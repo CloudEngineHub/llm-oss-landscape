@@ -83,35 +83,44 @@ participants_end = participants_end_date.strftime("%Y-%m-%d")
 print(f"Participants month: {openrank_latest_month}")
 print(f"Output fields: {openrank_field}, {participants_field}")
 
-# ── ClickHouse ─────────────────────────────────────────────────────────
-bypass_local_proxy_for_hosts(CLICKHOUSE_HOST, "api.github.com")
-
-ch_client = clickhouse_connect.get_client(
-    host=CLICKHOUSE_HOST,
-    port=8123,
-    username=os.getenv("CLICKHOUSE_USER"),
-    password=os.getenv("CLICKHOUSE_PASSWORD"),
-)
-
 parser = argparse.ArgumentParser(description="Enrich agentic-ai-projects.csv with GitHub and ClickHouse data.")
 parser.add_argument(
     "--metrics-only",
     action="store_true",
     help="Only refresh ClickHouse metrics fields; do not call GitHub API or rewrite project_readmes.json.",
 )
+parser.add_argument(
+    "--github-only",
+    action="store_true",
+    help="Only refresh GitHub API fields and README data; preserve existing ClickHouse metric fields.",
+)
 args = parser.parse_args()
+
+# ── ClickHouse ─────────────────────────────────────────────────────────
+bypass_local_proxy_for_hosts(CLICKHOUSE_HOST, "api.github.com")
+
+ch_client = None
+if not args.github_only:
+    ch_client = clickhouse_connect.get_client(
+        host=CLICKHOUSE_HOST,
+        port=8123,
+        username=os.getenv("CLICKHOUSE_USER"),
+        password=os.getenv("CLICKHOUSE_PASSWORD"),
+    )
 
 # ── GitHub API ─────────────────────────────────────────────────────────
 github_token = os.getenv("GITHUB_TOKEN", "").strip()
 gh_headers = {"Accept": "application/vnd.github.v3+json"}
-if not args.metrics_only:
+if args.metrics_only:
+    print("Metrics-only mode: skipping GitHub API and README fetch")
+else:
     if github_token:
         gh_headers["Authorization"] = f"token {github_token}"
         print(f"GitHub API: authenticated (rate limit ~5000/hr)")
     else:
         print("GitHub API: unauthenticated (rate limit 60/hr) — set GITHUB_TOKEN in .env for faster runs")
-else:
-    print("Metrics-only mode: skipping GitHub API and README fetch")
+if args.github_only:
+    print("GitHub-only mode: preserving existing ClickHouse metric fields")
 
 # ── Read input CSV ─────────────────────────────────────────────────────
 with open(INPUT_CSV, newline="", encoding="utf-8") as f:
@@ -129,51 +138,52 @@ repo_ids = sorted({
 
 # ── Batch query ClickHouse for OpenRank data ───────────────────────────
 openrank_data = {}
-print("Querying ClickHouse for OpenRank data...")
-
 repo_placeholders = ", ".join(str(repo_id) for repo_id in repo_ids)
+if not args.github_only:
+    print("Querying ClickHouse for OpenRank data...")
 
-# Query openrank for last 12 months
-for month in trend_months:
-    sql = f"""
-        SELECT repo_id, openrank
-        FROM opensource.global_openrank
-        WHERE platform = 'GitHub'
-          AND repo_id IN ({repo_placeholders})
-          AND type = 'Repo'
-          AND created_at = '{month}-01'
-    """
-    result = ch_client.query(sql)
-    for row in result.result_rows:
-        repo_id, score = row
-        if repo_id not in openrank_data:
-            openrank_data[repo_id] = {}
-        openrank_data[repo_id][month] = round(score, 2)
+    # Query openrank for last 12 months
+    for month in trend_months:
+        sql = f"""
+            SELECT repo_id, openrank
+            FROM opensource.global_openrank
+            WHERE platform = 'GitHub'
+              AND repo_id IN ({repo_placeholders})
+              AND type = 'Repo'
+              AND created_at = '{month}-01'
+        """
+        result = ch_client.query(sql)
+        for row in result.result_rows:
+            repo_id, score = row
+            if repo_id not in openrank_data:
+                openrank_data[repo_id] = {}
+            openrank_data[repo_id][month] = round(score, 2)
 
-print(f"ClickHouse OpenRank: got data for {len(openrank_data)} repos")
+    print(f"ClickHouse OpenRank: got data for {len(openrank_data)} repos")
 
 # ── Batch query ClickHouse for Participants data ───────────────────────
 participants_data = {}
-print("Querying ClickHouse for Participants data...")
+if not args.github_only:
+    print("Querying ClickHouse for Participants data...")
 
-# Query participants for the latest OpenRank month
-sql = f"""
-    SELECT repo_id, count(DISTINCT actor_id) as participants
-    FROM opensource.events
-    WHERE platform = 'GitHub'
-      AND repo_id IN ({repo_placeholders})
-      AND type IN ('IssuesEvent', 'IssueCommentEvent', 'PullRequestEvent',
-                   'PullRequestReviewEvent', 'PullRequestReviewCommentEvent')
-      AND created_at >= '{participants_start}'
-      AND created_at < '{participants_end}'
-    GROUP BY repo_id
-"""
-result = ch_client.query(sql)
-for row in result.result_rows:
-    repo_id, count = row
-    participants_data[repo_id] = count
+    # Query participants for the latest OpenRank month
+    sql = f"""
+        SELECT repo_id, count(DISTINCT actor_id) as participants
+        FROM opensource.events
+        WHERE platform = 'GitHub'
+          AND repo_id IN ({repo_placeholders})
+          AND type IN ('IssuesEvent', 'IssueCommentEvent', 'PullRequestEvent',
+                       'PullRequestReviewEvent', 'PullRequestReviewCommentEvent')
+          AND created_at >= '{participants_start}'
+          AND created_at < '{participants_end}'
+        GROUP BY repo_id
+    """
+    result = ch_client.query(sql)
+    for row in result.result_rows:
+        repo_id, count = row
+        participants_data[repo_id] = count
 
-print(f"ClickHouse Participants: got data for {len(participants_data)} repos")
+    print(f"ClickHouse Participants: got data for {len(participants_data)} repos")
 
 # ── GitHub API fetch with retry & rate-limit handling ─────────────────
 def fetch_github_info(repo_name, max_retries=3):
@@ -185,6 +195,8 @@ def fetch_github_info(repo_name, max_retries=3):
             if resp.status_code == 200:
                 data = resp.json()
                 return {
+                    "repo_id": data.get("id", 0),
+                    "repo_name": data.get("full_name") or repo_name,
                     "description": data.get("description") or "",
                     "stars": data.get("stargazers_count", 0),
                     "language": data.get("language") or "",
@@ -283,11 +295,17 @@ for i, row in enumerate(input_rows):
 
     # ClickHouse data
     repo_id_int = int(repo_id) if repo_id.isdigit() else 0
-    or_data = openrank_data.get(repo_id_int, {})
-    participants = participants_data.get(repo_id_int, 0)
+    if args.github_only:
+        or_data = {}
+        participants = int(row.get(participants_field) or 0)
+    else:
+        or_data = openrank_data.get(repo_id_int, {})
+        participants = participants_data.get(repo_id_int, 0)
 
     if args.metrics_only:
         gh_info = {
+            "repo_id": repo_id_int,
+            "repo_name": repo_name,
             "description": row.get("description", ""),
             "stars": int(row.get("stars") or 0),
             "language": row.get("language", ""),
@@ -300,22 +318,36 @@ for i, row in enumerate(input_rows):
         gh_info = fetch_github_info(repo_name)
         if gh_info is None:
             gh_info = {
+                "repo_id": repo_id_int,
+                "repo_name": repo_name,
                 "description": "", "stars": 0, "language": "",
                 "created_at": "", "topics": ""
             }
 
-        readme = fetch_github_readme(repo_name)
-        readmes[repo_name] = readme
+        canonical_repo_name = gh_info.get("repo_name") or repo_name
+        if canonical_repo_name != repo_name:
+            print(f"  repo renamed: {repo_name} -> {canonical_repo_name}")
+
+        readme = fetch_github_readme(canonical_repo_name)
+        readmes[canonical_repo_name] = readme
         readme_len = len(readme)
+        repo_name = canonical_repo_name
+        repo_id = str(gh_info.get("repo_id") or repo_id)
 
     # Show live progress
     print_progress(i, len(input_rows), repo_name, gh_info, or_data, participants, readme_len)
 
     # Build openrank trend list
-    trend_list = [or_data.get(m, None) for m in trend_months]
+    if args.github_only:
+        try:
+            trend_list = json.loads(row.get("openrank_trend") or "[]")
+        except json.JSONDecodeError:
+            trend_list = []
+    else:
+        trend_list = [or_data.get(m, None) for m in trend_months]
 
     # Get latest openrank
-    openrank_latest = or_data.get(openrank_latest_month, None)
+    openrank_latest = row.get(openrank_field, "") if args.github_only else or_data.get(openrank_latest_month, None)
 
     # Preserve existing categories if present
     existing_categories = row.get("categories", "")
@@ -333,12 +365,15 @@ for i, row in enumerate(input_rows):
         "topics": gh_info["topics"],
         "categories": existing_categories,
     }
-    if args.metrics_only:
+    if args.metrics_only or args.github_only:
         for key, value in row.items():
             if key in output_row:
+                if args.github_only and key.startswith(METRIC_PREFIXES):
+                    output_row[key] = value
                 continue
             if key.startswith(METRIC_PREFIXES):
-                continue
+                if args.metrics_only:
+                    continue
             output_row[key] = value
     enriched_rows.append(output_row)
 
@@ -379,9 +414,16 @@ if not args.metrics_only:
     print(f"Saved READMEs to {OUTPUT_READMES}")
 
 # Summary
-has_openrank = sum(1 for r in enriched_rows if r[openrank_field])
-has_stars = sum(1 for r in enriched_rows if r["stars"] and r["stars"] > 0)
-has_participants = sum(1 for r in enriched_rows if r[participants_field] > 0)
+def positive_number(value):
+    try:
+        return float(value) > 0
+    except (TypeError, ValueError):
+        return False
+
+
+has_openrank = sum(1 for r in enriched_rows if positive_number(r[openrank_field]))
+has_stars = sum(1 for r in enriched_rows if positive_number(r["stars"]))
+has_participants = sum(1 for r in enriched_rows if positive_number(r[participants_field]))
 print(f"  - Repos with {openrank_field}: {has_openrank}")
 print(f"  - Repos with stars: {has_stars}")
 print(f"  - Repos with {participants_field}: {has_participants}")

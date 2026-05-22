@@ -4,8 +4,11 @@
 
 # Production
 /build
+/website
 
 # Generated files
+/outputs
+/data/cache
 .docusaurus
 .cache-loader
 __pycache__/

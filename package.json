@@ -1,0 +1,17 @@
+{
+  "name": "llm-oss-landscape-pptx-tools",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local PPTX generation helpers for llm-oss-landscape reports.",
+  "scripts": {
+    "pptx:check": "node scripts/pptx/check-pptxgenjs.mjs",
+    "pptx:sample": "node scripts/pptx/build-sample-deck.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}
