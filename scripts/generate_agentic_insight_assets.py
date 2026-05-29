@@ -13,7 +13,7 @@ import pandas as pd
 
 BASE = Path(__file__).resolve().parents[1]
 DATA_FILE = BASE / "data" / "agentic-ai-projects.csv"
-OUT_DIR = BASE / "reports" / "260601-agentic_landscape"
+OUT_DIR = BASE / "insights" / "260601-agentic_landscape"
 FIG_DIR = OUT_DIR / "figures"
 SUMMARY_FILE = OUT_DIR / "agentic-summary.json"
 

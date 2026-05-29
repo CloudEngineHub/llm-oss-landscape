@@ -25,7 +25,7 @@ The landscape highlights the projects that are currently most representative of 
 
 ## Maintaining The Agentic AI Projects
 
-We aim to continuously maintain and expand [`data/agentic_projects.csv`](./data/agentic_projects.csv) with **noteworthy** projects across the Agentic AI ecosystem. If you think an important project is missing, please share it through our [dedicated issue tracker](https://github.com/antgroup/llm-oss-landscape/issues/1).
+We aim to continuously maintain and expand [`data/agentic-ai-projects.csv`](./data/agentic-ai-projects.csv) with **noteworthy** projects across the Agentic AI ecosystem. If you think an important project is missing, please share it through our [dedicated issue tracker](https://github.com/antgroup/agentic-ai-landscape/issues/1).
 
 ## Acknowledgement
 

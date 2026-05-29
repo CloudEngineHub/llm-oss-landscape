@@ -38,10 +38,10 @@ def test(name, condition, detail=""):
 
 # ── 1. Path resolution ────────────────────────────────────────────────
 print("\n1. Path resolution")
-test("BASE ends with llm-oss-landscape", wu.BASE.endswith("llm-oss-landscape"), wu.BASE)
+test("BASE ends with agentic-ai-landscape", wu.BASE.endswith("agentic-ai-landscape"), wu.BASE)
 test("SCRIPT_DIR ends with scripts", wu.SCRIPT_DIR.endswith("scripts"), wu.SCRIPT_DIR)
 test("ENV_PATH points to scripts/.env", wu.ENV_PATH.endswith("scripts/.env"), wu.ENV_PATH)
-test("PR_TARGET_REPO is antgroup", wu.PR_TARGET_REPO == "antgroup/llm-oss-landscape", wu.PR_TARGET_REPO)
+test("PR_TARGET_REPO is antgroup", wu.PR_TARGET_REPO == "antgroup/agentic-ai-landscape", wu.PR_TARGET_REPO)
 test("OPENAI_BASE_URL has v1 endpoint", wu.OPENAI_BASE_URL.endswith("/v1"), wu.OPENAI_BASE_URL)
 test("ClickHouse client is lazy", wu._ch_client is None, "client should not initialize at import")
 test("trend ends at latest OpenRank month", wu.trend_months[-1] == wu.openrank_latest_month, str(wu.trend_months))
@@ -111,7 +111,7 @@ report, written_path, report_context = wu.generate_canonical_report(
     fake_recs,
     date_str="2099-01-02",
 )
-test("archive path uses date", written_path.endswith("reports/weekly_reports_by_agents/2099-01-02-weekly-agentic-ai-report.md"), written_path)
+test("archive path uses date", written_path.endswith("insights/weekly_reports_by_agents/2099-01-02-weekly-agentic-ai-report.md"), written_path)
 test("archive report exists", os.path.exists(written_path), written_path)
 with open(wu.REPORT_FILE, "r", encoding="utf-8") as f:
     latest_report = f.read()
@@ -151,14 +151,14 @@ dingtalk_md = wu.build_dingtalk_markdown(
     fake_projects,
     fake_recs + [(fake_projects[1], 0.8, "第二个"), (fake_projects[0], 0.7, "第三个"), (fake_projects[1], 0.6, "第四个"), (fake_projects[0], 0.5, "第五个")],
     "/go/doc/123",
-    "https://github.com/antgroup/llm-oss-landscape/pull/1",
+    "https://github.com/antgroup/agentic-ai-landscape/pull/1",
     date_str="2099-01-02",
     report_markdown=report,
 )
 test("DingTalk title omits date", "## Agentic AI Weekly Update - 2099-01-02" not in dingtalk_md)
 test("DingTalk includes trend opinions", "**趋势观点**" in dingtalk_md)
 test("DingTalk uses Yuque markdown link", "[完整报告](https://yuque.antfin.com/go/doc/123)" in dingtalk_md)
-test("DingTalk uses PR markdown link", "[待筛选 PR](https://github.com/antgroup/llm-oss-landscape/pull/1)" in dingtalk_md)
+test("DingTalk uses PR markdown link", "[待筛选 PR](https://github.com/antgroup/agentic-ai-landscape/pull/1)" in dingtalk_md)
 test("DingTalk lists five highlighted projects", dingtalk_md.count("- **") == 5, dingtalk_md)
 tldr_only_report = "# Agentic AI Weekly Report - 2099-01-02\n\n## TL;DR\n\n- 本周发现 **2** 个候选项目。\n- 热门方向集中在 Coding Agent。\n\n## Review Candidates\n"
 test("DingTalk trend opinions fall back to TLDR", wu.extract_trend_opinions(tldr_only_report) == ["本周发现 2 个候选项目。", "热门方向集中在 Coding Agent。"])

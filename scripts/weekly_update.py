@@ -43,10 +43,10 @@ ENV_PATH = os.path.join(BASE, "scripts", ".env")
 INPUT_CSV = os.path.join(BASE, "data", "agentic-ai-projects.csv")
 OUTPUT_CSV = os.path.join(BASE, "data", "agentic-ai-projects.csv")
 REPORT_FILE = os.path.join(BASE, "data", "weekly_report.md")
-REPORT_ARCHIVE_DIR = os.path.join(BASE, "reports", "weekly_reports_by_agents")
+REPORT_ARCHIVE_DIR = os.path.join(BASE, "insights", "weekly_reports_by_agents")
 
 # Target repo for PRs
-PR_TARGET_REPO = "antgroup/llm-oss-landscape"
+PR_TARGET_REPO = "antgroup/agentic-ai-landscape"
 
 load_dotenv(ENV_PATH)
 
@@ -1978,7 +1978,7 @@ def main():
     parser.add_argument("--report-path", default=REPORT_FILE, help="Report path for --publish-existing")
     parser.add_argument("--confirm", action="store_true", help="(DEPRECATED) Use PR-based confirmation instead")
     parser.add_argument("--post-merge", action="store_true", help="Process a specified upstream merged PR: update CSV, reclassify, evolve taxonomy")
-    parser.add_argument("--pr", type=int, help="Required with --post-merge: upstream PR number in antgroup/llm-oss-landscape")
+    parser.add_argument("--pr", type=int, help="Required with --post-merge: upstream PR number in antgroup/agentic-ai-landscape")
     parser.add_argument("--full", action="store_true", help="Full pipeline (check + confirm all without PR)")
     args = parser.parse_args()
 
