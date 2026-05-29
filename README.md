@@ -15,17 +15,17 @@ The 2026 landscape follows a three-layer Agentic AI architecture: **Agent Infra*
 
 The landscape highlights the projects that are currently most representative of each ecosystem rather than attempting to cover every project. Visit [InclusionAI Insights](https://www.inclusion-ai.org/insight/) for more complete and dynamic Agentic AI ecosystem rankings, project data, and developer details.
 
-![Agent Infra Landscape 2026](/reports/260601-agentic_landscape/landscape_agent_infra.png)
+![Agent Infra Landscape 2026](/insights/260527-agentic_landscape/landscape_agent_infra.png)
 
-![Model Infra Landscape 2026](/reports/260601-agentic_landscape/landscape_model_infra.png)
+![Model Infra Landscape 2026](/insights/260527-agentic_landscape/landscape_model_infra.png)
 
-![Large Models Landscape 2026](/reports/260601-agentic_landscape/landscape_large_models.png)
+![Large Models Landscape 2026](/insights/260527-agentic_landscape/landscape_large_models.png)
 
 ---
 
 ## Maintaining The Agentic AI Projects
 
-We aim to continuously maintain and expand [`data/2605_agentic_projects.csv`](./data/2605_agentic_projects.csv) with **noteworthy** projects across the Agentic AI ecosystem. If you think an important project is missing, please share it through our [dedicated issue tracker](https://github.com/antgroup/llm-oss-landscape/issues/1).
+We aim to continuously maintain and expand [`data/agentic_projects.csv`](./data/agentic_projects.csv) with **noteworthy** projects across the Agentic AI ecosystem. If you think an important project is missing, please share it through our [dedicated issue tracker](https://github.com/antgroup/llm-oss-landscape/issues/1).
 
 ## Acknowledgement
 
