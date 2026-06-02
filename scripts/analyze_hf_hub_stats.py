@@ -8,7 +8,7 @@ import duckdb
 
 
 BASE = Path(__file__).resolve().parents[1]
-OUT_DIR = BASE / "reports" / "260601-agentic_landscape"
+OUT_DIR = BASE / "insights" / "260601-agentic_landscape"
 OUT_FILE = OUT_DIR / "hf-hub-stats-summary.json"
 PARQUET = "hf://datasets/cfahlgren1/hub-stats/models.parquet"
 
