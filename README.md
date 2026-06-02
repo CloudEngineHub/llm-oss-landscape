@@ -1,7 +1,7 @@
 # Agentic AI Landscape and Trends
 
 
-[![Webiste](https://img.shields.io/badge/Landscape-Online-yellow?style=flat)](https://agi-landscape.my.canva.site/2026-agentic-ai-landscape)
+[![Webiste](https://img.shields.io/badge/Landscape-Online-yellow?style=flat)](https://agi-landscape.my.canva.site)
 [![Blog](https://img.shields.io/badge/AGI-inclusionAI-White?style=flat)](https://www.inclusion-ai.org/insight)
 
 
