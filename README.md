@@ -5,7 +5,7 @@
 [![Blog](https://img.shields.io/badge/AGI-inclusionAI-White?style=flat)](https://www.inclusion-ai.org/insight)
 
 
-🧐 **Latest Blog**: [Taking the Pulse of Agentic AI from the Developer Community at the End of Q1 2026](https://www.inclusion-ai.org/blog/agentic-landscape-in-2026-Q1/)
+🧐 **Latest Blog**: [Agentic AI 2026: When the Hackathon Fever Cools Down](https://www.inclusion-ai.org/blog/agentic-ai-202606/)
 
 ---
 
