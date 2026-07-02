@@ -15,6 +15,10 @@ import threading
 import time
 from pathlib import Path
 
+try:
+    import requests as _requests
+except ImportError:
+    _requests = None
 
 ROOT = Path(__file__).resolve().parents[1]
 MCP_CONFIG = ROOT / ".mcp.json"
@@ -23,6 +27,66 @@ DEFAULT_SERVER_NAME = "yuqueServer"
 
 class McpError(RuntimeError):
     pass
+
+
+class HttpMcpClient:
+    """HTTP/SSE MCP client — works when utoo-proxy is unavailable."""
+
+    def __init__(self, url, timeout=30):
+        if _requests is None:
+            raise McpError("requests library not installed; cannot use HTTP MCP client")
+        self.url = url
+        self.timeout = timeout
+        self._next_id = 1
+        # Use CODE_PRIVATE_TOKEN or ANTHROPIC_AUTH_TOKEN for gateway auth
+        token = os.getenv("CODE_PRIVATE_TOKEN", "") or os.getenv("AONE_SANDBOX_APIKEY", "")
+        self._auth_headers = {"Authorization": f"Bearer {token}"} if token else {}
+
+    def close(self):
+        pass
+
+    def notify(self, method, params=None):
+        self._post(method, params, expect_response=False)
+
+    def request(self, method, params=None):
+        return self._post(method, params, expect_response=True)
+
+    def _post(self, method, params, expect_response=True):
+        msg_id = self._next_id
+        self._next_id += 1
+        payload = {"jsonrpc": "2.0", "method": method}
+        if params is not None:
+            payload["params"] = params
+        if expect_response:
+            payload["id"] = msg_id
+
+        headers = {
+            "Accept": "application/json, text/event-stream",
+            "Content-Type": "application/json",
+            **self._auth_headers,
+        }
+        resp = _requests.post(self.url, json=payload, headers=headers, timeout=self.timeout, stream=True)
+        resp.raise_for_status()
+
+        if not expect_response:
+            return None
+
+        # Collect all SSE data chunks and join before parsing
+        data_chunks = []
+        for line in resp.iter_lines():
+            if isinstance(line, bytes):
+                line = line.decode("utf-8")
+            if line.startswith("data:"):
+                data_chunks.append(line[5:].strip())
+
+        if data_chunks:
+            data = json.loads("".join(data_chunks))
+        else:
+            data = json.loads(resp.text)
+
+        if "error" in data:
+            raise McpError(json.dumps(data["error"], ensure_ascii=False))
+        return data.get("result")
 
 
 class StdioMcpClient:
@@ -125,12 +189,28 @@ def initialize_client(server_name, timeout):
     command = server.get("command")
     if not command:
         raise McpError(f"MCP server {server_name!r} has no command")
-    client = StdioMcpClient(
-        command=command,
-        args=server.get("args", []),
-        env=server.get("env", {}),
-        timeout=timeout,
-    )
+
+    # Prefer stdio (utoo-proxy); fall back to HTTP if binary is missing
+    import shutil
+    use_http = shutil.which(command) is None
+    if use_http:
+        # Extract URL from args (first arg that starts with http)
+        mcp_url = next(
+            (a for a in server.get("args", []) if a.startswith("http")),
+            None,
+        )
+        if not mcp_url:
+            raise McpError(f"Command {command!r} not found and no HTTP URL in args")
+        print(f"[yuque] utoo-proxy not found — using HTTP MCP client: {mcp_url}", file=sys.stderr)
+        client = HttpMcpClient(url=mcp_url, timeout=timeout)
+    else:
+        client = StdioMcpClient(
+            command=command,
+            args=server.get("args", []),
+            env=server.get("env", {}),
+            timeout=timeout,
+        )
+
     client.request(
         "initialize",
         {
