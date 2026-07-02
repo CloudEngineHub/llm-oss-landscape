@@ -987,8 +987,21 @@ def build_llm_prompt(context):
         f"```json\n{json.dumps(payload, ensure_ascii=False, indent=2)}\n```"
     )
 
+def _try_anthropic_local(context):
+    """Try calling the local Anthropic proxy with the full LLM prompt built from context."""
+    return _try_anthropic_local_with_prompt(build_llm_prompt(context))
+
 def generate_llm_trend_insights(context):
-    """Generate deep trend insights using OpenAI Chat Completions with fallback."""
+    """Generate deep trend insights using OpenAI Chat Completions (or local Anthropic proxy) with fallback."""
+    # Try local Anthropic proxy first (sandbox environment)
+    try:
+        result = _try_anthropic_local(context)
+        if result:
+            print(f"{GREEN}LLM trend insights generated via local Anthropic proxy{RESET}")
+            return result, False
+    except Exception as e:
+        print(f"{YELLOW}Local Anthropic proxy failed: {e}{RESET}")
+
     if not OPENAI_API_KEY:
         if ALLOW_LLM_FALLBACK:
             return generate_fallback_trend_insights(context), True
@@ -1500,6 +1513,30 @@ def build_pr_body(projects, report_markdown, date_str=None):
     ])
 
 # ── GitHub PR creation ────────────────────────────────────────────────
+def _create_pr_via_api(fork_owner, branch_name, date_str, projects, body):
+    """Create a GitHub PR using the REST API (no gh CLI required)."""
+    api_base = "https://api.github.com"
+    headers = {
+        "Authorization": f"token {github_token}",
+        "Accept": "application/vnd.github.v3+json",
+        "Content-Type": "application/json",
+    }
+    ensure_no_proxy("api.github.com")
+    payload = {
+        "title": f"Weekly update {date_str}: {len(projects)} new projects",
+        "body": body,
+        "head": f"{fork_owner}:{branch_name}",
+        "base": "main",
+    }
+    resp = requests.post(
+        f"{api_base}/repos/{PR_TARGET_REPO}/pulls",
+        headers=headers,
+        json=payload,
+        timeout=30,
+    )
+    resp.raise_for_status()
+    return resp.json().get("html_url", "")
+
 def create_pr(projects, report_markdown, report_path):
     """Create a GitHub PR with checklist for project selection."""
     date_str = datetime.now().strftime('%Y-%m-%d')
@@ -1531,60 +1568,91 @@ def create_pr(projects, report_markdown, report_path):
             ["git", "remote", "get-url", "origin"],
             capture_output=True, text=True, check=True
         ).stdout.strip()
-        # Extract owner from git@github.com:owner/repo.git or https://github.com/owner/repo.git
         owner_match = re.search(r'[:/]([^/]+)/', remote_url)
         fork_owner = owner_match.group(1) if owner_match else "xiaoya-yaya"
 
-        result = subprocess.run(
-            ["gh", "pr", "create",
-             "--repo", PR_TARGET_REPO,
-             "--head", f"{fork_owner}:{branch_name}",
-             "--title", f"Weekly update {date_str}: {len(projects)} new projects",
-             "--body", body],
-            capture_output=True, text=True, check=True
-        )
-        pr_url = result.stdout.strip()
+        # Try gh CLI first, fall back to GitHub REST API
+        pr_url = None
+        try:
+            result = subprocess.run(
+                ["gh", "pr", "create",
+                 "--repo", PR_TARGET_REPO,
+                 "--head", f"{fork_owner}:{branch_name}",
+                 "--title", f"Weekly update {date_str}: {len(projects)} new projects",
+                 "--body", body],
+                capture_output=True, text=True, check=True
+            )
+            pr_url = result.stdout.strip()
+        except FileNotFoundError:
+            print(f"{YELLOW}gh CLI not found — using GitHub REST API{RESET}")
+            pr_url = _create_pr_via_api(fork_owner, branch_name, date_str, projects, body)
+
         print(f"{GREEN}PR created: {pr_url}{RESET}")
-
-        # Switch back to main
         subprocess.run(["git", "checkout", "main"], capture_output=True)
-
         return pr_url
-    except FileNotFoundError:
-        print(f"{YELLOW}gh CLI not found. Skipping PR creation.{RESET}")
-        return None
+
     except subprocess.CalledProcessError as e:
         print(f"{YELLOW}PR creation failed: {e.stderr[:200] if e.stderr else e}{RESET}")
         subprocess.run(["git", "checkout", "main"], capture_output=True)
         return None
+    except Exception as e:
+        print(f"{YELLOW}PR creation failed: {e}{RESET}")
+        subprocess.run(["git", "checkout", "main"], capture_output=True)
+        return None
 
-def publish_existing_report(report_path=None):
-    """Publish an already generated report without re-running data collection or LLM generation."""
-    report_path = report_path or REPORT_FILE
+def _load_report(report_path):
+    """Load and parse a report file. Returns (report_markdown, projects, recommendations, date_str)."""
     if not os.path.exists(report_path):
         raise FileNotFoundError(f"Report not found: {report_path}")
     with open(report_path, "r", encoding="utf-8") as f:
         report_markdown = f.read()
-
     projects = parse_report_candidates(report_markdown)
     if not projects:
         raise ValueError(f"No Review Candidates table rows found in {report_path}")
     recommendations = parse_report_highlights(report_markdown)
     date_str = parse_report_date(report_markdown)
-
-    print(f"{CYAN}Publishing existing report: {report_path}{RESET}")
+    print(f"{CYAN}Loaded report: {report_path}{RESET}")
     print(f"{CYAN}Parsed {len(projects)} review candidates and {len(recommendations)} highlighted projects{RESET}")
+    return report_markdown, projects, recommendations, date_str
 
-    print(f"\n{BOLD}=== Publish existing: Yuque ==={RESET}")
+def publish_yuque_only(report_path=None):
+    """Publish only to Yuque."""
+    report_markdown, projects, recommendations, date_str = _load_report(report_path or REPORT_FILE)
+    print(f"\n{BOLD}=== Publish: Yuque ==={RESET}")
     yuque_url = publish_to_yuque(report_markdown, date_str=date_str)
+    if yuque_url:
+        print(f"{GREEN}Yuque URL: {yuque_url}{RESET}")
+    return yuque_url
 
-    print(f"\n{BOLD}=== Publish existing: GitHub review PR ==={RESET}")
-    pr_url = create_pr(projects, report_markdown, report_path)
+def publish_pr_only(report_path=None):
+    """Create only the GitHub review PR."""
+    report_markdown, projects, recommendations, date_str = _load_report(report_path or REPORT_FILE)
+    print(f"\n{BOLD}=== Publish: GitHub PR ==={RESET}")
+    pr_url = create_pr(projects, report_markdown, report_path or REPORT_FILE)
+    if pr_url:
+        print(f"{GREEN}PR URL: {pr_url}{RESET}")
+    return pr_url
 
-    print(f"\n{BOLD}=== Publish existing: DingTalk summary ==={RESET}")
+def publish_dingtalk_only(report_path=None, yuque_url=None, pr_url=None):
+    """Send only the DingTalk notification. Requires --yuque-url and --pr-url."""
+    report_markdown, projects, recommendations, date_str = _load_report(report_path or REPORT_FILE)
+    print(f"\n{BOLD}=== Publish: DingTalk ==={RESET}")
     send_dingtalk(projects, recommendations, yuque_url, pr_url, report_markdown=report_markdown)
 
-    print(f"\n{GREEN}Publish existing complete!{RESET}")
+def publish_existing_report(report_path=None):
+    """Publish an already generated report: Yuque + GitHub PR + DingTalk."""
+    report_markdown, projects, recommendations, date_str = _load_report(report_path or REPORT_FILE)
+
+    print(f"\n{BOLD}=== Step 1/3: Yuque ==={RESET}")
+    yuque_url = publish_to_yuque(report_markdown, date_str=date_str)
+
+    print(f"\n{BOLD}=== Step 2/3: GitHub review PR ==={RESET}")
+    pr_url = create_pr(projects, report_markdown, report_path or REPORT_FILE)
+
+    print(f"\n{BOLD}=== Step 3/3: DingTalk ==={RESET}")
+    send_dingtalk(projects, recommendations, yuque_url, pr_url, report_markdown=report_markdown)
+
+    print(f"\n{GREEN}Publish complete!{RESET}")
 
 # ── Post-merge: parse PR and update CSV ────────────────────────────────
 
@@ -1967,6 +2035,150 @@ def run_post_merge(pr_number):
     new_repo_names = [p["repo_name"] for p in selected]
     fetch_and_reclassify_top100(new_repo_names)
 
+# ── Add insights to existing report ────────────────────────────────────
+def run_add_insights(report_path=None):
+    """Re-generate only the Deep Trend Insights section in an existing report.
+
+    Reads trend_context.md as the LLM input to avoid re-querying ClickHouse / GitHub.
+    Patches both the archive report file and data/weekly_report.md in-place.
+    """
+    report_path = report_path or REPORT_FILE
+    if not os.path.exists(report_path):
+        raise FileNotFoundError(f"Report not found: {report_path}")
+    if not os.path.exists(TREND_CONTEXT_FILE):
+        raise FileNotFoundError(
+            f"Trend context not found: {TREND_CONTEXT_FILE}\n"
+            "Run --check --report-only first to generate it."
+        )
+
+    with open(report_path, "r", encoding="utf-8") as f:
+        report_markdown = f.read()
+    with open(TREND_CONTEXT_FILE, "r", encoding="utf-8") as f:
+        trend_context_md = f.read()
+
+    print(f"{CYAN}Generating LLM insights from existing trend context...{RESET}")
+
+    # Build a lightweight prompt using the pre-computed trend context markdown
+    prompt = (
+        "你是开源 AI 生态分析师。请基于下面的本周趋势数据摘要生成一份中文深度趋势洞察。\n"
+        "要求：\n"
+        "1. 输出 4-6 个有观点的小节，每节使用 Markdown 三级标题；\n"
+        "2. 每节必须引用至少 2 个具体项目名，并尽量引用 OpenRank、参与者、star、创建时间等证据；\n"
+        "3. 明确区分真实工程项目、资源/skills/awesome 类项目、协议/工具链/应用层趋势；\n"
+        "4. 不要编造未提供的数据；\n"
+        "5. 不要输出候选清单或表格。\n\n"
+        f"{trend_context_md}"
+    )
+
+    # Try local Anthropic proxy first, then OpenAI
+    insights = None
+    fallback_used = False
+    try:
+        result = _try_anthropic_local_with_prompt(prompt)
+        if result:
+            insights = result
+            print(f"{GREEN}LLM insights generated via local Anthropic proxy{RESET}")
+    except Exception as e:
+        print(f"{YELLOW}Local Anthropic proxy failed: {e}{RESET}")
+
+    if not insights and OPENAI_API_KEY:
+        try:
+            ensure_no_proxy(host_from_url(OPENAI_BASE_URL))
+            resp = requests.post(
+                f"{OPENAI_BASE_URL}/chat/completions",
+                headers={"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"},
+                json={
+                    "model": OPENAI_MODEL,
+                    "messages": [
+                        {"role": "system", "content": "You write concise, evidence-grounded open-source ecosystem analysis in Chinese."},
+                        {"role": "user", "content": prompt},
+                    ],
+                    "temperature": 0.4,
+                },
+                timeout=OPENAI_TIMEOUT,
+            )
+            resp.raise_for_status()
+            insights = resp.json()["choices"][0]["message"]["content"].strip()
+            print(f"{GREEN}LLM insights generated via OpenAI{RESET}")
+        except Exception as e:
+            print(f"{YELLOW}OpenAI failed: {e}{RESET}")
+
+    if not insights:
+        if ALLOW_LLM_FALLBACK:
+            insights = generate_fallback_trend_insights({"project_count": 0, "category_counts": {}, "highlighted": [], "fastest_growing": []})
+            fallback_used = True
+        else:
+            print(f"{RED}All LLM backends failed. Use ALLOW_LLM_FALLBACK=1 for template fallback.{RESET}")
+            return
+
+    # Patch the Deep Trend Insights section
+    fallback_note = "\n\n_Trend insights were generated by deterministic fallback because LLM generation was unavailable._\n" if fallback_used else ""
+    new_section = f"## Deep Trend Insights\n\n{insights}{fallback_note}\n"
+    patched = re.sub(
+        r"## Deep Trend Insights\n.*?(?=\n## |\Z)",
+        new_section,
+        report_markdown,
+        flags=re.S,
+    )
+
+    with open(report_path, "w", encoding="utf-8") as f:
+        f.write(patched)
+    print(f"{GREEN}Insights patched in: {report_path}{RESET}")
+
+    # Always keep data/weekly_report.md and the dated archive in sync
+    report_abs = os.path.abspath(report_path)
+    latest_abs = os.path.abspath(REPORT_FILE)
+
+    # Derive the dated archive path from the report header date
+    date_match = re.search(r"# Agentic AI Weekly Report - ([0-9]{4}-[0-9]{2}-[0-9]{2})", patched)
+    report_date = date_match.group(1) if date_match else datetime.now().strftime("%Y-%m-%d")
+    archive_abs = os.path.abspath(get_report_archive_path(report_date))
+
+    # Sync whichever of the two was NOT the primary target
+    if report_abs == latest_abs:
+        # Primary was data/weekly_report.md → sync to archive
+        shutil.copyfile(REPORT_FILE, archive_abs)
+        print(f"{GREEN}Archive updated: {archive_abs}{RESET}")
+    elif report_abs == archive_abs:
+        # Primary was archive → sync to data/weekly_report.md
+        shutil.copyfile(archive_abs, REPORT_FILE)
+        print(f"{GREEN}Latest copy updated: {REPORT_FILE}{RESET}")
+    else:
+        # Primary was some other path → sync to both
+        shutil.copyfile(report_path, REPORT_FILE)
+        shutil.copyfile(report_path, archive_abs)
+        print(f"{GREEN}Both archive and latest copy updated{RESET}")
+
+def _try_anthropic_local_with_prompt(prompt):
+    """Low-level helper: call the local Anthropic proxy with a raw prompt string."""
+    anthropic_base = os.getenv("ANTHROPIC_BASE_URL", "").rstrip("/")
+    anthropic_token = os.getenv("ANTHROPIC_AUTH_TOKEN", "")
+    anthropic_model = os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+    if not anthropic_base or not anthropic_token:
+        return None
+    proxy_url = re.sub(r'/v\d+/anthropic$', '', anthropic_base) + "/v1/messages"
+    resp = requests.post(
+        proxy_url,
+        headers={
+            "x-api-key": anthropic_token,
+            "anthropic-version": "2023-06-01",
+            "Content-Type": "application/json",
+        },
+        json={
+            "model": anthropic_model,
+            "max_tokens": 2048,
+            "system": "You write concise, evidence-grounded open-source ecosystem analysis in Chinese.",
+            "messages": [{"role": "user", "content": prompt}],
+        },
+        timeout=OPENAI_TIMEOUT,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    content = data.get("content", [{}])[0].get("text", "").strip()
+    if not content:
+        raise ValueError("empty Anthropic response")
+    return content
+
 # ── Main workflow ─────────────────────────────────────────────────────
 def main():
     print_runtime_context()
@@ -1974,8 +2186,14 @@ def main():
     parser.add_argument("--check", action="store_true", help="Check new projects, generate report drafts, create PR")
     parser.add_argument("--report-only", action="store_true", help="Generate the weekly report only; do not publish to Yuque, create PR, or send DingTalk")
     parser.add_argument("--no-publish", action="store_true", help="Alias for --report-only")
-    parser.add_argument("--publish-existing", action="store_true", help="Publish an existing generated report to Yuque, GitHub PR, and DingTalk without re-running data collection")
-    parser.add_argument("--report-path", default=REPORT_FILE, help="Report path for --publish-existing")
+    parser.add_argument("--publish-existing", action="store_true", help="Publish existing report: Yuque + GitHub PR + DingTalk (all three)")
+    parser.add_argument("--publish-yuque", action="store_true", help="Publish existing report to Yuque only")
+    parser.add_argument("--publish-pr", action="store_true", help="Create GitHub review PR only")
+    parser.add_argument("--publish-dingtalk", action="store_true", help="Send DingTalk notification only (requires --yuque-url and --pr-url)")
+    parser.add_argument("--yuque-url", default="", help="Yuque document URL (for --publish-dingtalk)")
+    parser.add_argument("--pr-url", default="", help="GitHub PR URL (for --publish-dingtalk)")
+    parser.add_argument("--report-path", default=REPORT_FILE, help="Report path for publish/add-insights commands")
+    parser.add_argument("--add-insights", action="store_true", help="Re-generate only the Deep Trend Insights section in an existing report using saved trend_context.md; no ClickHouse/GitHub calls")
     parser.add_argument("--confirm", action="store_true", help="(DEPRECATED) Use PR-based confirmation instead")
     parser.add_argument("--post-merge", action="store_true", help="Process a specified upstream merged PR: update CSV, reclassify, evolve taxonomy")
     parser.add_argument("--pr", type=int, help="Required with --post-merge: upstream PR number in antgroup/agentic-ai-landscape")
@@ -1988,6 +2206,22 @@ def main():
         print(f"  2. Check items you want to include")
         print(f"  3. Merge the PR")
         print(f"  4. Run --post-merge --pr <number> to update CSV")
+        return
+
+    if args.add_insights:
+        run_add_insights(args.report_path)
+        return
+
+    if args.publish_yuque:
+        publish_yuque_only(args.report_path)
+        return
+
+    if args.publish_pr:
+        publish_pr_only(args.report_path)
+        return
+
+    if args.publish_dingtalk:
+        publish_dingtalk_only(args.report_path, yuque_url=args.yuque_url, pr_url=args.pr_url)
         return
 
     if args.publish_existing:
