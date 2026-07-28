@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FINOS AI Readiness SIG - Agentic AI Landscape, AMP, and InclusionAI</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --ink: #172033;
+      --muted: #596579;
+      --line: #d9dee8;
+      --panel: #ffffff;
+      --accent: #ef4b9b;
+      --accent-2: #1677ff;
+      --soft: #eef4ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+
+    header {
+      min-height: 72vh;
+      display: grid;
+      align-items: end;
+      padding: 56px 6vw 48px;
+      background:
+        radial-gradient(circle at 80% 18%, rgba(239, 75, 155, 0.14), transparent 30%),
+        linear-gradient(135deg, #f7f8fb 0%, #eef4ff 48%, #ffffff 100%);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero {
+      max-width: 980px;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 940px;
+      font-size: clamp(42px, 7vw, 92px);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      margin: 24px 0 0;
+      color: #303b4f;
+      font-size: clamp(18px, 2.4vw, 28px);
+      font-weight: 520;
+    }
+
+    .speaker {
+      margin-top: 20px;
+      color: var(--ink);
+      font-size: 18px;
+      font-weight: 760;
+    }
+
+    .hero-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .hero-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .hero-links a.primary {
+      border-color: #cfe0ff;
+      background: #eaf2ff;
+      color: #174a91;
+    }
+
+    main {
+      padding: 0 0 64px;
+    }
+
+    section {
+      padding: 56px 6vw;
+      border-bottom: 1px solid var(--line);
+      background: var(--bg);
+    }
+
+    section:nth-child(even) {
+      background: #ffffff;
+    }
+
+    .section-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      margin: 0 0 16px;
+      font-size: clamp(28px, 4vw, 52px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    a {
+      color: var(--accent-2);
+      text-decoration-thickness: 2px;
+      text-underline-offset: 3px;
+    }
+
+    .lead {
+      max-width: 900px;
+      font-size: 22px;
+      color: #344155;
+    }
+
+    .grid {
+      display: grid;
+      gap: 20px;
+      margin-top: 28px;
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .panel,
+    .takeaway,
+    .metric {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 22px;
+    }
+
+    section:nth-child(even) .panel,
+    section:nth-child(even) .takeaway,
+    section:nth-child(even) .metric {
+      background: #fbfcff;
+    }
+
+    .panel strong,
+    .metric strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 19px;
+      color: var(--ink);
+    }
+
+    .metric {
+      min-height: 122px;
+    }
+
+    .metric .num {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 34px;
+      line-height: 1;
+      color: var(--accent-2);
+      font-weight: 780;
+    }
+
+    .image-block {
+      margin-top: 28px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .image-block img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .image-block.document {
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .caption {
+      padding: 12px 16px;
+      font-size: 15px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .takeaway {
+      margin-top: 24px;
+      border-left: 5px solid var(--accent);
+    }
+
+    .takeaway p {
+      color: #2d374a;
+      font-size: 20px;
+      font-weight: 620;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .timeline div {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 20px;
+      align-items: start;
+      padding: 18px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .timeline b {
+      color: var(--accent);
+    }
+
+    .timeline span {
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .quote {
+      max-width: 1000px;
+      margin-top: 28px;
+      padding: 30px;
+      background: var(--soft);
+      border: 1px solid #cfe0ff;
+      border-radius: 8px;
+      font-size: clamp(25px, 3.8vw, 46px);
+      line-height: 1.12;
+      font-weight: 760;
+      color: #18345d;
+    }
+
+    .section-label {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 760;
+      text-transform: uppercase;
+    }
+
+    .project-map {
+      margin-top: 28px;
+      border-top: 1px solid var(--line);
+    }
+
+    .project-row {
+      display: grid;
+      grid-template-columns: minmax(150px, 0.65fr) 1.1fr 1.5fr;
+      gap: 24px;
+      padding: 20px 0;
+      border-bottom: 1px solid var(--line);
+      align-items: start;
+    }
+
+    .project-row strong {
+      font-size: 18px;
+      color: var(--ink);
+    }
+
+    .project-row p {
+      font-size: 16px;
+    }
+
+    .protocol-flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .protocol-flow div {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .protocol-flow b {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--accent-2);
+    }
+
+    .protocol-flow span {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .source-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      margin-top: 18px;
+    }
+
+    .data-split {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 28px;
+      margin-top: 30px;
+    }
+
+    .data-block {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    section:nth-child(even) .data-block {
+      background: #fbfcff;
+    }
+
+    .data-block h3 {
+      margin-bottom: 4px;
+    }
+
+    .big-stat {
+      display: block;
+      margin-bottom: 10px;
+      color: var(--accent-2);
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .bar-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 118px 1fr 60px;
+      gap: 12px;
+      align-items: center;
+      color: #344155;
+      font-size: 15px;
+      font-weight: 680;
+    }
+
+    .bar-track {
+      height: 12px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e7ecf4;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--accent-2);
+    }
+
+    .bar-fill.pink { background: var(--accent); }
+    .bar-fill.green { background: #23b58b; }
+
+    .data-source {
+      margin-top: 16px;
+      color: #7a8597;
+      font-size: 13px;
+    }
+
+    footer {
+      padding: 36px 6vw 56px;
+      color: var(--muted);
+      background: #ffffff;
+    }
+
+    footer a {
+      color: var(--accent-2);
+    }
+
+    @media (max-width: 900px) {
+      header,
+      section {
+        padding-left: 22px;
+        padding-right: 22px;
+      }
+
+      .grid.three,
+      .grid.two {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline div {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+
+      .project-row,
+      .protocol-flow,
+      .data-split {
+        grid-template-columns: 1fr;
+      }
+
+      .bar-row {
+        grid-template-columns: 98px 1fr 52px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <p class="eyebrow">FINOS AI Readiness SIG · 15-20 minutes</p>
+      <h1>Agentic AI is becoming infrastructure</h1>
+      <p class="subtitle">How we read the open-source ecosystem, what it means for financial services, and why AMP gives us a useful test case.</p>
+      <p class="speaker">Yaya Xia · Ant Open Source</p>
+      <div class="hero-links">
+        <a class="primary" href="https://github.com/antgroup/agentic-ai-landscape">antgroup/agentic-ai-landscape</a>
+        <a href="https://www.inclusion-ai.org/insight">InclusionAI Insights</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section>
+      <div class="section-inner">
+        <span class="section-label">Why I do this work</span>
+        <h2>The ecosystem moves faster than our categories</h2>
+        <p class="lead">I started the landscape because stars and social media made it difficult to tell which projects were attracting attention and which ones were becoming real engineering communities.</p>
+        <p class="lead" style="margin-top: 14px;">Project repository: <a href="https://github.com/antgroup/agentic-ai-landscape">antgroup/agentic-ai-landscape</a></p>
+        <div class="grid three">
+          <div class="metric">
+            <span class="num">2025</span>
+            <strong>The first landscape</strong>
+            <p>We began with the LLM development toolchain and updated the map as the ecosystem changed.</p>
+          </div>
+          <div class="metric">
+            <span class="num">226</span>
+            <strong>Projects in the 2026 study</strong>
+            <p>Each project is classified with public data and manual review.</p>
+          </div>
+          <div class="metric">
+            <span class="num">OpenRank</span>
+            <strong>Collaboration over attention</strong>
+            <p>Stars show interest; issues, PRs, and reviews show work.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <p>The landscape gives me a repeatable way to read a noisy ecosystem and explain why a project or category matters.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <h2>How we build the landscape</h2>
+        <p class="lead">We combine community data with human review, so the map captures attention and engineering substance.</p>
+        <div class="grid three">
+          <div class="metric">
+            <span class="num">Stars</span>
+            <strong>Attention signal</strong>
+            <p>Useful for spotting interest, but easy to over-read in fast AI cycles.</p>
+          </div>
+          <div class="metric">
+            <span class="num">OpenRank</span>
+            <strong>Collaboration signal</strong>
+            <p>Looks at the collaboration relationships around issues and pull requests.</p>
+          </div>
+          <div class="metric">
+            <span class="num">Review</span>
+            <strong>Judgment layer</strong>
+            <p>Manual taxonomy, relevance checks, and a final selection of representative projects.</p>
+          </div>
+        </div>
+        <div class="timeline">
+          <div>
+            <b>Start with data</b>
+            <span>OpenDigger and GitHub give us the first project set and the community signals behind it.</span>
+          </div>
+          <div>
+            <b>Read the projects</b>
+            <span>READMEs, releases, and issue discussions show how maintainers describe the work and where users struggle.</span>
+          </div>
+          <div>
+            <b>Review manually</b>
+            <span>We curate representative projects and revise categories when the old map stops explaining the ecosystem.</span>
+          </div>
+          <div>
+            <b>Keep a live view</b>
+            <span>The InclusionAI leaderboard tracks current momentum while the landscape changes more carefully.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <h2>Three-layer architecture</h2>
+        <p class="lead">The layers push each other: agents create longer workloads, infrastructure makes them scalable, and models expand what agents can do.</p>
+        <div class="grid three">
+          <div class="panel">
+            <h3>Agent Infra</h3>
+            <p>Gives agents a working environment, with tools, context, and clear boundaries.</p>
+          </div>
+          <div class="panel">
+            <h3>Model Infra</h3>
+            <p>Makes model capability reliable enough to operate, especially when routing and cost start to matter.</p>
+          </div>
+          <div class="panel">
+            <h3>Large Models</h3>
+            <p>Define capability boundaries. Real deployments already mix models for different jobs.</p>
+          </div>
+        </div>
+        <div class="image-block">
+          <img src="./agentic_ai_three_layer_architecture.png" alt="Agentic AI three-layer architecture">
+          <div class="caption">Agentic AI 2026: Agent Infra, Model Infra, and Large Models shape each other as one execution stack.</div>
+        </div>
+        <div class="takeaway">
+          <p>The April OpenRank Top 4 captured the mix clearly: OpenClaw, vLLM, PyTorch, and Claude Code.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <div class="section-inner">
+        <h2>The Agent Infra landscape</h2>
+        <p class="lead">This is the busiest layer. Software is being repackaged as something agents can safely enter and operate.</p>
+        <div class="image-block">
+          <img src="../source-materials/agentic-ai-landscape-260527/landscape_agent_infra.png" alt="Agent Infra Landscape 2026">
+          <div class="caption">Latest Agent Infra landscape from the 2026 Agentic AI report.</div>
+        </div>
+        <div class="takeaway">
+          <p>Coding agents are an early large-scale entry point because code already has tests and a reviewable history.</p>
+        </div>
+        <div class="grid two">
+          <div class="metric">
+            <span class="num">78</span>
+            <strong>Coding-agent projects</strong>
+            <p>The largest category in the Agent Infra layer.</p>
+          </div>
+          <div class="metric">
+            <span class="num">59</span>
+            <strong>MCP-related projects</strong>
+            <p>A growing tool and data connection layer around agents.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <h2>The Model Infra landscape</h2>
+        <p class="lead">In the agent era, tokens become production material. Stability, routing, cost, and observability become infrastructure problems.</p>
+        <div class="image-block">
+          <img src="../source-materials/agentic-ai-landscape-260527/landscape_model_infra.png" alt="Model Infra Landscape 2026">
+          <div class="caption">Latest Model Infra landscape from the 2026 Agentic AI report.</div>
+        </div>
+        <div class="takeaway">
+          <p>Model price is one part of the cost. Routing and workload design also matter once agents make many calls for one task.</p>
+        </div>
+        <div class="data-block" style="margin-top: 28px;">
+          <span class="big-stat">76</span>
+          <h3>Spend tracking discussions in LiteLLM</h3>
+          <p>GitHub issues and pull requests show that cost control is already an everyday engineering topic.</p>
+          <div class="bar-list">
+            <div class="bar-row"><span>Spend tracking</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span>76</span></div>
+            <div class="bar-row"><span>Budget routing</span><div class="bar-track"><div class="bar-fill pink" style="width:49%"></div></div><span>37</span></div>
+            <div class="bar-row"><span>Cost routing</span><div class="bar-track"><div class="bar-fill green" style="width:30%"></div></div><span>23</span></div>
+            <div class="bar-row"><span>Lowest cost</span><div class="bar-track"><div class="bar-fill" style="width:24%"></div></div><span>18</span></div>
+          </div>
+          <div class="data-source">Source: GitHub Search API, BerriAI/litellm, 22 May 2026</div>
+        </div>
+        <div class="grid two">
+          <div class="metric">
+            <span class="num">&gt;2x</span>
+            <strong>RouteLLM cost signal</strong>
+            <p>Selected benchmarks kept quality close to a strong model while cutting cost.</p>
+          </div>
+          <div class="metric">
+            <span class="num">43.9%</span>
+            <strong>IPR cost reduction</strong>
+            <p>Reported in a cloud routing setting while matching the strongest model's quality.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <p>A production issue described node restarts cascading into retries and 503 errors across a 120-worker inference deployment. Stability becomes harder as the system grows.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <h2>The large-model landscape</h2>
+        <p class="lead">Models still matter, but the ecosystem is moving toward many models, many providers, and many routing choices.</p>
+        <div class="image-block">
+          <img src="../source-materials/agentic-ai-landscape-260527/landscape_large_models.png" alt="Large Models Landscape 2026">
+          <div class="caption">Latest Large Models landscape from the 2026 Agentic AI report.</div>
+        </div>
+        <div class="takeaway">
+          <p>The useful question is which model fits the task, the budget, and the risk level.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <h2>What we found</h2>
+        <p class="lead">The landscape shows an ecosystem reorganizing around agent execution. Model access is only one part of that system.</p>
+        <div class="data-split">
+          <div class="data-block">
+            <span class="big-stat">96 / 226</span>
+            <h3>Projects changed their description</h3>
+            <p>Many now describe themselves with agent-runtime language.</p>
+            <div class="bar-list">
+              <div class="bar-row"><span>agent</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span>21</span></div>
+              <div class="bar-row"><span>harness</span><div class="bar-track"><div class="bar-fill pink" style="width:29%"></div></div><span>6</span></div>
+              <div class="bar-row"><span>context</span><div class="bar-track"><div class="bar-fill green" style="width:24%"></div></div><span>5</span></div>
+              <div class="bar-row"><span>workflow</span><div class="bar-track"><div class="bar-fill" style="width:19%"></div></div><span>4</span></div>
+            </div>
+          </div>
+          <div class="data-block">
+            <span class="big-stat">92%</span>
+            <h3>Top projects use coding agents</h3>
+            <p>Repository files show that coding agents are already part of project maintenance.</p>
+            <div class="bar-list">
+              <div class="bar-row"><span>Claude Code</span><div class="bar-track"><div class="bar-fill" style="width:81%"></div></div><span>81%</span></div>
+              <div class="bar-row"><span>Codex</span><div class="bar-track"><div class="bar-fill pink" style="width:69%"></div></div><span>69%</span></div>
+              <div class="bar-row"><span>Cursor</span><div class="bar-track"><div class="bar-fill green" style="width:41%"></div></div><span>41%</span></div>
+              <div class="bar-row"><span>Gemini</span><div class="bar-track"><div class="bar-fill" style="width:19%"></div></div><span>19%</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="data-source">Sources: project descriptions in the 226-project study; GitHub file-tree scan of the OpenRank Top 100 Agentic AI projects, May 2026</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <span class="section-label">A longer historical view</span>
+        <h2>Software activity keeps expanding around AI</h2>
+        <p class="lead">The growth is visible on developer platforms, model hubs, and automated accounts participating in open-source work.</p>
+        <div class="grid three">
+          <div class="metric">
+            <span class="num">180M+</span>
+            <strong>GitHub developers</strong>
+            <p>GitHub reported more than 180 million developers in Octoverse 2025.</p>
+          </div>
+          <div class="metric">
+            <span class="num">2M</span>
+            <strong>Public models</strong>
+            <p>Hugging Face passed two million public models, with more than 540,000 added by May 2026.</p>
+          </div>
+          <div class="metric">
+            <span class="num">17,285</span>
+            <strong>Bot and app actors</strong>
+            <p>OpenDigger observed this many in the first four months of 2026, compared with 112 in the same period of 2017.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <p>In the 226 projects we studied, 563,973 developers or automated accounts participated during the first four months of 2026.</p>
+        </div>
+        <div class="data-split">
+          <div class="data-block">
+            <h3>Known employers in the Top 10K</h3>
+            <div class="bar-list">
+              <div class="bar-row"><span>NVIDIA</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span>160</span></div>
+              <div class="bar-row"><span>MS / GitHub</span><div class="bar-track"><div class="bar-fill" style="width:50%"></div></div><span>80</span></div>
+              <div class="bar-row"><span>Intel</span><div class="bar-track"><div class="bar-fill pink" style="width:49%"></div></div><span>78</span></div>
+              <div class="bar-row"><span>Google</span><div class="bar-track"><div class="bar-fill" style="width:48%"></div></div><span>76</span></div>
+            </div>
+          </div>
+          <div class="data-block">
+            <h3>Known contributor locations</h3>
+            <div class="bar-list">
+              <div class="bar-row"><span>United States</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span>1,113</span></div>
+              <div class="bar-row"><span>China</span><div class="bar-track"><div class="bar-fill pink" style="width:65%"></div></div><span>726</span></div>
+              <div class="bar-row"><span>India</span><div class="bar-track"><div class="bar-fill green" style="width:21%"></div></div><span>229</span></div>
+              <div class="bar-row"><span>Germany</span><div class="bar-track"><div class="bar-fill" style="width:16%"></div></div><span>175</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="takeaway">
+          <p>Among the Top 10,000 contributors, 198 were likely bot or app accounts.</p>
+        </div>
+        <div class="data-source">Source: Agentic AI developer profile, January-April 2026. Company and location charts use profiles with known values.</div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <span class="section-label">What financial services adds</span>
+        <h2>Agents need visible authority and evidence</h2>
+        <p class="lead">Once an agent can trigger a workflow or prepare a transaction, the system needs to know who approved the action and whether it stayed inside the approved scope.</p>
+        <div class="grid three">
+          <div class="panel">
+            <h3>Authority</h3>
+            <p>Identify the person or institution behind an agent action and preserve the approval.</p>
+          </div>
+          <div class="panel">
+            <h3>Scope</h3>
+            <p>Record the budget, policy, or transaction boundary the agent must follow.</p>
+          </div>
+          <div class="panel">
+            <h3>Evidence</h3>
+            <p>Keep enough context to reconstruct the action when it is reviewed later.</p>
+          </div>
+        </div>
+        <div class="project-map">
+          <div class="project-row">
+            <strong><a href="https://air-governance-framework.finos.org/">AI Governance Framework</a></strong>
+            <p>A catalogue of AI risks and mitigations for financial institutions.</p>
+            <p>Agentic use cases could add concrete examples around delegated actions, model overreach, and decision audit.</p>
+          </div>
+          <div class="project-row">
+            <strong><a href="https://fluxnova.finos.org/">Fluxnova</a></strong>
+            <p>Standards-based process orchestration with human tasks and audit-ready execution.</p>
+            <p>An agent workflow could be tested with explicit approval points and recovery paths.</p>
+          </div>
+          <div class="project-row">
+            <strong><a href="https://calm.finos.org/">CALM</a></strong>
+            <p>Machine-readable architecture that can be validated and kept under version control.</p>
+            <p>A controlled-agent or AMP reference architecture could make boundaries and control points inspectable.</p>
+          </div>
+          <div class="project-row">
+            <strong><a href="https://cdm.finos.org/">CDM</a></strong>
+            <p>A machine-readable and executable model for financial products, trades, and lifecycle events.</p>
+            <p>Its modelling approach is relevant to user intent and transaction evidence in agent-assisted payments.</p>
+          </div>
+          <div class="project-row">
+            <strong><a href="https://hpc.finos.org/">HPC</a></strong>
+            <p>Shared work around high-performance computing in finance.</p>
+            <p>Agent workloads raise familiar questions about inference capacity, routing, and cost.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <span class="section-label">A concrete test case</span>
+        <h2>Payments expose the agent trust gap</h2>
+        <p class="lead">A user may approve an intent now and let an agent continue later. The merchant and wallet still need to verify what the user allowed.</p>
+        <div class="image-block document">
+          <img src="./amp_shift.png" alt="User-led and agent-assisted commerce in AMP">
+          <div class="caption">AMP Whitepaper V1.0: the agent can move the transaction forward after receiving user intent.</div>
+        </div>
+        <div class="takeaway">
+          <p>The payment flow needs a durable connection between the user's approval and the transaction eventually submitted by the agent.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <span class="section-label">Agentic Mobile Protocol</span>
+        <h2>AMP carries trust context above existing payment rails</h2>
+        <p class="lead">AMP is an open-source application-layer protocol developed by Alipay+ for agent-assisted payment scenarios.</p>
+        <div class="protocol-flow">
+          <div><b>User intent</b><span>The user approves the goal and relevant limits.</span></div>
+          <div><b>Agent action</b><span>The agent prepares or completes the order within that scope.</span></div>
+          <div><b>Wallet control</b><span>Authentication and payment control remain with the wallet.</span></div>
+          <div><b>Evidence</b><span>The transaction retains context that can be checked later.</span></div>
+        </div>
+        <div class="grid two">
+          <div class="image-block">
+            <img src="./amp_trust_layer.png" alt="AMP trust layer above payment rails">
+            <div class="caption">AMP adds an application-layer trust protocol while existing rails continue to move the money.</div>
+          </div>
+          <div class="image-block">
+            <img src="./amp_modes.png" alt="Two AMP payment modes">
+            <div class="caption">The whitepaper describes real-time approval and pre-authorized intent payment.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <span class="section-label">AMP and FINOS</span>
+        <h2>The first useful work is an integration case</h2>
+        <p class="lead">A small reference flow would make the protocol questions easier to evaluate than a broad discussion about agentic commerce.</p>
+        <div class="grid two">
+          <div class="panel">
+            <h3>Payment participants</h3>
+            <p>Banks can test delegated intent against risk policy. Wallets can examine user approval and control. Card networks and acquirers can assess authorization and merchant integration.</p>
+          </div>
+          <div class="panel">
+            <h3>FINOS projects</h3>
+            <p>Fluxnova can represent the workflow. CALM can describe its architecture. The AI Governance Framework can map the risks. CDM offers useful modelling patterns for transaction evidence.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <p>A separate AMP session could walk through one real-time flow, one pre-authorized flow, and the open integration questions.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <section>
+      <div class="section-inner">
+        <span class="section-label">InclusionAI</span>
+        <h2>An open stack for inclusive AGI</h2>
+        <p class="lead">InclusionAI works on models, the infrastructure around them, and services that bring those capabilities into real settings.</p>
+        <div class="image-block">
+          <img src="./inclusionai_inclusive_agi.png" alt="InclusionAI inclusive AGI architecture">
+          <div class="caption">InclusionAI works across Models, Model Infra, Agent Infra, and AI Services.</div>
+        </div>
+        <div class="grid two">
+          <div class="panel">
+            <h3>AReaL</h3>
+            <p>Our reinforcement learning infrastructure for reasoning and agentic models is part of the PyTorch Foundation ecosystem.</p>
+          </div>
+          <div class="panel">
+            <h3>ASystem</h3>
+            <p>A future foundation donation is under consideration for the agent runtime stack.</p>
+          </div>
+        </div>
+        <div class="takeaway">
+          <p>The landscape is part of this work: it helps us see where open infrastructure is forming and where foundation governance may help.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-inner">
+        <span class="section-label">Next on the agenda</span>
+        <h2>Ant Ling model progress</h2>
+        <div class="quote">Richard will introduce the latest work on the Ant Ling models.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>Sources</strong>
+    <div class="source-links">
+      <a href="https://github.com/antgroup/agentic-ai-landscape">Agentic AI Landscape</a>
+      <a href="https://www.inclusion-ai.org/insight">InclusionAI Insights</a>
+      <a href="https://air-governance-framework.finos.org/">FINOS AI Governance Framework</a>
+      <a href="https://fluxnova.finos.org/">Fluxnova</a>
+      <a href="https://cdm.finos.org/">CDM</a>
+      <a href="https://calm.finos.org/">CALM</a>
+      <a href="https://hpc.finos.org/">HPC</a>
+      <span>AMP Whitepaper V1.0, Alipay+</span>
+      <span>Agentic AI 2026 data findings deck, 23 May 2026</span>
+    </div>
+  </footer>
+</body>
+</html>

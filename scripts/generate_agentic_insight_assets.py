@@ -17,20 +17,7 @@ OUT_DIR = BASE / "insights" / "260601-agentic_landscape"
 FIG_DIR = OUT_DIR / "figures"
 SUMMARY_FILE = OUT_DIR / "agentic-summary.json"
 
-MONTHS = [
-    "2025-05",
-    "2025-06",
-    "2025-07",
-    "2025-08",
-    "2025-09",
-    "2025-10",
-    "2025-11",
-    "2025-12",
-    "2026-01",
-    "2026-02",
-    "2026-03",
-    "2026-04",
-]
+MONTHS = []
 
 COLORS = {
     "blue": "#2563eb",
@@ -53,6 +40,20 @@ def parse_trend(value):
     except (ValueError, SyntaxError):
         return []
     return [None if v is None or (isinstance(v, float) and math.isnan(v)) else float(v) for v in values]
+
+
+def months_from_trend_field(field):
+    """Expand openrank_trend_YYMM_YYMM into its inclusive month list."""
+    _, _, start, end = field.split("_")
+    year, month = 2000 + int(start[:2]), int(start[2:])
+    end_year, end_month = 2000 + int(end[:2]), int(end[2:])
+    months = []
+    while (year, month) <= (end_year, end_month):
+        months.append(f"{year:04d}-{month:02d}")
+        month = month % 12 + 1
+        if month == 1:
+            year += 1
+    return months
 
 
 def escape(value):
@@ -205,7 +206,11 @@ def draw_scatter(df, name, title, width=1100, height=700):
         x = left + chart_w * (row["log_stars"] - min_x) / (max_x - min_x)
         y = top + chart_h * (1 - (row["log_openrank"] - min_y) / (max_y - min_y))
         r = 3.5 + min(9, math.sqrt(row["stars"]) / 95)
-        color = COLORS["blue"] if "Coding Agent" in row["categories"] else COLORS["cyan"]
+        color = (
+            COLORS["blue"]
+            if "coding" in str(row["categories"]).lower()
+            else COLORS["cyan"]
+        )
         parts.append(f'<circle cx="{x:.1f}" cy="{y:.1f}" r="{r:.1f}" fill="{color}" opacity="0.58"/>')
     labels = ["openclaw/openclaw", "anthropics/claude-code", "anomalyco/opencode", "openai/codex", "google-gemini/gemini-cli"]
     for repo in labels:
@@ -222,12 +227,30 @@ def draw_scatter(df, name, title, width=1100, height=700):
 
 
 def main():
+    global MONTHS
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     df = pd.read_csv(DATA_FILE)
-    openrank_columns = sorted([col for col in df.columns if col.startswith("openrank_") and col != "openrank_trend"])
+    openrank_columns = sorted(
+        [
+            col
+            for col in df.columns
+            if col.startswith("openrank_") and not col.startswith("openrank_trend_")
+        ]
+    )
+    trend_columns = sorted(
+        [col for col in df.columns if col.startswith("openrank_trend_")]
+    )
+    if len(trend_columns) != 1:
+        raise ValueError(f"Expected one month-stamped OpenRank trend field, got {trend_columns}")
+    trend_col = trend_columns[0]
+    MONTHS = months_from_trend_field(trend_col)
     openrank_col = openrank_columns[-1] if openrank_columns else "openrank_latest"
     df["openrank_current"] = pd.to_numeric(df[openrank_col], errors="coerce")
-    df["trend"] = df["openrank_trend"].fillna("[]").apply(parse_trend)
+    df["trend"] = df[trend_col].fillna("[]").apply(parse_trend)
+    if "categories" not in df.columns:
+        df["categories"] = (
+            df["landscape_section"].fillna("").replace("", "Outside current landscape")
+        )
     df["change"] = df.apply(trend_change, axis=1)
     df["created_at"] = pd.to_datetime(df["created_at"], errors="coerce")
 

@@ -176,6 +176,14 @@ jupyter notebook get_projects_info.ipynb
 - Use custom fonts from `notebooks/src/` directory
 - Matplotlib/Wordcloud libraries used; refer to cell examples for common patterns
 
+## Presentation Material Organization
+
+- Store all persistent materials for a talk under `presentations/<YYMMDD>-<event-slug>/`.
+- Keep the brief, research notes, scripts, decks, audience-facing HTML, charts, sourced assets, and final QA artifacts together in that event directory.
+- Example: CommunityOverCode China 2026 keynote materials belong in `presentations/260807-CoC-KN/`.
+- Do not place presentation materials in `outputs/`; reserve `outputs/` for non-presentation generated artifacts.
+- Keep disposable build intermediates in a temporary directory and remove them before handoff.
+
 ## Security & Credentials
 
 - **Never commit `.env` file** - contains API tokens and database credentials

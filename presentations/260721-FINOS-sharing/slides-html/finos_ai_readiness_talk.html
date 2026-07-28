@@ -1,0 +1,887 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FINOS AI Readiness SIG - Agentic AI Landscape</title>
+  <style>
+    :root {
+      --bg: #edf2f7;
+      --slide: #ffffff;
+      --ink: #0b1633;
+      --muted: #5c6980;
+      --line: #dbe4f0;
+      --blue: #1677ff;
+      --cyan: #42d5ff;
+      --navy: #071a3a;
+      --purple: #7c5cff;
+      --green: #24b47e;
+      --amber: #f59e0b;
+      --soft: #f6f9ff;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+
+    .deck {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(320px, 390px);
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .stage {
+      display: grid;
+      place-items: center;
+      min-height: calc(100vh - 36px);
+      min-width: 0;
+    }
+
+    .slide {
+      display: none;
+      width: min(100%, calc((100vh - 48px) * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: var(--slide);
+      border: 1px solid #cad6e6;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 18px 45px rgba(11, 22, 51, 0.15);
+      padding: clamp(26px, 4vh, 42px) clamp(32px, 4vw, 58px);
+      container-type: size;
+    }
+
+    .slide.active { display: block; }
+    .dark { background: var(--navy); color: #fff; }
+    .soft { background: var(--soft); }
+
+    .kicker {
+      color: var(--blue);
+      font-size: clamp(9px, 1.15cqw, 13px);
+      line-height: 1;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 1.8cqh;
+    }
+
+    .dark .kicker { color: var(--cyan); }
+
+    h1, h2 {
+      margin: 0;
+      max-width: 900px;
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    h1 { font-size: clamp(30px, 4.7cqw, 56px); }
+    h2 { font-size: clamp(24px, 3.5cqw, 42px); }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(12px, 1.55cqw, 19px);
+      line-height: 1.45;
+    }
+
+    .dark p { color: #c7d9f4; }
+
+    .subtitle {
+      max-width: 760px;
+      margin-top: 2.7cqh;
+      font-size: clamp(15px, 1.9cqw, 23px);
+      color: #d7e6ff;
+    }
+
+    .footer {
+      position: absolute;
+      left: 4.8cqw;
+      bottom: 3.1cqh;
+      font-size: clamp(8px, .92cqw, 11px);
+      color: #8b98ad;
+    }
+
+    .dark .footer { color: #91a8c9; }
+
+    .num {
+      position: absolute;
+      right: 4cqw;
+      bottom: 3.3cqh;
+      font-size: clamp(8px, 1cqw, 12px);
+      color: #98a5b8;
+    }
+
+    .grid {
+      display: grid;
+      gap: 2cqh;
+      margin-top: 3.8cqh;
+    }
+
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .five { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+    .card, .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 2cqh 1.65cqw;
+    }
+
+    .dark .card, .dark .metric {
+      background: #0d244d;
+      border-color: #21426e;
+    }
+
+    .card h3 {
+      margin: 0 0 .9cqh;
+      font-size: clamp(14px, 1.75cqw, 21px);
+      line-height: 1.15;
+    }
+
+    .card p, .metric p { font-size: clamp(11px, 1.3cqw, 16px); }
+
+    .metric b {
+      display: block;
+      margin-bottom: .9cqh;
+      font-size: clamp(24px, 3.15cqw, 38px);
+      color: var(--blue);
+      line-height: 1;
+    }
+
+    .dark .metric b { color: var(--cyan); }
+
+    .claim {
+      margin-top: 3.8cqh;
+      padding: 2.45cqh 2.15cqw;
+      border-left: 6px solid var(--blue);
+      background: #eef6ff;
+      border-radius: 6px;
+      font-size: clamp(15px, 2cqw, 24px);
+      font-weight: 760;
+      line-height: 1.25;
+      color: var(--ink);
+    }
+
+    .dark .claim {
+      background: #102b5b;
+      color: #fff;
+      border-left-color: var(--cyan);
+    }
+
+    .image-frame {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 0.92fr 1.08fr;
+      gap: 2.65cqw;
+      align-items: center;
+      height: 68cqh;
+      margin-top: 2.45cqh;
+    }
+
+    .stack {
+      display: grid;
+      gap: 1.55cqh;
+    }
+
+    .layer {
+      display: grid;
+      grid-template-columns: minmax(90px, 14cqw) 1fr;
+      align-items: center;
+      gap: 1.5cqw;
+      padding: 1.7cqh 1.65cqw;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 4cqh;
+      padding: 0 1.15cqw;
+      border-radius: 18px;
+      background: var(--blue);
+      color: #fff;
+      font-weight: 800;
+      font-size: clamp(10px, 1.25cqw, 15px);
+    }
+
+    .tag.purple { background: var(--purple); }
+    .tag.green { background: var(--green); }
+    .tag.amber { background: var(--amber); }
+
+    .bars {
+      display: grid;
+      gap: 1.55cqh;
+      margin-top: 2.7cqh;
+    }
+
+    .bar {
+      display: grid;
+      grid-template-columns: minmax(78px, 12.5cqw) 1fr minmax(28px, 3.8cqw);
+      gap: 1.15cqw;
+      align-items: center;
+      font-size: clamp(10px, 1.25cqw, 15px);
+      font-weight: 760;
+    }
+
+    .track {
+      height: 1.8cqh;
+      background: #e7eef8;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 999px;
+    }
+
+    .notes {
+      height: calc(100vh - 36px);
+      overflow: auto;
+      background: #ffffff;
+      border: 1px solid #cad6e6;
+      border-radius: 10px;
+      box-shadow: 0 18px 45px rgba(11, 22, 51, 0.12);
+      padding: 22px 24px;
+    }
+
+    .notes.hidden { display: none; }
+    .deck.notes-hidden { grid-template-columns: 1fr; }
+
+    .notes h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+
+    .notes .hint {
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .note-block { display: none; }
+    .note-block.active { display: block; }
+
+    .note-block h3 {
+      margin: 0 0 14px;
+      font-size: 19px;
+      color: var(--blue);
+    }
+
+    .note-block p {
+      margin: 0 0 14px;
+      font-size: 17px;
+      color: #2e3b52;
+      line-height: 1.55;
+    }
+
+    .controls {
+      position: fixed;
+      left: 28px;
+      bottom: 20px;
+      display: flex;
+      gap: 8px;
+      z-index: 10;
+    }
+
+    button {
+      border: 1px solid #bfd0e6;
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(11, 22, 51, 0.12);
+    }
+
+    .source {
+      position: absolute;
+      left: 4.8cqw;
+      bottom: 5.8cqh;
+      font-size: clamp(8px, 1cqw, 12px);
+      color: #8b98ad;
+    }
+
+    .mini {
+      font-size: clamp(10px, 1.15cqw, 14px);
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .brand-tags {
+      margin-top: 5.1cqh;
+      display: flex;
+      gap: 1cqw;
+    }
+
+    .metrics-four {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 6cqh;
+    }
+
+    .hero-visual {
+      height: 52cqh;
+      margin-top: 2.45cqh;
+    }
+
+    .slide.compact .card,
+    .slide.compact .metric {
+      padding-top: 1.55cqh;
+      padding-bottom: 1.55cqh;
+    }
+
+    .slide.compact .claim { margin-top: 2.5cqh; }
+
+    .slide.auto-fit {
+      padding: clamp(20px, 3vh, 32px) clamp(24px, 3vw, 44px);
+    }
+
+    .slide.auto-fit .split {
+      height: 64cqh;
+      margin-top: 1.8cqh;
+    }
+
+    .slide.auto-fit .grid {
+      gap: 1.3cqh;
+      margin-top: 2.5cqh;
+    }
+
+    .slide.auto-fit .claim {
+      margin-top: 2cqh;
+      padding: 1.7cqh 1.7cqw;
+      font-size: clamp(14px, 1.8cqw, 22px);
+    }
+
+    .slide.auto-fit-tight h2 { font-size: clamp(22px, 3.1cqw, 38px); }
+    .slide.auto-fit-tight p { font-size: clamp(11px, 1.4cqw, 17px); }
+    .slide.auto-fit-tight .card p,
+    .slide.auto-fit-tight .metric p { font-size: clamp(10px, 1.15cqw, 14px); }
+    .slide.auto-fit-tight .split { height: 61cqh; }
+    .slide.auto-fit-tight .stack { gap: 1.1cqh; }
+
+    @media (max-width: 1280px) {
+      .deck { grid-template-columns: 1fr; }
+      .stage { min-height: auto; }
+      .slide { width: 100%; }
+      .notes { height: auto; }
+    }
+
+    @media (max-height: 680px) and (min-width: 1281px) {
+      .deck { grid-template-columns: minmax(0, 1fr) 340px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck" id="deck">
+    <main class="stage">
+      <section class="slide dark active">
+        <div class="kicker">FINOS AI Readiness SIG · 21 July 2026</div>
+        <h1>Agentic AI is starting to look like infrastructure</h1>
+        <p class="subtitle">Open-source signals, relevant FINOS projects, and one concrete trust problem in agentic commerce.</p>
+        <div class="brand-tags">
+          <span class="tag">Ant Group</span>
+          <span class="tag purple">InclusionAI</span>
+          <span class="tag green">Alipay+ AMP</span>
+        </div>
+        <div class="footer">Xiaoya · FINOS AI Readiness SIG</div>
+        <div class="num">1 / 18</div>
+      </section>
+
+      <section class="slide soft">
+        <div class="kicker">A simple framing</div>
+        <h2>Agents are becoming software users</h2>
+        <div class="split">
+          <div class="stack">
+            <div class="card">
+              <h3>The old assumption</h3>
+              <p>A person is present at the interface, reads the transaction or workflow, and confirms the next step.</p>
+            </div>
+            <div class="card">
+              <h3>What changes with agents</h3>
+              <p>An agent may call an API directly, run a tool in the background, or continue after the user leaves the session.</p>
+            </div>
+          </div>
+          <div>
+            <div class="claim">The system needs to know what the agent is allowed to do before it lets the agent act.</div>
+          </div>
+        </div>
+        <div class="footer">FINOS fit: AI Governance Framework, CALM</div>
+        <div class="num">2 / 18</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">What we noticed</div>
+        <h2>The open-source signals are still getting bigger</h2>
+        <div class="grid metrics-four">
+          <div class="metric"><b>180M+</b><p>GitHub developers in Octoverse 2025</p></div>
+          <div class="metric"><b>36M+</b><p>new GitHub developers in 2025</p></div>
+          <div class="metric"><b>2M</b><p>public Hugging Face models</p></div>
+          <div class="metric"><b>154x</b><p>bot/app actor growth, Jan-Apr 2017 to Jan-Apr 2026</p></div>
+        </div>
+        <div class="claim">The software around the model now carries more responsibility, especially permissions and operating cost.</div>
+        <div class="source">Sources: Agentic AI Landscape 2026; GitHub Octoverse 2025; OpenDigger; Hugging Face</div>
+        <div class="num">3 / 18</div>
+      </section>
+
+      <section class="slide soft">
+        <div class="kicker">Collaboration is changing</div>
+        <h2>Automation is moving up the software production chain</h2>
+        <div class="split">
+          <div>
+            <div class="metric"><b>112</b><p>bot/app actors in the first four months of 2017</p></div>
+            <div style="height:18px"></div>
+            <div class="metric"><b>17,285</b><p>bot/app actors in the same period in 2026</p></div>
+            <div style="height:18px"></div>
+            <div class="metric"><b>563,973</b><p>developers or automated accounts in 226 tracked Agentic AI projects</p></div>
+          </div>
+          <div>
+            <p class="lead">Bots used to mostly run tests and dependency updates. Some AI tools now read changes, comment on PRs, and propose patches.</p>
+            <div class="claim">For a bank, the first question may be simple: who approved this action, and where is the evidence?</div>
+          </div>
+        </div>
+        <div class="footer">FINOS fit: CALM and AI Governance Framework</div>
+        <div class="num">4 / 18</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Landscape</div>
+        <h2>The agentic stack has three layers</h2>
+        <div class="stack" style="margin-top:46px;">
+          <div class="layer"><span class="tag purple">Agent Infra</span><p>Agents enter workflows, use tools, keep context, and stay inside boundaries.</p></div>
+          <div class="layer"><span class="tag">Model Infra</span><p>Model capability becomes something teams can run, route, measure, and afford.</p></div>
+          <div class="layer"><span class="tag green">Models</span><p>Capability keeps expanding, and real usage increasingly looks like a portfolio.</p></div>
+        </div>
+        <div class="claim">For financial services, readiness lives across the whole stack.</div>
+        <div class="num">5 / 18</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">OpenRank and project labels</div>
+        <h2>The runtime around agents is heating up</h2>
+        <div class="split" style="grid-template-columns:1.1fr .9fr;">
+          <div class="image-frame"><img src="assets/landscape_agent_infra.png" alt="Agent Infra Landscape 2026"></div>
+          <div>
+            <div class="bars">
+              <div class="bar"><span>Coding agent</span><div class="track"><div class="fill" style="width:98%;background:var(--purple)"></div></div><span>78</span></div>
+              <div class="bar"><span>Observability</span><div class="track"><div class="fill" style="width:89%"></div></div><span>71</span></div>
+              <div class="bar"><span>Memory</span><div class="track"><div class="fill" style="width:88%;background:var(--green)"></div></div><span>70</span></div>
+              <div class="bar"><span>MCP</span><div class="track"><div class="fill" style="width:74%;background:var(--cyan)"></div></div><span>59</span></div>
+              <div class="bar"><span>Gateway</span><div class="track"><div class="fill" style="width:39%;background:var(--amber)"></div></div><span>31</span></div>
+            </div>
+            <div class="claim">The signal is the control surface around agents.</div>
+          </div>
+        </div>
+        <div class="source">Source: 226-project Agentic AI Landscape classification, April 2026 participants</div>
+        <div class="num">6 / 18</div>
+      </section>
+
+      <section class="slide dark">
+        <div class="kicker">Readiness</div>
+        <h2>Finance will ask for controlled autonomy</h2>
+        <p class="lead">The first questions are practical.</p>
+        <div class="grid three">
+          <div class="card"><h3>Who approved this?</h3><p>Identity and authority have to be visible when the actor is an agent.</p></div>
+          <div class="card"><h3>What was the scope?</h3><p>The system needs the budget, boundary, or policy the user accepted.</p></div>
+          <div class="card"><h3>Where is the evidence?</h3><p>If something goes wrong, the path needs to be reconstructable.</p></div>
+        </div>
+        <div class="claim">FINOS projects already cover risk language, workflow checkpoints, and inspectable architecture.</div>
+        <div class="num">7 / 18</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Collaboration map</div>
+        <h2>FINOS already has pieces of the control layer</h2>
+        <div class="stack" style="margin-top:28px;">
+          <div class="layer"><span class="tag">AI Governance</span><p>Map agent risks and mitigations to real use cases.</p></div>
+          <div class="layer"><span class="tag purple">Fluxnova</span><p>Try agent workflows with approval points and process visibility.</p></div>
+          <div class="layer"><span class="tag green">CDM</span><p>Explore shared objects for intent and transaction evidence.</p></div>
+          <div class="layer"><span class="tag amber">CALM</span><p>Make architecture and control points machine-readable.</p></div>
+          <div class="layer"><span class="tag">HPC</span><p>Apply established compute practices to AI inference and training workloads.</p></div>
+        </div>
+        <div class="source">Sources: FINOS AI Governance Framework, Fluxnova, CDM, CALM, HPC</div>
+        <div class="num">8 / 18</div>
+      </section>
+
+      <section class="slide soft">
+        <div class="kicker">Model Infra</div>
+        <h2>Token cost starts behaving like production cost</h2>
+        <div class="split">
+          <div>
+            <div class="grid two">
+              <div class="metric"><b>&gt;2x</b><p>cost saving signal in RouteLLM on selected benchmarks</p></div>
+              <div class="metric"><b>43.9%</b><p>reported reduction in the IPR cloud routing setting</p></div>
+            </div>
+            <div class="claim">A single user request can turn into a chain of model calls. Routing becomes part of governance.</div>
+          </div>
+          <div class="image-frame"><img src="assets/landscape_model_infra.png" alt="Model Infra Landscape 2026"></div>
+        </div>
+        <div class="footer">FINOS fit: HPC, AI Governance Framework</div>
+        <div class="num">9 / 18</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Models</div>
+        <h2>Real usage looks like a model portfolio</h2>
+        <div class="split" style="grid-template-columns:1fr 1fr;">
+          <div>
+            <p class="lead">A coding agent and a private local workflow may need very different models.</p>
+            <div class="claim">The useful question is which model fits this task, this risk level, and this budget.</div>
+          </div>
+          <div class="image-frame"><img src="assets/landscape_large_models.png" alt="Large Models Landscape 2026"></div>
+        </div>
+        <div class="source">Source: Agentic AI Landscape 2026 model layer</div>
+        <div class="num">10 / 18</div>
+      </section>
+
+      <section class="slide soft">
+        <div class="kicker">AMP bridge</div>
+        <h2>Payments make the agent trust problem visible</h2>
+        <div class="split">
+          <div>
+            <p class="lead">A user can approve an intent first. The agent may act later.</p>
+            <div class="claim">The merchant or wallet needs a way to check the authorization and the scope.</div>
+            <p class="mini">Example: find me a flight under this budget, book it if the timing works, and tell me later.</p>
+          </div>
+          <div class="image-frame"><img src="assets/amp_shift.png" alt="User-led and agent-assisted commerce"></div>
+        </div>
+        <div class="source">Source: AMP Whitepaper V1.0, Alipay+</div>
+        <div class="num">11 / 18</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Agentic Mobile Protocol</div>
+        <h2>AMP carries trust context above the payment rails</h2>
+        <div class="split">
+          <div class="stack">
+            <div class="card"><h3>What AMP tries to carry</h3><p>The approval, the boundary, and the evidence around an agent-assisted transaction.</p></div>
+            <div class="card"><h3>What stays with the wallet</h3><p>The user-side authentication and payment control people already rely on.</p></div>
+            <div class="metric"><b>2B+</b><p>Alipay+ user accounts, with 50 payment partners and 150M+ merchants across 220+ markets.</p></div>
+          </div>
+          <div class="image-frame"><img src="assets/amp_trust_gap.png" alt="AMP trust gap"></div>
+        </div>
+        <div class="source">Source: AMP Whitepaper V1.0, Alipay+</div>
+        <div class="num">12 / 18</div>
+      </section>
+
+      <section class="slide soft">
+        <div class="kicker">Payment scenarios</div>
+        <h2>Two AMP patterns are enough for a first discussion</h2>
+        <div class="split">
+          <div class="stack">
+            <div class="card"><h3>Real-time approved payment</h3><p>The user is present, reviews the prepared order, and confirms the exact transaction.</p></div>
+            <div class="card"><h3>Pre-authorized intent payment</h3><p>The user sets the goal and budget first. Payment only goes through if the later order still matches that scope.</p></div>
+            <div class="claim">The payment screen is only the visible part. The harder question is how intent, delegation, and evidence travel through the transaction.</div>
+          </div>
+          <div class="image-frame"><img src="assets/amp_modes.png" alt="AMP payment modes"></div>
+        </div>
+        <div class="source">Source: AMP Whitepaper V1.0, Alipay+</div>
+        <div class="num">13 / 18</div>
+      </section>
+
+      <section class="slide dark compact">
+        <div class="kicker">AMP and FINOS</div>
+        <h2>AMP needs input from the payment ecosystem</h2>
+        <p class="lead">Each participant sees a different part of an agent-assisted transaction.</p>
+        <div class="grid five">
+          <div class="card"><h3>Banks</h3><p>Risk policy for delegated intent.</p></div>
+          <div class="card"><h3>Wallets</h3><p>User approval and payment control.</p></div>
+          <div class="card"><h3>Card networks</h3><p>Authorization and evidence.</p></div>
+          <div class="card"><h3>Acquirers</h3><p>Merchant-side integration.</p></div>
+          <div class="card"><h3>Agent platforms</h3><p>Intent and transaction context.</p></div>
+        </div>
+        <div class="claim">A dedicated AMP session could cover protocol flows and integration questions.</div>
+        <div class="num">14 / 18</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Ant Group / InclusionAI</div>
+        <h2>InclusionAI works across the open AGI stack</h2>
+        <div class="image-frame hero-visual"><img src="assets/inclusionai_inclusive_agi.png" alt="InclusionAI open AGI stack"></div>
+        <div class="claim">Our belief is that intelligence should be something more people can understand, use, adapt, and improve.</div>
+        <div class="source">Source: Agentic AI 2026 source deck</div>
+        <div class="num">15 / 18</div>
+      </section>
+
+      <section class="slide soft">
+        <div class="kicker">Foundation collaboration</div>
+        <h2>Open infrastructure needs open homes</h2>
+        <div class="grid two">
+          <div class="card"><h3>AReaL</h3><p>Our RL infrastructure for reasoning and agentic models is now part of the PyTorch Foundation ecosystem.</p></div>
+          <div class="card"><h3>ASystem</h3><p>A future foundation donation is under consideration for the agent runtime stack.</p></div>
+          <div class="card"><h3>FINOS fit</h3><p>HPC is close to training and inference workloads. CALM is close to controlled-agent architecture.</p></div>
+          <div class="card"><h3>Evaluation evidence</h3><p>AI Governance can connect model evaluation evidence with risk controls.</p></div>
+        </div>
+        <div class="claim">Which pieces should become shared infrastructure, and which should remain firm-specific?</div>
+        <div class="num">16 / 18</div>
+      </section>
+
+      <section class="slide dark">
+        <div class="kicker">Next</div>
+        <h2>Bailing model progress</h2>
+        <p class="subtitle">Richard will introduce the latest work on the Bailing models.</p>
+        <div class="claim">The model layer sets the capability boundary for the infrastructure discussed today.</div>
+        <div class="num">17 / 18</div>
+      </section>
+
+      <section class="slide">
+        <div class="kicker">Backup discussion</div>
+        <h2>Questions worth leaving open</h2>
+        <div class="stack" style="margin-top:34px;">
+          <div class="layer"><span class="tag">1</span><p>Which agent workflows are closest to production readiness in financial institutions?</p></div>
+          <div class="layer"><span class="tag purple">2</span><p>What controls should be standardized across firms?</p></div>
+          <div class="layer"><span class="tag green">3</span><p>How should we represent user intent, delegated authority, and agent actions?</p></div>
+          <div class="layer"><span class="tag amber">4</span><p>Would a dedicated AMP session be useful for wallet, bank, card network, acquirer, and merchant participants?</p></div>
+        </div>
+        <div class="num">18 / 18</div>
+      </section>
+    </main>
+
+    <aside class="notes" id="notes">
+      <h2>Speaker Notes</h2>
+      <div class="hint">Use ←/→ or Space to move. Press N to hide or show notes.</div>
+
+      <div class="note-block active">
+        <h3>1. Opening</h3>
+        <p>Hi everyone, thanks for having us here. I will keep this fairly informal.</p>
+        <p>A full landscape report would be too much for this slot, so I will pick a few signals we are seeing in open source and connect them to the AI readiness questions that matter for financial services.</p>
+        <p>Near the end I will also briefly introduce one protocol idea from Alipay+, AMP, because agentic commerce is a very concrete place where all these readiness questions show up immediately.</p>
+        <p>The main thought is simple. Agentic AI is starting to look like infrastructure. For finance, the useful version is the one we can control, audit, afford, and put into real workflows.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>2. Agents as software users</h3>
+        <p>The change I would start with is simple, and I believe this group has discussed it a lot already: agents are becoming users of software.</p>
+        <p>Traditional software assumes a human is present at the interface. The human reads, clicks, confirms, and takes responsibility.</p>
+        <p>Agents show up differently. They may call an API directly, run a tool in the background, or continue after the user has left the session.</p>
+        <p>That changes the control question. If the actor touching the system is an agent, what does the system need to know before it lets the agent act?</p>
+        <p>This connects naturally to the FINOS AI Governance Framework. A lot of AI risks become sharper once the system can act, especially around traceability, versioning, approval, and recovery.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>3. Open-source signals</h3>
+        <p>One thing we found interesting is that stronger models did not make software smaller.</p>
+        <p>GitHub keeps growing. Hugging Face also feels less like a model showcase now and more like a factory floor. A model gets released, and then the community immediately starts adapting it: lighter versions, local versions, domain versions, runtime-specific versions.</p>
+        <p>In the first four months of 2026, OpenDigger observed more than 13 million active developers and more than 27 million active repositories. Hugging Face reached 2 million public models, with more than 540 thousand added by May 2026 alone.</p>
+        <p>The software around the model now carries more responsibility. Permissions and operating cost are two obvious examples.</p>
+        <p>FINOS already has mature work in those less glamorous layers. They decide whether a capable model can actually be used in production.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>4. Automation in collaboration</h3>
+        <p>Another signal we care about is automation inside collaboration.</p>
+        <p>Bots are not new. We have had CI and dependency bots for years. What feels different now is that some AI tools can read the change, comment on it, and even propose a patch.</p>
+        <p>In the first four months of 2017, only 112 bot or app actors were active in the GitHub event stream. In the same period in 2026, the number reached 17,285. The first four months of 2026 also already doubled the same period in 2025.</p>
+        <p>In our 226 Agentic AI project set, we found 563,973 developers or automated accounts participating between January and the end of April 2026. I would read that number as a signal that automation is becoming part of the collaboration network.</p>
+        <p>For financial services, it changes the control question. If an agent can submit a payment instruction, the system needs to know who authorized it and what evidence was recorded.</p>
+        <p>This is where CALM feels relevant. Once agents start touching real systems, architecture cannot live only in diagrams and human memory. Some of it has to become machine-readable.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>5. Three-layer stack</h3>
+        <p>In our landscape, we organize the ecosystem into three layers.</p>
+        <p>Agent Infra is the working environment for agents. It gives them context, tools, and boundaries.</p>
+        <p>Model Infra makes model capability reliable enough to operate. Routing and cost are two important parts of that layer.</p>
+        <p>Models still define the capability boundary. In real deployments, teams often choose different models for different tasks and risk levels.</p>
+        <p>For finance, model benchmarks tell only part of the story. The execution stack matters too.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>6. Runtime signals</h3>
+        <p>The easy story is that coding agents are hot. That is true, and it is also a little too easy.</p>
+        <p>The more useful signal is that the runtime around agents is heating up too. MCP is one example. Observability is another. Gateways are also becoming important because teams need a controlled way to reach different models.</p>
+        <p>In our classification of 226 projects, coding-agent projects reached 78. MCP-related projects reached 59. Memory and observability were also large labels in the set.</p>
+        <p>That feels like a production signal. People already know how to build a demo agent. The next question is what happens when it fails inside a real workflow.</p>
+        <p>This is a nice bridge to FINOS Fluxnova. Workflow orchestration in finance already deals with process visibility, approvals, and end-to-end execution. Agentic workflows need that discipline.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>7. Controlled autonomy</h3>
+        <p>My favorite phrase here is controlled autonomy.</p>
+        <p>If we only maximize autonomy, it becomes hard for a bank or regulated institution to adopt. If we build control into the architecture, agents become much more useful.</p>
+        <p>The first questions are very practical. Who approved this? What was the scope? Where is the evidence? Those answers decide whether the system can be trusted.</p>
+        <p>FINOS can help make these controls reusable. One useful output would be a controlled-agent reference pattern mapped to the AI Governance Framework and described through CALM.</p>
+        <p>The implementation will differ by firm. The approval and evidence questions are shared.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>8. FINOS project map</h3>
+        <p>When I looked at the leading FINOS projects, what stood out is that they already cover many of the pieces agentic systems keep needing.</p>
+        <p>The AI Governance Framework gives a risk and mitigation language. Fluxnova is close to workflow orchestration and process visibility. CDM has the financial industry's habit of making activities machine-readable. CALM brings architecture-as-code. HPC is close to the compute and cost problem.</p>
+        <p>A concrete reference pattern could connect several of these projects. CALM could describe the architecture. Fluxnova could represent the workflow and its approval points.</p>
+        <p>The risk controls could map to the AI Governance Framework. CDM is relevant where financial intent or transaction evidence needs a shared representation.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>9. Token cost</h3>
+        <p>For a chatbot, token cost can look like usage cost. For an agent, tokens start to look like production material.</p>
+        <p>Think about a research or coding agent. One user request can turn into many model calls before the user sees the final result. It may retrieve documents, call tools, revise an answer, run checks, and ask another model to evaluate the result.</p>
+        <p>That makes model routing a governance capability. The question becomes: for this task and this risk level, which model should we use, and how much are we willing to spend?</p>
+        <p>RouteLLM showed that routing can keep quality close to a strong model while cutting cost to less than half on some benchmarks. IPR reported a 43.9 percent cost reduction in a cloud deployment setting. The exact numbers are less important than the direction: model choice is becoming operational policy.</p>
+        <p>FINOS HPC is relevant here. Financial institutions already know how painful large compute workloads can be. AI inference and agent workloads are starting to need the same discipline.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>10. Model portfolios</h3>
+        <p>The model layer is still the source of capability for the whole stack. But it is getting harder to talk about a single winner.</p>
+        <p>A coding agent and a private local workflow may need very different models. A financial workflow may also need domain knowledge and policy constraints around the model.</p>
+        <p>The useful question is which model fits this task, this risk level, and this budget.</p>
+        <p>Open components make more of that choice inspectable and adaptable.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>11. AMP bridge</h3>
+        <p>Let me make this concrete with commerce.</p>
+        <p>Traditional payment systems have a familiar trust moment: a person sees the transaction and taps confirm.</p>
+        <p>In agent-assisted commerce, the user may say: find me a flight under this budget, book it if the timing works, and tell me later. The user is still the source of intent, but the agent may move the transaction forward later.</p>
+        <p>That creates a trust gap. A merchant or wallet needs to know whether the agent was really authorized, what budget or conditions the user approved, and whether the final payment stayed inside that scope.</p>
+        <p>The AI Governance Framework can describe the control problem here. CDM is relevant because the financial intent and transaction evidence need a machine-readable form.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>12. AMP protocol</h3>
+        <p>This is where AMP comes in.</p>
+        <p>AMP is the Agentic Mobile Protocol, an open-source application-layer trust protocol developed by Alipay+ for agentic payment scenarios.</p>
+        <p>AMP sits above the existing payment rails. The rails still move the money; AMP tries to carry the missing trust context around the agent.</p>
+        <p>The idea is simple: when an agent helps with a transaction, the rest of the ecosystem should not have to guess what the user approved. The approval, scope, and evidence should travel with the flow.</p>
+        <p>The whitepaper describes AMP on top of the Alipay+ global wallet gateway, which connects more than 2 billion user accounts through 50 mobile payment partners to more than 150 million merchants across more than 220 markets.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>13. AMP patterns</h3>
+        <p>For a first discussion, I would keep AMP to two patterns.</p>
+        <p>The first is familiar: real-time approved payment. The user is online, the agent prepares the order, and the user confirms the exact payment.</p>
+        <p>The second is newer: pre-authorized intent. The user sets the goal and budget first. The agent can continue later, but the payment only goes through if it still matches what the user approved.</p>
+        <p>The payment screen is only the visible part. The harder question is how intent, delegation, and evidence travel through the transaction.</p>
+        <p>There are several specific links to FINOS work. AMP controls could be mapped to the AI Governance Framework. A payment flow could be described in CALM and tested as a Fluxnova workflow. CDM may also offer useful patterns for representing intent and transaction evidence.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>14. AMP collaboration</h3>
+        <p>Agentic commerce touches too many parties for one company to define the whole answer.</p>
+        <p>Banks need to apply risk policy to delegated intent. Wallets retain the user's approval and payment controls. Card networks and acquirers see authorization and merchant-side integration. Agent platforms carry the original intent and transaction context.</p>
+        <p>Those are the participants that could test AMP against real integration requirements.</p>
+        <p>A separate AMP session could go into the protocol flow, the two payment modes, and the open questions for implementers.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>15. InclusionAI</h3>
+        <p>Let me close by placing this in the bigger InclusionAI picture.</p>
+        <p>Our belief is that intelligence should be something more people can understand, use, adapt, and improve.</p>
+        <p>That is why InclusionAI works across the stack: models, model infrastructure, agent infrastructure, and real service scenarios.</p>
+        <p>For financial services, this matters because the industry cares deeply about infrastructure that can be inspected and governed. Open source is one way to make intelligent infrastructure easier to review, deploy, and improve together.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>16. Open homes</h3>
+        <p>One concrete example is AReaL. It is our RL infrastructure for reasoning and agentic models, and it is now in the PyTorch Foundation ecosystem.</p>
+        <p>Open governance gives infrastructure a path to earn trust.</p>
+        <p>A future foundation donation is also under consideration for ASystem, our agent runtime stack.</p>
+        <p>The relevant FINOS links are concrete. HPC covers training and inference workloads. CALM can describe controlled-agent architecture. AI Governance can connect evaluation evidence with risk controls.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>17. Bailing model progress</h3>
+        <p>This section has focused on the ecosystem and the infrastructure around agents.</p>
+        <p>The model layer sets the capability boundary for that infrastructure.</p>
+        <p>Next, Richard will introduce the latest progress on the Bailing models.</p>
+      </div>
+
+      <div class="note-block">
+        <h3>18. Backup discussion</h3>
+        <p>If the discussion opens up, I would use these questions to keep it practical.</p>
+        <p>Which agent workflows are closest to production readiness in financial institutions?</p>
+        <p>What controls should be standardized across firms?</p>
+        <p>How should we represent user intent, delegated authority, and agent actions?</p>
+        <p>Would a dedicated AMP session be useful for wallet, bank, card network, acquirer, and merchant participants?</p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="controls">
+    <button id="prev">← Prev</button>
+    <button id="next">Next →</button>
+    <button id="toggle">Toggle notes</button>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const notes = [...document.querySelectorAll('.note-block')];
+    const deck = document.getElementById('deck');
+    const notesPanel = document.getElementById('notes');
+    let index = 0;
+
+    function isOverflowing(slide) {
+      return slide.scrollHeight > slide.clientHeight + 1 || slide.scrollWidth > slide.clientWidth + 1;
+    }
+
+    function fitSlide(slide) {
+      slide.classList.remove('auto-fit', 'auto-fit-tight');
+      requestAnimationFrame(() => {
+        if (!isOverflowing(slide)) return;
+        slide.classList.add('auto-fit');
+        requestAnimationFrame(() => {
+          if (isOverflowing(slide)) slide.classList.add('auto-fit-tight');
+        });
+      });
+    }
+
+    function show(i) {
+      index = Math.max(0, Math.min(slides.length - 1, i));
+      slides.forEach((s, n) => s.classList.toggle('active', n === index));
+      notes.forEach((s, n) => s.classList.toggle('active', n === index));
+      location.hash = String(index + 1);
+      fitSlide(slides[index]);
+    }
+
+    function toggleNotes() {
+      notesPanel.classList.toggle('hidden');
+      deck.classList.toggle('notes-hidden');
+      fitSlide(slides[index]);
+    }
+
+    document.getElementById('prev').addEventListener('click', () => show(index - 1));
+    document.getElementById('next').addEventListener('click', () => show(index + 1));
+    document.getElementById('toggle').addEventListener('click', toggleNotes);
+
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight' || event.key === ' ') show(index + 1);
+      if (event.key === 'ArrowLeft') show(index - 1);
+      if (event.key.toLowerCase() === 'n') toggleNotes();
+    });
+
+    window.addEventListener('resize', () => fitSlide(slides[index]));
+
+    const initial = Number(location.hash.replace('#', ''));
+    if (initial) show(initial - 1);
+    else fitSlide(slides[0]);
+  </script>
+</body>
+</html>

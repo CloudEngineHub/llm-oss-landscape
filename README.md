@@ -27,6 +27,8 @@ The landscape highlights the projects that are currently most representative of 
 
 We aim to continuously maintain and expand [`data/agentic-ai-projects.csv`](./data/agentic-ai-projects.csv) with **noteworthy** projects across the Agentic AI ecosystem. If you think an important project is missing, please share it through our [dedicated issue tracker](https://github.com/antgroup/agentic-ai-landscape/issues/1).
 
+Weekly report and ecosystem insight operations are managed through [`WORKFLOW.md`](./WORKFLOW.md).
+
 ## Acknowledgement
 
 This project was initiated by Ant Open Source and InclusionAI to better understand the evolution of the large language model development ecosystem through community data analysis. We aim to surface emerging trends and highlight the projects shaping the Agentic AI landscape.

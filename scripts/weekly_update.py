@@ -113,13 +113,9 @@ def ensure_no_proxy(host):
             os.environ[key] = ",".join(existing)
 
 def ensure_direct_network_hosts():
-    """Bypass inherited SOCKS proxy settings for hosts used by this pipeline."""
+    """Bypass inherited proxy settings only for hosts that must be reached directly."""
     for host in DIRECT_NETWORK_HOSTS:
         ensure_no_proxy(host)
-    for key in ("HTTP_PROXY", "HTTPS_PROXY", "ALL_PROXY", "http_proxy", "https_proxy", "all_proxy"):
-        value = os.getenv(key, "")
-        if "127.0.0.1" in value or "localhost" in value:
-            os.environ.pop(key, None)
 
 def get_ch_client():
     """Create the ClickHouse client lazily so importing this module has no network side effects."""
@@ -1008,7 +1004,6 @@ def generate_llm_trend_insights(context):
         raise RuntimeError("OPENAI_API_KEY is required for weekly trend insights. Set ALLOW_LLM_FALLBACK=1 to allow template fallback.")
 
     try:
-        ensure_no_proxy(host_from_url(OPENAI_BASE_URL))
         resp = requests.post(
             f"{OPENAI_BASE_URL}/chat/completions",
             headers={
@@ -2083,7 +2078,6 @@ def run_add_insights(report_path=None):
 
     if not insights and OPENAI_API_KEY:
         try:
-            ensure_no_proxy(host_from_url(OPENAI_BASE_URL))
             resp = requests.post(
                 f"{OPENAI_BASE_URL}/chat/completions",
                 headers={"Authorization": f"Bearer {OPENAI_API_KEY}", "Content-Type": "application/json"},
