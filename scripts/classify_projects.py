@@ -5,6 +5,7 @@ DEPRECATED: Classification logic has been consolidated into weekly_update.py.
 This file is kept for reference only. Use weekly_update.py --post-merge instead.
 """
 
+import os
 import json
 import re
 import csv

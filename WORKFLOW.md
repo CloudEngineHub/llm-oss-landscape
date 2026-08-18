@@ -4,6 +4,13 @@ This file records the actual `scripts/weekly_update.py` commands used by this re
 
 ## Environment
 
+Create the virtualenv once:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+```
+
 Local runs use:
 
 ```bash

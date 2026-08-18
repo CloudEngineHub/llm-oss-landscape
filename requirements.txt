@@ -1,0 +1,9 @@
+# Runtime dependencies for scripts/ (Python 3.12)
+requests[socks]
+python-dotenv
+python-dateutil
+clickhouse-connect
+
+# Only needed by the insight/figure helper scripts
+pandas
+duckdb

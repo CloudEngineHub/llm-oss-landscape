@@ -1,9 +1,9 @@
 {
-  "name": "llm-oss-landscape-pptx-tools",
+  "name": "agentic-ai-landscape-pptx-tools",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Local PPTX generation helpers for llm-oss-landscape reports.",
+  "description": "Local PPTX generation helpers for agentic-ai-landscape reports and talks.",
   "scripts": {
     "pptx:check": "node scripts/pptx/check-pptxgenjs.mjs",
     "pptx:sample": "node scripts/pptx/build-sample-deck.mjs"

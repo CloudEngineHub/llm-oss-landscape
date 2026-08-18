@@ -76,7 +76,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "requests[socks]" python-dotenv python-dateutil clickhouse-connect
+          python -m pip install -r requirements.txt
 
       - name: Validate required configuration
         run: |
