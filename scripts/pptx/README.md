@@ -20,5 +20,6 @@ outputs/pptxgenjs/sample-landscape-deck.pptx
 1. Copy `build-sample-deck.mjs` to a report-specific builder, such as
    `build-agentic-landscape-deck.mjs`.
 2. Reuse `pptx-theme.mjs` for colors, fonts, slide sizing, and output writing.
-3. Write final decks to `reports/<report-name>/slides/` or `outputs/pptxgenjs/`.
+3. Write presentation decks to `presentations/<YYMMDD>-<event-slug>/` and other
+   generated decks to `outputs/pptxgenjs/`.
 4. Keep source data paths explicit in the builder so the deck is reproducible.

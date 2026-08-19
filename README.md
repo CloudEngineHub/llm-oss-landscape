@@ -23,11 +23,31 @@ The landscape highlights the projects that are currently most representative of 
 
 ---
 
+## Insights
+
+- [Landscape reports](./insights) — dated, bilingual analyses of how each layer of the ecosystem is evolving.
+- [Case studies](./insights/case_studies) — deep dives into single projects or themes.
+- [Weekly reports](./insights/weekly_reports_by_agents) — automatically generated snapshots of newly surfacing projects.
+
+## Data
+
+The canonical dataset is [`data/agentic-ai-projects.csv`](./data/agentic-ai-projects.csv). Each row is keyed by the GitHub `repo_id`, carries GitHub metadata (stars, forks, license, language, topics), OpenDigger signals (`openrank_*`, `participants_*`), and the curation fields that record why a project is in the landscape (`landscape_layer`, `landscape_section`, `selection_reason`, `selection_caveat`).
+
+Project vitality is measured with [OpenRank](https://github.com/X-lab2017/open-digger) rather than raw star counts, so activity from issues, pull requests, reviews, and contributors is taken into account.
+
 ## Maintaining The Agentic AI Projects
 
 We aim to continuously maintain and expand [`data/agentic-ai-projects.csv`](./data/agentic-ai-projects.csv) with **noteworthy** projects across the Agentic AI ecosystem. If you think an important project is missing, please share it through our [dedicated issue tracker](https://github.com/antgroup/agentic-ai-landscape/issues/1).
 
-Weekly report and ecosystem insight operations are managed through [`WORKFLOW.md`](./WORKFLOW.md).
+The data collection and publishing code lives in [`scripts/`](./scripts). To run it locally:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r requirements.txt
+# then fill in scripts/.env with GitHub, ClickHouse, and publishing credentials
+```
+
+Weekly report and ecosystem insight operations are documented in [`WORKFLOW.md`](./WORKFLOW.md); repository conventions for contributors and coding agents are in [`AGENTS.md`](./AGENTS.md).
 
 ## Acknowledgement
 

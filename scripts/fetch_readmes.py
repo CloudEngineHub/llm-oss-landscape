@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 # Paths
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE = os.path.dirname(SCRIPT_DIR)
-ENV_PATH = os.path.join(BASE, "notebooks", ".env")
+ENV_PATH = os.path.join(BASE, "scripts", ".env")
 INPUT_CSV = os.path.join(BASE, "data", "agentic-ai-projects.csv")
 OUTPUT_JSON = os.path.join(BASE, "data", "project_readmes.json")
 
