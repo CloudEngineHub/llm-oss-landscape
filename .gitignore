@@ -11,6 +11,8 @@
 /data/cache
 .docusaurus
 .cache-loader
+**/.build/
+**/.build-*/
 __pycache__/
 *.py[cod]
 
