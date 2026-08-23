@@ -1,0 +1,6 @@
+{
+  "repository": "antgroup/agentic-ai-landscape",
+  "application_path": "apps/landscape-web",
+  "data_source": "data/agentic-ai-projects.csv",
+  "migration_version": "2026-08-23-main-repository"
+}
