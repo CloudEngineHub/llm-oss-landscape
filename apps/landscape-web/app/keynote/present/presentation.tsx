@@ -500,7 +500,10 @@ export default function KeynotePresentation({
       <section className={styles.deck} aria-live="polite">
         <header className={styles.stageHeader}>
           <div className={styles.stageHeaderLeft}>
-            <Link className={styles.backLink} href="/keynote">
+            <Link
+              className={styles.backLink}
+              href="/presentations/260807_CommunityOverCode"
+            >
               ← 回到 keynote
             </Link>
             <span>{scene.label}</span>
@@ -536,12 +539,12 @@ export default function KeynotePresentation({
           {onlineFootnoteScenes.has(scene.id) ? (
             <a
               className={styles.onlineFootnote}
-              href="https://landscape.16507.cn/keynote"
+              href="https://landscape.16507.cn/presentations/260807_CommunityOverCode"
               target="_blank"
               rel="noreferrer"
-              aria-label="在线打开 keynote 体验页面"
+              aria-label="在线打开 CommunityOverCode 演讲页面"
             >
-              线上体验 · landscape.16507.cn/keynote ↗
+              线上体验 · 260807_CommunityOverCode ↗
             </a>
           ) : null}
         </footer>

@@ -1,4 +1,5 @@
 export type StageId = "application" | "framework" | "runtime" | "model";
+export type TrendSignal = "new" | "rising";
 
 export type LandscapeProject = {
   id: string;
@@ -18,7 +19,7 @@ export type LandscapeProject = {
   selectionReason: string;
   selectionCaveat: string;
   landscapeAction: "keep" | "add";
-  trendSignal: "new" | "rising" | null;
+  trendSignals: TrendSignal[];
   trendSignalReason: string;
   topics: string[];
   categories: string[];

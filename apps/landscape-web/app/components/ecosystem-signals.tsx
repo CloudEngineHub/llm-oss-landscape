@@ -141,9 +141,10 @@ export function EcosystemSignals({
     projects,
     (project) => project.participants ?? 0,
   );
-  const newProjects = projects.filter(
-    (project) => project.trendSignal,
-  ).length;
+  const trendSignalCount = projects.reduce(
+    (count, project) => count + project.trendSignals.length,
+    0,
+  );
 
   const agentFieldTrend = MONTHS.map((month, index) => ({
     month,
@@ -259,7 +260,7 @@ export function EcosystemSignals({
     },
     {
       label: "Trend signals",
-      value: newProjects.toLocaleString(),
+      value: trendSignalCount.toLocaleString(),
     },
   ];
 

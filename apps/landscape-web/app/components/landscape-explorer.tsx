@@ -12,7 +12,6 @@ import {
   type CSSProperties,
   type ReactNode,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -91,22 +90,57 @@ function projectInitials(name: string) {
     .toUpperCase();
 }
 
-function breakableProjectName(name: string) {
-  const segments = name.split(/(?<=[a-z])(?=[A-Z])/g);
+function logoContentClipPath(image: HTMLImageElement) {
+  const style = window.getComputedStyle(image);
+  const width = image.clientWidth;
+  const height = image.clientHeight;
+  const paddingLeft = Number.parseFloat(style.paddingLeft) || 0;
+  const paddingRight = Number.parseFloat(style.paddingRight) || 0;
+  const paddingTop = Number.parseFloat(style.paddingTop) || 0;
+  const paddingBottom = Number.parseFloat(style.paddingBottom) || 0;
+  const availableWidth = Math.max(0, width - paddingLeft - paddingRight);
+  const availableHeight = Math.max(0, height - paddingTop - paddingBottom);
+  const aspectRatio = image.naturalWidth / image.naturalHeight;
 
-  return segments.map((segment, index) => (
-    <span key={`${segment}-${index}`}>
-      {index > 0 ? <wbr /> : null}
-      {segment}
-    </span>
-  ));
+  if (!width || !height || !availableWidth || !availableHeight || !aspectRatio) {
+    return undefined;
+  }
+
+  const availableAspectRatio = availableWidth / availableHeight;
+  const renderedWidth =
+    aspectRatio >= availableAspectRatio
+      ? availableWidth
+      : availableHeight * aspectRatio;
+  const renderedHeight =
+    aspectRatio >= availableAspectRatio
+      ? availableWidth / aspectRatio
+      : availableHeight;
+  const horizontalInset = (width - renderedWidth) / 2;
+  const verticalInset = (height - renderedHeight) / 2;
+  const radius = Math.min(7, renderedWidth * 0.18, renderedHeight * 0.18);
+  const px = (value: number) => `${value.toFixed(2)}px`;
+
+  return `inset(${px(verticalInset)} ${px(horizontalInset)} round ${px(radius)})`;
+}
+
+const CURATED_PROJECT_PRIORITY = new Map([
+  ["deepseek-ai/deepseek-harness", 100],
+]);
+
+function compareLandscapeProjects(
+  a: LandscapeProject,
+  b: LandscapeProject,
+) {
+  return (
+    (CURATED_PROJECT_PRIORITY.get(b.repo) ?? 0) -
+      (CURATED_PROJECT_PRIORITY.get(a.repo) ?? 0) ||
+    (b.openrank ?? -1) - (a.openrank ?? -1) ||
+    a.name.localeCompare(b.name)
+  );
 }
 
 type RankStyle = CSSProperties & {
-  "--logo-size": string;
   "--name-size": string;
-  "--mark-basis": string;
-  "--rank-grow": string;
 };
 
 type ZoneStyle = CSSProperties & {
@@ -152,7 +186,7 @@ const MODEL_STAGES = [
     description: "Post-train and pre-train systems",
     rows: [
       [
-        "Post-Train · Reinforcement learning",
+        "Post-Train · RL & environments",
         "Post-Train · Supervised fine-tuning",
       ],
       [
@@ -272,9 +306,17 @@ function projectGrid(count: number, aspectRatio: number) {
   );
 
   if (count === 2 && aspectRatio < 1) columns = 1;
-  if (count === 3 && aspectRatio < 2) columns = 2;
+  if (count === 3) columns = aspectRatio >= 1.35 ? 3 : 2;
   if (count === 4 && aspectRatio > 0.55 && aspectRatio < 2.2) {
     columns = 2;
+  }
+
+  if (count >= 5 && aspectRatio >= 1.15) {
+    columns = Math.max(columns, Math.ceil(count / 2));
+  }
+
+  if (count >= 5 && count % columns === 1 && columns < count) {
+    columns += 1;
   }
 
   return {
@@ -396,42 +438,25 @@ function buildTreemap(items: Omit<WeightedZone, "area">[], aspect: number) {
 
 function ProjectMark({
   project,
-  rankScale,
   matched,
   selected,
   focused,
   onSelect,
 }: {
   project: LandscapeProject;
-  rankScale: number;
   matched: boolean;
   selected: boolean;
   focused?: boolean;
   onSelect: () => void;
 }) {
   const [logoFailed, setLogoFailed] = useState(false);
-  const stableScale = Number(rankScale.toFixed(6));
-  const visualScale = Number(Math.pow(stableScale, 0.76).toFixed(6));
-  const labelDemand = Math.min(
-    42,
-    Math.max(0, project.name.length - 10) * 2.4,
-  );
+  const [logoClipPath, setLogoClipPath] = useState<string>();
   const labelScale = Math.max(
-    0.74,
-    1 - Math.max(0, project.name.length - 18) * 0.035,
+    0.62,
+    1 - Math.max(0, project.name.length - 10) * 0.035,
   );
   const style: RankStyle = {
-    "--logo-size": `${(32 + visualScale * 42).toFixed(3)}px`,
-    "--name-size": `${(
-      (10.2 + visualScale * 3.8) *
-      labelScale
-    ).toFixed(3)}px`,
-    "--mark-basis": `${(
-      88 +
-      visualScale * 72 +
-      labelDemand
-    ).toFixed(3)}px`,
-    "--rank-grow": (0.72 + visualScale * 2.28).toFixed(3),
+    "--name-size": `${(10.2 * labelScale).toFixed(3)}px`,
   };
 
   return (
@@ -448,7 +473,11 @@ function ProjectMark({
       aria-pressed={selected}
       aria-label={`${project.name}, OpenRank ${formatOpenRank(project)}`}
       data-landscape-project
-      data-landscape-signal={project.trendSignal ?? undefined}
+      data-landscape-signal={
+        project.trendSignals.length
+          ? project.trendSignals.join(" ")
+          : undefined
+      }
     >
       <span className={styles.projectLogoWrap} data-landscape-logo>
         <span className={styles.projectLogo}>
@@ -467,10 +496,14 @@ function ProjectMark({
                 height: "100%",
                 maxWidth: "100%",
                 maxHeight: "100%",
-                padding: 4,
+                padding: 2,
                 objectFit: "contain",
                 display: "block",
+                clipPath: logoClipPath,
               }}
+              onLoad={(event) =>
+                setLogoClipPath(logoContentClipPath(event.currentTarget))
+              }
               onError={() => setLogoFailed(true)}
             />
           ) : (
@@ -479,23 +512,30 @@ function ProjectMark({
             </span>
           )}
         </span>
-        {project.trendSignal ? (
-          <span
-            className={styles.projectNewBadge}
-            data-signal={project.trendSignal}
-            title={project.trendSignalReason}
-            aria-label={
-              project.trendSignal === "new"
-                ? "New project in the last three months"
-                : "Project with strong recent growth"
-            }
-          >
-            {project.trendSignal === "new" ? "NEW" : "RISING"}
+      </span>
+      <span className={styles.projectLabelLine}>
+        <span className={styles.projectName} data-landscape-project-name>
+          {project.name}
+        </span>
+        {project.trendSignals.length ? (
+          <span className={styles.projectSignalBadges}>
+            {project.trendSignals.map((signal) => (
+              <span
+                key={signal}
+                className={styles.projectNewBadge}
+                data-signal={signal}
+                title={project.trendSignalReason}
+                aria-label={
+                  signal === "new"
+                    ? "Created in the current three-month window"
+                    : "Project with strong recent growth"
+                }
+              >
+                {signal === "new" ? "NEW" : "RISING"}
+              </span>
+            ))}
           </span>
         ) : null}
-      </span>
-      <span className={styles.projectName} data-landscape-project-name>
-        {breakableProjectName(project.name)}
       </span>
       {focused ? (
         <span className={styles.focusedProjectMeta}>
@@ -516,7 +556,6 @@ function ZoneSection({
   normalizedQuery,
   selectedRepo,
   presentationFocus,
-  rankScale,
   onSelect,
   expanded,
   style,
@@ -528,37 +567,19 @@ function ZoneSection({
   normalizedQuery: string;
   selectedRepo: string | null;
   presentationFocus?: string;
-  rankScale: (project: LandscapeProject) => number;
   onSelect: (repo: string) => void;
   expanded?: boolean;
   style?: CSSProperties;
   aspectRatio: number;
   className?: string;
 }) {
-  const rankedZoneValues = zoneProjects
-    .map((project) => project.openrank)
-    .filter((value): value is number => value !== null && value > 0)
-    .map((value) => Math.log1p(value));
-  const zoneMin = Math.min(...rankedZoneValues);
-  const zoneMax = Math.max(...rankedZoneValues);
-  const zoneRange = zoneMax - zoneMin;
-  const getZoneRankScale = (project: LandscapeProject) => {
-    if (!project.openrank) return 0;
-    const absoluteScale = rankScale(project);
-    const localScale =
-      rankedZoneValues.length === 1
-        ? 1
-        : (Math.log1p(project.openrank) - zoneMin) / (zoneRange || 1);
-
-    return Math.max(
-      0,
-      Math.min(1, localScale * 0.68 + absoluteScale * 0.32),
-    );
-  };
+  const orderedZoneProjects = [...zoneProjects].sort(
+    compareLandscapeProjects,
+  );
   const [zoneFamily, zoneName = zone] = zone.includes(" · ")
     ? zone.split(" · ", 2)
     : ["", zone];
-  const grid = projectGrid(zoneProjects.length, aspectRatio);
+  const grid = projectGrid(orderedZoneProjects.length, aspectRatio);
   const zoneStyle: ZoneStyle = {
     ...style,
     "--project-columns": grid.columns,
@@ -586,16 +607,15 @@ function ZoneSection({
         <span aria-hidden="true" />
         <h4>{title}</h4>
         <Badge className={styles.zoneCountBadge} variant="secondary">
-          {zoneProjects.length}
+          {orderedZoneProjects.length}
         </Badge>
         <span aria-hidden="true" />
       </header>
       <div className={styles.projectCloud}>
-        {zoneProjects.map((zoneProject) => (
+        {orderedZoneProjects.map((zoneProject) => (
           <ProjectMark
             key={zoneProject.repo}
             project={zoneProject}
-            rankScale={getZoneRankScale(zoneProject)}
             matched={matchesQuery(zoneProject, normalizedQuery)}
             selected={selectedRepo === zoneProject.repo}
             focused={expanded}
@@ -613,7 +633,6 @@ function StageSection({
   normalizedQuery,
   selectedRepo,
   presentationFocus,
-  rankScale,
   onSelect,
   focused,
   onFocusStage,
@@ -623,7 +642,6 @@ function StageSection({
   normalizedQuery: string;
   selectedRepo: string | null;
   presentationFocus?: string;
-  rankScale: (project: LandscapeProject) => number;
   onSelect: (repo: string) => void;
   focused?: boolean;
   onFocusStage?: (stage: StageId) => void;
@@ -635,18 +653,13 @@ function StageSection({
   const zoneItems = zones.map((zone) => {
     const zoneProjects = stageProjects
       .filter((project) => project.zone === zone)
-      .sort(
-        (a, b) =>
-          (b.openrank ?? -1) - (a.openrank ?? -1) ||
-          a.name.localeCompare(b.name),
-      );
+      .sort(compareLandscapeProjects);
     const weight =
       1.1 +
       zoneProjects.reduce(
         (sum, project) =>
           sum +
           1 +
-          rankScale(project) * 0.55 +
           Math.min(project.name.length, 24) * 0.006,
         0,
       );
@@ -713,7 +726,6 @@ function StageSection({
               normalizedQuery={normalizedQuery}
               selectedRepo={selectedRepo}
               presentationFocus={presentationFocus}
-              rankScale={rankScale}
               onSelect={onSelect}
               expanded={focused}
               style={zoneStyle}
@@ -735,7 +747,6 @@ function ModelStageSection({
   normalizedQuery,
   selectedRepo,
   presentationFocus,
-  rankScale,
   onSelect,
   focused,
   onFocusStage,
@@ -745,7 +756,6 @@ function ModelStageSection({
   normalizedQuery: string;
   selectedRepo: string | null;
   presentationFocus?: string;
-  rankScale: (project: LandscapeProject) => number;
   onSelect: (repo: string) => void;
   focused?: boolean;
   onFocusStage?: (stage: string) => void;
@@ -757,18 +767,13 @@ function ModelStageSection({
     const items = rowZones.map((zone) => {
       const zoneProjects = modelProjects
         .filter((project) => project.zone === zone)
-        .sort(
-          (a, b) =>
-            (b.openrank ?? -1) - (a.openrank ?? -1) ||
-            a.name.localeCompare(b.name),
-        );
+        .sort(compareLandscapeProjects);
       const weight =
         1.25 +
         zoneProjects.reduce(
           (sum, project) =>
             sum +
             1 +
-            rankScale(project) * 0.5 +
             Math.min(project.name.length, 24) * 0.005,
           0,
         );
@@ -866,7 +871,6 @@ function ModelStageSection({
                     normalizedQuery={normalizedQuery}
                     selectedRepo={selectedRepo}
                     presentationFocus={presentationFocus}
-                    rankScale={rankScale}
                     onSelect={onSelect}
                     expanded={focused}
                     aspectRatio={
@@ -977,10 +981,10 @@ function EcosystemArchitecture() {
           <span className={styles.assetsDirection} aria-hidden="true" />
           <strong>Awesome × Agentic</strong>
           <div>
-            <span>Discover</span>
-            <span>Reuse</span>
-            <span>Install</span>
-            <span>Operate</span>
+            <span>Collections</span>
+            <span>Skills</span>
+            <span>Playbooks</span>
+            <span>Workflows</span>
           </div>
         </a>
       </div>
@@ -1103,24 +1107,6 @@ export default function LandscapeExplorer({
         )
     : [];
 
-  const openRankRange = useMemo(() => {
-    const values = projects
-      .map((project) => project.openrank)
-      .filter((value): value is number => value !== null && value > 0)
-      .map((value) => Math.log1p(value));
-    return {
-      min: Math.min(...values),
-      max: Math.max(...values),
-    };
-  }, [projects]);
-
-  const rankScale = (project: LandscapeProject) => {
-    if (!project.openrank) return 0;
-    const value = Math.log1p(project.openrank);
-    const range = openRankRange.max - openRankRange.min || 1;
-    return Math.max(0, Math.min(1, (value - openRankRange.min) / range));
-  };
-
   const agentProjects = projects.filter(
     (project) => project.stage !== "model",
   );
@@ -1138,8 +1124,10 @@ export default function LandscapeExplorer({
       (sum, project) => sum + project.stars,
       0,
     ),
-    newProjects: moduleProjects.filter((project) => project.trendSignal)
-      .length,
+    newProjects: moduleProjects.reduce(
+      (count, project) => count + project.trendSignals.length,
+      0,
+    ),
   });
   const agentSummary = summarizeModule(agentProjects);
   const modelSummary = summarizeModule(modelProjects);
@@ -1283,16 +1271,19 @@ export default function LandscapeExplorer({
             fitContainerHeight={presentationMode}
           >
             <div className={styles.landscapeBoard}>
-              <section ref={agentSlideRef} className={styles.landscapeSlide}>
+              <section
+                ref={agentSlideRef}
+                className={cn(
+                  styles.landscapeSlide,
+                  styles.agentLandscapeSlide,
+                )}
+              >
                 <header className={styles.boardMasthead}>
                   <div className={styles.boardTitleLockup}>
-                    <span aria-hidden="true">A</span>
-                    <div>
-                      <h2>Agent Infra Landscape 2026</h2>
-                      {!presentationMode ? (
-                        <p>Applications · frameworks · runtime infrastructure</p>
-                      ) : null}
-                    </div>
+                    <h2>
+                      <span>Agent Infra</span>
+                      <em>Landscape 2026</em>
+                    </h2>
                   </div>
                   <div className={styles.boardSource}>
                     <div className={styles.boardBrands}>
@@ -1315,9 +1306,6 @@ export default function LandscapeExplorer({
                 </header>
 
                 <div className={styles.landscapeBand}>
-                  <aside className={styles.infraRail} aria-hidden="true">
-                    <span>Agent Infra</span>
-                  </aside>
                   <div
                     className={cn(
                       styles.stageStack,
@@ -1345,7 +1333,6 @@ export default function LandscapeExplorer({
                           normalizedQuery={normalizedInfraQuery}
                           selectedRepo={selectedRepo}
                           presentationFocus={presentationFocus}
-                          rankScale={rankScale}
                           onSelect={(repo) => {
                             setDialogScope("agent");
                             setSelectedRepo(repo);
@@ -1447,13 +1434,10 @@ export default function LandscapeExplorer({
               >
                 <header className={styles.boardMasthead}>
                   <div className={styles.boardTitleLockup}>
-                    <span aria-hidden="true">M</span>
-                    <div>
-                      <h2>Model Infra Landscape 2026</h2>
-                      {!presentationMode ? (
-                        <p>Routing · serving · training · data · compute</p>
-                      ) : null}
-                    </div>
+                    <h2>
+                      <span>Model Infra</span>
+                      <em>Landscape 2026</em>
+                    </h2>
                   </div>
                   <div className={styles.boardSource}>
                     <div className={styles.boardBrands}>
@@ -1476,12 +1460,6 @@ export default function LandscapeExplorer({
                 </header>
 
                 <div className={styles.landscapeBand}>
-                  <aside
-                    className={cn(styles.infraRail, styles.modelInfraRail)}
-                    aria-hidden="true"
-                  >
-                    <span>Model Infra</span>
-                  </aside>
                   <div
                     className={cn(
                       styles.stageStack,
@@ -1507,7 +1485,6 @@ export default function LandscapeExplorer({
                         normalizedQuery={normalizedInfraQuery}
                         selectedRepo={selectedRepo}
                         presentationFocus={presentationFocus}
-                        rankScale={rankScale}
                         onSelect={(repo) => {
                           setDialogScope("model");
                           setSelectedRepo(repo);
@@ -1556,8 +1533,8 @@ export default function LandscapeExplorer({
           <EmbeddedLandscape
             id="awesome-list"
             title="Awesome × Agentic"
-            detail="Discover · reuse · install · operate"
-            src="/keynote/awesome/awesome_agentic_landscape_2026.html"
+            detail="Collections · skills · domain playbooks · workflows"
+            src="/awesome/awesome_agentic_landscape_2026.html"
             accent="awesome"
           />
           <EcosystemSignals projects={projects} />

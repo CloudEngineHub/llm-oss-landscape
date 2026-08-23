@@ -1,7 +1,11 @@
 import { existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 
-import type { LandscapeProject, StageId } from "./landscape-types";
+import type {
+  LandscapeProject,
+  StageId,
+  TrendSignal,
+} from "./landscape-types";
 
 type SectionDefinition = {
   layer: "Agent Infra" | "Model Infra";
@@ -11,7 +15,11 @@ type SectionDefinition = {
 
 const LANDSCAPE_SECTIONS: SectionDefinition[] = [
   { layer: "Agent Infra", stage: "application", zone: "Agentic coding" },
-  { layer: "Agent Infra", stage: "application", zone: "Coding harnesses" },
+  {
+    layer: "Agent Infra",
+    stage: "application",
+    zone: "Coding workflows & harnesses",
+  },
   {
     layer: "Agent Infra",
     stage: "application",
@@ -50,7 +58,7 @@ const LANDSCAPE_SECTIONS: SectionDefinition[] = [
   {
     layer: "Agent Infra",
     stage: "runtime",
-    zone: "Tool & browser use",
+    zone: "Tools, web & computer use",
   },
   {
     layer: "Agent Infra",
@@ -72,7 +80,7 @@ const LANDSCAPE_SECTIONS: SectionDefinition[] = [
   {
     layer: "Model Infra",
     stage: "model",
-    zone: "Post-Train · Reinforcement learning",
+    zone: "Post-Train · RL & environments",
   },
   {
     layer: "Model Infra",
@@ -144,6 +152,8 @@ const PROJECT_NAME_OVERRIDES: Record<string, string> = {
   "datahub-project/datahub": "DataHub",
   "deepspeedai/deepspeed": "DeepSpeed",
   "deepseek-ai/deepep": "DeepEP",
+  "deepseek-ai/deepseek-harness": "DeepSeek Harness",
+  "deusdata/codebase-memory-mcp": "Codebase Memory MCP",
   "delta-io/delta": "Delta Lake",
   "earendil-works/pi": "Pi",
   "farion1231/cc-switch": "cc-switch",
@@ -166,6 +176,7 @@ const PROJECT_NAME_OVERRIDES: Record<string, string> = {
   "langflow-ai/langflow": "Langflow",
   "langfuse/langfuse": "Langfuse",
   "langgenius/dify": "Dify",
+  "larksuite/cli": "Lark CLI",
   "livekit/agents": "LiveKit Agents",
   "llm-d/llm-d": "llm-d",
   "lobehub/lobehub": "LobeHub",
@@ -182,6 +193,7 @@ const PROJECT_NAME_OVERRIDES: Record<string, string> = {
   "nvidia/cutlass": "CUTLASS",
   "nvidia/megatron-lm": "Megatron-LM",
   "nvidia/model-optimizer": "NVIDIA Model Optimizer",
+  "nvidia-nemo/rl": "NeMo RL",
   "nvidia/tensorrt-llm": "TensorRT-LLM",
   "nvidia/transformerengine": "Transformer Engine",
   "oceanbase/seekdb": "seekdb",
@@ -196,6 +208,7 @@ const PROJECT_NAME_OVERRIDES: Record<string, string> = {
   "paddlepaddle/paddle": "PaddlePaddle",
   "paperclipai/paperclip": "Paperclip",
   "pipecat-ai/pipecat": "Pipecat",
+  "pingdotgg/t3code": "T3 Code",
   "promptfoo/promptfoo": "promptfoo",
   "pydantic/pydantic-ai": "Pydantic AI",
   "pytorch/pytorch": "PyTorch",
@@ -203,6 +216,7 @@ const PROJECT_NAME_OVERRIDES: Record<string, string> = {
   "quantumnous/new-api": "New API",
   "rlinf/rlinf": "RLinf",
   "sgl-project/sglang": "SGLang",
+  "stacklok/toolhive": "ToolHive",
   "topoteretes/cognee": "Cognee",
   "trycua/cua": "CUA",
   "unslothai/unsloth": "Unsloth",
@@ -287,6 +301,20 @@ function nullableNumber(value: string) {
   if (!value) return null;
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
+}
+
+function parseTrendSignals(value: string): TrendSignal[] {
+  const supported = new Set<TrendSignal>(["new", "rising"]);
+  return [
+    ...new Set(
+      value
+        .toLowerCase()
+        .split(/[+,]/)
+        .map((signal) => signal.trim()),
+    ),
+  ].filter((signal): signal is TrendSignal =>
+      supported.has(signal as TrendSignal),
+  );
 }
 
 function parseTrend(value: string): Array<number | null> {
@@ -403,12 +431,7 @@ export function getLandscapeProjects(): LandscapeProject[] {
         record.landscape_action.trim().toLowerCase() === "add"
           ? "add"
           : "keep",
-      trendSignal:
-        record.trend_signal?.trim().toLowerCase() === "new"
-          ? "new"
-          : record.trend_signal?.trim().toLowerCase() === "rising"
-            ? "rising"
-            : null,
+      trendSignals: parseTrendSignals(record.trend_signal ?? ""),
       trendSignalReason: record.trend_signal_reason ?? "",
       topics: record.topics.split(",").filter(Boolean),
       categories: [record.landscape_layer, record.landscape_section],

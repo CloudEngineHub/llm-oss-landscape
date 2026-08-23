@@ -211,13 +211,11 @@ export function ModuleOpenRankChart({
                           </AvatarFallback>
                         </Avatar>
                         <small>#{index + 1}</small>
-                        {project.trendSignal ? (
-                          <b>
-                            {project.trendSignal === "new"
-                              ? "NEW"
-                              : "RISING"}
+                        {project.trendSignals.map((signal) => (
+                          <b key={signal}>
+                            {signal === "new" ? "NEW" : "RISING"}
                           </b>
-                        ) : null}
+                        ))}
                       </span>
                       <span
                         className={styles.moduleTrendProjectName}

@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Awesome × Agentic AI Landscape</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root { --scale: 1; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { position: relative; background: #e9ebee; color: #111318; font-family: Inter, "PingFang SC", "Helvetica Neue", Arial, sans-serif; }
+    .canvas {
+      position: absolute;
+      left: 50%; top: 50%;
+      width: 1920px; height: 1080px;
+      padding: 42px 54px 32px;
+      display: grid;
+      grid-template-rows: 82px 1fr 28px;
+      gap: 18px;
+      background: #ffffff;
+      transform: translate(-50%, -50%) scale(var(--scale));
+      transform-origin: center;
+    }
+    .topbar { display: flex; align-items: flex-start; justify-content: space-between; border-bottom: 3px solid #111318; }
+    h1 { margin: 0; font-size: 38px; line-height: 1; letter-spacing: -1.1px; font-weight: 850; }
+    .topbar p { margin: 10px 0 0; color: #5b626c; font-size: 15px; font-weight: 600; }
+    .snapshot { padding-top: 4px; text-align: right; color: #5b626c; font-size: 13px; line-height: 1.5; font-weight: 650; }
+    .landscape { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 18px; min-height: 0; }
+    .category { min-width: 0; min-height: 0; border: 2px solid #1f2329; display: grid; grid-template-rows: 72px 1fr; background: #ffffff; }
+    .category-header { padding: 12px 18px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #1f2329; background: color-mix(in srgb, var(--accent) 76%, #ffffff); }
+    .category-header h2 { margin: 0; font-size: 23px; line-height: 1; font-weight: 850; }
+    .category-header p { margin: 7px 0 0; font-size: 13px; color: #353a42; font-weight: 650; }
+    .category-header strong { width: 42px; height: 42px; display: grid; place-items: center; border: 2px solid #1f2329; border-radius: 50%; background: #ffffff; font-size: 17px; }
+    .project-grid { min-height: 0; padding: 12px 14px 14px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: 8px 12px; }
+    .relaxed .project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 16px; }
+    .project { min-width: 0; padding: 8px 10px; display: grid; grid-template-columns: 42px 1fr; grid-template-rows: 22px 18px; column-gap: 10px; align-content: center; border-left: 4px solid var(--accent); background: #f5f6f7; color: #111318; text-decoration: none; transition: background 120ms ease, transform 120ms ease; }
+    .project:hover, .project:focus-visible { background: color-mix(in srgb, var(--accent) 20%, #ffffff); transform: translateY(-1px); outline: 2px solid #111318; outline-offset: 1px; }
+    .project img { grid-row: 1 / span 2; width: 42px; height: 42px; border: 1px solid #c9cdd2; border-radius: 9px; object-fit: cover; background: #ffffff; }
+    .project-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 16px; line-height: 22px; font-weight: 800; }
+    .project-owner { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #626973; font-size: 11px; line-height: 18px; font-weight: 650; }
+    .relaxed .project { grid-template-columns: 48px 1fr; grid-template-rows: 25px 19px; padding: 10px 12px; }
+    .relaxed .project img { width: 48px; height: 48px; border-radius: 10px; }
+    .relaxed .project-name { font-size: 18px; line-height: 25px; }
+    .relaxed .project-owner { font-size: 12px; line-height: 19px; }
+    footer { display: flex; align-items: center; justify-content: space-between; color: #5b626c; font-size: 12px; font-weight: 650; }
+    footer strong { color: #111318; }
+  </style>
+</head>
+<body>
+  <main class="canvas">
+    <header class="topbar">
+      <div>
+        <h1>Awesome × Agentic AI Landscape</h1>
+        <p>Strictly selected repositories that package reusable curation, skills, playbooks, or working methods.</p>
+      </div>
+      <div class="snapshot">28 projects<br>Updated 2026-08-23</div>
+    </header>
+    <section class="landscape" aria-label="Curated Awesome and Agentic AI projects">
+      <section class="category compact" style="--accent:#EAA9CC;--count:9">
+        <header class="category-header">
+          <div>
+            <h2>Curated collections</h2>
+            <p>Directories and ecosystem maps</p>
+          </div>
+          <strong>9</strong>
+        </header>
+        <div class="project-grid">
+      <a class="project" href="https://github.com/composio-community/awesome-codex-skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/composio-community.png" alt="">
+        <span class="project-name">awesome-codex-skills</span>
+        <span class="project-owner">composio-community</span>
+      </a>
+    
+      <a class="project" href="https://github.com/ComposioHQ/awesome-claude-skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/composiohq.png" alt="">
+        <span class="project-name">awesome-claude-skills</span>
+        <span class="project-owner">ComposioHQ</span>
+      </a>
+    
+      <a class="project" href="https://github.com/e2b-dev/awesome-ai-agents" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/e2b-dev.png" alt="">
+        <span class="project-name">awesome-ai-agents</span>
+        <span class="project-owner">e2b-dev</span>
+      </a>
+    
+      <a class="project" href="https://github.com/github/awesome-copilot" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/github.png" alt="">
+        <span class="project-name">awesome-copilot</span>
+        <span class="project-owner">github</span>
+      </a>
+    
+      <a class="project" href="https://github.com/hesreallyhim/awesome-claude-code" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/hesreallyhim.png" alt="">
+        <span class="project-name">awesome-claude-code</span>
+        <span class="project-owner">hesreallyhim</span>
+      </a>
+    
+      <a class="project" href="https://github.com/punkpeye/awesome-mcp-servers" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/punkpeye.png" alt="">
+        <span class="project-name">awesome-mcp-servers</span>
+        <span class="project-owner">punkpeye</span>
+      </a>
+    
+      <a class="project" href="https://github.com/Shubhamsaboo/awesome-llm-apps" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/shubhamsaboo.png" alt="">
+        <span class="project-name">awesome-llm-apps</span>
+        <span class="project-owner">Shubhamsaboo</span>
+      </a>
+    
+      <a class="project" href="https://github.com/sindresorhus/awesome" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/sindresorhus.png" alt="">
+        <span class="project-name">awesome</span>
+        <span class="project-owner">sindresorhus</span>
+      </a>
+    
+      <a class="project" href="https://github.com/VoltAgent/awesome-agent-skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/voltagent.png" alt="">
+        <span class="project-name">awesome-agent-skills</span>
+        <span class="project-owner">VoltAgent</span>
+      </a>
+    </div>
+      </section>
+    
+      <section class="category relaxed" style="--accent:#9EBBE8;--count:7">
+        <header class="category-header">
+          <div>
+            <h2>Skills &amp; plugins</h2>
+            <p>Capabilities an agent can load</p>
+          </div>
+          <strong>7</strong>
+        </header>
+        <div class="project-grid">
+      <a class="project" href="https://github.com/addyosmani/agent-skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/addyosmani.png" alt="">
+        <span class="project-name">agent-skills</span>
+        <span class="project-owner">addyosmani</span>
+      </a>
+    
+      <a class="project" href="https://github.com/anthropics/claude-plugins-official" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/anthropics.png" alt="">
+        <span class="project-name">claude-plugins-official</span>
+        <span class="project-owner">anthropics</span>
+      </a>
+    
+      <a class="project" href="https://github.com/anthropics/skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/anthropics.png" alt="">
+        <span class="project-name">skills</span>
+        <span class="project-owner">anthropics</span>
+      </a>
+    
+      <a class="project" href="https://github.com/google/skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/google.png" alt="">
+        <span class="project-name">skills</span>
+        <span class="project-owner">google</span>
+      </a>
+    
+      <a class="project" href="https://github.com/openai/skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/openai.png" alt="">
+        <span class="project-name">skills</span>
+        <span class="project-owner">openai</span>
+      </a>
+    
+      <a class="project" href="https://github.com/vercel-labs/skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/vercel-labs.png" alt="">
+        <span class="project-name">skills</span>
+        <span class="project-owner">vercel-labs</span>
+      </a>
+    
+      <a class="project" href="https://github.com/wshobson/agents" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/wshobson.png" alt="">
+        <span class="project-name">agents</span>
+        <span class="project-owner">wshobson</span>
+      </a>
+    </div>
+      </section>
+    
+      <section class="category relaxed" style="--accent:#B69ADD;--count:4">
+        <header class="category-header">
+          <div>
+            <h2>Domain playbooks</h2>
+            <p>Reusable knowledge for a specific job</p>
+          </div>
+          <strong>4</strong>
+        </header>
+        <div class="project-grid">
+      <a class="project" href="https://github.com/enescingoz/awesome-n8n-templates" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/enescingoz.png" alt="">
+        <span class="project-name">awesome-n8n-templates</span>
+        <span class="project-owner">enescingoz</span>
+      </a>
+    
+      <a class="project" href="https://github.com/freestylefly/awesome-gpt-image-2" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/freestylefly.png" alt="">
+        <span class="project-name">awesome-gpt-image-2</span>
+        <span class="project-owner">freestylefly</span>
+      </a>
+    
+      <a class="project" href="https://github.com/VoltAgent/awesome-design-md" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/voltagent.png" alt="">
+        <span class="project-name">awesome-design-md</span>
+        <span class="project-owner">VoltAgent</span>
+      </a>
+    
+      <a class="project" href="https://github.com/cathrynlavery/diagram-design" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/cathrynlavery.png" alt="">
+        <span class="project-name">diagram-design</span>
+        <span class="project-owner">cathrynlavery</span>
+      </a>
+    </div>
+      </section>
+    
+      <section class="category relaxed" style="--accent:#8BC8AF;--count:8">
+        <header class="category-header">
+          <div>
+            <h2>Workflows &amp; methods</h2>
+            <p>Ways to plan, review, and operate</p>
+          </div>
+          <strong>8</strong>
+        </header>
+        <div class="project-grid">
+      <a class="project" href="https://github.com/affaan-m/ECC" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/affaan-m.png" alt="">
+        <span class="project-name">ECC</span>
+        <span class="project-owner">affaan-m</span>
+      </a>
+    
+      <a class="project" href="https://github.com/garrytan/gstack" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/garrytan.png" alt="">
+        <span class="project-name">gstack</span>
+        <span class="project-owner">garrytan</span>
+      </a>
+    
+      <a class="project" href="https://github.com/github/spec-kit" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/github.png" alt="">
+        <span class="project-name">spec-kit</span>
+        <span class="project-owner">github</span>
+      </a>
+    
+      <a class="project" href="https://github.com/obra/superpowers" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/obra.png" alt="">
+        <span class="project-name">superpowers</span>
+        <span class="project-owner">obra</span>
+      </a>
+    
+      <a class="project" href="https://github.com/rohitg00/awesome-claude-code-toolkit" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/rohitg00.png" alt="">
+        <span class="project-name">awesome-claude-code-toolkit</span>
+        <span class="project-owner">rohitg00</span>
+      </a>
+    
+      <a class="project" href="https://github.com/shanraisshan/claude-code-best-practice" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/shanraisshan.png" alt="">
+        <span class="project-name">claude-code-best-practice</span>
+        <span class="project-owner">shanraisshan</span>
+      </a>
+    
+      <a class="project" href="https://github.com/sickn33/agentic-awesome-skills" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/sickn33.png" alt="">
+        <span class="project-name">agentic-awesome-skills</span>
+        <span class="project-owner">sickn33</span>
+      </a>
+    
+      <a class="project" href="https://github.com/virgiliojr94/book-to-skill" target="_blank" rel="noreferrer">
+        <img src="assets/github-avatars/virgiliojr94.png" alt="">
+        <span class="project-name">book-to-skill</span>
+        <span class="project-owner">virgiliojr94</span>
+      </a>
+    </div>
+      </section>
+    </section>
+    <footer>
+      <span><strong>Selection rule:</strong> reusable repository artifact + distinct role + evidence beyond a single popularity spike</span>
+      <span>antgroup/agentic-ai-landscape</span>
+    </footer>
+  </main>
+  <script>
+    function fit() {
+      const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+      document.documentElement.style.setProperty("--scale", String(scale));
+    }
+    window.addEventListener("resize", fit);
+    fit();
+  </script>
+</body>
+</html>

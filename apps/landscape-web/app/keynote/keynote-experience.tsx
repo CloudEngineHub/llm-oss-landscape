@@ -419,7 +419,10 @@ export default function KeynoteExperience({
             <span>2026 keynote · 08.07</span>
           </p>
           <div className={styles.headerActions}>
-            <Link className={styles.stageLink} href="/keynote/present">
+            <Link
+              className={styles.stageLink}
+              href="/presentations/260807_CommunityOverCode/present"
+            >
               <MonitorPlayIcon aria-hidden="true" />
               演讲播放
             </Link>
