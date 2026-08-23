@@ -35,6 +35,18 @@ The canonical dataset is [`data/agentic-ai-projects.csv`](./data/agentic-ai-proj
 
 Project vitality is measured with [OpenRank](https://github.com/X-lab2017/open-digger) rather than raw star counts, so activity from issues, pull requests, reviews, and contributors is taken into account.
 
+## Landscape Website
+
+The production Next.js application lives in [`apps/landscape-web`](./apps/landscape-web) and reads the canonical project dataset above directly. Run it locally with:
+
+```bash
+cd apps/landscape-web
+npm ci
+npm run dev
+```
+
+The existing production address is [landscape-demo-omega.vercel.app](https://landscape-demo-omega.vercel.app/). Vercel should use `apps/landscape-web` as the project Root Directory.
+
 ## Maintaining The Agentic AI Projects
 
 We aim to continuously maintain and expand [`data/agentic-ai-projects.csv`](./data/agentic-ai-projects.csv) with **noteworthy** projects across the Agentic AI ecosystem. If you think an important project is missing, please share it through our [dedicated issue tracker](https://github.com/antgroup/agentic-ai-landscape/issues/1).

@@ -1,0 +1,9 @@
+.git
+.venv
+**/node_modules
+**/.next
+**/dist
+**/.env*
+outputs
+*.log
+*.pem

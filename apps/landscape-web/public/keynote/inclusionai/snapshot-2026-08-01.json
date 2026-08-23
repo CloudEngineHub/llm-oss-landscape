@@ -1,0 +1,91 @@
+{
+  "generated_at": "2026-08-03T16:12:24.437511+00:00",
+  "snapshot_date": "2026-08-01",
+  "github": {
+    "publishers": [
+      {
+        "publisher": "inclusionAI",
+        "repositories": 59,
+        "stars": 10851,
+        "forks": 993,
+        "fork_repositories": 3
+      },
+      {
+        "publisher": "AQ-MedAI",
+        "repositories": 24,
+        "stars": 1336,
+        "forks": 99,
+        "fork_repositories": 0
+      },
+      {
+        "publisher": "Robbyant",
+        "repositories": 10,
+        "stars": 29355,
+        "forks": 2841,
+        "fork_repositories": 0
+      }
+    ],
+    "total": {
+      "repositories": 93,
+      "stars": 41542,
+      "forks": 3933,
+      "fork_repositories": 3
+    }
+  },
+  "huggingface": {
+    "publishers": [
+      {
+        "publisher": "inclusionAI",
+        "models": 150,
+        "downloads": 475791,
+        "likes": 7381
+      },
+      {
+        "publisher": "AQ-MedAI",
+        "models": 21,
+        "downloads": 11430,
+        "likes": 113
+      },
+      {
+        "publisher": "robbyant",
+        "models": 27,
+        "downloads": 47135,
+        "likes": 1296
+      }
+    ],
+    "total": {
+      "models": 198,
+      "downloads": 534356,
+      "likes": 8790
+    },
+    "downloads_window": "rolling 30 days"
+  },
+  "modelscope": {
+    "publishers": [
+      {
+        "publisher": "inclusionAI",
+        "models": 157,
+        "downloads": 163605,
+        "likes": 487
+      },
+      {
+        "publisher": "AQ-MedAI",
+        "models": 9,
+        "downloads": 9352,
+        "likes": 9
+      },
+      {
+        "publisher": "robbyant",
+        "models": 22,
+        "downloads": 32612,
+        "likes": 142
+      }
+    ],
+    "total": {
+      "models": 188,
+      "downloads": 205569,
+      "likes": 638
+    },
+    "downloads_window": "not declared by the API"
+  }
+}
