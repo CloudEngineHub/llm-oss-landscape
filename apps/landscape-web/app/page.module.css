@@ -584,7 +584,7 @@
 .moduleHeader {
   margin-bottom: 20px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(510px, 0.75fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 40px;
 }
@@ -624,45 +624,30 @@
   line-height: 1.35;
 }
 
-.moduleSummaryStrip {
-  min-width: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  overflow: hidden;
-  background: color-mix(in srgb, var(--module-accent) 18%, white);
-  border: 2px solid var(--ink);
-  border-radius: 12px;
+.moduleHeaderActions {
+  padding-bottom: 2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 9px;
 }
 
-.moduleSummaryStrip > div {
-  min-width: 0;
-  padding: 13px 12px 12px;
-  border-left: 1px solid var(--ink);
+.moduleHeaderActions .canvasLink,
+.moduleHeaderActions .shareButton {
+  height: 36px;
+  border-color: #cececa;
+  border-radius: 9px;
 }
 
-.moduleSummaryStrip > div:first-child {
-  border-left: 0;
+.moduleHeaderActions .shareButton {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: white;
 }
 
-.moduleSummaryStrip dt {
-  overflow: hidden;
-  color: var(--quiet);
-  font-family: var(--font-code);
-  font-size: 8px;
-  font-weight: 650;
-  letter-spacing: 0.06em;
-  text-overflow: ellipsis;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.moduleSummaryStrip dd {
-  margin: 7px 0 0;
-  font-size: clamp(18px, 1.65vw, 25px);
-  font-weight: 760;
-  line-height: 1;
-  letter-spacing: -0.045em;
+.moduleHeaderActions .shareButton:hover {
+  background: color-mix(in srgb, var(--ink) 88%, white);
+  color: white;
 }
 
 .moduleOpenRankChart {
@@ -935,46 +920,42 @@
   outline-offset: 2px;
 }
 
-.moduleToolbar {
-  min-height: 52px;
-  margin-bottom: 12px;
-  padding: 7px 9px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #f7f7f5;
-  border: 1px solid #e7e7e4;
-  border-radius: 12px;
-}
-
-.moduleSearch {
-  min-width: 280px;
-  margin-right: auto;
-}
-
-.moduleSearch input {
-  font-size: 12px;
-}
-
 .sharedInfraSearchBar {
   margin: 0 0 28px;
-  padding: 10px 13px;
-  background: #f7f7f5;
-  border: 1px solid #e7e7e4;
-  border-radius: 14px;
+  display: flex;
+  justify-content: center;
 }
 
 .sharedInfraSearch {
-  width: 100%;
+  width: min(100%, 980px);
+  min-height: 54px;
+  padding: 5px 9px 5px 13px;
+  background: white;
+  border: 1px solid #d7d7d2;
+  border-radius: 999px;
+  box-shadow: 0 8px 28px rgb(20 20 20 / 6%);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+.sharedInfraSearch:focus-within {
+  border-color: var(--ink);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--signal-pink) 13%, transparent),
+    0 10px 30px rgb(20 20 20 / 8%);
+}
+
+.sharedInfraSearch > svg {
+  width: 18px;
+  height: 18px;
+  margin-left: 4px;
+  color: #5f5f5b;
 }
 
 .sharedInfraSearch input {
-  min-height: 40px;
+  min-height: 42px;
   font-size: 14px;
-}
-
-.moduleActionsToolbar {
-  justify-content: flex-end;
 }
 
 .moduleMatch {
@@ -3394,6 +3375,11 @@
   height: 82%;
 }
 
+.communityLogoGrid figure[data-community="kaiyuanshe"] img {
+  width: 62%;
+  height: 62%;
+}
+
 .footer {
   min-height: 140px;
   padding: 32px 38px;
@@ -3471,10 +3457,6 @@
   .moduleHeader {
     grid-template-columns: 1fr;
     gap: 22px;
-  }
-
-  .moduleSummaryStrip {
-    width: 100%;
   }
 
   .moduleChartPlot {
@@ -3573,10 +3555,6 @@
 
   .landscapeModule {
     margin-bottom: 68px;
-  }
-
-  .moduleToolbar {
-    flex-wrap: wrap;
   }
 
   .moduleChartHeader {
@@ -3749,26 +3727,6 @@
     letter-spacing: -0.042em;
   }
 
-  .moduleSummaryStrip {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .moduleSummaryStrip > div {
-    border-top: 1px solid var(--ink);
-  }
-
-  .moduleSummaryStrip > div:nth-child(-n + 2) {
-    border-top: 0;
-  }
-
-  .moduleSummaryStrip > div:nth-child(odd) {
-    border-left: 0;
-  }
-
-  .moduleToolbar {
-    align-items: stretch;
-  }
-
   .moduleChartBody {
     padding-right: 10px;
     grid-template-columns: 34px minmax(0, 1fr);
@@ -3788,8 +3746,9 @@
     padding: 5px;
   }
 
-  .moduleToolbar .shareButton {
-    flex: 1;
+  .moduleHeaderActions {
+    width: 100%;
+    justify-content: flex-start;
   }
 
   .insightMetricGrid {

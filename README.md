@@ -59,7 +59,7 @@ python3 -m venv .venv
 
 Weekly report and ecosystem insight operations are documented in [`WORKFLOW.md`](./WORKFLOW.md); repository conventions for contributors and coding agents are in [`AGENTS.md`](./AGENTS.md).
 
-## Initiated by communities
+## Initiated by Communities
 
 <p align="center">
   <img src="./apps/landscape-web/public/community-logos/ant-open-source.png" width="150" alt="Ant Open Source logo">&nbsp;&nbsp;&nbsp;&nbsp;
@@ -67,5 +67,5 @@ Weekly report and ecosystem insight operations are documented in [`WORKFLOW.md`]
   <img src="./apps/landscape-web/public/community-logos/alibaba-open-source.png" width="180" alt="Alibaba Open Source logo">
   <br><br>
   <img src="./apps/landscape-web/public/community-logos/opendigger.png" width="210" alt="OpenDigger logo">&nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="./apps/landscape-web/public/community-logos/kaiyuanshe.svg" width="180" alt="KAIYUANSHE logo">
+  <img src="./apps/landscape-web/public/community-logos/kaiyuanshe.svg" width="150" alt="KAIYUANSHE logo">
 </p>

@@ -149,7 +149,7 @@ export default function Home() {
           aria-labelledby="community-initiators-title"
         >
           <header className={styles.communityInitiatorsHeader}>
-            <h2 id="community-initiators-title">Initiated by communities</h2>
+            <h2 id="community-initiators-title">Initiated by Communities</h2>
           </header>
           <div className={styles.communityLogoGrid}>
             {COMMUNITY_INITIATORS.map((community) => (

@@ -61,18 +61,24 @@ const STAGES: StageDefinition[] = [
 function matchesQuery(project: LandscapeProject, query: string) {
   if (!query) return true;
 
-  return [
+  const searchableText = [
     project.name,
     project.repo,
+    project.owner,
     project.description,
     project.language,
     project.zone,
     ...project.categories,
     ...project.topics,
   ]
+    .filter(Boolean)
     .join(" ")
-    .toLowerCase()
-    .includes(query);
+    .toLowerCase();
+
+  return query
+    .split(/\s+/)
+    .filter(Boolean)
+    .every((term) => searchableText.includes(term));
 }
 
 function formatOpenRank(project: LandscapeProject) {
@@ -219,11 +225,6 @@ const MODEL_STAGE_ASPECT_RATIO: Record<
   "Model Training": 4.74,
   "Data & Compute": 6.83,
 };
-
-const COMPACT_NUMBER = new Intl.NumberFormat("en", {
-  notation: "compact",
-  maximumFractionDigits: 1,
-});
 
 const LANDSCAPE_CANVAS_WIDTH = 1440;
 const LANDSCAPE_CANVAS_HEIGHT = 810;
@@ -888,37 +889,6 @@ function ModelStageSection({
   );
 }
 
-function ModuleSummaryStrip({
-  summary,
-}: {
-  summary: {
-    projects: number;
-    zones: number;
-    openrank: number;
-    stars: number;
-    newProjects: number;
-  };
-}) {
-  const metrics = [
-    { label: "Projects", value: summary.projects.toLocaleString() },
-    { label: "Sections", value: summary.zones.toLocaleString() },
-    { label: "OpenRank", value: COMPACT_NUMBER.format(summary.openrank) },
-    { label: "Stars", value: COMPACT_NUMBER.format(summary.stars) },
-    { label: "Trend", value: summary.newProjects.toLocaleString() },
-  ];
-
-  return (
-    <dl className={styles.moduleSummaryStrip}>
-      {metrics.map((metric) => (
-        <div key={metric.label}>
-          <dt>{metric.label}</dt>
-          <dd>{metric.value}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 function EmbeddedLandscape({
   id,
   title,
@@ -1040,24 +1010,6 @@ export default function LandscapeExplorer({
   const modelProjects = projects.filter(
     (project) => project.stage === "model",
   );
-  const summarizeModule = (moduleProjects: LandscapeProject[]) => ({
-    projects: moduleProjects.length,
-    zones: new Set(moduleProjects.map((project) => project.zone)).size,
-    openrank: moduleProjects.reduce(
-      (sum, project) => sum + (project.openrank ?? 0),
-      0,
-    ),
-    stars: moduleProjects.reduce(
-      (sum, project) => sum + project.stars,
-      0,
-    ),
-    newProjects: moduleProjects.reduce(
-      (count, project) => count + project.trendSignals.length,
-      0,
-    ),
-  });
-  const agentSummary = summarizeModule(agentProjects);
-  const modelSummary = summarizeModule(modelProjects);
   const agentMatchCount = agentProjects.filter((project) =>
     matchesQuery(project, normalizedInfraQuery),
   ).length;
@@ -1106,7 +1058,7 @@ export default function LandscapeExplorer({
       {!embedOnly ? (
         <>
           <div className={styles.landscapeLead} id="landscape-home">
-            <h1>Map the Infrastructure Behind Agentic AI</h1>
+            <h1>Era of Agentic AI: Landscape and Trends</h1>
           </div>
 
           <div className={styles.sharedInfraSearchBar}>
@@ -1118,7 +1070,7 @@ export default function LandscapeExplorer({
               <Input
                 value={infraQuery}
                 onChange={(event) => setInfraQuery(event.target.value)}
-                placeholder="Search Agent & Model Infra"
+                placeholder="Search projects, organizations, languages, technologies"
               />
               {infraQuery ? (
                 <Button
@@ -1157,37 +1109,30 @@ export default function LandscapeExplorer({
                   <h3>Where agents are built, operated, and used.</h3>
                   <p>Applications · Frameworks · Runtime infrastructure</p>
                 </div>
-                <ModuleSummaryStrip summary={agentSummary} />
+                <div className={styles.moduleHeaderActions}>
+                  <a
+                    className={styles.canvasLink}
+                    href="/embed/agent-infra"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open canvas
+                    <ArrowUpRightIcon aria-hidden="true" />
+                  </a>
+                  <Button
+                    className={styles.shareButton}
+                    variant="outline"
+                    type="button"
+                    onClick={() => {
+                      setShareTarget("agent");
+                      setShareOpen(true);
+                    }}
+                  >
+                    <Share2Icon data-icon="inline-start" />
+                    Export &amp; share
+                  </Button>
+                </div>
               </header>
-
-              <div
-                className={cn(
-                  styles.moduleToolbar,
-                  styles.moduleActionsToolbar,
-                )}
-              >
-                <a
-                  className={styles.canvasLink}
-                  href="/embed/agent-infra"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Direct canvas
-                  <ArrowUpRightIcon aria-hidden="true" />
-                </a>
-                <Button
-                  className={styles.shareButton}
-                  variant="outline"
-                  type="button"
-                  onClick={() => {
-                    setShareTarget("agent");
-                    setShareOpen(true);
-                  }}
-                >
-                  <Share2Icon data-icon="inline-start" />
-                  Share Agent Infra
-                </Button>
-              </div>
             </>
           ) : null}
 
@@ -1216,9 +1161,6 @@ export default function LandscapeExplorer({
                       <strong>ANT OPEN SOURCE</strong>
                       <strong>INCLUSION AI</strong>
                     </div>
-                    <span>
-                      {agentProjects.length} projects · Jul OpenRank weighted
-                    </span>
                     {focusedStage?.module === "agent" ? (
                       <button
                         className={styles.resetStageView}
@@ -1311,37 +1253,30 @@ export default function LandscapeExplorer({
                   <h3>The systems beneath model workloads.</h3>
                   <p>Access &amp; serving · Training · Data &amp; compute</p>
                 </div>
-                <ModuleSummaryStrip summary={modelSummary} />
+                <div className={styles.moduleHeaderActions}>
+                  <a
+                    className={styles.canvasLink}
+                    href="/embed/model-infra"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Open canvas
+                    <ArrowUpRightIcon aria-hidden="true" />
+                  </a>
+                  <Button
+                    className={styles.shareButton}
+                    variant="outline"
+                    type="button"
+                    onClick={() => {
+                      setShareTarget("model");
+                      setShareOpen(true);
+                    }}
+                  >
+                    <Share2Icon data-icon="inline-start" />
+                    Export &amp; share
+                  </Button>
+                </div>
               </header>
-
-              <div
-                className={cn(
-                  styles.moduleToolbar,
-                  styles.moduleActionsToolbar,
-                )}
-              >
-                <a
-                  className={styles.canvasLink}
-                  href="/embed/model-infra"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Direct canvas
-                  <ArrowUpRightIcon aria-hidden="true" />
-                </a>
-                <Button
-                  className={styles.shareButton}
-                  variant="outline"
-                  type="button"
-                  onClick={() => {
-                    setShareTarget("model");
-                    setShareOpen(true);
-                  }}
-                >
-                  <Share2Icon data-icon="inline-start" />
-                  Share Model Infra
-                </Button>
-              </div>
             </>
           ) : null}
 
@@ -1370,9 +1305,6 @@ export default function LandscapeExplorer({
                       <strong>ANT OPEN SOURCE</strong>
                       <strong>INCLUSION AI</strong>
                     </div>
-                    <span>
-                      {modelProjects.length} projects · Jul OpenRank weighted
-                    </span>
                     {focusedStage?.module === "model" ? (
                       <button
                         className={styles.resetStageView}
