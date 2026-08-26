@@ -1058,7 +1058,11 @@ export default function LandscapeExplorer({
       {!embedOnly ? (
         <>
           <div className={styles.landscapeLead} id="landscape-home">
-            <h1>Era of Agentic AI: Landscape and Trends</h1>
+            <h1>
+              Era of Agentic AI:
+              <br />
+              Landscape and Trends
+            </h1>
           </div>
 
           <div className={styles.sharedInfraSearchBar}>
@@ -1156,12 +1160,8 @@ export default function LandscapeExplorer({
                       <em>Landscape 2026</em>
                     </h2>
                   </div>
-                  <div className={styles.boardSource}>
-                    <div className={styles.boardBrands}>
-                      <strong>ANT OPEN SOURCE</strong>
-                      <strong>INCLUSION AI</strong>
-                    </div>
-                    {focusedStage?.module === "agent" ? (
+                  {focusedStage?.module === "agent" ? (
+                    <div className={styles.boardSource}>
                       <button
                         className={styles.resetStageView}
                         type="button"
@@ -1169,8 +1169,8 @@ export default function LandscapeExplorer({
                       >
                         Back to overview
                       </button>
-                    ) : null}
-                  </div>
+                    </div>
+                  ) : null}
                 </header>
 
                 <div className={styles.landscapeBand}>
@@ -1300,12 +1300,8 @@ export default function LandscapeExplorer({
                       <em>Landscape 2026</em>
                     </h2>
                   </div>
-                  <div className={styles.boardSource}>
-                    <div className={styles.boardBrands}>
-                      <strong>ANT OPEN SOURCE</strong>
-                      <strong>INCLUSION AI</strong>
-                    </div>
-                    {focusedStage?.module === "model" ? (
+                  {focusedStage?.module === "model" ? (
+                    <div className={styles.boardSource}>
                       <button
                         className={styles.resetStageView}
                         type="button"
@@ -1313,8 +1309,8 @@ export default function LandscapeExplorer({
                       >
                         Back to overview
                       </button>
-                    ) : null}
-                  </div>
+                    </div>
+                  ) : null}
                 </header>
 
                 <div className={styles.landscapeBand}>

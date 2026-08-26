@@ -386,14 +386,6 @@
   gap: 0;
 }
 
-.embedExplorer[data-presentation-mode="true"] .boardSource > span {
-  display: none;
-}
-
-.embedExplorer[data-presentation-mode="true"] .boardSource strong {
-  font-size: 11px;
-}
-
 .embedExplorer .boardViewport {
   width: 100%;
   max-width: none;
@@ -1088,32 +1080,6 @@
   flex-direction: column;
   align-items: flex-end;
   gap: 4px;
-}
-
-.boardSource strong {
-  font-size: 11px;
-  letter-spacing: 0.08em;
-}
-
-.boardBrands {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-}
-
-.boardBrands strong:first-child {
-  color: #126ed0;
-}
-
-.boardBrands strong:last-child {
-  color: #526cdf;
-}
-
-.boardSource span {
-  color: var(--quiet);
-  font-family: var(--font-code);
-  font-size: 8px;
-  text-transform: uppercase;
 }
 
 .resetStageView {
