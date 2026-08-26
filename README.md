@@ -11,15 +11,13 @@
 
 ## Agentic AI Landscape 2026
 
-The 2026 landscape follows a three-layer Agentic AI architecture: **Agent Infra** organizes the application, framework, runtime, and tool ecosystem; **Model Infra** covers the data, training, serving, and deployment stack; and **Large Models** provide the foundation that powers the layers above.
+The 2026 landscape maps two infrastructure blocks: **Agent Infra** organizes the application, framework, runtime, and tool ecosystem; **Model Infra** covers the data, training, serving, and deployment stack.
 
 The landscape highlights the projects that are currently most representative of each ecosystem rather than attempting to cover every project. Visit [InclusionAI Insights](https://www.inclusion-ai.org/insight/) for more complete and dynamic Agentic AI ecosystem rankings, project data, and developer details.
 
 ![Agent Infra Landscape 2026](/insights/260527-agentic_landscape/landscape_agent_infra.png)
 
 ![Model Infra Landscape 2026](/insights/260527-agentic_landscape/landscape_model_infra.png)
-
-![Large Models Landscape 2026](/insights/260527-agentic_landscape/landscape_large_models.png)
 
 ---
 
@@ -61,8 +59,13 @@ python3 -m venv .venv
 
 Weekly report and ecosystem insight operations are documented in [`WORKFLOW.md`](./WORKFLOW.md); repository conventions for contributors and coding agents are in [`AGENTS.md`](./AGENTS.md).
 
-## Acknowledgement
+## Initiated by communities
 
-This project was initiated by Ant Open Source and InclusionAI to better understand the evolution of the large language model development ecosystem through community data analysis. We aim to surface emerging trends and highlight the projects shaping the Agentic AI landscape.
-
-We are grateful for the support and feedback from the open-source community, and for the data support provided by [OpenDigger](https://github.com/X-lab2017/open-digger). We look forward to growing this work together through open participation.
+<p align="center">
+  <img src="./apps/landscape-web/public/community-logos/ant-open-source.png" width="150" alt="Ant Open Source logo">&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="./apps/landscape-web/public/community-logos/inclusionai.png" width="180" alt="inclusionAI logo">&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="./apps/landscape-web/public/community-logos/alibaba-open-source.png" width="180" alt="Alibaba Open Source logo">
+  <br><br>
+  <img src="./apps/landscape-web/public/community-logos/opendigger.png" width="210" alt="OpenDigger logo">&nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="./apps/landscape-web/public/community-logos/kaiyuanshe.svg" width="180" alt="KAIYUANSHE logo">
+</p>

@@ -1,4 +1,5 @@
 import { ArrowUpRightIcon, ChevronDownIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 import { getLandscapeProjects } from "@/lib/landscape-data";
@@ -7,6 +8,44 @@ import LandscapeLogo from "./components/landscape-logo";
 import LandscapeExplorer from "./components/landscape-explorer";
 import FloatingLandscapeNav from "./components/floating-landscape-nav";
 import styles from "./page.module.css";
+
+const COMMUNITY_INITIATORS = [
+  {
+    name: "Ant Open Source",
+    slug: "ant-open-source",
+    logo: "/community-logos/ant-open-source.png",
+    width: 1226,
+    height: 438,
+  },
+  {
+    name: "inclusionAI",
+    slug: "inclusionai",
+    logo: "/community-logos/inclusionai.png",
+    width: 1612,
+    height: 466,
+  },
+  {
+    name: "Alibaba Open Source",
+    slug: "alibaba-open-source",
+    logo: "/community-logos/alibaba-open-source.png",
+    width: 240,
+    height: 58,
+  },
+  {
+    name: "OpenDigger",
+    slug: "opendigger",
+    logo: "/community-logos/opendigger.png",
+    width: 2064,
+    height: 400,
+  },
+  {
+    name: "KAIYUANSHE",
+    slug: "kaiyuanshe",
+    logo: "/community-logos/kaiyuanshe.svg",
+    width: 1190,
+    height: 401,
+  },
+] as const;
 
 export default function Home() {
   const projects = getLandscapeProjects();
@@ -104,12 +143,38 @@ export default function Home() {
 
         <LandscapeExplorer projects={projects} />
 
+        <section
+          className={styles.communityInitiators}
+          id="community-initiators"
+          aria-labelledby="community-initiators-title"
+        >
+          <header className={styles.communityInitiatorsHeader}>
+            <h2 id="community-initiators-title">Initiated by communities</h2>
+          </header>
+          <div className={styles.communityLogoGrid}>
+            {COMMUNITY_INITIATORS.map((community) => (
+              <figure
+                key={community.name}
+                aria-label={community.name}
+                data-community={community.slug}
+              >
+                <Image
+                  src={community.logo}
+                  alt={`${community.name} logo`}
+                  width={community.width}
+                  height={community.height}
+                />
+              </figure>
+            ))}
+          </div>
+        </section>
+
         <footer className={styles.footer}>
           <div>
             <LandscapeLogo className={styles.footerMark} />
             <p>
-              Open-source projects across Agent Infra, Model Infra, Large
-              Models, and reusable agent assets.
+              Open-source projects across Agent Infra, Model Infra, and
+              reusable agent assets.
             </p>
           </div>
           <p>

@@ -8,10 +8,10 @@ const ITEMS = [
   { id: "landscape-home", label: "Home", mark: "H" },
   { id: "agent-infra", label: "Agent Infra", mark: "A" },
   { id: "model-infra", label: "Model Infra", mark: "M" },
-  { id: "large-models", label: "Large Models", mark: "L" },
   { id: "awesome-list", label: "Awesome", mark: "W" },
   { id: "signals", label: "Signals", mark: "S" },
   { id: "project-ranking", label: "Ranking", mark: "R" },
+  { id: "community-initiators", label: "Community", mark: "C" },
 ] as const;
 
 export default function FloatingLandscapeNav() {

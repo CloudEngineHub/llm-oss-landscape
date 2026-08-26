@@ -919,79 +919,6 @@ function ModuleSummaryStrip({
   );
 }
 
-function EcosystemArchitecture() {
-  return (
-    <section
-      className={styles.ecosystemArchitecture}
-      id="ecosystem-architecture"
-      aria-labelledby="ecosystem-architecture-title"
-    >
-      <header className={styles.architectureHeader}>
-        <h2 id="ecosystem-architecture-title">
-          Agentic AI ecosystem architecture
-        </h2>
-        <div className={styles.architectureLegend} aria-label="Diagram legend">
-          <span>Technical stack</span>
-          <span>Reusable assets</span>
-        </div>
-      </header>
-
-      <div className={styles.architectureMap}>
-        <div className={styles.architectureStack}>
-          <a
-            className={cn(styles.architectureLayer, styles.architectureAgent)}
-            href="#agent-infra"
-          >
-            <strong>Agent Infra</strong>
-            <span>Applications</span>
-            <span>Frameworks</span>
-            <span>Runtime</span>
-          </a>
-
-          <div className={styles.architectureConnector} aria-hidden="true">
-            <span />
-          </div>
-
-          <a
-            className={cn(styles.architectureLayer, styles.architectureModel)}
-            href="#model-infra"
-          >
-            <strong>Model Infra</strong>
-            <span>Access &amp; serving</span>
-            <span>Training</span>
-            <span>Data &amp; compute</span>
-          </a>
-
-          <div className={styles.architectureConnector} aria-hidden="true">
-            <span />
-          </div>
-
-          <a
-            className={cn(styles.architectureLayer, styles.architectureModels)}
-            href="#large-models"
-          >
-            <strong>Large Models</strong>
-            <span>Open weights</span>
-            <span>API models</span>
-            <span>Capability &amp; usage</span>
-          </a>
-        </div>
-
-        <a className={styles.architectureAssets} href="#awesome-list">
-          <span className={styles.assetsDirection} aria-hidden="true" />
-          <strong>Awesome × Agentic</strong>
-          <div>
-            <span>Collections</span>
-            <span>Skills</span>
-            <span>Playbooks</span>
-            <span>Workflows</span>
-          </div>
-        </a>
-      </div>
-    </section>
-  );
-}
-
 function EmbeddedLandscape({
   id,
   title,
@@ -1181,7 +1108,6 @@ export default function LandscapeExplorer({
           <div className={styles.landscapeLead} id="landscape-home">
             <h1>Map the Infrastructure Behind Agentic AI</h1>
           </div>
-          <EcosystemArchitecture />
 
           <div className={styles.sharedInfraSearchBar}>
             <label className={cn(styles.search, styles.sharedInfraSearch)}>
@@ -1523,13 +1449,6 @@ export default function LandscapeExplorer({
 
       {!embedOnly ? (
         <>
-          <EmbeddedLandscape
-            id="large-models"
-            title="Large Models"
-            detail="Open weights · API access · usage · capability"
-            src="/keynote/large-models/index.html"
-            accent="models"
-          />
           <EmbeddedLandscape
             id="awesome-list"
             title="Awesome × Agentic"

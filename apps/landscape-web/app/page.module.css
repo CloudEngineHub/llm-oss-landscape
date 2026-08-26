@@ -458,216 +458,6 @@
   letter-spacing: -0.052em;
 }
 
-.ecosystemArchitecture {
-  max-width: 1500px;
-  margin: 0 auto 96px;
-  padding: 20px;
-  scroll-margin-top: 24px;
-  background: #fbfbf9;
-  border: 2px solid var(--ink);
-  border-radius: 22px;
-}
-
-.architectureHeader {
-  margin-bottom: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.architectureHeader h2 {
-  margin: 0;
-  font-size: clamp(24px, 2.6vw, 40px);
-  font-weight: 790;
-  line-height: 1;
-  letter-spacing: -0.05em;
-}
-
-.architectureLegend {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.architectureLegend span {
-  padding: 6px 9px;
-  background: white;
-  border: 1px solid #d8d8d3;
-  border-radius: 999px;
-  color: var(--quiet);
-  font-size: 9px;
-  font-weight: 650;
-}
-
-.architectureLegend span:last-child {
-  background: #e7f4b9;
-  border-color: #b6cf70;
-  color: var(--ink);
-}
-
-.architectureMap {
-  display: grid;
-  grid-template-columns: minmax(0, 3.2fr) minmax(230px, 1fr);
-  align-items: stretch;
-  gap: 24px;
-}
-
-.architectureStack {
-  min-width: 0;
-  display: grid;
-  grid-template-rows: repeat(2, minmax(88px, auto) 26px) minmax(88px, auto);
-}
-
-.architectureLayer {
-  min-width: 0;
-  padding: 13px;
-  display: grid;
-  grid-template-columns: minmax(160px, 1.25fr) repeat(3, minmax(90px, 1fr));
-  align-items: stretch;
-  gap: 8px;
-  border: 2px solid var(--ink);
-  border-radius: 16px;
-  color: var(--ink);
-  text-decoration: none;
-  transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.architectureLayer:hover,
-.architectureAssets:hover {
-  box-shadow: 5px 5px 0 var(--ink);
-  transform: translate(-2px, -2px);
-}
-
-.architectureLayer:focus-visible,
-.architectureAssets:focus-visible {
-  outline: 3px solid var(--signal-violet);
-  outline-offset: 3px;
-}
-
-.architectureLayer strong {
-  padding: 8px 10px;
-  display: flex;
-  align-items: center;
-  font-size: clamp(22px, 2.2vw, 34px);
-  font-weight: 820;
-  line-height: 0.96;
-  letter-spacing: -0.05em;
-}
-
-.architectureLayer > span {
-  min-width: 0;
-  padding: 9px 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgb(255 255 255 / 72%);
-  border: 1px solid var(--ink);
-  border-radius: 10px;
-  font-size: clamp(11px, 1.05vw, 15px);
-  font-weight: 680;
-  line-height: 1.15;
-  text-align: center;
-}
-
-.architectureAgent {
-  background: #ffd2f2;
-}
-
-.architectureModel {
-  background: #d8effc;
-}
-
-.architectureModels {
-  background: #e2dcff;
-}
-
-.architectureConnector {
-  display: grid;
-  place-items: center;
-}
-
-.architectureConnector > span {
-  position: relative;
-  width: 3px;
-  height: 100%;
-  background: var(--ink);
-}
-
-.architectureConnector > span::before {
-  position: absolute;
-  top: -1px;
-  left: 50%;
-  width: 11px;
-  height: 11px;
-  background: var(--ink);
-  clip-path: polygon(50% 0, 100% 100%, 0 100%);
-  content: "";
-  transform: translateX(-50%);
-}
-
-.architectureAssets {
-  position: relative;
-  min-width: 0;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 22px;
-  background: #e7f4b9;
-  border: 2px solid var(--ink);
-  border-radius: 16px;
-  color: var(--ink);
-  text-decoration: none;
-  transition: transform 150ms ease, box-shadow 150ms ease;
-}
-
-.assetsDirection {
-  position: absolute;
-  top: 14%;
-  left: -26px;
-  width: 26px;
-  height: 3px;
-  background: var(--ink);
-  transform: translateY(-50%);
-}
-
-.assetsDirection::before {
-  position: absolute;
-  top: 50%;
-  left: -1px;
-  width: 11px;
-  height: 11px;
-  background: var(--ink);
-  clip-path: polygon(0 50%, 100% 0, 100% 100%);
-  content: "";
-  transform: translateY(-50%);
-}
-
-.architectureAssets > strong {
-  max-width: 230px;
-  font-size: clamp(26px, 2.8vw, 44px);
-  font-weight: 820;
-  line-height: 0.92;
-  letter-spacing: -0.055em;
-}
-
-.architectureAssets > div {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 7px;
-}
-
-.architectureAssets > div span {
-  padding: 8px 7px;
-  background: white;
-  border: 1px solid var(--ink);
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 700;
-  text-align: center;
-}
-
 .search {
   min-width: 0;
   display: flex;
@@ -3084,8 +2874,161 @@
   grid-column: span 8;
 }
 
-.signalStackedCard {
+.signalFieldCard {
   grid-column: 1 / -1;
+}
+
+.signalFieldCard [data-slot="card-header"] {
+  padding-bottom: 14px;
+}
+
+.signalFieldCard [data-slot="card-title"] {
+  font-size: clamp(22px, 2.1vw, 31px);
+  font-weight: 750;
+  letter-spacing: -0.045em;
+}
+
+.signalFieldCard [data-slot="card-description"] {
+  font-size: 9px;
+}
+
+.signalFieldGrid {
+  padding-top: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+}
+
+.signalFieldPanel {
+  min-width: 0;
+  padding-right: 22px;
+}
+
+.signalFieldPanel + .signalFieldPanel {
+  padding-right: 0;
+  padding-left: 22px;
+  border-left: 1px solid #dcdcd8;
+}
+
+.signalFieldPanelHeader {
+  min-height: 64px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.signalFieldPanelHeader h3 {
+  margin: 0 0 5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  font-weight: 760;
+  letter-spacing: -0.025em;
+}
+
+.signalFieldPanelHeader h3::before {
+  width: 18px;
+  height: 5px;
+  background: #e65fc1;
+  border-radius: 999px;
+  content: "";
+}
+
+.signalFieldPanel[data-tone="model"] .signalFieldPanelHeader h3::before {
+  background: #58a6d8;
+}
+
+.signalFieldHeadline {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+}
+
+.signalFieldHeadline strong {
+  font-size: 26px;
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.signalFieldHeadline span {
+  color: var(--quiet);
+  font-family: var(--font-code);
+  font-size: 8px;
+  font-weight: 650;
+}
+
+.signalFieldHeadline span[data-direction="up"] {
+  color: #19754d;
+}
+
+.signalFieldPeak {
+  margin: 0;
+  text-align: right;
+}
+
+.signalFieldPeak dt {
+  color: var(--quiet);
+  font-family: var(--font-code);
+  font-size: 7px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.signalFieldPeak dd {
+  margin: 5px 0 0;
+  font-size: 10px;
+  font-weight: 670;
+}
+
+.signalFieldBreakdown {
+  margin: 10px 0 4px 44px;
+  padding: 9px 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  border-block: 1px solid #ecece8;
+}
+
+.signalFieldBreakdown > span {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 7px minmax(0, 1fr);
+  column-gap: 6px;
+}
+
+.signalFieldBreakdown i {
+  width: 7px;
+  height: 7px;
+  margin-top: 2px;
+  grid-row: 1 / span 2;
+  border-radius: 2px;
+}
+
+.signalFieldBreakdown small {
+  overflow: hidden;
+  color: var(--quiet);
+  font-size: 8px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.signalFieldBreakdown strong {
+  margin-top: 2px;
+  font-family: var(--font-code);
+  font-size: 10px;
+  font-weight: 680;
+}
+
+.signalFieldChart {
+  width: 100%;
+  height: 245px;
+  min-height: 245px;
 }
 
 .signalTallCard {
@@ -3098,95 +3041,6 @@
 
 .signalScatterCard {
   grid-column: 1 / -1;
-}
-
-.signalInlineLegend {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.signalInlineLegend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--quiet);
-  font-size: 9px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.signalInlineLegend i {
-  width: 12px;
-  height: 3px;
-  display: block;
-  background: var(--layer-color);
-  border-radius: 999px;
-}
-
-.signalInlineLegend [data-layer="agent"] {
-  --layer-color: #ef72ca;
-}
-
-.signalInlineLegend [data-layer="model"] {
-  --layer-color: #74b7e3;
-}
-
-.signalStackLegend {
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex-wrap: wrap;
-  gap: 15px;
-}
-
-.signalStackLegend span {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--quiet);
-  font-size: 9px;
-  font-weight: 600;
-}
-
-.signalStackLegend i {
-  width: 11px;
-  height: 11px;
-  display: block;
-  background: var(--legend-color);
-  border-radius: 2px;
-}
-
-.signalStackLegend [data-series="application"] {
-  --legend-color: #e65fc1;
-}
-
-.signalStackLegend [data-series="framework"] {
-  --legend-color: #f19bd8;
-}
-
-.signalStackLegend [data-series="runtime"] {
-  --legend-color: #9f4b8d;
-}
-
-.signalStackLegend [data-series="access"] {
-  --legend-color: #58a6d8;
-}
-
-.signalStackLegend [data-series="training"] {
-  --legend-color: #94cbed;
-}
-
-.signalStackLegend [data-series="foundation"] {
-  --legend-color: #2e6f9c;
-}
-
-.signalStackedChart {
-  width: 100%;
-  height: 330px;
-  min-height: 330px;
 }
 
 .signalLargeChart {
@@ -3481,6 +3335,65 @@
   white-space: nowrap;
 }
 
+.communityInitiators {
+  width: min(1500px, calc(100% - 126px));
+  margin: 0 auto;
+  padding: 30px 0 72px;
+  scroll-margin-top: 24px;
+  border-top: 3px solid var(--ink);
+}
+
+.communityInitiatorsHeader {
+  margin-bottom: 36px;
+}
+
+.communityInitiatorsHeader h2 {
+  margin: 0;
+  font-size: clamp(30px, 3.4vw, 52px);
+  font-weight: 780;
+  line-height: 0.94;
+  letter-spacing: -0.055em;
+  text-align: center;
+}
+
+.communityLogoGrid {
+  max-width: 1180px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: 36px;
+  row-gap: 28px;
+}
+
+.communityLogoGrid figure {
+  height: clamp(92px, 8vw, 126px);
+  min-width: 0;
+  margin: 0;
+  display: grid;
+  place-items: center;
+  grid-column: span 2;
+}
+
+.communityLogoGrid figure:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+
+.communityLogoGrid figure:nth-child(5) {
+  grid-column: 4 / span 2;
+}
+
+.communityLogoGrid img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
+.communityLogoGrid figure[data-community="ant-open-source"] img {
+  width: 82%;
+  height: 82%;
+}
+
 .footer {
   min-height: 140px;
   padding: 32px 38px;
@@ -3573,7 +3486,7 @@
   }
 
   .signalWideCard,
-  .signalStackedCard,
+  .signalFieldCard,
   .signalTallCard,
   .signalLanguageCard,
   .signalScatterCard {
@@ -3638,39 +3551,6 @@
   .landscapeLead {
     grid-template-columns: 1fr;
     gap: 24px;
-  }
-
-  .ecosystemArchitecture {
-    margin-bottom: 68px;
-    padding: 14px;
-    border-radius: 17px;
-  }
-
-  .architectureHeader {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .architectureMap {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .architectureLayer {
-    grid-template-columns: 1fr;
-  }
-
-  .architectureLayer > span {
-    min-height: 38px;
-  }
-
-  .architectureAssets {
-    min-height: 170px;
-  }
-
-  .assetsDirection {
-    display: none;
   }
 
   .embeddedModuleHeader {
@@ -3769,8 +3649,46 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .signalFieldGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .signalFieldPanel {
+    padding-right: 0;
+    padding-bottom: 22px;
+  }
+
+  .signalFieldPanel + .signalFieldPanel {
+    padding-top: 22px;
+    padding-left: 0;
+    border-top: 1px solid #dcdcd8;
+    border-left: 0;
+  }
+
   .projectRanking {
     padding-bottom: 56px;
+  }
+
+  .communityInitiators {
+    width: calc(100% - 36px);
+    padding-bottom: 56px;
+  }
+
+  .communityLogoGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 18px;
+  }
+
+  .communityLogoGrid figure,
+  .communityLogoGrid figure:nth-child(4),
+  .communityLogoGrid figure:nth-child(5) {
+    height: 88px;
+    grid-column: span 1;
+  }
+
+  .communityLogoGrid figure:last-child {
+    grid-column: 1 / -1;
   }
 
   .rankingHeader > div:first-child {
@@ -3910,7 +3828,7 @@
   }
 
   .signalLargeChart,
-  .signalStackedChart,
+  .signalFieldChart,
   .signalRankingChart,
   .signalMediumChart {
     height: 280px;

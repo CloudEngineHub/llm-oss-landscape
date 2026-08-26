@@ -1,6 +1,8 @@
 "use client";
 
 import {
+  Area,
+  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
@@ -41,6 +43,7 @@ const MONTHS = [
   "Apr",
   "May",
   "Jun",
+  "Jul",
 ];
 
 const NUMBER_FORMAT = new Intl.NumberFormat("en", {
@@ -90,6 +93,140 @@ const SIGNAL_CHART_CONFIG = {
     color: "#717171",
   },
 } satisfies ChartConfig;
+
+type FieldTrendPoint = {
+  month: string;
+  [key: string]: string | number;
+};
+
+type FieldSeries = {
+  key: string;
+  label: string;
+  color: string;
+};
+
+const AGENT_FIELD_SERIES: FieldSeries[] = [
+  { key: "application", label: "Application", color: "#e65fc1" },
+  { key: "framework", label: "Framework", color: "#f19bd8" },
+  { key: "runtime", label: "Runtime", color: "#9f4b8d" },
+];
+
+const MODEL_FIELD_SERIES: FieldSeries[] = [
+  { key: "access", label: "Access & Serving", color: "#58a6d8" },
+  { key: "training", label: "Training", color: "#94cbed" },
+  { key: "foundation", label: "Data & Compute", color: "#2e6f9c" },
+];
+
+function getFieldTotal(row: FieldTrendPoint, series: FieldSeries[]) {
+  return series.reduce((total, item) => total + Number(row[item.key] ?? 0), 0);
+}
+
+function FieldTrendPanel({
+  title,
+  tone,
+  data,
+  series,
+  sharedMaximum,
+}: {
+  title: string;
+  tone: "agent" | "model";
+  data: FieldTrendPoint[];
+  series: FieldSeries[];
+  sharedMaximum: number;
+}) {
+  const latest = data.at(-1);
+  const previous = data.at(-2);
+  const latestTotal = latest ? getFieldTotal(latest, series) : 0;
+  const previousTotal = previous ? getFieldTotal(previous, series) : 0;
+  const change = previousTotal
+    ? ((latestTotal - previousTotal) / previousTotal) * 100
+    : 0;
+  const peak = data.reduce(
+    (best, row) =>
+      getFieldTotal(row, series) > getFieldTotal(best, series) ? row : best,
+    data[0],
+  );
+
+  return (
+    <article className={styles.signalFieldPanel} data-tone={tone}>
+      <header className={styles.signalFieldPanelHeader}>
+        <div>
+          <h3>{title}</h3>
+          <p className={styles.signalFieldHeadline}>
+            <strong>{NUMBER_FORMAT.format(latestTotal)}</strong>
+            <span data-direction={change >= 0 ? "up" : "down"}>
+              {change >= 0 ? "+" : ""}
+              {change.toFixed(1)}% vs {previous?.month}
+            </span>
+          </p>
+        </div>
+        <dl className={styles.signalFieldPeak}>
+          <dt>Peak</dt>
+          <dd>
+            {peak.month} · {NUMBER_FORMAT.format(getFieldTotal(peak, series))}
+          </dd>
+        </dl>
+      </header>
+
+      <div className={styles.signalFieldBreakdown}>
+        {series.map((item) => (
+          <span key={item.key}>
+            <i style={{ backgroundColor: item.color }} aria-hidden="true" />
+            <small>{item.label}</small>
+            <strong>{NUMBER_FORMAT.format(Number(latest?.[item.key] ?? 0))}</strong>
+          </span>
+        ))}
+      </div>
+
+      <ChartContainer
+        config={SIGNAL_CHART_CONFIG}
+        className={styles.signalFieldChart}
+      >
+        <AreaChart
+          accessibilityLayer
+          data={data}
+          syncId="openrank-by-field"
+          margin={{ left: 0, right: 8, top: 10, bottom: 0 }}
+        >
+          <CartesianGrid vertical={false} />
+          <XAxis
+            dataKey="month"
+            axisLine={false}
+            tickLine={false}
+            tickMargin={9}
+            interval="preserveStartEnd"
+          />
+          <YAxis
+            width={44}
+            axisLine={false}
+            tickLine={false}
+            domain={[0, sharedMaximum]}
+            tickCount={4}
+            tickFormatter={(value) => NUMBER_FORMAT.format(value)}
+          />
+          <ChartTooltip content={<ChartTooltipContent indicator="line" />} />
+          {series.map((item) => (
+            <Area
+              key={item.key}
+              type="monotone"
+              dataKey={item.key}
+              stackId="openrank"
+              fill={item.color}
+              fillOpacity={0.9}
+              stroke={item.color}
+              strokeWidth={1.5}
+              isAnimationActive={false}
+              activeDot={{ r: 3 }}
+              dot={false}
+              connectNulls
+              baseValue={0}
+            />
+          ))}
+        </AreaChart>
+      </ChartContainer>
+    </article>
+  );
+}
 
 function isAgentProject(project: LandscapeProject) {
   return project.stage !== "model";
@@ -194,6 +331,17 @@ export function EcosystemSignals({
       ),
     ),
   }));
+  const fieldTrendMaximum =
+    Math.ceil(
+      Math.max(
+        ...agentFieldTrend.map((row) =>
+          getFieldTotal(row, AGENT_FIELD_SERIES),
+        ),
+        ...modelFieldTrend.map((row) =>
+          getFieldTotal(row, MODEL_FIELD_SERIES),
+        ),
+      ) / 1000,
+    ) * 1000;
   const leaders = [...projects]
     .filter(
       (project): project is LandscapeProject & { openrank: number } =>
@@ -282,136 +430,28 @@ export function EcosystemSignals({
       </div>
 
       <div className={styles.signalDashboardGrid}>
-        <Card className={styles.signalStackedCard}>
+        <Card className={styles.signalFieldCard}>
           <CardHeader>
-            <CardTitle>Agent Infra OpenRank by field</CardTitle>
+            <CardTitle>OpenRank by field</CardTitle>
+            <CardDescription>
+              Aug 2025–Jul 2026 · monthly OpenRank sum · shared scale
+            </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className={styles.signalStackLegend} aria-hidden="true">
-              <span data-series="application">
-                <i />
-                Agent Application
-              </span>
-              <span data-series="framework">
-                <i />
-                Agent Framework
-              </span>
-              <span data-series="runtime">
-                <i />
-                Agent Runtime Infra
-              </span>
-            </div>
-            <ChartContainer
-              config={SIGNAL_CHART_CONFIG}
-              className={styles.signalStackedChart}
-            >
-              <BarChart
-                accessibilityLayer
-                data={agentFieldTrend}
-                barCategoryGap="24%"
-                margin={{ left: 4, right: 14 }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  axisLine={false}
-                  tickLine={false}
-                  tickMargin={10}
-                />
-                <YAxis
-                  width={52}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(value) => NUMBER_FORMAT.format(value)}
-                />
-                <ChartTooltip
-                  content={<ChartTooltipContent indicator="line" />}
-                />
-                <Bar
-                  dataKey="application"
-                  stackId="openrank"
-                  fill="var(--color-application)"
-                />
-                <Bar
-                  dataKey="framework"
-                  stackId="openrank"
-                  fill="var(--color-framework)"
-                />
-                <Bar
-                  dataKey="runtime"
-                  stackId="openrank"
-                  fill="var(--color-runtime)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ChartContainer>
-          </CardContent>
-        </Card>
-
-        <Card className={styles.signalStackedCard}>
-          <CardHeader>
-            <CardTitle>Model Infra OpenRank by field</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className={styles.signalStackLegend} aria-hidden="true">
-              <span data-series="access">
-                <i />
-                Access & Serving
-              </span>
-              <span data-series="training">
-                <i />
-                Model Training
-              </span>
-              <span data-series="foundation">
-                <i />
-                Data & Compute
-              </span>
-            </div>
-            <ChartContainer
-              config={SIGNAL_CHART_CONFIG}
-              className={styles.signalStackedChart}
-            >
-              <BarChart
-                accessibilityLayer
-                data={modelFieldTrend}
-                barCategoryGap="24%"
-                margin={{ left: 4, right: 14 }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey="month"
-                  axisLine={false}
-                  tickLine={false}
-                  tickMargin={10}
-                />
-                <YAxis
-                  width={52}
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(value) => NUMBER_FORMAT.format(value)}
-                />
-                <ChartTooltip
-                  cursor={{ fill: "#f0f0ed", opacity: 0.7 }}
-                  content={<ChartTooltipContent indicator="line" />}
-                />
-                <Bar
-                  dataKey="access"
-                  stackId="openrank"
-                  fill="var(--color-access)"
-                />
-                <Bar
-                  dataKey="training"
-                  stackId="openrank"
-                  fill="var(--color-training)"
-                />
-                <Bar
-                  dataKey="foundation"
-                  stackId="openrank"
-                  fill="var(--color-foundation)"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ChartContainer>
+          <CardContent className={styles.signalFieldGrid}>
+            <FieldTrendPanel
+              title="Agent Infra"
+              tone="agent"
+              data={agentFieldTrend}
+              series={AGENT_FIELD_SERIES}
+              sharedMaximum={fieldTrendMaximum}
+            />
+            <FieldTrendPanel
+              title="Model Infra"
+              tone="model"
+              data={modelFieldTrend}
+              series={MODEL_FIELD_SERIES}
+              sharedMaximum={fieldTrendMaximum}
+            />
           </CardContent>
         </Card>
 
