@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
-import { getLandscapeProjects } from "@/lib/landscape-data";
-
+import { getInclusionResearchData } from "../../research-data";
 import OpenInfrastructureKeynote from "./presentation";
 
 export const metadata: Metadata = {
@@ -41,9 +40,7 @@ const pressureSections = [
 ] as const;
 
 export default function OpenInfrastructureKeynotePage() {
-  const projects = getLandscapeProjects();
-  const agentProjects = projects.filter((project) => project.stage !== "model");
-  const modelProjects = projects.filter((project) => project.stage === "model");
+  const { projects, stats: researchStats } = getInclusionResearchData();
 
   const pressure = pressureSections.map((section) => ({
     label: section.label,
@@ -60,21 +57,9 @@ export default function OpenInfrastructureKeynotePage() {
   return (
     <OpenInfrastructureKeynote
       stats={{
-        total: projects.length,
-        agent: agentProjects.length,
-        model: modelProjects.length,
-        agentRecentShare: Math.round(
-          (agentProjects.filter((project) => project.createdAt >= "2025-01-01")
-            .length /
-            agentProjects.length) *
-            100,
-        ),
-        modelRecentShare: Math.round(
-          (modelProjects.filter((project) => project.createdAt >= "2025-01-01")
-            .length /
-            modelProjects.length) *
-            100,
-        ),
+        ...researchStats,
+        agentRecentShare: Math.round((researchStats.agentRecent / researchStats.agent) * 100),
+        modelRecentShare: Math.round((researchStats.modelRecent / researchStats.model) * 100),
         pressure,
       }}
     />

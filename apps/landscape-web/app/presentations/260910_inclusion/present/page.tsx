@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 
-import { getLandscapeProjects } from "@/lib/landscape-data";
-
+import { getInclusionResearchData } from "../research-data";
 import InclusionPresentation from "./presentation";
 
 export const metadata: Metadata = {
@@ -11,7 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default function InclusionPresentationPage() {
-  const projects = getLandscapeProjects();
+  const { projects, stats: researchStats } = getInclusionResearchData();
   const agentProjects = projects.filter((project) => project.stage !== "model");
   const modelProjects = projects.filter((project) => project.stage === "model");
   const rankedProjects = projects
@@ -21,9 +20,7 @@ export default function InclusionPresentationPage() {
   return (
     <InclusionPresentation
       stats={{
-        total: projects.length,
-        agent: agentProjects.length,
-        model: modelProjects.length,
+        ...researchStats,
         agentParticipants: agentProjects.reduce(
           (total, project) => total + (project.participants ?? 0),
           0,

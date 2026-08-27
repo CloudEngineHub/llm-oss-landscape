@@ -18,6 +18,7 @@ import {
 
 import LandscapeLogo from "@/app/components/landscape-logo";
 
+import type { InclusionResearchStats } from "../../research-data";
 import styles from "./presentation.module.css";
 
 type PressureSection = {
@@ -27,10 +28,7 @@ type PressureSection = {
   projects: Array<{ name: string; repo: string }>;
 };
 
-type KeynoteStats = {
-  total: number;
-  agent: number;
-  model: number;
+type KeynoteStats = InclusionResearchStats & {
   agentRecentShare: number;
   modelRecentShare: number;
   pressure: PressureSection[];
@@ -280,7 +278,7 @@ function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
   return (
     <article className={styles.landscapeSignalSlide}>
       <SlideHeading eyebrow="AGENTIC AI ECOSYSTEM">
-        The young layer is forming around the task.
+        The agent layer is young. The base below it is not.
       </SlideHeading>
       <div className={styles.layerComparison}>
         <div className={styles.agentLayer}>
@@ -293,7 +291,13 @@ function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
           <strong>{stats.model}</strong>
           <p>{stats.modelRecentShare}% created in 2025 or later</p>
         </div>
-        <div className={styles.totalMark}>{stats.total} projects</div>
+        <div className={styles.totalMark}>
+          MAY {stats.mayTracked} → NOW {stats.currentTracked} TRACKED
+        </div>
+      </div>
+      <div className={styles.runtimeSignal}>
+        <strong>{stats.runtimeOutsideMay}/{stats.agentOutsideMay}</strong>
+        <span>Agent Infra projects outside the May pool sit in Runtime</span>
       </div>
       <div className={styles.pressureRail}>
         {stats.pressure.map((section) => (
@@ -312,8 +316,8 @@ function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
         ))}
       </div>
       <SourceLine>
-        Source: agentic-ai-projects.csv · July 2026 OpenRank · 23 Aug review
-        snapshot. Counts show selected projects, not production adoption.
+        Source: May tracking snapshot + current agentic-ai-projects.csv. Counts
+        describe the selected ecosystem, not production adoption.
       </SourceLine>
     </article>
   );

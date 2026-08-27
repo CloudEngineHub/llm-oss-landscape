@@ -42,14 +42,15 @@ request and then release its environment. The runtime may be gone, while the
 effect remains. Even that short-lived environment needs isolation, narrowly
 scoped authority and a record which survives cleanup.
 
-### 3. The young layer is forming around the task · `1:15–2:15`
+### 3. The agent layer is young. The base below it is not · `1:15–2:15`
 
-Our latest landscape follows 143 open-source projects. Agent Infra is the
-younger half: 55 percent of its selected projects were created in 2025 or later,
-compared with 17 percent in Model Infra. The new demand is clustering around
-three practical boundaries: isolated execution, control over tools, and context
-which outlives a process. These counts describe where builders are concentrating
-their attention. They are not production-adoption figures.
+The tracked project pool grew from 227 repositories in May to 277 in the current
+review. Agent Infra is the younger layer: 55 percent of its selected projects
+were created in 2025 or later, compared with 17 percent in Model Infra. Thirteen
+of the 23 Agent Infra selections outside the May tracking pool sit in Runtime.
+The visible attention is still concentrated near applications, while the map is
+becoming denser around isolated execution, tool control and durable context.
+These counts describe ecosystem activity, not production adoption.
 
 ### 4. The installed base is already carrying AI · `2:15–3:05`
 

@@ -4,11 +4,11 @@
 
 > 数据核对日期：2026-08-26。全景图的 OpenRank 与参与者数据使用 2026-07 完整月；GitHub Stars、仓库状态与项目清单来自 2026-08-23 快照。CNCF、OpenInfra 数据分别保留其原始调查或报告口径，不能与 GitHub 项目热度混作一组采用率。
 
-### 20 天里，图上发生了什么
+### 从 5 月基线看，图上发生了什么
 
-CommunityOverCode 使用的冻结版有 126 个项目，其中 Agent Infra 69 个、Model Infra 57 个。当前版本有 143 个项目，其中 Agent Infra 84 个、Model Infra 59 个。净增的 17 个项目里，13 个进入 Agent Infra，4 个进入 Model Infra。
+5 月跟踪池包含 227 个仓库，当前 canonical 项目池包含 277 个，增加了 50 个。当前 Agent Infra 与 Model Infra 两张图选择了 143 个项目，其中 31 个不在 5 月跟踪池里。这个口径反映候选池与当前图上项目的变化，不能直接等同于 5 月发布图的逐项增删；精确的新增、移除与重分类仍需恢复 5 月发布图的机器可读清单。
 
-新增项目没有改变大的方向。13 个 Agent Infra 新项目中，有 7 个落在 Agentic coding、Coding workflows & harnesses 或 Code-first frameworks。DeepSeek Harness、Kimi Code、T3 Code、Spec Kit 等项目继续把注意力吸引到软件研发流程上。
+当前选择中，Agent Infra 有 23 个项目不在 5 月跟踪池，Model Infra 有 8 个。Agent Infra 的这 23 个项目里有 13 个位于 Runtime。DeepSeek Harness、Kimi Code、T3 Code、Spec Kit 等项目继续把注意力吸引到软件研发流程；而 context、tool control、protocol 与 sandbox 的密度增加，说明增长并不只发生在应用入口。
 
 分类变化反而更值得保留：AgentGateway 和 MCP Context Forge 从 Model API gateways 移入 Agent Infra 的 Protocols & interoperability。模型网关治理一次模型请求；agent gateway、MCP registry 和 tool runtime 需要处理工具发现、策略、凭据、隔离与审计。它们已经更接近 Agent 的控制面。
 
@@ -16,7 +16,7 @@ CommunityOverCode 使用的冻结版有 126 个项目，其中 Agent Infra 69 �
 
 1. **Coding 仍是最拥挤的入口。** Agentic coding 有 14 个项目，7 月 OpenRank 合计 821.77；Coding workflows & harnesses 有 8 个项目。DeepSeek Harness 创建于 8 月 13 日，发布期 Stars 上升很快，但尚无完整月 OpenRank，不能据此判断社区成熟度或生产采用。
 2. **Context 开始成为独立的数据系统。** Memory, knowledge & context 已有 9 个项目，本轮新增 Headroom 和 Supermemory。OpenViking 的 OpenRank 从 4 月 135.01 上升至 7 月 177.61，增量 42.60。它把 memory、knowledge、RAG 和 skills 放进同一个 context database，说明 Agent 状态不再只被当成向量检索的附属物。
-3. **工具入口与协议层一起变厚。** Tools, web & computer use 有 6 个项目；Lark CLI 4—7 月 OpenRank 从 95.47 上升到 179.37。Protocols & interoperability 从 CoC 版的 5 个增至 8 个，其中两项变化来自重新分类。这里的信号是开发者注意力，不是企业采用率。
+3. **工具入口与协议层一起变厚。** Tools, web & computer use 有 6 个项目；Lark CLI 4—7 月 OpenRank 从 95.47 上升到 179.37。Protocols & interoperability 当前有 8 个项目，其中一部分变化来自重新分类。这里的信号是开发者注意力，不是企业采用率。
 4. **Model Infra 的压力仍集中在 serving 与加速。** Serving · Inference 的 8 个项目 7 月 OpenRank 合计 786.81；Pre-Train · Compiler & accelerator 的 8 个项目合计 267.35。FlashInfer 4—7 月 OpenRank 从 127.11 上升到 147.83。Agent 增加的多步调用会继续把成本、延迟和加速器利用率问题推到底层。
 
 Apache 项目在新版图上的位置几乎没有变化：59 个 Model Infra 项目中有 6 个 Apache 项目，占 10.2%，分别位于 Data · Governance、Data · Integration、Compute & scheduling；Agent Infra 仍为 0。Iceberg、Hudi、Paimon、Gravitino、Airflow 和 Spark 没有变成 Agent 项目，但 Agent 的状态、数据处理和任务执行会继续落到这些长期运行的系统上。
@@ -61,6 +61,6 @@ Agent 把一次用户请求拆成多次模型调用、检索和工具执行。�
 
 ## 第一部分暂定结论
 
-这 20 天里，应用层最热的项目仍然是 coding agent 和 harness。真正与生产基础设施相接的变化更慢，也更具体：sandbox 被做成 Kubernetes 对象，Kata 被接到 Agent Sandbox 下面，AgentGateway 和 MCP 管理项目形成控制面，OpenTelemetry 开始定义 agent 与 tool spans，Kubernetes 和 Kueue 继续补齐专用硬件的动态调度。
+从 5 月基线看，应用层最热的项目仍然是 coding agent 和 harness；而当前图中不在 5 月跟踪池的 Agent Infra 项目，超过一半位于 Runtime。真正与生产基础设施相接的变化更慢，也更具体：sandbox 被做成 Kubernetes 对象，Kata 被接到 Agent Sandbox 下面，AgentGateway 和 MCP 管理项目形成控制面，OpenTelemetry 开始定义 agent 与 tool spans，Kubernetes 和 Kueue 继续补齐专用硬件的动态调度。
 
 云原生时代积累的编排、身份、可观测、数据与虚拟化能力都还在。Agent 让这些系统需要处理一种更短命、更难预先描述、能够跨系统产生副作用的工作负载。第一部分的主线可以据此落在一句朴素的判断上：底座沿用，控制边界前移到每一次任务。

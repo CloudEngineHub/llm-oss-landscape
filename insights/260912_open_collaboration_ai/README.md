@@ -24,12 +24,21 @@ The report is the durable version of the work. It will combine the landscapes, r
 
 ## Repository structure
 
-- `report/online-report.md` — the mother manuscript and editorial contract.
-- `report/interactive-report-outline.md` — interaction and reading-path notes.
-- `research/open-infrastructure-trends.md` — sourced ecosystem and infrastructure evidence.
-- `research/open-collaboration-study-design.md` — questions, cohorts, metrics and evidence rules.
+- `report/` contains publication material: the reader-facing manuscript, web reading structure, page copy and published reference library.
+- `report/online-report.md` is the mother manuscript. Completed analysis belongs here in full prose.
+- `report/interactive-report-outline.md` contains interaction and reading-path notes, not research findings.
+- `report/web-copy.json` contains short editable page copy derived from the manuscript.
+- `report/references.json` is the reader-facing source library used by the web report.
+- `research/` contains the audit trail: definitions, calculations, source notes, study design and evidence boundaries. It supports the report without duplicating its narrative.
+- `research/landscape-signals.md` is the evidence register for Chapter 01.
+- `research/open-infrastructure-trends.md` contains sourced ecosystem and infrastructure evidence.
+- `research/open-collaboration-study-design.md` contains questions, cohorts, metrics and evidence rules.
 - `working-notes/01-open-infrastructure-keynote.md` — provisional five-minute extraction.
 - `working-notes/02-open-collaboration-talk.md` — provisional ten-minute extraction.
+
+Working rule: write the conclusion once in `report/online-report.md`; keep the
+numbers and derivation needed to verify it in the corresponding `research/`
+file. Talks and UI copy are shortened derivatives of those two layers.
 - `landscape-refresh/` — landscape review notebook and supporting data work.
 
 The material under `working-notes/` remains provisional until the repository study is complete. At that point, event-specific presentation sources should be derived into distinct directories under `insights/presentations/`.

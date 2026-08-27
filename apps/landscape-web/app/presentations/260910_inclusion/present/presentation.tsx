@@ -9,18 +9,17 @@ import {
 } from "lucide-react";
 import {
   type PointerEvent as ReactPointerEvent,
+  type ReactNode,
   useCallback,
   useEffect,
   useRef,
   useState,
 } from "react";
 
+import type { InclusionResearchStats } from "../research-data";
 import styles from "./presentation.module.css";
 
-type PresentationStats = {
-  total: number;
-  agent: number;
-  model: number;
+type PresentationStats = InclusionResearchStats & {
   agentParticipants: number;
   modelParticipants: number;
   agentTrend: number[];
@@ -39,8 +38,13 @@ type SwipeStart = {
 
 const scenes = [
   { id: "cover", label: "OPEN" },
+  { id: "tracked-pool", label: "MAY → NOW" },
   { id: "landscape", label: "LANDSCAPE" },
-  { id: "signals", label: "SIGNALS" },
+  { id: "two-gates", label: "TWO GATES" },
+  { id: "deepseek", label: "CASE" },
+  { id: "question", label: "QUESTION" },
+  { id: "method", label: "METHOD" },
+  { id: "close", label: "CLOSE" },
 ] as const;
 
 type SceneId = (typeof scenes)[number]["id"];
@@ -82,6 +86,7 @@ export default function InclusionPresentation({
       if (event.key === "Home") setSceneIndex(0);
       if (event.key === "End") setSceneIndex(scenes.length - 1);
       if (event.key === "Enter") void enterFullscreen();
+      if (/^[1-8]$/.test(event.key)) setSceneIndex(Number(event.key) - 1);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -114,7 +119,7 @@ export default function InclusionPresentation({
   return (
     <main
       className={styles.stage}
-      lang="zh-CN"
+      lang="en"
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerCancel={() => {
@@ -139,7 +144,7 @@ export default function InclusionPresentation({
             onClick={() => void enterFullscreen()}
           >
             <Maximize2Icon aria-hidden="true" />
-            全屏
+            Fullscreen
           </button>
         </header>
 
@@ -152,12 +157,12 @@ export default function InclusionPresentation({
         </div>
 
         <footer className={styles.controls}>
-          <div className={styles.progress} aria-label="演示进度">
+          <div className={styles.progress} aria-label="Presentation progress">
             {scenes.map((item, index) => (
               <button
                 key={item.id}
                 type="button"
-                aria-label={`前往第 ${index + 1} 页：${item.label}`}
+                aria-label={`Go to slide ${index + 1}: ${item.label}`}
                 aria-current={index === sceneIndex ? "page" : undefined}
                 data-active={index === sceneIndex}
                 onClick={() => setSceneIndex(index)}
@@ -175,7 +180,7 @@ export default function InclusionPresentation({
               type="button"
               onClick={previous}
               disabled={sceneIndex === 0}
-              aria-label="上一页"
+              aria-label="Previous slide"
             >
               <ChevronLeftIcon aria-hidden="true" />
             </button>
@@ -183,7 +188,7 @@ export default function InclusionPresentation({
               type="button"
               onClick={next}
               disabled={sceneIndex === scenes.length - 1}
-              aria-label="下一页"
+              aria-label="Next slide"
             >
               <ChevronRightIcon aria-hidden="true" />
             </button>
@@ -208,10 +213,10 @@ function Scene({ id, stats }: { id: SceneId; stats: PresentationStats }) {
             <strong>The Inclusion Conference</strong>
           </div>
           <h1>
-            Agentic AI Landscape
-            <em>趋势洞察</em>
+            When agents joined in,
+            <em>what happened to open-source collaboration?</em>
           </h1>
-          <p>September 2026</p>
+          <p>Xiaoya Xia · September 2026</p>
         </div>
         <div className={styles.collaborationMark}>
           <strong>ANT OPEN SOURCE</strong>
@@ -222,142 +227,179 @@ function Scene({ id, stats }: { id: SceneId; stats: PresentationStats }) {
     );
   }
 
+  if (id === "tracked-pool") {
+    return (
+      <article className={styles.talkSlide}>
+        <TalkHeading eyebrow="MAY → CURRENT REVIEW">
+          The tracked pool grew by {stats.trackedDelta} projects.
+        </TalkHeading>
+        <div className={styles.poolTimeline}>
+          <section>
+            <span>MAY 2026</span>
+            <strong>{stats.mayTracked}</strong>
+            <p>repositories in the frozen tracking pool</p>
+          </section>
+          <i aria-hidden="true" />
+          <section>
+            <span>CURRENT</span>
+            <strong>{stats.currentTracked}</strong>
+            <p>repositories in the canonical project list</p>
+          </section>
+          <aside>
+            <strong>{stats.total}</strong>
+            <span>selected for the two maps</span>
+          </aside>
+        </div>
+        <p className={styles.slideConclusion}>
+          The number changed. The more useful signal is where the map became denser.
+        </p>
+      </article>
+    );
+  }
+
   if (id === "landscape") {
     return (
-      <article className={styles.landscapeSlide}>
-        <header className={styles.slideTitle}>
-          <span>LANDSCAPE</span>
-          <h2>当前收录项目</h2>
-          <strong>{stats.total}</strong>
-        </header>
-        <div className={styles.infraLanes}>
-          <section className={styles.agentLane}>
-            <div>
-              <span>A</span>
-              <h3>Agent Infra</h3>
-            </div>
-            <strong>{stats.agent}</strong>
-            <p>Applications · Frameworks · Runtime</p>
-          </section>
-          <section className={styles.modelLane}>
-            <div>
-              <span>M</span>
-              <h3>Model Infra</h3>
-            </div>
-            <strong>{stats.model}</strong>
-            <p>Access · Training · Data & compute</p>
-          </section>
-        </div>
-        <div className={styles.leaderStrip}>
-          <span>OPENRANK LEADERS</span>
-          {stats.leaders.map((project, index) => (
-            <div key={project.name}>
-              <small>#{index + 1}</small>
-              <strong>{project.name}</strong>
-              <b>{project.openrank.toFixed(1)}</b>
-            </div>
+      <article className={styles.talkSlide}>
+        <TalkHeading eyebrow="LANDSCAPE">
+          The crowded part and the growing part are different.
+        </TalkHeading>
+        <div className={styles.talkMacroChart}>
+          <div className={styles.talkMacroLegend}>
+            <span><i data-series="projects" />Project share</span>
+            <span><i data-series="openrank" />OpenRank share</span>
+          </div>
+          {stats.agentMacro.map((group) => (
+            <section key={group.label}>
+              <div>
+                <strong>{group.label}</strong>
+                <span>{group.projects} projects</span>
+              </div>
+              <p>
+                <i data-series="projects" style={{ width: `${group.projectShare}%` }} />
+                <i data-series="openrank" style={{ width: `${group.openrankShare}%` }} />
+              </p>
+              <b>{group.projectShare}% / {group.openrankShare}%</b>
+            </section>
           ))}
+        </div>
+        <div className={styles.talkFindingStrip}>
+          <p><strong>55%</strong><span>of Agent Infra OpenRank sits in Application</span></p>
+          <p><strong>{stats.runtimeOutsideMay}/{stats.agentOutsideMay}</strong><span>Agent projects outside the May pool sit in Runtime</span></p>
+          <p><strong>44%</strong><span>of Model Infra OpenRank sits in Serving</span></p>
         </div>
       </article>
     );
   }
 
-  const maxTrend = Math.max(...stats.agentTrend, ...stats.modelTrend, 1);
-  const chartPoints = (values: number[]) =>
-    values
-      .map((value, index) => {
-        const x = (index / Math.max(values.length - 1, 1)) * 600;
-        const y = 210 - (value / maxTrend) * 190;
-        return `${x.toFixed(1)},${y.toFixed(1)}`;
-      })
-      .join(" ");
-  const participantMax = Math.max(
-    stats.agentParticipants,
-    stats.modelParticipants,
-    1,
-  );
+  if (id === "two-gates") return <TwoGatesSlide />;
+  if (id === "deepseek") return <DeepSeekSlide />;
+  if (id === "question") return <QuestionSlide />;
+  if (id === "method") return <MethodSlide />;
+  return <ClosingSlide />;
+}
 
+function TalkHeading({ eyebrow, children }: { eyebrow: string; children: ReactNode }) {
   return (
-    <article className={styles.signalsSlide}>
-      <header className={styles.slideTitle}>
-        <span>SIGNALS</span>
-        <h2>本期关注的变化</h2>
-      </header>
-      <div className={styles.signalComposition}>
-        <section className={styles.signalTrend}>
-          <div className={styles.signalLabel}>
-            <span>01</span>
-            <h3>分领域 OpenRank 趋势</h3>
-          </div>
-          <div className={styles.trendChart}>
-            <svg
-              viewBox="0 0 600 220"
-              role="img"
-              aria-label="2025 年 8 月至 2026 年 7 月 Agent Infra 与 Model Infra OpenRank 汇总趋势"
-            >
-              <polyline
-                className={styles.agentTrendLine}
-                points={chartPoints(stats.agentTrend)}
-              />
-              <polyline
-                className={styles.modelTrendLine}
-                points={chartPoints(stats.modelTrend)}
-              />
-            </svg>
-            <div className={styles.trendLegend}>
-              <span>
-                <i data-series="agent" />
-                Agent Infra
-                <strong>{stats.agentTrend.at(-1)?.toLocaleString()}</strong>
-              </span>
-              <span>
-                <i data-series="model" />
-                Model Infra
-                <strong>{stats.modelTrend.at(-1)?.toLocaleString()}</strong>
-              </span>
-            </div>
-          </div>
-          <p>2025-08—2026-07 · 项目 OpenRank 按基础设施板块汇总</p>
+    <header className={styles.talkHeading}>
+      <span>{eyebrow}</span>
+      <h2>{children}</h2>
+    </header>
+  );
+}
+
+function TwoGatesSlide() {
+  return (
+    <article className={styles.talkSlide}>
+      <TalkHeading eyebrow="ONE AGENT · TWO BOUNDARIES">Agents enter software twice.</TalkHeading>
+      <div className={styles.gatePair}>
+        <section>
+          <span>BEFORE MERGE</span>
+          <h3>Who can change the software?</h3>
+          <p>Issues · pull requests · review · maintainer judgment</p>
+          <strong>MERGE GATE</strong>
         </section>
-        <section className={styles.signalParticipation}>
-          <div className={styles.signalLabel}>
-            <span>02</span>
-            <h3>参与者变化</h3>
-          </div>
-          <div className={styles.peopleBars}>
-            <div>
-              <span>Agent</span>
-              <i
-                style={{
-                  height: `${(stats.agentParticipants / participantMax) * 100}%`,
-                }}
-              />
-              <strong>{stats.agentParticipants.toLocaleString()}</strong>
-            </div>
-            <div>
-              <span>Model</span>
-              <i
-                style={{
-                  height: `${(stats.modelParticipants / participantMax) * 100}%`,
-                }}
-              />
-              <strong>{stats.modelParticipants.toLocaleString()}</strong>
-            </div>
-          </div>
-          <p>2026-07 · Participants 汇总</p>
+        <section>
+          <span>AFTER DEPLOYMENT</span>
+          <h3>What can the software change?</h3>
+          <p>Code execution · tools · authority · external effects</p>
+          <strong>EXECUTION GATE</strong>
         </section>
-        <section className={styles.signalRanking}>
-          <div className={styles.signalLabel}>
-            <span>03</span>
-            <h3>可筛选项目榜单</h3>
-          </div>
-          <div className={styles.filterLine}>
-            <span>领域</span>
-            <span>月份</span>
-            <span>语言</span>
-          </div>
-          <p>榜单保留项目上下文，不把单一排名当作完整结论。</p>
-        </section>
+      </div>
+    </article>
+  );
+}
+
+function DeepSeekSlide() {
+  return (
+    <article className={styles.talkSlide}>
+      <TalkHeading eyebrow="CASE · DEEPSEEK HARNESS">
+        Open code can still keep the core closed.
+      </TalkHeading>
+      <div className={styles.caseSlideGrid}>
+        <blockquote>
+          “You may consider this repository an idea, an official showcase, and a source of inspiration.”
+        </blockquote>
+        <dl>
+          <div><dt>LICENSE</dt><dd>MIT</dd></div>
+          <div><dt>ISSUES</dt><dd data-state="off">Off</dd></div>
+          <div><dt>PULL REQUESTS</dt><dd data-state="off">Off</dd></div>
+          <div><dt>DISCUSSIONS</dt><dd data-state="on">On</dd></div>
+          <div><dt>ECOSYSTEM SURFACE</dt><dd>Plugins</dd></div>
+        </dl>
+      </div>
+      <p className={styles.slideConclusion}>Publishing source, accepting outside changes and growing an ecosystem are three different decisions.</p>
+    </article>
+  );
+}
+
+function QuestionSlide() {
+  return (
+    <article className={styles.talkSlide}>
+      <TalkHeading eyebrow="THE RESEARCH QUESTION">
+        More code does not tell us whether collaboration improved.
+      </TalkHeading>
+      <div className={styles.researchMeasures}>
+        <section><strong>OUTPUT</strong><span>PRs and commits per repository-month</span></section>
+        <section><strong>ENTRY</strong><span>First-time contributor merge and return</span></section>
+        <section><strong>JUDGMENT</strong><span>Time to first human review and revision rounds</span></section>
+        <section><strong>PRESSURE</strong><span>Review load per active maintainer</span></section>
+      </div>
+      <p className={styles.slideConclusion}>The answer has to include the work that lands on maintainers.</p>
+    </article>
+  );
+}
+
+function MethodSlide() {
+  return (
+    <article className={styles.talkSlide}>
+      <TalkHeading eyebrow="FIELD STUDY DESIGN">
+        The answer needs a matched control group.
+      </TalkHeading>
+      <div className={styles.cohortFlow}>
+        <section><strong>≈100</strong><span>post-2024 Agentic AI repositories</span></section>
+        <i aria-hidden="true" />
+        <section><strong>1:1</strong><span>traditional software controls</span></section>
+        <i aria-hidden="true" />
+        <section><strong>Same age window</strong><span>language · owner type · contributor scale · PR intake</span></section>
+      </div>
+      <div className={styles.methodBoundary}>
+        <span>CONFIRMED AGENT</span>
+        <span>AUTOMATION / BOT</span>
+        <span>HUMAN ACCOUNT</span>
+        <span>UNKNOWN</span>
+      </div>
+    </article>
+  );
+}
+
+function ClosingSlide() {
+  return (
+    <article className={styles.talkClosing}>
+      <span>THE SAME QUESTION RETURNS AFTER DEPLOYMENT</span>
+      <h2>Who authorised the change, and can someone reconstruct it later?</h2>
+      <div>
+        <p><strong>MERGE GATE</strong><span>maintainer review</span></p>
+        <p><strong>EXECUTION GATE</strong><span>infrastructure policy and evidence</span></p>
       </div>
     </article>
   );

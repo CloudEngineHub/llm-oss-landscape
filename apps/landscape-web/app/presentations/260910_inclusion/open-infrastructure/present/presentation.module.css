@@ -411,8 +411,18 @@
   transform: translateX(-50%);
 }
 
+.runtimeSignal {
+  margin: 2.3cqh 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: .8cqw;
+}
+
+.runtimeSignal strong { color: var(--violet); font-size: 2.1cqw; line-height: .85; letter-spacing: -.05em; }
+.runtimeSignal span { font-size: .82cqw; font-weight: 700; }
+
 .pressureRail {
-  margin-top: 4cqh;
+  margin-top: 2.4cqh;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border-top: 0.15cqw solid var(--ink);

@@ -13,9 +13,21 @@ We will publish the latest Agent Infra and Model Infra landscapes, recording new
 
 The study asks a question that is already affecting software development: when AI starts writing code and working with Issues and pull requests, what happens to open-source collaboration?
 
-## Role of the trend section
+## First synchronized slide map
 
-The landscape update establishes what changed since CommunityOverCode and where attention is gathering. The open-infrastructure keynote becomes one focused passage inside this section. It should remain useful to a general Inclusion Conference audience and should not assume that everyone attended the 7–9 September event.
+1. **Open** — When agents joined in, what happened to open-source collaboration?
+2. **May to current review** — the tracked pool grew from 227 to 277 projects;
+3. **Landscape** — the crowded part and the growing part are different;
+4. **Two gates** — agents enter software before merge and after deployment;
+5. **DeepSeek Harness** — open code, outside contributions and ecosystem growth are separate choices;
+6. **Research question** — more code does not establish better collaboration;
+7. **Method** — roughly one hundred post-2024 Agentic AI repositories need matched traditional-software controls;
+8. **Close** — the same authorization and evidence question returns after deployment.
+
+Landscape and activity signals stay in one section. The five-minute Open
+Infrastructure keynote reuses the Landscape evidence, then follows the Execution
+gate. The ten-minute Inclusion Conference talk follows the Merge gate and uses
+Open Infrastructure as the final bridge.
 
 ## Research section to build next
 
