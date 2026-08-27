@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
 
-import { getLandscapeProjects } from "@/lib/landscape-data";
-
+import { getInclusionResearchData } from "../research-data";
 import InclusionPresentation from "./presentation";
 
 export const metadata: Metadata = {
-  title: "演示播放｜260910 InclusionAI",
+  title: "Presentation | 260910 InclusionConf",
   description:
-    "Agentic AI Landscape 2026 年 9 月趋势洞察的 16:9 交互式演示。",
+    "Interactive presentation material for the 2026 Inclusion Conference research release.",
 };
 
 export default function InclusionPresentationPage() {
-  const projects = getLandscapeProjects();
+  const { projects, stats: researchStats } = getInclusionResearchData();
   const agentProjects = projects.filter((project) => project.stage !== "model");
   const modelProjects = projects.filter((project) => project.stage === "model");
   const rankedProjects = projects
@@ -21,9 +20,7 @@ export default function InclusionPresentationPage() {
   return (
     <InclusionPresentation
       stats={{
-        total: projects.length,
-        agent: agentProjects.length,
-        model: modelProjects.length,
+        ...researchStats,
         agentParticipants: agentProjects.reduce(
           (total, project) => total + (project.participants ?? 0),
           0,

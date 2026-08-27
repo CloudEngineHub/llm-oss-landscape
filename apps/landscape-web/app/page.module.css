@@ -1082,6 +1082,14 @@
   gap: 4px;
 }
 
+.boardSource span {
+  color: var(--quiet);
+  font-size: 9px;
+  font-weight: 650;
+  line-height: 1.45;
+  text-align: right;
+}
+
 .resetStageView {
   margin-top: 2px;
   padding: 4px 9px;

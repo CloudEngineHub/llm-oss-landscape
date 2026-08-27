@@ -7,7 +7,10 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "localhost", "10.71.15.140"],
   outputFileTracingRoot: monorepoRoot,
   outputFileTracingIncludes: {
-    "/*": ["../../data/agentic-ai-projects.csv"],
+    "/*": [
+      "../../data/agentic-ai-projects.csv",
+      "../../insights/260912_open_collaboration_ai/report/web-copy.json",
+    ],
   },
   turbopack: {
     root: monorepoRoot,

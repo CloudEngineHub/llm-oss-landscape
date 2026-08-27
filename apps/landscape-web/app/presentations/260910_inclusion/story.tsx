@@ -1,11 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
-import { type ReactNode, useMemo, useState } from "react";
+import { ArrowLeftIcon, ExternalLinkIcon, PlayIcon } from "lucide-react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import LandscapeLogo from "@/app/components/landscape-logo";
+import type { ReportCopy, ReportCopyKey } from "@/lib/inclusion-report-copy";
+import type { ReportReferenceGroup } from "@/lib/inclusion-report-references";
 
+import type {
+  InclusionResearchStats,
+  LanguageMixGroup,
+  MacroGroup,
+  RuntimePathPoint,
+} from "./research-data";
+import { EditableText, ReportCopyEditor } from "./report-copy-editor";
 import styles from "./page.module.css";
 
 type StoryProject = {
@@ -14,21 +30,15 @@ type StoryProject = {
   layer: "agent" | "model";
   zone: string;
   openrank: number | null;
-  participants: number | null;
+  stars: number;
+  language: string;
   createdAt: string;
-  growth: number | null;
   signals: Array<"new" | "rising">;
 };
 
-type StoryStats = {
-  total: number;
-  agent: number;
-  model: number;
-  agentRecent: number;
-  modelRecent: number;
-  agentAdds: number;
-  modelAdds: number;
-  sinceCoc: number;
+type BarStyle = CSSProperties & {
+  "--bar-delay": string;
+  "--bar-width": string;
 };
 
 const infraShifts = [
@@ -99,13 +109,35 @@ const infraShifts = [
   },
 ] as const;
 
-export default function BundSummitStory({
+const outsideGithubSignals = [
+  {
+    source: "OPENROUTER · PUBLIC APP RANKING",
+    value: "#5",
+    label: "DeepSeek Harness in the current global app ranking",
+    note: "It also appears in the fastest-growing list for the week, above 999%. Public, attributed OpenRouter traffic only; checked 27 Aug 2026.",
+    href: "https://openrouter.ai/apps/",
+  },
+  {
+    source: "OPENROUTER + ZENMUX · HUGGING FACE",
+    value: "5 / 10",
+    label: "Top usage ranks with an official public-weight repository",
+    note: "June 2026 composite usage sample. Weight access was resolved on Hugging Face; open-weight does not imply an OSI-approved license.",
+    href: "https://huggingface.co/docs/hub/en/api",
+  },
+] as const;
+
+export default function InclusionConfStory({
+  initialCopy,
+  references,
   stats,
   projects,
 }: {
-  stats: StoryStats;
+  initialCopy: ReportCopy;
+  references: ReportReferenceGroup[];
+  stats: InclusionResearchStats;
   projects: StoryProject[];
 }) {
+  const pageRef = useRef<HTMLElement>(null);
   const [layer, setLayer] = useState<"agent" | "model">("agent");
   const [shiftId, setShiftId] = useState<(typeof infraShifts)[number]["id"]>(
     "execution",
@@ -123,135 +155,144 @@ export default function BundSummitStory({
         .slice(0, 5),
     [layerProjects],
   );
-  const growthLeaders = useMemo(
-    () =>
-      [...projects]
-        .filter((project) => (project.growth ?? 0) > 0)
-        .sort((a, b) => (b.growth ?? 0) - (a.growth ?? 0))
-        .slice(0, 6),
-    [projects],
-  );
-
   const layerStats =
     layer === "agent"
-      ? { count: stats.agent, recent: stats.agentRecent, adds: stats.agentAdds }
-      : { count: stats.model, recent: stats.modelRecent, adds: stats.modelAdds };
+      ? { count: stats.agent, recent: stats.agentRecent }
+      : { count: stats.model, recent: stats.modelRecent };
   const recentShare = Math.round((layerStats.recent / layerStats.count) * 100);
   const activeShift = infraShifts.find((shift) => shift.id === shiftId)!;
-  const maxGrowth = Math.max(
-    ...growthLeaders.map((project) => project.growth ?? 0),
-  );
+
+  useEffect(() => {
+    const page = pageRef.current;
+    if (!page) return;
+
+    const revealTargets = [...page.querySelectorAll<HTMLElement>("[data-reveal]")];
+    page.dataset.motionReady = "true";
+
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+
+    if (reduceMotion || !("IntersectionObserver" in window)) {
+      revealTargets.forEach((target) => {
+        target.dataset.visible = "true";
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          (entry.target as HTMLElement).dataset.visible = "true";
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -4%", threshold: 0.08 },
+    );
+
+    revealTargets.forEach((target) => observer.observe(target));
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <main className={styles.page} lang="en">
+    <main className={styles.page} lang="en" ref={pageRef}>
+      <ReportCopyEditor initialCopy={initialCopy}>
       <nav className={styles.nav} aria-label="Talk chapters">
         <Link className={styles.brand} href="/">
           <LandscapeLogo className={styles.brandMark} />
           <span>Agentic AI Landscape</span>
         </Link>
         <div className={styles.chapterNav}>
-          <a href="#landscape">01 Trends</a>
-          <a href="#infrastructure">02 Open infrastructure</a>
-          <a href="#collaboration">03 Collaboration</a>
-          <a href="#signals">04 Signals</a>
+          <a href="#landscape">01 Landscape</a>
+          <a href="#collaboration">02 Collaboration</a>
+          <a href="#infrastructure">03 Open infrastructure</a>
         </div>
-        <Link className={styles.navBack} href="/">
-          <ArrowLeftIcon aria-hidden="true" />
-          Back to the landscape
-        </Link>
+        <div className={styles.navActions} aria-label="Play presentations">
+          <Link
+            className={`${styles.playLink} ${styles.playInfra}`}
+            href="/presentations/260910_inclusion/open-infrastructure/present"
+          >
+            <PlayIcon aria-hidden="true" />
+            <span>5 MIN</span>
+            <strong>Open Infrastructure</strong>
+          </Link>
+          <Link
+            className={`${styles.playLink} ${styles.playCollaboration}`}
+            href="/presentations/260910_inclusion/present"
+          >
+            <PlayIcon aria-hidden="true" />
+            <span>10 MIN</span>
+            <strong>Collaboration</strong>
+          </Link>
+          <Link className={styles.navBack} href="/">
+            <ArrowLeftIcon aria-hidden="true" />
+            <span>Landscape</span>
+          </Link>
+        </div>
       </nav>
 
       <header className={styles.hero}>
-        <div className={styles.heroTopline}>
-          <p className={styles.eyebrow}>THE BUND SUMMIT · 09.10 · SHANGHAI</p>
-          <p className={styles.eyebrow}>OPEN ECOSYSTEM FIELD NOTES · 2026</p>
-        </div>
         <h1 className={styles.heroTitle}>
-          When <span>agents</span> joined in,
-          <em>what happened to open-source collaboration?</em>
+          <EditableText copyKey="heroPrefix" />
+          {" "}
+          <EditableText className={styles.heroAgent} copyKey="heroAgent" />
+          {" "}
+          <EditableText copyKey="heroSuffix" />
+          {" "}
+          <EditableText as="em" copyKey="heroFocus" />
         </h1>
-        <div className={styles.heroBottom}>
-          <p className={styles.continuity}>
-            Twenty days after CommunityOverCode, the landscape has grown from
-            126 to 143 projects. Most of the new attention still sits around
-            coding. The production questions are moving lower in the stack.
-          </p>
-          <p className={styles.heroLede}>
-            We use the latest Agent Infra and Model Infra maps to follow two
-            changes: how agents enter open-source collaboration, and what open
-            infrastructure has to manage once their actions reach production.
-          </p>
-        </div>
+        <EditableText as="p" className={styles.heroSummary} copyKey="heroLede" />
       </header>
 
-      <section className={styles.axisBand} aria-label="Two questions">
+      <section
+        className={styles.axisBand}
+        aria-label="Two questions"
+        data-reveal
+      >
         <article>
-          <span>01 · AGENTS AS CONTRIBUTORS</span>
-          <h2>How will an agent contribute?</h2>
-          <p>
-            Agents already read repository rules, edit code and run tests. The
-            contribution surface now includes machine-readable instructions and
-            plugins alongside issues and pull requests.
-          </p>
+          <span>THE MERGE GATE</span>
+          <EditableText as="h2" copyKey="mergeGateTitle" />
+          <EditableText as="p" copyKey="mergeGateBody" />
         </article>
         <article>
-          <span>02 · AGENTS AS WORKLOADS</span>
-          <h2>What kind of workload is an agent?</h2>
-          <p>
-            An agent can generate code during a task, call an external tool and
-            carry state across several short-lived environments. The process may
-            disappear in minutes; its effects do not.
-          </p>
+          <span>THE EXECUTION GATE</span>
+          <EditableText as="h2" copyKey="executionGateTitle" />
+          <EditableText as="p" copyKey="executionGateBody" />
         </article>
       </section>
 
-      <section className={styles.metricBand} aria-label="Landscape summary">
-        <Metric value={stats.total} label="Projects in the current landscape" />
-        <Metric value={stats.agent} label="Agent Infra" />
-        <Metric value={stats.model} label="Model Infra" />
+      <section
+        className={styles.metricBand}
+        aria-label="Landscape summary"
+        data-reveal
+      >
+        <Metric value={stats.mayTracked} label="Tracked in May 2026" />
+        <Metric value={stats.currentTracked} label="Tracked now" />
+        <Metric value={stats.total} label="Selected for the current maps" />
         <Metric
-          value={stats.sinceCoc}
-          label="Selected since the CoC snapshot"
+          value={stats.selectedOutsideMay}
+          label="Selected projects outside the May pool"
         />
       </section>
 
-      <section className={styles.chapter} id="landscape">
-        <SectionTag index="01">Trends</SectionTag>
-        <h2 className={styles.chapterTitle}>
-          The map added 17 projects. Its pressure points barely moved.
-        </h2>
-        <p className={styles.chapterLede}>
-          Thirteen additions entered Agent Infra and four entered Model Infra.
-          Seven of the thirteen Agent additions are coding tools, harnesses or
-          code-first frameworks. The structural change sits elsewhere: gateways,
-          context and sandbox projects are becoming a control layer around the
-          agent, not another model API wrapper.
-        </p>
+      <section
+        className={`${styles.chapter} ${styles.landscapeChapter}`}
+        id="landscape"
+      >
+        <SectionTag index="01">Landscape findings</SectionTag>
+        <EditableText
+          as="h2"
+          className={styles.chapterTitle}
+          copyKey="landscapeOverviewTitle"
+        />
+        <EditableText
+          as="p"
+          className={styles.chapterLede}
+          copyKey="landscapeOverviewBody"
+        />
 
-        <div className={styles.trendGrid}>
-          <TrendCard
-            number="7 / 13"
-            title="Coding still absorbs the new attention"
-            body="DeepSeek Harness, Kimi Code, T3 Code and Spec Kit joined a layer that was already crowded. DeepSeek's launch signal is large; it is still too new for a complete OpenRank month."
-          />
-          <TrendCard
-            number="9"
-            title="Context is separating from RAG"
-            body="The memory and context section now has nine projects. OpenViking rose by 42.6 OpenRank points between April and July, the second-largest gain in the map."
-          />
-          <TrendCard
-            number="5 → 8"
-            title="Protocols are becoming a control plane"
-            body="AgentGateway and MCP Context Forge moved from Model API gateways into Agent Infra. Their work is tool discovery, policy, registry and runtime management."
-          />
-          <TrendCard
-            number="786.8"
-            title="Serving remains the heavy systems layer"
-            body="Eight inference projects hold 786.8 combined July OpenRank. FlashInfer gained 20.7 points from April to July as multi-call workloads keep pressure on serving efficiency."
-          />
-        </div>
-
-        <div className={styles.landscapeLens}>
+        <div className={styles.landscapeLens} data-reveal>
           <div className={styles.lensHeader}>
             <div className={styles.lensToggle} aria-label="Choose a landscape">
               {(["agent", "model"] as const).map((item) => (
@@ -280,8 +321,12 @@ export default function BundSummitStory({
               <span>Created in 2025 or later</span>
             </div>
             <div>
-              <strong>+{layerStats.adds}</strong>
-              <span>Added in the current review</span>
+              <strong>
+                {layer === "agent"
+                  ? stats.agentOutsideMay
+                  : stats.selectedOutsideMay - stats.agentOutsideMay}
+              </strong>
+              <span>Selected projects outside the May tracking pool</span>
             </div>
             <div className={styles.leaderList}>
               {leaders.map((project) => (
@@ -298,20 +343,220 @@ export default function BundSummitStory({
             </div>
           </div>
         </div>
+
+        <EditableText
+          as="h2"
+          className={styles.landscapeFindingTitle}
+          copyKey="landscapeTitle"
+        />
+
+        <p className={styles.chapterLede}>
+          The tracked pool grew by {stats.trackedDelta} projects since May.
+          Applications still attract most of the visible activity. Runtime now
+          holds almost the same number of selected projects, and it accounts for{" "}
+          {stats.runtimeOutsideMay} of the {stats.agentOutsideMay} Agent
+          Infra projects that were not in the May tracking pool.
+        </p>
+
+        <div className={styles.macroEvidence} data-reveal>
+          <MacroComparison
+            titleKey="agentChartTitle"
+            groups={stats.agentMacro}
+            accent="agent"
+          />
+          <MacroComparison
+            titleKey="modelChartTitle"
+            groups={stats.modelMacro}
+            accent="model"
+          />
+        </div>
+
+        <div className={styles.growthPanel} data-reveal>
+          <div className={styles.growthSummary}>
+            <strong>APR→JUL</strong>
+            <EditableText as="p" copyKey="growthSummary" />
+          </div>
+          <div className={styles.growthList}>
+            {stats.growthLeaders.map((project, index) => {
+              const maxGrowth = stats.growthLeaders[0]?.growth ?? 1;
+              return (
+                <div className={styles.growthRow} key={project.repo}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  <a
+                    href={`https://github.com/${project.repo}`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {project.name}
+                  </a>
+                  <span className={styles.projectMeta}>{project.zone}</span>
+                  <div className={styles.growthBar} aria-hidden="true">
+                    <i
+                      style={
+                        {
+                          "--bar-delay": `${index * 90}ms`,
+                          "--bar-width": `${(project.growth / maxGrowth) * 100}%`,
+                        } as BarStyle
+                      }
+                    />
+                  </div>
+                  <b className={styles.growthValue}>+{project.growth.toFixed(1)}</b>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className={styles.ageFinding} data-reveal>
+          <div>
+            <span>CREATED IN 2025 OR LATER</span>
+            <strong>{Math.round((stats.agentRecent / stats.agent) * 100)}%</strong>
+            <p>Agent Infra · {stats.agentRecent} of {stats.agent} projects</p>
+          </div>
+          <div>
+            <span>CREATED IN 2025 OR LATER</span>
+            <strong>{Math.round((stats.modelRecent / stats.model) * 100)}%</strong>
+            <p>Model Infra · {stats.modelRecent} of {stats.model} projects</p>
+          </div>
+          <EditableText as="p" copyKey="ageFinding" />
+        </div>
+
+        <article className={styles.languageSignal} data-reveal>
+          <header>
+            <span className={styles.signalEyebrow}>PRIMARY LANGUAGE</span>
+            <EditableText as="h3" copyKey="languageTitle" />
+            <EditableText as="p" copyKey="languageBody" />
+          </header>
+          <LanguageMixChart
+            groups={stats.languageMix}
+            agentTotal={stats.agent}
+            modelTotal={stats.model}
+          />
+        </article>
+
+        <div className={styles.runtimePath} data-reveal>
+          <header>
+            <span className={styles.signalEyebrow}>AGENT RUNTIME</span>
+            <EditableText as="h3" copyKey="runtimePathTitle" />
+            <EditableText as="p" copyKey="runtimePathBody" />
+          </header>
+          <RuntimePath points={stats.runtimePath} />
+        </div>
+
+        <aside className={styles.outsideGithub} data-reveal>
+          <header>
+            <span className={styles.signalEyebrow}>OUTSIDE GITHUB</span>
+            <EditableText as="h3" copyKey="outsideGithubTitle" />
+            <EditableText as="p" copyKey="outsideGithubBody" />
+          </header>
+          <div className={styles.outsideGithubSignals}>
+            {outsideGithubSignals.map((signal) => (
+              <a
+                href={signal.href}
+                key={signal.source}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span>{signal.source}</span>
+                <strong>{signal.value}</strong>
+                <b>{signal.label}</b>
+                <small>{signal.note}</small>
+                <ExternalLinkIcon aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+        </aside>
+      </section>
+
+      <section className={styles.chapter} id="collaboration">
+        <SectionTag index="02">Collaboration</SectionTag>
+        <EditableText
+          as="h2"
+          className={styles.chapterTitle}
+          copyKey="collaborationTitle"
+        />
+        <EditableText
+          as="p"
+          className={styles.chapterLede}
+          copyKey="collaborationLede"
+        />
+
+        <div className={styles.caseGrid} data-reveal>
+          <article className={styles.caseNarrative}>
+            <EditableText as="h3" copyKey="caseTitle" />
+            <EditableText as="blockquote" copyKey="caseQuote" />
+            <EditableText as="p" copyKey="caseBody" />
+          </article>
+          <aside className={styles.caseEvidence}>
+            <h3>DeepSeek Harness · checked 25 Aug 2026</h3>
+            <dl className={styles.caseFacts}>
+              <CaseFact label="Created" value="13 Aug" />
+              <CaseFact label="License" value="MIT" />
+              <CaseFact label="Issues" value="Off" state="off" />
+              <CaseFact label="Pull requests" value="Off" state="off" />
+              <CaseFact label="Discussions" value="On" state="on" />
+              <CaseFact label="Plugin discovery" value="dsh-plugin" state="on" />
+            </dl>
+            <a
+              className={styles.sourceLink}
+              href="https://github.com/deepseek-ai/deepseek-harness/blob/master/CONTRIBUTING.md"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Read the contribution guide
+              <ExternalLinkIcon aria-hidden="true" />
+            </a>
+          </aside>
+        </div>
+        <div
+          className={styles.questionStrip}
+          aria-label="Governance choices"
+          data-reveal
+        >
+          <EditableText as="p" copyKey="governanceInterface" />
+          <EditableText as="p" copyKey="governanceDiscovery" />
+          <EditableText as="p" copyKey="governanceRevocation" />
+        </div>
+        <div className={styles.studyFrame} data-reveal>
+          <header>
+            <span>QUESTION UNDER TEST</span>
+            <EditableText as="h3" copyKey="studyTitle" />
+          </header>
+          <div>
+            <p>
+              <strong>Output</strong>
+              <span>PRs and commits per repository-month</span>
+            </p>
+            <p>
+              <strong>Entry</strong>
+              <span>First-time contributor merge and return</span>
+            </p>
+            <p>
+              <strong>Judgment</strong>
+              <span>Human review time and revision rounds</span>
+            </p>
+            <p>
+              <strong>Pressure</strong>
+              <span>Review load per active maintainer</span>
+            </p>
+          </div>
+          <EditableText as="small" copyKey="studyNote" />
+        </div>
       </section>
 
       <section className={styles.chapter} id="infrastructure">
-        <SectionTag index="02">Open infrastructure</SectionTag>
-        <h2 className={styles.chapterTitle}>
-          The substrate is familiar. The control boundary is moving.
-        </h2>
-        <p className={styles.chapterLede}>
-          Kubernetes and OpenStack already carry production AI workloads. Agents
-          add a shorter-lived and less predictable unit of work: a task that can
-          create code, borrow authority and leave effects in several systems.
-          The figures below describe the installed base, not Agent adoption.
-        </p>
-        <div className={styles.infraBaseline}>
+        <SectionTag index="03">Open infrastructure</SectionTag>
+        <EditableText
+          as="h2"
+          className={styles.chapterTitle}
+          copyKey="infrastructureTitle"
+        />
+        <EditableText
+          as="p"
+          className={styles.chapterLede}
+          copyKey="infrastructureLede"
+        />
+        <div className={styles.infraBaseline} data-reveal>
           <a
             href="https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/"
             target="_blank"
@@ -340,7 +585,7 @@ export default function BundSummitStory({
             <small>OpenInfra 2025 annual report</small>
           </a>
         </div>
-        <div className={styles.shiftModule}>
+        <div className={styles.shiftModule} data-reveal>
           <div
             className={styles.shiftTabs}
             role="tablist"
@@ -387,118 +632,9 @@ export default function BundSummitStory({
         </div>
       </section>
 
-      <section className={styles.chapter} id="collaboration">
-        <SectionTag index="03">Collaboration</SectionTag>
-        <h2 className={styles.chapterTitle}>
-          A public repository can still choose a closed core
-        </h2>
-        <p className={styles.chapterLede}>
-          DeepSeek Harness makes the distinction visible. The code is released
-          under MIT and Discussions are open. Issues and pull requests are
-          disabled. Its contribution guide directs community work toward plugins
-          and says external pull requests are not being accepted for now.
-        </p>
-
-        <div className={styles.caseGrid}>
-          <article className={styles.caseNarrative}>
-            <h3>The contribution surface sits outside the core repository</h3>
-            <blockquote>
-              “You may consider this repository an idea, an official showcase,
-              and a source of inspiration, but not a mandate from us.”
-            </blockquote>
-            <p>
-              The project treats its official code as a reference point and
-              third-party plugins as the place where the ecosystem can branch
-              out. That arrangement leaves practical governance work around
-              interface stability, discovery and what happens when a plugin
-              becomes unsafe or abandoned.
-            </p>
-          </article>
-          <aside className={styles.caseEvidence}>
-            <h3>DeepSeek Harness · checked 25 Aug 2026</h3>
-            <dl className={styles.caseFacts}>
-              <CaseFact label="Created" value="13 Aug" />
-              <CaseFact label="License" value="MIT" />
-              <CaseFact label="Issues" value="Off" state="off" />
-              <CaseFact label="Pull requests" value="Off" state="off" />
-              <CaseFact label="Discussions" value="On" state="on" />
-              <CaseFact label="Plugin discovery" value="dsh-plugin" state="on" />
-            </dl>
-            <a
-              className={styles.sourceLink}
-              href="https://github.com/deepseek-ai/deepseek-harness/blob/master/CONTRIBUTING.md"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read the contribution guide
-              <ExternalLinkIcon aria-hidden="true" />
-            </a>
-          </aside>
-        </div>
-        <div className={styles.questionStrip} aria-label="Governance choices">
-          <p>Interface stability needs a visible owner.</p>
-          <p>Plugin discovery needs verification and provenance.</p>
-          <p>Unsafe or abandoned capabilities need a revocation path.</p>
-        </div>
-      </section>
-
-      <section className={styles.chapter} id="signals">
-        <SectionTag index="04">Signals</SectionTag>
-        <h2 className={styles.chapterTitle}>
-          The strongest recent growth is showing up around tool use and memory
-        </h2>
-        <p className={styles.chapterLede}>
-          Lark CLI and OpenViking recorded the largest OpenRank gains between
-          April and July in this landscape. Orca also rose steadily in
-          multi-agent orchestration. These figures show where developer attention
-          is gathering; they do not establish production adoption.
-        </p>
-        <div className={styles.growthPanel}>
-          <div className={styles.growthSummary}>
-            <strong>APR→JUL</strong>
-            <p>
-              Each bar compares the same repository in April and July 2026. The
-              length shows the OpenRank increase, not stars, revenue or deployment.
-            </p>
-          </div>
-          <div className={styles.growthList}>
-            {growthLeaders.map((project, index) => (
-              <div className={styles.growthRow} key={project.repo}>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <a
-                  href={`https://github.com/${project.repo}`}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {project.name}
-                </a>
-                <span className={styles.projectMeta}>{project.zone}</span>
-                <div className={styles.growthBar} aria-hidden="true">
-                  <i
-                    style={{
-                      width: `${((project.growth ?? 0) / maxGrowth) * 100}%`,
-                    }}
-                  />
-                </div>
-                <b className={styles.growthValue}>
-                  +{project.growth?.toFixed(1)}
-                </b>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <section className={styles.closing}>
-        <p>
-          Can an agent run code, use authority and leave enough evidence for
-          someone else to understand what happened?
-        </p>
-        <small>
-          This is where agentic AI meets cloud native, PyTorch and OpenInfra. The
-          established stack remains useful. Its control model has to account for
-          code and environments that appear during the task.
-        </small>
+        <EditableText as="p" copyKey="closingQuestion" />
+        <EditableText as="small" copyKey="closingNote" />
       </section>
 
       <section className={styles.methodology}>
@@ -506,69 +642,50 @@ export default function BundSummitStory({
           <summary>Methodology and data boundaries</summary>
           <div className={styles.methodologyBody}>
             <p>
-              The project list comes from the 143 repositories marked keep or
-              add in data/agentic-ai-projects.csv. The CoC comparison uses the
-              frozen 126-project selection. OpenRank and participant counts use
-              the complete July 2026 month. Creation dates, categories and review
-              decisions come from the landscape snapshot dated 23 August 2026.
+              The current maps contain {stats.total} repositories marked keep or
+              add in data/agentic-ai-projects.csv. The May baseline is the
+              {stats.mayTracked}-repository tracking pool preserved in
+              data/history_snapshot/2605_agentic_projects.csv. OpenRank and
+              participant counts use the complete July 2026 month.
             </p>
             <p>
               OpenRank, stars, forks and participant counts describe different
-              signals. This page uses them to study developer attention and open
-              collaboration. It does not treat them as evidence of production
-              adoption, revenue or technical superiority. DeepSeek Harness
-              repository settings were checked through the GitHub API on 25 August
-              2026.
+              signals. Primary language is GitHub&apos;s repository-level label,
+              not a count of source lines. The OpenRouter app ranking is public
+              and opt-in; Hugging Face downloads are artifact requests, not
+              unique users. None of these measures establishes production
+              adoption, revenue or technical superiority.
             </p>
           </div>
         </details>
-        <div className={styles.sources}>
-          <span className={styles.sourceLabel}>Sources</span>
-          <a
-            href="https://stateofopensource.ai/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            State of Open Source AI · interaction reference
-          </a>
-          <a
-            href="https://open-digger.cn/en/docs/user_docs/metrics/openrank"
-            target="_blank"
-            rel="noreferrer"
-          >
-            OpenRank documentation
-          </a>
-          <a
-            href="https://github.com/deepseek-ai/deepseek-harness"
-            target="_blank"
-            rel="noreferrer"
-          >
-            DeepSeek Harness
-          </a>
-          <a
-            href="https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            CNCF Annual Cloud Native Survey 2025
-          </a>
-          <a
-            href="https://openinfra.org/annual-report/2025/"
-            target="_blank"
-            rel="noreferrer"
-          >
-            OpenInfra Annual Report 2025
-          </a>
-          <a
-            href="https://github.com/open-telemetry/semantic-conventions-genai"
-            target="_blank"
-            rel="noreferrer"
-          >
-            OpenTelemetry GenAI conventions
-          </a>
-        </div>
       </section>
+
+      <ResearchTrail groups={references} />
+      </ReportCopyEditor>
     </main>
+  );
+}
+
+function ResearchTrail({ groups }: { groups: ReportReferenceGroup[] }) {
+  const references = groups.flatMap((group) => group.items);
+
+  return (
+    <section className={styles.referenceLibrary} id="references">
+      <header className={styles.referenceHeader}>
+        <h2>References</h2>
+        <span>{references.length} sources</span>
+      </header>
+      <ul className={styles.referenceList}>
+        {references.map((item) => (
+          <li key={item.id}>
+            <a href={item.url} target="_blank" rel="noreferrer">
+              <span>{item.title}</span>
+              <ExternalLinkIcon aria-hidden="true" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
   );
 }
 
@@ -581,21 +698,153 @@ function Metric({ value, label }: { value: number; label: string }) {
   );
 }
 
-function TrendCard({
-  number,
-  title,
-  body,
+function MacroComparison({
+  titleKey,
+  groups,
+  accent,
 }: {
-  number: string;
-  title: string;
-  body: string;
+  titleKey: ReportCopyKey;
+  groups: MacroGroup[];
+  accent: "agent" | "model";
 }) {
   return (
-    <article className={styles.trendCard}>
-      <strong>{number}</strong>
-      <h3>{title}</h3>
-      <p>{body}</p>
+    <article className={styles.macroChart} data-accent={accent}>
+      <EditableText as="h3" copyKey={titleKey} />
+      <div className={styles.macroLegend}>
+        <span>
+          <i data-series="projects" />
+          Project share
+        </span>
+        <span>
+          <i data-series="openrank" />
+          OpenRank share
+        </span>
+      </div>
+      <div className={styles.macroRows}>
+        {groups.map((group, index) => (
+          <div className={styles.macroRow} key={group.label}>
+            <div>
+              <strong>{group.label}</strong>
+              <span>
+                {group.projects} projects · {group.newlyTracked} outside May
+                pool
+              </span>
+            </div>
+            <div className={styles.macroBars}>
+              <i
+                data-series="projects"
+                style={
+                  {
+                    "--bar-delay": `${index * 110}ms`,
+                    "--bar-width": `${group.projectShare}%`,
+                  } as BarStyle
+                }
+              />
+              <i
+                data-series="openrank"
+                style={
+                  {
+                    "--bar-delay": `${index * 110 + 70}ms`,
+                    "--bar-width": `${group.openrankShare}%`,
+                  } as BarStyle
+                }
+              />
+            </div>
+            <b>
+              {group.projectShare}% / {group.openrankShare}%
+            </b>
+          </div>
+        ))}
+      </div>
     </article>
+  );
+}
+
+function LanguageMixChart({
+  groups,
+  agentTotal,
+  modelTotal,
+}: {
+  groups: LanguageMixGroup[];
+  agentTotal: number;
+  modelTotal: number;
+}) {
+  const rows = [
+    { label: "Agent Infra", total: agentTotal, key: "agent" as const },
+    { label: "Model Infra", total: modelTotal, key: "model" as const },
+  ];
+
+  return (
+    <div className={styles.languageChart}>
+      <div className={styles.languageRows}>
+        {rows.map((row) => (
+          <div className={styles.languageRow} key={row.key}>
+            <div>
+              <strong>{row.label}</strong>
+              <span>{row.total} repositories</span>
+            </div>
+            <div
+              className={styles.languageBar}
+              role="img"
+              aria-label={`${row.label} primary-language mix`}
+            >
+              {groups.map((group, index) => (
+                <i
+                  data-language={group.label.toLowerCase()}
+                  key={group.label}
+                  style={
+                    {
+                      "--bar-delay": `${index * 80}ms`,
+                      "--bar-width": `${(group[row.key] / row.total) * 100}%`,
+                    } as BarStyle
+                  }
+                  title={`${group.label}: ${group[row.key]} repositories`}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className={styles.languageLegend} aria-label="Language legend">
+        {groups.map((group) => (
+          <span key={group.label}>
+            <i data-language={group.label.toLowerCase()} />
+            {group.label}
+          </span>
+        ))}
+      </div>
+      <small>
+        GitHub primary language by repository, not share of source lines. Other
+        includes Rust, Java, Shell and smaller groups.
+      </small>
+    </div>
+  );
+}
+
+function RuntimePath({ points }: { points: RuntimePathPoint[] }) {
+  return (
+    <div className={styles.runtimePathSteps}>
+      {points.map((point, index) => (
+        <article key={point.label}>
+          <span>{String(index + 1).padStart(2, "0")}</span>
+          <strong>{point.shortLabel}</strong>
+          <b>{point.projects}</b>
+          <small>{point.label}</small>
+          <div>
+            {point.examples.map((project) => (
+              <a
+                href={`https://github.com/${project.repo}`}
+                key={project.repo}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {project.name}
+              </a>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
   );
 }
 

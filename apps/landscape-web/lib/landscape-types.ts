@@ -8,6 +8,7 @@ export type LandscapeProject = {
   name: string;
   description: string;
   stars: number;
+  contributors: number | null;
   forks: number;
   openIssues: number;
   license: string;

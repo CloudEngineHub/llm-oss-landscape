@@ -1,0 +1,184 @@
+[
+  {
+    "label": "Data and platform signals",
+    "description": "Repository metadata remains the primary evidence. Usage platforms are used as narrow cross-checks.",
+    "items": [
+      {
+        "id": "D01",
+        "title": "GitHub REST API documentation",
+        "publisher": "GitHub",
+        "date": "accessed August 2026",
+        "url": "https://docs.github.com/en/rest/repos/repos",
+        "usedFor": "Repository creation dates, Stars, primary language and public repository settings."
+      },
+      {
+        "id": "D02",
+        "title": "OpenRank metric documentation",
+        "publisher": "OpenDigger",
+        "date": "accessed August 2026",
+        "url": "https://open-digger.cn/en/docs/user_docs/metrics/openrank",
+        "usedFor": "Definition and interpretation of the repository activity metric used in the landscape."
+      },
+      {
+        "id": "D03",
+        "title": "OpenRouter App & Agent Rankings",
+        "publisher": "OpenRouter",
+        "date": "checked August 27, 2026",
+        "url": "https://openrouter.ai/apps/",
+        "usedFor": "DeepSeek Harness public app rank and weekly growth signal."
+      },
+      {
+        "id": "D04",
+        "title": "OpenRouter App Rankings API",
+        "publisher": "OpenRouter",
+        "date": "accessed August 2026",
+        "url": "https://openrouter.ai/docs/api/api-reference/datasets/get-app-rankings",
+        "usedFor": "Ranking scope, public attribution boundary and trending definition."
+      },
+      {
+        "id": "D05",
+        "title": "Hugging Face Hub API documentation",
+        "publisher": "Hugging Face",
+        "date": "accessed August 2026",
+        "url": "https://huggingface.co/docs/hub/en/api",
+        "usedFor": "Resolving official public-weight repositories in the June model-usage sample."
+      },
+      {
+        "id": "D06",
+        "title": "ZenMux model API marketplace",
+        "publisher": "ZenMux",
+        "date": "June 2026 frozen sample",
+        "url": "https://zenmux.ai/",
+        "usedFor": "One half of the normalized cross-platform model-usage comparison."
+      }
+    ]
+  },
+  {
+    "label": "Surveys and ecosystem reports",
+    "description": "These sources establish the installed open-infrastructure base; they do not measure agent adoption.",
+    "items": [
+      {
+        "id": "R01",
+        "title": "Annual Cloud Native Survey 2025",
+        "publisher": "CNCF",
+        "date": "2026",
+        "url": "https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/",
+        "usedFor": "Kubernetes production use and the share of GenAI-hosting organizations using Kubernetes for inference."
+      },
+      {
+        "id": "R02",
+        "title": "OpenInfra Annual Report 2025",
+        "publisher": "OpenInfra Foundation",
+        "date": "2026",
+        "url": "https://openinfra.org/annual-report/2025/",
+        "usedFor": "Documented OpenStack production-core scale."
+      }
+    ]
+  },
+  {
+    "label": "Open infrastructure and standards",
+    "description": "Primary project and specification material used to examine what existing infrastructure can already provide.",
+    "items": [
+      {
+        "id": "S01",
+        "title": "Kubernetes Agent Sandbox quickstart",
+        "publisher": "Kubernetes SIGs",
+        "date": "accessed August 2026",
+        "url": "https://github.com/kubernetes-sigs/agent-sandbox/blob/main/examples/quickstart/README.md",
+        "usedFor": "Sandbox, template, claim and warm-pool lifecycle objects."
+      },
+      {
+        "id": "S02",
+        "title": "Kata Containers Agent Sandbox integration",
+        "publisher": "Kata Containers",
+        "date": "accessed August 2026",
+        "url": "https://katacontainers.io/blog/kata-containers-agent-sandbox-integration/",
+        "usedFor": "VM-backed isolation as a boundary for agent-generated code."
+      },
+      {
+        "id": "S03",
+        "title": "Deploying the SPIRE Agent",
+        "publisher": "SPIFFE / SPIRE",
+        "date": "accessed August 2026",
+        "url": "https://spiffe.io/docs/latest/deploying/spire_agent/",
+        "usedFor": "Workload and delegated identity capabilities, including impersonation risk."
+      },
+      {
+        "id": "S04",
+        "title": "OpenTelemetry GenAI agent span conventions",
+        "publisher": "OpenTelemetry",
+        "date": "accessed August 2026",
+        "url": "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md",
+        "usedFor": "Current semantic conventions for agents and tool execution, including development status."
+      },
+      {
+        "id": "S05",
+        "title": "Kubernetes v1.34 Dynamic Resource Allocation updates",
+        "publisher": "Kubernetes",
+        "date": "September 2025",
+        "url": "https://kubernetes.io/blog/2025/09/01/kubernetes-v1-34-dra-updates/",
+        "usedFor": "The current accelerator-allocation substrate and its GA status."
+      },
+      {
+        "id": "S06",
+        "title": "Kueue overview",
+        "publisher": "Kubernetes SIG Scheduling",
+        "date": "accessed August 2026",
+        "url": "https://kueue.sigs.k8s.io/docs/overview/",
+        "usedFor": "Quota-aware scheduling across batch, training and inference workloads."
+      },
+      {
+        "id": "S07",
+        "title": "Kueue topology-aware scheduling",
+        "publisher": "Kueue",
+        "date": "accessed August 2026",
+        "url": "https://kueue.sigs.k8s.io/docs/concepts/topology_aware_scheduling/",
+        "usedFor": "Placement constraints for network-sensitive distributed work."
+      }
+    ]
+  },
+  {
+    "label": "Project cases",
+    "description": "Repository material used to keep ecosystem claims tied to visible engineering and governance choices.",
+    "items": [
+      {
+        "id": "C01",
+        "title": "DeepSeek Harness repository",
+        "publisher": "DeepSeek",
+        "date": "checked August 2026",
+        "url": "https://github.com/deepseek-ai/deepseek-harness",
+        "usedFor": "Repository surface, license and project structure."
+      },
+      {
+        "id": "C02",
+        "title": "DeepSeek Harness contribution guide",
+        "publisher": "DeepSeek",
+        "date": "checked August 2026",
+        "url": "https://github.com/deepseek-ai/deepseek-harness/blob/master/CONTRIBUTING.md",
+        "usedFor": "External contribution policy and the plugin-based ecosystem path."
+      },
+      {
+        "id": "C03",
+        "title": "OpenViking repository",
+        "publisher": "Volcengine",
+        "date": "checked August 2026",
+        "url": "https://github.com/volcengine/OpenViking",
+        "usedFor": "A concrete example of the growing memory, knowledge and context category."
+      }
+    ]
+  },
+  {
+    "label": "Editorial and interaction references",
+    "description": "Design references are disclosed separately and are not treated as evidence for our findings.",
+    "items": [
+      {
+        "id": "E01",
+        "title": "State of Open Source AI",
+        "publisher": "Mozilla",
+        "date": "accessed August 2026",
+        "url": "https://stateofopensource.ai/",
+        "usedFor": "Reference for long-form web reading, scroll-led chart reveals and a visible citation trail."
+      }
+    ]
+  }
+]

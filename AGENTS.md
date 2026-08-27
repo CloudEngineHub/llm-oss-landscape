@@ -178,9 +178,19 @@ jupyter notebook get_projects_info.ipynb
 
 ## Presentation Material Organization
 
-- Store all persistent materials for a talk under `presentations/<YYMMDD>-<event-slug>/`.
-- Keep the brief, research notes, scripts, decks, audience-facing HTML, charts, sourced assets, and final QA artifacts together in that event directory.
-- Example: CommunityOverCode China 2026 keynote materials belong in `presentations/260807-CoC-KN/`.
+- Before and after any task that writes, moves, generates, or deletes project
+  files, use the project-local `agentic-repo-hygiene` skill in
+  `.codex/skills/agentic-repo-hygiene/`. Preserve pre-existing work and resolve
+  or report every warning before handoff.
+
+- Store canonical research and report manuscripts under `insights/<study>/`.
+- Derive talk-specific briefs, scripts, decks, charts and QA artifacts into
+  `insights/presentations/<YYMMDD>-<event-slug>/` only when the study is ready
+  to support that presentation.
+- Keep web routes and UI implementation under `apps/landscape-web/`; do not use
+  application source directories as the canonical home for research prose.
+- Example: CommunityOverCode China 2026 keynote materials belong in
+  `insights/presentations/260807-CoC-KN/`.
 - Do not place presentation materials in `outputs/`; reserve `outputs/` for non-presentation generated artifacts.
 - Keep disposable build intermediates in a temporary directory and remove them before handoff.
 

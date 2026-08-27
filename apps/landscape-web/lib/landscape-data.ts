@@ -292,6 +292,42 @@ function resolveLandscapeDataPath() {
   return resolved;
 }
 
+function readCsvRecords(filePath: string) {
+  return parseCsv(
+    readFileSync(filePath, "utf8").replace(/^\uFEFF/, ""),
+  );
+}
+
+function resolveMay2026SnapshotPath() {
+  const currentDataPath = resolveLandscapeDataPath();
+  const candidates = [
+    path.join(
+      path.dirname(currentDataPath),
+      "history_snapshot",
+      "2605_agentic_projects.csv",
+    ),
+    path.join(
+      process.cwd(),
+      "data",
+      "history_snapshot",
+      "2605_agentic_projects.csv",
+    ),
+    path.resolve(
+      process.cwd(),
+      "../../data/history_snapshot/2605_agentic_projects.csv",
+    ),
+  ];
+  const resolved = candidates.find((candidate) => existsSync(candidate));
+
+  if (!resolved) {
+    throw new Error(
+      `May 2026 landscape snapshot not found. Checked: ${candidates.join(", ")}`,
+    );
+  }
+
+  return resolved;
+}
+
 function numberOrZero(value: string) {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
@@ -338,9 +374,7 @@ function displayName(repo: string) {
 }
 
 function readSelectedRecords() {
-  const records = parseCsv(
-    readFileSync(resolveLandscapeDataPath(), "utf8").replace(/^\uFEFF/, ""),
-  );
+  const records = readCsvRecords(resolveLandscapeDataPath());
   const selected = records.filter((record) =>
     ["keep", "add"].includes(record.landscape_action.trim().toLowerCase()),
   );
@@ -406,6 +440,18 @@ export function getLandscapeRepositories() {
   return readSelectedRecords().map(({ record }) => record.repo_name);
 }
 
+export function getLandscapePoolRepositories() {
+  return readCsvRecords(resolveLandscapeDataPath()).map(
+    (record) => record.repo_name,
+  );
+}
+
+export function getMay2026TrackedRepositories() {
+  return readCsvRecords(resolveMay2026SnapshotPath()).map(
+    (record) => record.repo_name,
+  );
+}
+
 export function getLandscapeProjects(): LandscapeProject[] {
   return readSelectedRecords().map(({ record, section }) => {
     const [owner] = record.repo_name.split("/");
@@ -417,6 +463,7 @@ export function getLandscapeProjects(): LandscapeProject[] {
       name: displayName(record.repo_name),
       description: record.description,
       stars: numberOrZero(record.stars),
+      contributors: nullableNumber(record.contributors),
       forks: numberOrZero(record.forks),
       openIssues: numberOrZero(record.open_issues),
       license: record.license || "—",

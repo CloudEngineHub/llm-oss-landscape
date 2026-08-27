@@ -119,7 +119,7 @@ export default function Home() {
                   href="/presentations/260910_inclusion"
                 >
                   <span>260910</span>
-                  <strong>260910_inclusion</strong>
+                  <strong>260910_InclusionConf</strong>
                 </Link>
                 <Link
                   className={styles.communityPresentation}

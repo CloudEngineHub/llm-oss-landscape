@@ -35,13 +35,25 @@ Project vitality is measured with [OpenRank](https://github.com/X-lab2017/open-d
 
 ## Landscape Website
 
-The production Next.js application lives in [`apps/landscape-web`](./apps/landscape-web) and reads the canonical project dataset above directly. Run it locally with:
+The production Next.js application lives in [`apps/landscape-web`](./apps/landscape-web) and reads the canonical project dataset above directly.
+
+For a local preview with live updates, run this from the repository root:
 
 ```bash
-cd apps/landscape-web
-npm ci
-npm run dev
+npm run web:dev
 ```
+
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000). Changes under
+`apps/landscape-web/` and the canonical CSV will be rebuilt automatically.
+This command uses Webpack polling because native file watching has previously
+exhausted file handles in this repository.
+
+If the page was already open against `npm run start`, refresh it once after
+switching servers so the browser loads the development client. After that,
+changes appear without another manual refresh.
+
+Use `npm run start` only when checking a completed production build; it does
+not provide live updates.
 
 The existing production address is [landscape-demo-omega.vercel.app](https://landscape-demo-omega.vercel.app/). Vercel should use `apps/landscape-web` as the project Root Directory.
 

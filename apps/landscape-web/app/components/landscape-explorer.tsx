@@ -228,6 +228,7 @@ const MODEL_STAGE_ASPECT_RATIO: Record<
 
 const LANDSCAPE_CANVAS_WIDTH = 1440;
 const LANDSCAPE_CANVAS_HEIGHT = 810;
+const LANDSCAPE_UPDATED_AT = "2026-08-26";
 
 function FixedLandscapeFrame({
   children,
@@ -1160,8 +1161,13 @@ export default function LandscapeExplorer({
                       <em>Landscape 2026</em>
                     </h2>
                   </div>
-                  {focusedStage?.module === "agent" ? (
-                    <div className={styles.boardSource}>
+                  <div className={styles.boardSource}>
+                    <span>
+                      {agentProjects.length} projects
+                      <br />
+                      Updated {LANDSCAPE_UPDATED_AT}
+                    </span>
+                    {focusedStage?.module === "agent" ? (
                       <button
                         className={styles.resetStageView}
                         type="button"
@@ -1169,8 +1175,8 @@ export default function LandscapeExplorer({
                       >
                         Back to overview
                       </button>
-                    </div>
-                  ) : null}
+                    ) : null}
+                  </div>
                 </header>
 
                 <div className={styles.landscapeBand}>
@@ -1300,8 +1306,13 @@ export default function LandscapeExplorer({
                       <em>Landscape 2026</em>
                     </h2>
                   </div>
-                  {focusedStage?.module === "model" ? (
-                    <div className={styles.boardSource}>
+                  <div className={styles.boardSource}>
+                    <span>
+                      {modelProjects.length} projects
+                      <br />
+                      Updated {LANDSCAPE_UPDATED_AT}
+                    </span>
+                    {focusedStage?.module === "model" ? (
                       <button
                         className={styles.resetStageView}
                         type="button"
@@ -1309,8 +1320,8 @@ export default function LandscapeExplorer({
                       >
                         Back to overview
                       </button>
-                    </div>
-                  ) : null}
+                    ) : null}
+                  </div>
                 </header>
 
                 <div className={styles.landscapeBand}>
