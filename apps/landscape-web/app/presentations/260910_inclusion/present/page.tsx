@@ -5,9 +5,9 @@ import { getLandscapeProjects } from "@/lib/landscape-data";
 import InclusionPresentation from "./presentation";
 
 export const metadata: Metadata = {
-  title: "演示播放｜260910 InclusionAI",
+  title: "Presentation | 260910 InclusionConf",
   description:
-    "Agentic AI Landscape 2026 年 9 月趋势洞察的 16:9 交互式演示。",
+    "Interactive presentation material for the 2026 Inclusion Conference research release.",
 };
 
 export default function InclusionPresentationPage() {

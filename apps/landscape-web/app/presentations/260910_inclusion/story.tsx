@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowLeftIcon, ExternalLinkIcon } from "lucide-react";
+import { ArrowLeftIcon, ExternalLinkIcon, PlayIcon } from "lucide-react";
 import { type ReactNode, useMemo, useState } from "react";
 
 import LandscapeLogo from "@/app/components/landscape-logo";
@@ -99,7 +99,7 @@ const infraShifts = [
   },
 ] as const;
 
-export default function BundSummitStory({
+export default function InclusionConfStory({
   stats,
   projects,
 }: {
@@ -155,15 +155,35 @@ export default function BundSummitStory({
           <a href="#collaboration">03 Collaboration</a>
           <a href="#signals">04 Signals</a>
         </div>
-        <Link className={styles.navBack} href="/">
-          <ArrowLeftIcon aria-hidden="true" />
-          Back to the landscape
-        </Link>
+        <div className={styles.navActions} aria-label="Play presentations">
+          <Link
+            className={`${styles.playLink} ${styles.playInfra}`}
+            href="/presentations/260910_inclusion/open-infrastructure/present"
+          >
+            <PlayIcon aria-hidden="true" />
+            <span>5 MIN</span>
+            <strong>Open Infrastructure</strong>
+          </Link>
+          <Link
+            className={`${styles.playLink} ${styles.playCollaboration}`}
+            href="/presentations/260910_inclusion/present"
+          >
+            <PlayIcon aria-hidden="true" />
+            <span>10 MIN</span>
+            <strong>Collaboration</strong>
+          </Link>
+          <Link className={styles.navBack} href="/">
+            <ArrowLeftIcon aria-hidden="true" />
+            <span>Landscape</span>
+          </Link>
+        </div>
       </nav>
 
       <header className={styles.hero}>
         <div className={styles.heroTopline}>
-          <p className={styles.eyebrow}>THE BUND SUMMIT · 09.10 · SHANGHAI</p>
+          <p className={styles.eyebrow}>
+            THE INCLUSION CONFERENCE · 09.10 · SHANGHAI
+          </p>
           <p className={styles.eyebrow}>OPEN ECOSYSTEM FIELD NOTES · 2026</p>
         </div>
         <h1 className={styles.heroTitle}>

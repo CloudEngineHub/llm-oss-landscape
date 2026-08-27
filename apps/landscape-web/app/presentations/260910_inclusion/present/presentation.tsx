@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowLeftIcon,
@@ -130,7 +129,7 @@ export default function InclusionPresentation({
               href="/presentations/260910_inclusion"
             >
               <ArrowLeftIcon aria-hidden="true" />
-              260910_inclusion
+              260910_InclusionConf
             </Link>
             <span>{scene.label}</span>
           </div>
@@ -206,14 +205,7 @@ function Scene({ id, stats }: { id: SceneId; stats: PresentationStats }) {
         </div>
         <div className={styles.coverCopy}>
           <div className={styles.inclusionLockup}>
-            <Image
-              src="/keynote/inclusionai/inclusionai.png"
-              alt="InclusionAI"
-              width={58}
-              height={58}
-              priority
-            />
-            <strong>InclusionAI</strong>
+            <strong>The Inclusion Conference</strong>
           </div>
           <h1>
             Agentic AI Landscape
@@ -224,7 +216,7 @@ function Scene({ id, stats }: { id: SceneId; stats: PresentationStats }) {
         <div className={styles.collaborationMark}>
           <strong>ANT OPEN SOURCE</strong>
           <span>×</span>
-          <strong>INCLUSION AI</strong>
+          <strong>THE INCLUSION CONFERENCE</strong>
         </div>
       </article>
     );

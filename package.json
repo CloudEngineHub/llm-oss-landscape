@@ -5,6 +5,7 @@
   "type": "module",
   "description": "Local PPTX generation helpers for agentic-ai-landscape reports and talks.",
   "scripts": {
+    "web:dev": "npm --prefix apps/landscape-web run dev:local",
     "pptx:check": "node scripts/pptx/check-pptxgenjs.mjs",
     "pptx:sample": "node scripts/pptx/build-sample-deck.mjs"
   },

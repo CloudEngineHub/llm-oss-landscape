@@ -31,6 +31,7 @@
 }
 
 .brand,
+.playLink,
 .navBack,
 .chapterNav a,
 .sourceLink {
@@ -50,6 +51,7 @@
 .chapterNav { display: flex; align-items: center; gap: 22px; }
 
 .chapterNav a,
+.playLink,
 .navBack,
 .eyebrow,
 .sectionTag,
@@ -69,7 +71,43 @@
 
 .chapterNav a { color: var(--quiet); }
 .chapterNav a:hover, .chapterNav a:focus-visible { color: var(--signal); }
-.navBack { justify-self: end; display: inline-flex; align-items: center; gap: 7px; }
+
+.navActions {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.playLink {
+  min-height: 34px;
+  padding: 7px 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1.5px solid var(--ink);
+  border-radius: 5px;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.playLink svg { width: 11px; height: 11px; fill: currentColor; }
+.playLink span { font-weight: 860; }
+.playLink strong { font: inherit; font-weight: 690; letter-spacing: .015em; text-transform: none; }
+.playInfra { background: var(--model-soft); }
+.playCollaboration { background: var(--agent-soft); }
+.playLink:hover, .playLink:focus-visible { color: var(--white); background: var(--ink); outline: none; }
+
+.navBack {
+  min-height: 34px;
+  padding-left: 9px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-left: 1px solid var(--line);
+  white-space: nowrap;
+}
+
 .navBack svg { width: 13px; height: 13px; }
 
 .hero, .chapter, .closing, .methodology { padding-inline: clamp(20px, 7vw, 112px); }
@@ -309,6 +347,8 @@
 
 @media (max-width: 700px) {
   .brand span { display: none; }
+  .playLink strong { display: none; }
+  .navBack span { display: none; }
   .heroTitle { font-size: 41px; line-height: .94; letter-spacing: -.06em; }
   .heroTopline { display: block; }
   .heroTopline p + p { margin-top: 10px; }

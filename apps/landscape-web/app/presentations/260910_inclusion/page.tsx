@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 
 import { getLandscapeProjects } from "@/lib/landscape-data";
 
-import BundSummitStory from "./story";
+import InclusionConfStory from "./story";
 
 export const metadata: Metadata = {
-  title: "What Happened to Open-Source Collaboration When Agents Joined In? | The Bund Summit 2026",
+  title:
+    "What Happened to Open-Source Collaboration When Agents Joined In? | The Inclusion Conference 2026",
   description:
     "A data-led study of open-source collaboration and open infrastructure across 143 Agentic AI projects.",
 };
@@ -17,13 +18,13 @@ function projectGrowth(trend: Array<number | null>) {
   return Math.round((july - april) * 100) / 100;
 }
 
-export default function BundSummitStoryPage() {
+export default function InclusionConfStoryPage() {
   const projects = getLandscapeProjects();
   const agentProjects = projects.filter((project) => project.stage !== "model");
   const modelProjects = projects.filter((project) => project.stage === "model");
 
   return (
-    <BundSummitStory
+    <InclusionConfStory
       stats={{
         total: projects.length,
         agent: agentProjects.length,
