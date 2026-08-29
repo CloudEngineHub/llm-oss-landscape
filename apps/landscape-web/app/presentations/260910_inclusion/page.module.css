@@ -310,34 +310,6 @@
   line-height: 1.65;
 }
 
-.subchapterMarker {
-  margin-top: clamp(58px, 7vw, 92px);
-  padding-top: 14px;
-  display: flex;
-  align-items: baseline;
-  gap: 14px;
-  border-top: 1px solid var(--line);
-  font-family: var(--font-code);
-  text-transform: uppercase;
-}
-
-.subchapterMarker span {
-  color: var(--signal);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: .08em;
-}
-
-.subchapterMarker strong {
-  font-size: 11px;
-  letter-spacing: .07em;
-}
-
-.subchapterMarker + .landscapeLens,
-.subchapterMarker + .landscapeFindingTitle,
-.subchapterMarker + .adoptionSequence,
-.subchapterMarker + .iterationLoop { margin-top: 26px; }
-
 .macroEvidence {
   margin-top: 54px;
   display: grid;
@@ -819,15 +791,6 @@
 .studyFrame > div strong { display: block; font-size: 18px; }
 .studyFrame > div span { margin-top: 16px; display: block; color: var(--quiet); font-size: 13px; line-height: 1.55; }
 .studyFrame > small { padding: 18px 26px; display: block; color: var(--quiet); border-top: 1.5px solid var(--ink); font-family: var(--font-code); font-size: 9px; line-height: 1.5; letter-spacing: .05em; }
-
-.infrastructureSubchapter {
-  margin-top: clamp(88px, 11vw, 156px);
-  padding-top: clamp(46px, 6vw, 78px);
-  border-top: 4px solid var(--ink);
-  scroll-margin-top: 82px;
-}
-
-.infrastructureSubchapter .chapterTitle { max-width: 980px; }
 
 .infraBaseline {
   margin-top: 52px;

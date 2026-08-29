@@ -12,7 +12,7 @@
   "executionGateTitle": "Agents as Workload Operators",
   "executionGateBody": "An agent can generate code during a task, call an external tool and carry state across several short-lived environments. The process may disappear in minutes; its effects do not.",
   "landscapeOverviewTitle": "Agent applications lead the activity. Runtime is where the landscape is filling in.",
-  "landscapeOverviewBody": "The current landscapes contain 84 Agent Infra and 59 Model Infra projects. Applications hold 55% of Agent Infra's July OpenRank, while Runtime accounts for 13 of the 23 Agent Infra selections outside the May tracking pool. Model Infra remains an older, Python-led systems base, with Serving holding 44% of its July OpenRank. The map shows both where activity sits and where production responsibilities are accumulating.",
+  "landscapeOverviewBody": "The current landscapes contain 84 Agent Infra and 59 Model Infra projects. Applications hold 55% of Agent Infra's July OpenRank, while Runtime accounts for 13 of the 23 Agent Infra selections outside the May tracking pool. Model Infra remains an older, Python-led systems base, with Serving holding 44% of its July OpenRank. The findings below follow recent growth, project age, primary language and the runtime path from context to evidence.",
   "landscapeTitle": "Applications hold the activity. Runtime holds more of the new selections.",
   "agentChartTitle": "Attention is still concentrated at the application layer",
   "modelChartTitle": "Serving still carries the systems weight",
@@ -20,7 +20,7 @@
   "languageTitle": "Agent products lean TypeScript. Model infrastructure still speaks Python.",
   "languageBody": "TypeScript leads Agent Infra with 33 of 84 repositories; Python leads Model Infra with 33 of 59. The split reflects two engineering centres: product-facing agent tools and a model stack rooted in ML and systems work.",
   "runtimePathTitle": "Runtime projects are clustering along the path an agent takes through a task.",
-  "runtimePathBody": "The map is filling in around context, interfaces, tool execution, isolation and evidence. These categories connect the project landscape to the task now reaching Kubernetes, OpenInfra, workload identity and telemetry systems.",
+  "runtimePathBody": "The map is filling in around context, interfaces, tool execution, isolation and evidence. Coding agents create the demand; these runtime categories show what the rest of the stack has to provide.",
   "growthSummary": "Recent OpenRank gains appear around tool use, context and inference efficiency. They show community activity, not production adoption.",
   "outsideGithubTitle": "Usage data also points toward coding agents and open-weight models.",
   "outsideGithubBody": "GitHub remains the main record of how projects are built. Public usage and model-hub data provide a narrower outside check: whether an application is being called and whether model artifacts are being reused.",
@@ -49,7 +49,7 @@
   "studyTitle": "What this evidence can support",
   "studyNote": "The thread estimates use a frozen Top 100, a 2,000-thread repository-stratified probability sample and an equal-repository view. GitHub User means account type, not human-written code. GitHub merged flag is not a universal accepted-contribution label.",
   "infrastructureTitle": "The runtime can disappear while its authority and effects remain.",
-  "infrastructureLede": "Kubernetes and OpenStack already carry production AI workloads. The Runtime pattern in the current map points to a different task shape: code appears during execution, authority is borrowed for minutes, and the effects can outlive the process. The figures below describe the installed base, not Agent adoption.",
+  "infrastructureLede": "Kubernetes and OpenStack already carry production AI workloads. Agents introduce a task that can create code, borrow authority and leave effects in several systems. The figures below describe the installed base, not Agent adoption.",
   "closingQuestion": "Can an agent run code, use authority and leave enough evidence for someone else to understand what happened?",
   "closingNote": "This is where agentic AI meets cloud native, PyTorch and OpenInfra. The established stack remains useful. Its control model has to account for code and environments that appear during the task."
 }

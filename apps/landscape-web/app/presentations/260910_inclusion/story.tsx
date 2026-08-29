@@ -314,9 +314,9 @@ export default function InclusionConfStory({
           <span>Agentic AI Landscape</span>
         </Link>
         <div className={styles.chapterNav}>
-          <a href="#landscape">01 Landscape &amp; infrastructure</a>
-          <a href="#collaboration">02 Open-source collaboration</a>
-          <a href="#method">Method &amp; sources</a>
+          <a href="#landscape">01 Landscape</a>
+          <a href="#collaboration">02 Collaboration</a>
+          <a href="#infrastructure">03 Open infrastructure</a>
         </div>
         <div className={styles.navActions} aria-label="Play presentations">
           <Link
@@ -390,7 +390,7 @@ export default function InclusionConfStory({
         className={`${styles.chapter} ${styles.landscapeChapter}`}
         id="landscape"
       >
-        <SectionTag index="01">Landscape &amp; open infrastructure</SectionTag>
+        <SectionTag index="01">Landscape findings</SectionTag>
         <EditableText
           as="h2"
           className={styles.chapterTitle}
@@ -401,11 +401,6 @@ export default function InclusionConfStory({
           className={styles.chapterLede}
           copyKey="landscapeOverviewBody"
         />
-
-        <div className={styles.subchapterMarker} data-reveal>
-          <span>01A</span>
-          <strong>The current maps</strong>
-        </div>
 
         <div className={styles.landscapeLens} data-reveal>
           <div className={styles.lensHeader}>
@@ -457,11 +452,6 @@ export default function InclusionConfStory({
               ))}
             </div>
           </div>
-        </div>
-
-        <div className={styles.subchapterMarker} data-reveal>
-          <span>01B</span>
-          <strong>Signals in the map</strong>
         </div>
 
         <EditableText
@@ -586,98 +576,10 @@ export default function InclusionConfStory({
             ))}
           </div>
         </aside>
-
-        <div className={styles.infrastructureSubchapter} id="infrastructure">
-          <SectionTag index="01C">Open infrastructure</SectionTag>
-          <EditableText
-            as="h2"
-            className={styles.chapterTitle}
-            copyKey="infrastructureTitle"
-          />
-          <EditableText
-            as="p"
-            className={styles.chapterLede}
-            copyKey="infrastructureLede"
-          />
-          <div className={styles.infraBaseline} data-reveal>
-            <a
-              href="https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <strong>82%</strong>
-              <span>Kubernetes in production among container users</span>
-              <small>CNCF 2025 survey</small>
-            </a>
-            <a
-              href="https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <strong>66%</strong>
-              <span>GenAI-hosting organisations using Kubernetes for inference</span>
-              <small>CNCF 2025 survey</small>
-            </a>
-            <a
-              href="https://openinfra.org/annual-report/2025/"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <strong>55M+</strong>
-              <span>Documented OpenStack cores in production</span>
-              <small>OpenInfra 2025 annual report</small>
-            </a>
-          </div>
-          <div className={styles.shiftModule} data-reveal>
-            <div
-              className={styles.shiftTabs}
-              role="tablist"
-              aria-label="Infrastructure assumptions"
-            >
-              {infraShifts.map((shift) => (
-                <button
-                  key={shift.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={shift.id === shiftId}
-                  data-active={shift.id === shiftId}
-                  onClick={() => setShiftId(shift.id)}
-                >
-                  {shift.label}
-                </button>
-              ))}
-            </div>
-            <div className={styles.shiftCompare}>
-              <article>
-                <span>A common infrastructure assumption</span>
-                <h3>{activeShift.before}</h3>
-              </article>
-              <article>
-                <span>What the agent changes</span>
-                <h3>{activeShift.after}</h3>
-                <p>{activeShift.detail}</p>
-              </article>
-            </div>
-            <div className={styles.shiftEvidence}>
-              <article>
-                <span>Signal in the current landscape</span>
-                <p>{activeShift.mapSignal}</p>
-              </article>
-              <article>
-                <span>What established open infrastructure contributes</span>
-                <p>{activeShift.openInfra}</p>
-                <a href={activeShift.href} target="_blank" rel="noreferrer">
-                  Inspect the primary source
-                  <ExternalLinkIcon aria-hidden="true" />
-                </a>
-              </article>
-            </div>
-          </div>
-        </div>
       </section>
 
       <section className={styles.chapter} id="collaboration">
-        <SectionTag index="02">Open-source collaboration</SectionTag>
+        <SectionTag index="02">Collaboration</SectionTag>
         <EditableText
           as="h2"
           className={styles.chapterTitle}
@@ -688,11 +590,6 @@ export default function InclusionConfStory({
           className={styles.chapterLede}
           copyKey="collaborationLede"
         />
-
-        <div className={styles.subchapterMarker} data-reveal>
-          <span>02A</span>
-          <strong>Agent participation</strong>
-        </div>
 
         <div className={styles.adoptionSequence} data-reveal>
           <header>
@@ -879,11 +776,6 @@ export default function InclusionConfStory({
             uses resolved threads with a visible final close, merge or reopen
             actor. Rows overlap when an App mediates a User action.
           </small>
-        </div>
-
-        <div className={styles.subchapterMarker} data-reveal>
-          <span>02B</span>
-          <strong>The contribution process</strong>
         </div>
 
         <div className={styles.iterationLoop} data-reveal>
@@ -1081,12 +973,100 @@ export default function InclusionConfStory({
         </div>
       </section>
 
+      <section className={styles.chapter} id="infrastructure">
+        <SectionTag index="03">Open infrastructure</SectionTag>
+        <EditableText
+          as="h2"
+          className={styles.chapterTitle}
+          copyKey="infrastructureTitle"
+        />
+        <EditableText
+          as="p"
+          className={styles.chapterLede}
+          copyKey="infrastructureLede"
+        />
+        <div className={styles.infraBaseline} data-reveal>
+          <a
+            href="https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <strong>82%</strong>
+            <span>Kubernetes in production among container users</span>
+            <small>CNCF 2025 survey</small>
+          </a>
+          <a
+            href="https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <strong>66%</strong>
+            <span>GenAI-hosting organisations using Kubernetes for inference</span>
+            <small>CNCF 2025 survey</small>
+          </a>
+          <a
+            href="https://openinfra.org/annual-report/2025/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            <strong>55M+</strong>
+            <span>Documented OpenStack cores in production</span>
+            <small>OpenInfra 2025 annual report</small>
+          </a>
+        </div>
+        <div className={styles.shiftModule} data-reveal>
+          <div
+            className={styles.shiftTabs}
+            role="tablist"
+            aria-label="Infrastructure assumptions"
+          >
+            {infraShifts.map((shift) => (
+              <button
+                key={shift.id}
+                type="button"
+                role="tab"
+                aria-selected={shift.id === shiftId}
+                data-active={shift.id === shiftId}
+                onClick={() => setShiftId(shift.id)}
+              >
+                {shift.label}
+              </button>
+            ))}
+          </div>
+          <div className={styles.shiftCompare}>
+            <article>
+              <span>A common infrastructure assumption</span>
+              <h3>{activeShift.before}</h3>
+            </article>
+            <article>
+              <span>What the agent changes</span>
+              <h3>{activeShift.after}</h3>
+              <p>{activeShift.detail}</p>
+            </article>
+          </div>
+          <div className={styles.shiftEvidence}>
+            <article>
+              <span>Signal in the current landscape</span>
+              <p>{activeShift.mapSignal}</p>
+            </article>
+            <article>
+              <span>What established open infrastructure contributes</span>
+              <p>{activeShift.openInfra}</p>
+              <a href={activeShift.href} target="_blank" rel="noreferrer">
+                Inspect the primary source
+                <ExternalLinkIcon aria-hidden="true" />
+              </a>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section className={styles.closing}>
         <EditableText as="p" copyKey="closingQuestion" />
         <EditableText as="small" copyKey="closingNote" />
       </section>
 
-      <section className={styles.methodology} id="method">
+      <section className={styles.methodology}>
         <details>
           <summary>Methodology and data boundaries</summary>
           <div className={styles.methodologyBody}>
