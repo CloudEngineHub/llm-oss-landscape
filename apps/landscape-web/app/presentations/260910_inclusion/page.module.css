@@ -310,6 +310,34 @@
   line-height: 1.65;
 }
 
+.subchapterMarker {
+  margin-top: clamp(58px, 7vw, 92px);
+  padding-top: 14px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-code);
+  text-transform: uppercase;
+}
+
+.subchapterMarker span {
+  color: var(--signal);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+
+.subchapterMarker strong {
+  font-size: 11px;
+  letter-spacing: .07em;
+}
+
+.subchapterMarker + .landscapeLens,
+.subchapterMarker + .landscapeFindingTitle,
+.subchapterMarker + .adoptionSequence,
+.subchapterMarker + .iterationLoop { margin-top: 26px; }
+
 .macroEvidence {
   margin-top: 54px;
   display: grid;
