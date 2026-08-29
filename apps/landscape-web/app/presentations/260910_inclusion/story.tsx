@@ -41,6 +41,16 @@ type BarStyle = CSSProperties & {
   "--bar-width": string;
 };
 
+type MarkerBarStyle = CSSProperties & {
+  "--marker-delay": string;
+  "--marker-rate": string;
+};
+
+type CollaborationBarStyle = CSSProperties & {
+  "--collaboration-rate": string;
+  "--collaboration-delay": string;
+};
+
 const infraShifts = [
   {
     id: "execution",
@@ -126,6 +136,30 @@ const outsideGithubSignals = [
   },
 ] as const;
 
+const markerTimeline = [
+  { year: "2022", observed: 28, strict: 0, active: 0 },
+  { year: "2023", observed: 51, strict: 0, active: 0 },
+  { year: "2024", observed: 62, strict: 0, active: 0 },
+  { year: "2025", observed: 86, strict: 42, active: 48 },
+  { year: "2026", observed: 100, strict: 86, active: 92 },
+] as const;
+
+const markerNiches = [
+  { label: "Agent frameworks", value: 20, total: 21 },
+  { label: "Agent runtime infra", value: 14, total: 15 },
+  { label: "Agent applications", value: 24, total: 28 },
+  { label: "Model infra", value: 28, total: 36 },
+] as const;
+
+const markerTools = [
+  ["Cross-agent", 80],
+  ["Claude Code", 71],
+  ["Codex", 22],
+  ["GitHub Copilot", 20],
+  ["Cursor", 17],
+  ["Gemini", 12],
+] as const;
+
 export default function InclusionConfStory({
   initialCopy,
   references,
@@ -141,6 +175,9 @@ export default function InclusionConfStory({
   const [layer, setLayer] = useState<"agent" | "model">("agent");
   const [shiftId, setShiftId] = useState<(typeof infraShifts)[number]["id"]>(
     "execution",
+  );
+  const [markerMeasure, setMarkerMeasure] = useState<"strict" | "active">(
+    "strict",
   );
 
   const layerProjects = useMemo(
@@ -161,6 +198,79 @@ export default function InclusionConfStory({
       : { count: stats.model, recent: stats.modelRecent };
   const recentShare = Math.round((layerStats.recent / layerStats.count) * 100);
   const activeShift = infraShifts.find((shift) => shift.id === shiftId)!;
+  const collaboration = stats.collaboration;
+  const adoptionSteps = [
+    {
+      value: `${collaboration.strictInstructionRepositories}/100`,
+      label: "Repositories with strict Agent instructions",
+      rate: collaboration.strictInstructionRepositories,
+    },
+    {
+      value: `${collaboration.observedParticipationRepositories}/${collaboration.activeRepositories}`,
+      label: "Active repositories with Agent participation in the sample",
+      rate:
+        (collaboration.observedParticipationRepositories /
+          collaboration.activeRepositories) *
+        100,
+    },
+    {
+      value: formatPercent(collaboration.participationThreadShare),
+      label: "Weighted threads with visible Agent participation",
+      rate: collaboration.participationThreadShare * 100,
+    },
+    {
+      value: formatPercent(collaboration.participationOpenerShare, 1),
+      label: "Weighted threads opened with visible Agent participation",
+      rate: collaboration.participationOpenerShare * 100,
+    },
+  ];
+  const threadRows = [
+    {
+      label: "Agent participation",
+      tone: "agent",
+      values: [
+        collaboration.participationOpenerShare,
+        collaboration.agentReviewShare,
+        collaboration.agentGateShare,
+      ],
+    },
+    {
+      label: "GitHub User account",
+      tone: "user",
+      values: [null, collaboration.userReviewShare, collaboration.userGateShare],
+    },
+    {
+      label: "Maintainer-associated account",
+      tone: "maintainer",
+      values: [
+        null,
+        collaboration.maintainerReviewShare,
+        collaboration.maintainerGateShare,
+      ],
+    },
+  ] as const;
+  const taskFootprint = [
+    { label: "Review", value: collaboration.agentTaskEvents.review },
+    { label: "Triage & routing", value: collaboration.agentTaskEvents.triage },
+    { label: "Discussion", value: collaboration.agentTaskEvents.discussion },
+    { label: "Open a thread", value: collaboration.agentTaskEvents.openedThread },
+    { label: "Attributed commit", value: collaboration.agentTaskEvents.codeCommit },
+  ];
+  const taskMaximum = Math.max(...taskFootprint.map((item) => item.value));
+  const iterationSignals = [
+    {
+      label: "PRs with a visible review",
+      value: collaboration.reviewedPrShare,
+    },
+    {
+      label: "Reviewed PRs with a later commit",
+      value: collaboration.reviewedPrFollowupCommitShare,
+    },
+    {
+      label: "Change requests with a later commit",
+      value: collaboration.changeRequestFollowupCommitShare,
+    },
+  ];
 
   useEffect(() => {
     const page = pageRef.current;
@@ -481,6 +591,276 @@ export default function InclusionConfStory({
           copyKey="collaborationLede"
         />
 
+        <div className={styles.adoptionSequence} data-reveal>
+          <header>
+            <EditableText as="h3" copyKey="collaborationAdoptionTitle" />
+            <EditableText as="p" copyKey="collaborationAdoptionBody" />
+          </header>
+          <div className={styles.adoptionSteps}>
+            {adoptionSteps.map((item, index) => (
+              <div className={styles.adoptionStep} key={item.label}>
+                <span>{String(index + 1).padStart(2, "0")}</span>
+                <strong>{item.value}</strong>
+                <p>{item.label}</p>
+                <i
+                  style={
+                    {
+                      "--collaboration-delay": `${index * 100}ms`,
+                      "--collaboration-rate": `${Math.max(item.rate, 0.8)}%`,
+                    } as CollaborationBarStyle
+                  }
+                />
+              </div>
+            ))}
+          </div>
+          <small>
+            Readiness, repository detection and weighted thread share use
+            different denominators. The progression is descriptive, not a
+            conversion funnel.
+          </small>
+        </div>
+
+        <div className={styles.taskFootprint} data-reveal>
+          <header>
+            <EditableText as="h3" copyKey="collaborationTasksTitle" />
+            <EditableText as="p" copyKey="collaborationTasksBody" />
+          </header>
+          <div className={styles.taskFootprintRows}>
+            {taskFootprint.map((item, index) => (
+              <div key={item.label}>
+                <span>{item.label}</span>
+                <i>
+                  <em
+                    style={
+                      {
+                        "--collaboration-delay": `${index * 90}ms`,
+                        "--collaboration-rate": `${Math.max(
+                          (item.value / taskMaximum) * 100,
+                          1,
+                        )}%`,
+                      } as CollaborationBarStyle
+                    }
+                  />
+                </i>
+                <strong>{item.value.toLocaleString("en-US")}</strong>
+              </div>
+            ))}
+          </div>
+          <div className={styles.automationSplit}>
+            <header>
+              <strong>Automation is broader than Agent use</strong>
+              <span>Probability-weighted thread presence</span>
+            </header>
+            {collaboration.automationByItem.map((item) => (
+              <div key={item.label}>
+                <b>{item.label}</b>
+                <p>
+                  <strong>{formatPercent(item.knownAutomation, 1)}</strong>
+                  <span>Any known Bot or App</span>
+                </p>
+                <p>
+                  <strong>{formatPercent(item.verifiedAgent, 1)}</strong>
+                  <span>Verified Agent participation</span>
+                </p>
+                <p>
+                  <strong>{formatPercent(item.conventionalAutomation, 1)}</strong>
+                  <span>Conventional automation</span>
+                </p>
+                <p>
+                  <strong>{formatPercent(item.automationOnly, 2)}</strong>
+                  <span>No visible GitHub User account</span>
+                </p>
+              </div>
+            ))}
+          </div>
+          <small>
+            Counts are Agent-attributed public events across the probability
+            sample, not shares of labour. One thread can contain several tasks.
+            Bot/App and Agent columns overlap because many Agent services use a
+            GitHub App or Bot identity.
+          </small>
+        </div>
+
+        <MarkerAdoption
+          measure={markerMeasure}
+          onMeasureChange={setMarkerMeasure}
+        />
+
+        <div className={styles.markerSpread} data-reveal>
+          <header>
+            <span>WHERE THE RULES APPEAR</span>
+            <h3>Agent instructions have already moved into model infrastructure.</h3>
+            <p>
+              Strict instruction coverage is highest in frameworks, but it is
+              already present in 28 of 36 Model Infra repositories. The same
+              files now sit beside compilers, runtimes, data systems and model
+              serving code.
+            </p>
+          </header>
+          <div className={styles.markerNicheRows}>
+            {markerNiches.map((item, index) => {
+              const rate = Math.round((item.value / item.total) * 100);
+              return (
+                <div className={styles.markerNicheRow} key={item.label}>
+                  <span>{item.label}</span>
+                  <div>
+                    <i
+                      style={
+                        {
+                          "--marker-delay": `${index * 90}ms`,
+                          "--marker-rate": `${rate}%`,
+                        } as MarkerBarStyle
+                      }
+                    />
+                  </div>
+                  <b>
+                    {item.value}/{item.total}
+                  </b>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className={styles.threadMap} data-reveal>
+          <header>
+            <EditableText as="h3" copyKey="collaborationEntryTitle" />
+            <EditableText as="p" copyKey="collaborationEntryBody" />
+          </header>
+          <div className={styles.threadMapTable}>
+            <div className={styles.threadMapHead}>
+              <span>Visible actor</span>
+              <b>Open</b>
+              <b>Review</b>
+              <b>Gate</b>
+            </div>
+            {threadRows.map((row, rowIndex) => (
+              <div
+                className={styles.threadMapRow}
+                data-tone={row.tone}
+                key={row.label}
+              >
+                <strong>{row.label}</strong>
+                {row.values.map((value, columnIndex) => (
+                  <div
+                    data-stage={["Open", "Review", "Gate"][columnIndex]}
+                    key={`${row.label}-${columnIndex}`}
+                  >
+                    {value === null ? (
+                      <span className={styles.notEstimated}>Not estimated</span>
+                    ) : (
+                      <>
+                        <span>{formatPercent(value, 1)}</span>
+                        <i
+                          style={
+                            {
+                              "--collaboration-delay": `${
+                                rowIndex * 100 + columnIndex * 70
+                              }ms`,
+                              "--collaboration-rate": `${Math.max(
+                                value * 100,
+                                0.8,
+                              )}%`,
+                            } as CollaborationBarStyle
+                          }
+                        />
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+          <small>
+            Open uses all {collaboration.sampleThreads.toLocaleString("en-US")} sampled threads. Review uses {collaboration.samplePullRequests.toLocaleString("en-US")} PRs. Gate
+            uses resolved threads with a visible final close, merge or reopen
+            actor. Rows overlap when an App mediates a User action.
+          </small>
+        </div>
+
+        <div className={styles.iterationLoop} data-reveal>
+          <header>
+            <EditableText as="h3" copyKey="collaborationIterationTitle" />
+            <EditableText as="p" copyKey="collaborationIterationBody" />
+          </header>
+          <div className={styles.iterationSignals}>
+            {iterationSignals.map((item, index) => (
+              <div key={item.label}>
+                <strong>{formatPercent(item.value, 1)}</strong>
+                <span>{item.label}</span>
+                <i>
+                  <em
+                    style={
+                      {
+                        "--collaboration-delay": `${index * 100}ms`,
+                        "--collaboration-rate": `${item.value * 100}%`,
+                      } as CollaborationBarStyle
+                    }
+                  />
+                </i>
+              </div>
+            ))}
+          </div>
+          <p className={styles.iterationSensitivity}>
+            After a change request, a later commit is visible in {formatPercent(
+              collaboration.agentChangeRequestFollowupCommitShare,
+              1,
+            )} of Agent-attributed cases and {formatPercent(
+              collaboration.humanChangeRequestFollowupCommitShare,
+              1,
+            )} of GitHub User cases. Only 63 sampled PRs contain a visible
+            change request; the difference is descriptive, not an efficiency
+            estimate.
+          </p>
+        </div>
+
+        <div className={styles.governanceLedger} data-reveal>
+          <header>
+            <EditableText as="h3" copyKey="collaborationGovernanceTitle" />
+            <EditableText as="p" copyKey="collaborationGovernanceBody" />
+          </header>
+          <div className={styles.governanceRail} aria-label="Contribution policy scan">
+            <i
+              data-policy="invite"
+              style={{ width: `${collaboration.explicitInvitations}%` }}
+            />
+            <i
+              data-policy="gate"
+              style={{ width: `${collaboration.gatedPolicies}%` }}
+            />
+            <i
+              data-policy="unspecified"
+              style={{ width: `${collaboration.noDetectedPolicySignal}%` }}
+            />
+            <i
+              data-policy="closed"
+              style={{ width: `${collaboration.restrictedCreationPolicies}%` }}
+            />
+          </div>
+          <dl className={styles.governanceLegend}>
+            <div data-policy="invite">
+              <dt>{collaboration.explicitInvitations}</dt>
+              <dd>Explicitly invite contribution</dd>
+            </div>
+            <div data-policy="gate">
+              <dt>{collaboration.gatedPolicies}</dt>
+              <dd>Issue-first or scoped pre-approval</dd>
+            </div>
+            <div data-policy="unspecified">
+              <dt>{collaboration.noDetectedPolicySignal}</dt>
+              <dd>No restrictive policy signal detected</dd>
+            </div>
+            <div data-policy="closed">
+              <dt>{collaboration.restrictedCreationPolicies}</dt>
+              <dd>Restrict pull-request creation to collaborators</dd>
+            </div>
+          </dl>
+          <small>
+            GitHub creation settings first; frozen README, CONTRIBUTING,
+            GOVERNANCE and PR-template candidates manually reviewed.
+          </small>
+        </div>
+
         <div className={styles.caseGrid} data-reveal>
           <article className={styles.caseNarrative}>
             <EditableText as="h3" copyKey="caseTitle" />
@@ -488,7 +868,7 @@ export default function InclusionConfStory({
             <EditableText as="p" copyKey="caseBody" />
           </article>
           <aside className={styles.caseEvidence}>
-            <h3>DeepSeek Harness · checked 25 Aug 2026</h3>
+            <h3>DeepSeek Harness · checked 29 Aug 2026</h3>
             <dl className={styles.caseFacts}>
               <CaseFact label="Created" value="13 Aug" />
               <CaseFact label="License" value="MIT" />
@@ -508,36 +888,85 @@ export default function InclusionConfStory({
             </a>
           </aside>
         </div>
-        <div
-          className={styles.questionStrip}
-          aria-label="Governance choices"
-          data-reveal
-        >
-          <EditableText as="p" copyKey="governanceInterface" />
-          <EditableText as="p" copyKey="governanceDiscovery" />
-          <EditableText as="p" copyKey="governanceRevocation" />
+
+        <div className={styles.outcomeEvidence} data-reveal>
+          <header>
+            <EditableText as="h3" copyKey="collaborationBurdenTitle" />
+            <EditableText as="p" copyKey="collaborationBurdenBody" />
+          </header>
+          <div className={styles.outcomeColumns}>
+            <article>
+              <span>90+ day resolved PRs · GitHub merged flag</span>
+              <div className={styles.outcomeBar}>
+                <b>External author</b>
+                <i>
+                  <em style={{ width: `${collaboration.externalMergeFlagShare * 100}%` }} />
+                </i>
+                <strong>{formatPercent(collaboration.externalMergeFlagShare, 1)}</strong>
+              </div>
+              <div className={styles.outcomeBar}>
+                <b>Maintainer or member</b>
+                <i>
+                  <em style={{ width: `${collaboration.internalMergeFlagShare * 100}%` }} />
+                </i>
+                <strong>{formatPercent(collaboration.internalMergeFlagShare, 1)}</strong>
+              </div>
+              <small>
+                {formatPercent(collaboration.externalPrShare, 1)} of weighted PR
+                intake comes from external-association accounts.
+              </small>
+            </article>
+            <article>
+              <span>Fixed 90-day maturity · median repository</span>
+              <div className={styles.maturityCompare}>
+                <p>
+                  <strong>{formatPercent(collaboration.top100PrUnresolvedMedian, 1)}</strong>
+                  <small>Top 100 unresolved PR share</small>
+                </p>
+                <p>
+                  <strong>{formatPercent(collaboration.controlPrUnresolvedMedian, 1)}</strong>
+                  <small>12 long-lived controls</small>
+                </p>
+              </div>
+              <p className={styles.controlSignal}>
+                {collaboration.controlsWithRisingPrBacklog} of {collaboration.controlsTotal}
+                {" "}controls also have a higher unresolved share in 2026 than
+                in 2022. Review pressure is wider than the Agentic AI sample.
+              </p>
+            </article>
+          </div>
         </div>
+
+        <div className={styles.scarcityStatement} data-reveal>
+          <EditableText as="h3" copyKey="collaborationScarcityTitle" />
+          <EditableText as="p" copyKey="collaborationScarcityBody" />
+          <div>
+            <span>PR intake</span>
+            <strong>{formatPercent(collaboration.externalPrShare, 1)} external</strong>
+            <span>Visible Agent review</span>
+            <strong>{formatPercent(collaboration.agentReviewShare, 1)} of PRs</strong>
+            <span>Visible GitHub User gate</span>
+            <strong>{formatPercent(collaboration.userGateShare, 1)} of resolved threads</strong>
+          </div>
+        </div>
+
         <div className={styles.studyFrame} data-reveal>
           <header>
-            <span>QUESTION UNDER TEST</span>
+            <span>WHAT THE DATA CAN SUPPORT</span>
             <EditableText as="h3" copyKey="studyTitle" />
           </header>
           <div>
             <p>
-              <strong>Output</strong>
-              <span>PRs and commits per repository-month</span>
+              <strong>Complete</strong>
+              <span>100 repository surfaces, {collaboration.sampleThreads.toLocaleString("en-US")} sampled threads, {collaboration.publicEventsAnalyzed.toLocaleString("en-US")} timeline, review-comment and PR-commit events, and twelve long-lived controls</span>
             </p>
             <p>
-              <strong>Entry</strong>
-              <span>First-time contributor merge and return</span>
+              <strong>Observed</strong>
+              <span>Repository rules, public actor identities, review loops, external author association, fixed-maturity outcomes and visible gate actions</span>
             </p>
             <p>
-              <strong>Judgment</strong>
-              <span>Human review time and revision rounds</span>
-            </p>
-            <p>
-              <strong>Pressure</strong>
-              <span>Review load per active maintainer</span>
+              <strong>Still not causal</strong>
+              <span>Agent participation is voluntary and selected. Public traces cannot reveal undisclosed local AI use or private maintainer work.</span>
             </p>
           </div>
           <EditableText as="small" copyKey="studyNote" />
@@ -656,6 +1085,16 @@ export default function InclusionConfStory({
               unique users. None of these measures establishes production
               adoption, revenue or technical superiority.
             </p>
+            <p>
+              The Collaboration chapter freezes the tracked-pool Top 100 by
+              July OpenRank, then treats OpenRank only as a sampling rule. The
+              current entry-surface refresh uses GitHub REST and GraphQL. Annual
+              marker snapshots inspect declared instruction and config paths on
+              the default branch. The ClickHouse event panel is retained for
+              historical scale and quality checks, but its 2025–2026 PR author
+              and merge-time payload is incomplete and is not used for a claim
+              about productivity.
+            </p>
           </div>
         </details>
       </section>
@@ -663,6 +1102,91 @@ export default function InclusionConfStory({
       <ResearchTrail groups={references} />
       </ReportCopyEditor>
     </main>
+  );
+}
+
+function MarkerAdoption({
+  measure,
+  onMeasureChange,
+}: {
+  measure: "strict" | "active";
+  onMeasureChange: (measure: "strict" | "active") => void;
+}) {
+  const title =
+    measure === "strict"
+      ? "Active instruction"
+      : "Instruction or active config";
+
+  return (
+    <div className={styles.markerPanel} data-reveal>
+      <header>
+        <span>MACHINE-READABLE COLLABORATION RULES</span>
+        <h3>The repository contract changed quickly.</h3>
+        <p>
+          Among the 86 repositories observable in both years, 42 kept a strict
+          instruction and 32 added one. None removed it from the declared target
+          paths. Structural missing years are excluded from each denominator.
+        </p>
+        <div className={styles.markerToggle} aria-label="Marker definition">
+          <button
+            type="button"
+            data-active={measure === "strict"}
+            onClick={() => onMeasureChange("strict")}
+          >
+            Strict instruction
+          </button>
+          <button
+            type="button"
+            data-active={measure === "active"}
+            onClick={() => onMeasureChange("active")}
+          >
+            + active config
+          </button>
+        </div>
+      </header>
+      <div className={styles.markerChart}>
+        <div className={styles.markerChartTitle}>
+          <strong>{title}</strong>
+          <span>repositories / observable repositories</span>
+        </div>
+        <div className={styles.markerTimelineRows}>
+          {markerTimeline.map((item, index) => {
+            const value = item[measure];
+            const rate = Math.round((value / item.observed) * 100);
+            return (
+              <div className={styles.markerTimelineRow} key={item.year}>
+                <b>{item.year}</b>
+                <div>
+                  <i
+                    style={
+                      {
+                        "--marker-delay": `${index * 100}ms`,
+                        "--marker-rate": `${rate}%`,
+                      } as MarkerBarStyle
+                    }
+                  />
+                </div>
+                <span>
+                  {value}/{item.observed}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        <div className={styles.markerTools} aria-label="Current marker tools">
+          {markerTools.map(([tool, repositories]) => (
+            <span key={tool}>
+              <b>{repositories}</b> {tool}
+            </span>
+          ))}
+        </div>
+        <small>
+          Latest commit at or before each snapshot on the current default
+          branch. Target paths cover common root and .github instructions and
+          config directories. .gitignore residuals are excluded.
+        </small>
+      </div>
+    </div>
   );
 }
 
@@ -846,6 +1370,12 @@ function RuntimePath({ points }: { points: RuntimePathPoint[] }) {
       ))}
     </div>
   );
+}
+
+function formatPercent(value: number, digits = 0) {
+  const scale = 10 ** digits;
+  const rounded = Math.round((value * 100 + Number.EPSILON) * scale) / scale;
+  return `${rounded.toFixed(digits)}%`;
 }
 
 function SectionTag({

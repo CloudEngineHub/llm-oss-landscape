@@ -1,0 +1,11 @@
+repo_name,agent_opener_threads,github_user_opener_threads,agent_opener_open_share,github_user_opener_open_share,open_share_difference_agent_minus_user,agent_opener_median_resolution_days,github_user_opener_median_resolution_days
+langchain-ai/deepagents,1,12,0.0,0.0,0.0,21.75,0.01
+open-metadata/OpenMetadata,2,11,0.0,0.0909,-0.0909,8.01,5.61
+microsoft/onnxruntime,1,13,0.0,0.0769,-0.0769,11.99,2.31
+pingdotgg/t3code,1,5,0.0,0.0,0.0,0.21,12.59
+cline/cline,1,11,0.0,0.1818,-0.1818,2.0,6.89
+OpenHands/software-agent-sdk,3,9,0.0,0.0,0.0,0.31,6.17
+Kilo-Org/kilocode,1,9,0.0,0.0,0.0,0.01,8.24
+mlflow/mlflow,2,10,0.0,0.0,0.0,0.05,0.98
+langflow-ai/langflow,1,13,0.0,0.1538,-0.1538,40.9,1.9
+eosphoros-ai/DB-GPT,2,13,1.0,0.0,1.0,,3.91

@@ -1,0 +1,31 @@
+deep_rank,repo_name,llm_native_manual,collaboration_niche,study_stage,stage_label_zh,threads,issues,pull_requests,agent_participation_share,agent_response_share,human_conversation_share,maintainer_present_share,automation_only_response_share,external_pr_share,visible_review_share,human_review_share,agent_review_share,post_review_commit_share,resolved_within_30d_share,pr_merged_within_30d_share,median_first_human_response_hours,median_first_maintainer_response_hours
+1,openai/codex,llm_native,agent_application,launch_120d,创建后 120 天,30,12,18,0.0,0.0,1.0,0.633333,0.033333,0.722222,0.333333,0.333333,0.0,0.5,0.766667,0.666667,4.594,4.594
+1,openai/codex,llm_native,agent_application,previous_2025q4,2025 年最后四个月,30,19,11,0.033333,0.033333,1.0,0.066667,0.066667,1.0,0.454545,0.454545,0.090909,0.2,0.666667,0.545455,25.209,21.5375
+1,openai/codex,llm_native,agent_application,current_2026m5_m8,2026 年最近四个月,30,23,7,0.2,0.166667,0.933333,0.033333,0.3,1.0,0.857143,0.428571,0.714286,0.666667,0.416667,0.5,5.9275,4.236
+2,anthropics/claude-code,llm_native,agent_application,launch_120d,创建后 120 天,30,30,0,0.0,0.0,1.0,0.533333,0.2,,,,,,0.333333,,25.6715,35.1195
+2,anthropics/claude-code,llm_native,agent_application,previous_2025q4,2025 年最后四个月,30,30,0,0.0,0.0,1.0,0.066667,0.733333,,,,,,0.4,,348.499,1311.7045
+2,anthropics/claude-code,llm_native,agent_application,current_2026m5_m8,2026 年最近四个月,30,30,0,0.0,0.0,1.0,0.066667,0.366667,,,,,,0.47619,,30.816,533.4035
+3,langchain-ai/langchain,llm_native,agent_framework,launch_120d,创建后 120 天,30,6,24,0.066667,0.066667,1.0,0.0,0.033333,1.0,0.458333,0.458333,0.0,0.363636,0.866667,0.916667,6.427,
+3,langchain-ai/langchain,llm_native,agent_framework,previous_2025q4,2025 年最后四个月,30,7,23,0.1,0.1,1.0,0.8,0.433333,0.217391,0.304348,0.26087,0.086957,0.285714,0.8,0.913043,24.876,26.1865
+3,langchain-ai/langchain,llm_native,agent_framework,current_2026m5_m8,2026 年最近四个月,30,6,24,0.8,0.3,0.9,0.2,0.8,0.791667,0.208333,0.041667,0.208333,0.4,0.956522,0.333333,7.797,66.2615
+4,langgenius/dify,llm_native,agent_framework,launch_120d,创建后 120 天,30,19,11,0.2,0.0,1.0,0.466667,0.033333,0.636364,0.454545,0.454545,0.0,0.0,0.866667,1.0,4.432,7.655
+4,langgenius/dify,llm_native,agent_framework,previous_2025q4,2025 年最后四个月,30,13,17,0.966667,0.766667,1.0,0.733333,0.133333,0.529412,0.941176,0.941176,0.705882,0.75,0.866667,0.882353,1.424,1.424
+4,langgenius/dify,llm_native,agent_framework,current_2026m5_m8,2026 年最近四个月,30,6,24,0.933333,0.133333,0.933333,0.333333,0.033333,1.0,0.75,0.708333,0.041667,0.333333,0.807692,0.636364,4.7425,152.1625
+5,n8n-io/n8n,mixed,agent_framework,launch_120d,创建后 120 天,30,23,7,0.366667,0.033333,1.0,1.0,0.0,1.0,0.142857,0.142857,0.0,1.0,0.733333,0.714286,0.687,0.662
+5,n8n-io/n8n,mixed,agent_framework,previous_2025q4,2025 年最后四个月,30,14,16,0.833333,0.833333,1.0,0.466667,0.166667,0.8125,1.0,0.8125,1.0,0.5,0.8,0.75,0.282,0.282
+5,n8n-io/n8n,mixed,agent_framework,current_2026m5_m8,2026 年最近四个月,30,4,26,1.0,0.866667,0.9,0.366667,0.233333,0.807692,0.884615,0.769231,0.730769,0.521739,0.851852,0.73913,8.456,18.137
+6,langfuse/langfuse,llm_native,agent_runtime_infra,launch_120d,创建后 120 天,30,3,27,0.266667,0.0,0.966667,0.866667,0.733333,0.111111,0.074074,0.074074,0.0,1.0,0.933333,0.814815,6.63,6.63
+6,langfuse/langfuse,llm_native,agent_runtime_infra,previous_2025q4,2025 年最后四个月,30,9,21,0.966667,0.533333,0.966667,0.466667,0.3,0.47619,0.285714,0.095238,0.285714,0.833333,0.9,0.809524,2.941,31.341
+6,langfuse/langfuse,llm_native,agent_runtime_infra,current_2026m5_m8,2026 年最近四个月,30,3,27,0.933333,0.9,0.966667,0.333333,0.833333,0.666667,0.851852,0.148148,0.851852,0.521739,0.857143,0.722222,41.078,0.072
+7,coder/coder,mixed,agent_runtime_infra,launch_120d,创建后 120 天,30,15,15,0.033333,0.0,1.0,0.566667,0.0,0.666667,1.0,1.0,0.0,0.466667,0.733333,1.0,9.841,1.9895
+7,coder/coder,mixed,agent_runtime_infra,previous_2025q4,2025 年最后四个月,30,7,23,0.066667,0.033333,0.866667,0.766667,0.1,0.521739,0.826087,0.73913,0.0,0.526316,0.8,0.695652,3.411,3.618
+7,coder/coder,mixed,agent_runtime_infra,current_2026m5_m8,2026 年最近四个月,30,2,28,0.466667,0.466667,0.866667,0.366667,0.233333,0.821429,0.857143,0.75,0.25,0.333333,0.952381,0.842105,27.861,27.861
+8,milvus-io/milvus,traditional,agent_runtime_infra,launch_120d,创建后 120 天,30,11,19,0.0,0.0,1.0,0.1,0.066667,0.947368,0.473684,0.473684,0.0,0.555556,0.833333,0.947368,2.3725,7552.8095
+8,milvus-io/milvus,traditional,agent_runtime_infra,previous_2025q4,2025 年最后四个月,30,10,20,0.1,0.1,0.966667,0.4,0.266667,0.9,0.6,0.6,0.1,0.25,0.7,0.7,19.867,93.7335
+8,milvus-io/milvus,traditional,agent_runtime_infra,current_2026m5_m8,2026 年最近四个月,30,7,23,0.0,0.0,0.933333,0.5,0.266667,0.695652,0.347826,0.347826,0.0,0.75,0.64,0.684211,23.6555,16.684
+9,vllm-project/vllm,llm_native,model_infra,launch_120d,创建后 120 天,30,13,17,0.166667,0.0,1.0,0.966667,0.0,0.117647,0.352941,0.352941,0.0,1.0,0.8,0.823529,34.061,29.419
+9,vllm-project/vllm,llm_native,model_infra,previous_2025q4,2025 年最后四个月,30,14,16,0.466667,0.466667,1.0,0.6,0.233333,0.6875,0.875,0.5625,0.875,0.642857,0.566667,0.5,14.698,10.126
+9,vllm-project/vllm,llm_native,model_infra,current_2026m5_m8,2026 年最近四个月,30,4,26,0.733333,0.733333,1.0,0.6,0.233333,0.807692,0.846154,0.576923,0.807692,0.772727,0.65,0.4375,4.704,4.704
+10,pytorch/pytorch,traditional,model_infra,launch_120d,创建后 120 天,30,13,17,0.166667,0.0,1.0,0.633333,0.0,0.588235,0.352941,0.470588,0.0,0.833333,0.966667,0.941176,1.5465,0.447
+10,pytorch/pytorch,traditional,model_infra,previous_2025q4,2025 年最后四个月,30,8,22,0.033333,0.033333,0.966667,0.7,0.2,0.772727,0.727273,0.727273,0.0,0.6875,0.566667,0.0,56.938,22.942
+10,pytorch/pytorch,traditional,model_infra,current_2026m5_m8,2026 年最近四个月,30,4,26,0.266667,0.266667,0.933333,0.7,0.233333,0.615385,0.769231,0.692308,0.0,0.75,0.545455,0.0,37.56,67.8645

@@ -1,0 +1,11 @@
+deep_rank,repo_name,sample_rank,llm_native_manual,collaboration_niche,created_at,selection_reason
+1,openai/codex,10,llm_native,agent_application,2025-04-13,头部 coding agent；观察新项目从 launch 到当前的协作变化
+2,anthropics/claude-code,16,llm_native,agent_application,2025-02-22,头部 coding agent；Issue 与 PR 治理方式具有代表性
+3,langchain-ai/langchain,76,llm_native,agent_framework,2022-10-17,较早的 LLM-native 框架；社区生命周期长
+4,langgenius/dify,30,llm_native,agent_framework,2023-04-12,应用构建框架；外部贡献和产品迭代都活跃
+5,n8n-io/n8n,22,mixed,agent_framework,2019-06-22,传统 workflow 产品向 Agent 扩展的 mixed 案例
+6,langfuse/langfuse,67,llm_native,agent_runtime_infra,2023-05-18,LLM-native 可观测性基础设施
+7,coder/coder,25,mixed,agent_runtime_infra,2021-12-22,传统开发环境基础设施向 Agent workload 扩展
+8,milvus-io/milvus,38,traditional,agent_runtime_infra,2019-09-16,传统数据基础设施；可与 LLM-native runtime 对照
+9,vllm-project/vllm,7,llm_native,model_infra,2023-02-09,LLM-native 推理基础设施；贡献量高
+10,pytorch/pytorch,3,traditional,model_infra,2016-08-13,成熟传统模型基础设施；高门槛 review 与治理对照

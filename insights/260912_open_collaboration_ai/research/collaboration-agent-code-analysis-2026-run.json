@@ -1,0 +1,31 @@
+{
+  "completed_at": "2026-08-29T10:06:34.617987+00:00",
+  "sample_threads": 2000,
+  "sample_pull_requests": 1425,
+  "sample_merged_pull_requests": 852,
+  "commit_rows": 7237,
+  "coding_agent_identities": 22,
+  "expanded_coding_agent_identities": 27,
+  "metadata_complete": true,
+  "commit_endpoints_complete": true,
+  "validation_errors": [],
+  "validation_warnings": [
+    "commit attribution incomplete pingdotgg/t3code#8393: metadata=4, rows=3",
+    "commit attribution incomplete a2ui-project/a2ui#2349: metadata=27, rows=15",
+    "commit attribution incomplete activepieces/activepieces#13548: metadata=1605, rows=250",
+    "commit attribution incomplete NVIDIA/Megatron-LM#4523: metadata=501, rows=250"
+  ],
+  "p99_merged_pr_change_lines": 8297.25,
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-agent-code-attribution-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-agent-code-estimates-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-agent-code-key-metrics-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-agent-code-strata-2026.csv"
+  ],
+  "limitations": [
+    "Public GitHub attribution cannot observe AI used locally under a normal user account without disclosure.",
+    "Agent-touched PR code volume is not the same as AI-generated code volume when humans also committed.",
+    "PR additions and deletions include tests, documentation, generated files, lockfiles, and other non-source changes.",
+    "Agent-only is based on current PR commits; exact line survival across mixed Agent-human histories requires patch lineage."
+  ]
+}

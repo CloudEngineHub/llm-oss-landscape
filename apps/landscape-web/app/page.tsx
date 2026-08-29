@@ -163,6 +163,7 @@ export default function Home() {
                   alt={`${community.name} logo`}
                   width={community.width}
                   height={community.height}
+                  unoptimized
                 />
               </figure>
             ))}

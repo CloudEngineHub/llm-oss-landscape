@@ -1,0 +1,15 @@
+metric,metric_label_zh,paired_repositories,previous_repo_equal_mean,current_repo_equal_mean,current_minus_previous,repositories_increased,repositories_decreased,repositories_unchanged,p_value_exact_sign_flip,q_value_bh,significant_q05
+agent_participation_share,Agent 参与线程,10,0.356667,0.533333,0.176667,6,3,1,0.039062,0.273434,no
+agent_response_share,Agent 参与回复,10,0.29,0.383333,0.093333,7,2,1,0.378906,0.663085,no
+human_conversation_share,人类账号参与对话,10,0.976667,0.936667,-0.04,0,6,4,0.03125,0.273434,no
+maintainer_present_share,维护者账号参与,10,0.506667,0.35,-0.156667,1,6,3,0.0625,0.291667,no
+automation_only_response_share,回复只有自动化账号,10,0.263333,0.353333,0.09,6,2,2,0.304688,0.609376,no
+external_pr_share,外部贡献者发起 PR,9,0.657496,0.800687,0.143191,5,3,1,0.171875,0.419272,no
+visible_review_share,存在可见 review,9,0.668238,0.708033,0.039795,4,5,0,0.660156,0.805589,no
+human_review_share,人类账号参与 review,9,0.577026,0.49589,-0.081136,3,6,0,0.09375,0.328125,no
+agent_review_share,Agent 参与 review,9,0.349385,0.400511,0.051126,4,4,1,0.734375,0.805589,no
+post_review_commit_share,review 后继续提交,9,0.519525,0.56106,0.041535,6,3,0,0.691406,0.805589,no
+resolved_within_30d_share,30 天内关闭 Issue/PR,10,0.706667,0.71539,0.008723,5,5,0,0.835938,0.835938,no
+pr_merged_within_30d_share,30 天内合入 PR,9,0.644003,0.543874,-0.100129,1,7,1,0.179688,0.419272,no
+median_first_human_response_hours,首次人类回复中位小时数,10,49.8145,19.25975,-30.55475,5,5,0,0.576172,0.805589,no
+median_first_maintainer_response_hours,首次维护者回复中位小时数,10,152.2895,89.1386,-63.1509,5,5,0,0.748047,0.805589,no

@@ -2,199 +2,226 @@
 
 ## 研究设计
 
-版本：2026-08-26 working design
-研究对象：Agentic AI 开源项目与传统软件仓库对照组
+版本：2026-08-29 · 第二轮实证研究已完成
+
+数据状态：`rapidsai/cudf` 改名为 `NVIDIA/cudf` 造成的 GitHub Search 假零值已经修复。主样本为 100 个仓库、2,000 条线程，全部 endpoint 完整并通过校验。实验过程的白话说明见 [这次实验到底是怎么做的](how-the-study-was-run.md)。
+
+研究对象：头部 Agentic AI 开源仓库、长期活跃的软件仓库对照组
+
 公开输出：260910 在线研究报告、五分钟 Open Infrastructure keynote、十分钟 InclusionConf 分享
 
-## 我们真正要回答的问题
+## 这项研究要判断什么
 
 Agent 已经进入写代码、处理 Issue、提交 PR 和执行测试的流程。代码产出增加，并不自动等于协作效率提高。维护者可能收到更多改动，也可能需要花更多时间判断这些改动是否正确、是否值得合并，以及出了问题以后由谁负责。
 
-这项研究的核心问题是：
+研究围绕四个问题展开：
 
-> AI 进入软件开发流程以后，它提高了协作效率，还是主要增加了代码产出，并把更多判断压力留给维护者？
+1. 头部 Agentic AI 仓库采用开发 Agent 的比例有多高，Agent 主要承担什么任务？
+2. Agent 如何进入 Issue、PR、review 和代码迭代，哪些环节仍然依赖人类开发者？
+3. Agent 参与以后，处理速度、合并结果和 backlog 是否改善，维护者承担的判断工作是否增加？
+4. 当代码生成越来越便宜时，仓库真正稀缺的贡献是什么？
 
-这里的“协作效率”不能只用 commit 或 PR 数量代替。我们至少要同时看到贡献进入、审查过程、合并结果和维护者负担。
+第四个问题不能靠价值判断回答。它需要从真实仓库中观察：哪些工作最容易自动化，哪些 PR 最终能进入项目，维护者把时间花在什么地方，哪些机器产生的改动没有获得任何人类响应。
 
-## 研究问题
+## 主样本
 
-### RQ1 · 产出增加在哪里
+### 抽样框
 
-Agentic AI 项目是否产生更多 PR、Issue 和 commit？增长来自核心团队、外部贡献者、机器人，还是能够被公开证据确认的 AI agent？
+主样本来自 `data/agentic-ai-projects.csv`。当前文件包含 277 个持续跟踪的 Agentic AI 生态仓库，其中 225 个拥有 2026 年 7 月 OpenRank。仓库按照 `openrank_2607` 降序排列，固定前 100 个作为主样本；并列时按仓库全名排序。
 
-需要的数据：
+这个规则不设置年代、语言或生态位配额。人为配额会让样本失去“头部 100”的含义。年代、语言和生态位被保留为预先登记的分层变量，在分析中控制和交叉比较。
 
-- repository-month 的 PR、Issue、commit 数量；
-- 作者类型与首次贡献时间；
-- PR 改动行数、文件数和类型；
-- bot、automation 与明确 AI agent 的分层标记。
+冻结表：`collaboration-sample-top100-2607.csv`
 
-单独回答这个问题只能说明“产出发生了什么”，不能说明协作变好了。
+入样门槛：OpenRank 20.65
 
-### RQ2 · 外部贡献能否真正进入项目
+仓库状态：100 个仓库在项目池快照中均未归档，GitHub 状态均为 `ok`
 
-公开代码、允许提交 PR、接受外部贡献和发展开放生态是不同选择。Agentic AI 项目的外部 PR 接受率、首次贡献者合并率和重复贡献率，与对照组有何差异？
+### 样本分布
 
-需要的数据：
+| 维度 | 分布 |
+| --- | --- |
+| 创建年代代理 | 2022-12-01 及以后 72；更早 28 |
+| 主要语言 | Python 44；TypeScript 26；Go 11；Rust 7；C++ 7；Java 3；Scala 1；MLIR 1 |
+| 技术生态位 | Agent Application 28；Agent Framework 21；Agent Runtime Infra 15；Model Infra 36 |
+| 与 Agent 的距离 | 直接面向 Agent 使用者 28；Agent 构建层 21；支撑型基础设施 51 |
 
-- 首次贡献者 PR 数量与合并率；
-- 外部贡献者从第一次 PR 到第二次 PR 的留存；
-- 关闭但未合并的 PR 及关闭理由；
-- Issue、PR、Discussion 是否开放；
-- CONTRIBUTING、CLA、贡献模板和公开路线图是否存在。
+`created_at >= 2022-12-01` 只生成一个基于 ChatGPT 公开发布时点的候选分组。它不能证明仓库是 LLM-native：较早创建的仓库可能在之后完成 LLM 重构，较新的仓库也可能是成熟项目拆分出来的组件。
 
-### RQ3 · 评审速度是否以更多维护者判断为代价
+样本表的 `llm_native_manual` 已完成逐仓库复核。允许值为 `llm_native`、`traditional`、`mixed`、`uncertain`；本轮结果为 68、18、14、0。每个判断附置信度和一句理由，保存在 `collaboration-sample-llm-native-review-260829.csv`。后续分层以这份复核结果为准，创建时间代理只用于检查项目身份与发布时间是否一致。
 
-PR 更快关闭，可能是更快合并，也可能是批量拒绝。需要把首次响应、首次有效 review、修改轮次、合并时间和关闭结果放在一起。
+### 技术生态位
 
-需要的数据：
+生态位用于检验一个预先提出的假设：直接面向 Agent 使用者的产品，可能比运行时和模型基础设施更快改变协作入口、机器可读规则和贡献方式。
 
-- time to first response；
-- time to first review；
-- time to merge / close；
-- review comments、change requests 和 force-push 次数；
-- 合并前 revision rounds；
-- 无人工 review 的直接合并比例。
+| 研究分层 | 包含内容 |
+| --- | --- |
+| Agent Application | coding agent、coding harness、个人 Agent、对话工作台 |
+| Agent Framework | code-first framework、多 Agent 编排、workflow builder |
+| Agent Runtime Infra | context、协议、工具执行、sandbox、observability |
+| Model Infra | 数据、训练、推理、部署、调度和模型网关 |
 
-### RQ4 · 维护者负担如何变化
+88 个主样本仓库直接继承 landscape 分类。12 个未进入当前地图的仓库使用研究专用映射，映射依据和人工复核说明保存在样本表中。研究不再另设 Landscape sensitivity sample：编辑入图状态不是新的分析总体，会混淆实验。
 
-维护者是否在处理更多 PR？判断是否集中在少数人身上？自动化是否减少了机械工作，却增加了架构、安全和产品判断？
+### 样本代表什么
 
-需要的数据：
+OpenRank 会选择协作活跃、受到社区关注的仓库，因此这项研究描述的是头部 Agentic AI 开源项目，不代表所有 AI 仓库。Stars、OpenRank 和 participant 数用于描述样本，不能代替协作结果。
 
-- 每位 reviewer 每月处理的 PR 数；
-- top 1 / top 5 reviewer share；
-- reviewer Gini coefficient；
-- 每个合并 PR 的人工 review 数与评论量；
-- stale PR、reopen、revert 和 follow-up fix；
-- 维护者在 Issue 与 PR 中的响应时间分布。
+## 研究问题与可观察指标
 
-### RQ5 · 协作是否离开了 GitHub 的传统界面
+### RQ1 · 仓库在哪里采用 Agent
 
-有些项目公开仓库，却关闭 Issue 或不以 PR 为主要入口；协作可能转向插件市场、Discord、企业内部流程或下游仓库。研究需要记录协作表面，而不是把空白的 Issue/PR 页面直接解释为“没有社区”。
+仓库树中的机器可读文件用于识别开发 Agent 的公开采用信号。证据分三层：
 
-需要的数据：
+| 证据层 | 例子 | 是否计入主采用率 |
+| --- | --- | --- |
+| Active instruction | `AGENTS.md`、`CLAUDE.md`、`.github/copilot-instructions.md`、`.cursor/rules/` | 是 |
+| Active workflow/config | `.codex/`、`.claude/`、`.gemini/`、MCP 或 agent workflow 配置 | 单独报告 |
+| Residual mention | `.gitignore` 中出现 Cursor、Codex、Claude 等名称，但对应配置已不存在 | 否 |
 
-- GitHub Issue、PR、Discussion 的启用状态；
-- README 指向的贡献入口；
-- plugin、skill、extension 或 marketplace 仓库；
-- 外部社区链接和治理文件；
-- 核心仓库与生态仓库之间的贡献分布。
+五月分析把 `.gitignore` 痕迹也用于识别工具，得到 92% 的“至少一种 Coding Agent”覆盖率。新分析会保留旧口径以便复算，同时增加严格口径。这样才能判断 Cursor 等工具的变化究竟来自真实采用，还是来自残留的 ignore 规则。
 
-### RQ6 · 机器可读规则是否改变贡献过程
+Agent 承担的任务从文件路径和明确指令中做多标签编码，包括代码修改、测试、文档、review、Issue 处理、发布和依赖维护。模型辅助分类必须经过人工抽样复核，不能仅凭文件名推断任务。
 
-AGENTS.md、CLAUDE.md、copilot-instructions、skill 或 repository instruction 是否与更低的失败率、更短的修改链条或更高的首次贡献合并率有关？
+主要输出：
 
-这个问题只能证明相关性。规则较完善的项目通常也有更成熟的维护团队，需要在模型中控制项目规模、年龄和维护者数量。
+- 严格口径与宽口径的 Agent 采用率；
+- 每个 Agent 工具的仓库覆盖率；
+- 每个仓库的 Agent 配置数量及任务分布；
+- 2026 年 5 月与 8 月的重复横截面对比；
+- 同一仓库在两个时间点的新增、保留和删除配置。
 
-## 样本
+当前结果：严格 instruction 覆盖 86/100；instruction 或 active config 覆盖 92/100。线程样本在 89/100 个仓库中观察到可验证 Agent 身份或 App 代理行为，加权线程比例为 40.35%，仓库等权为 42.8%。仓库准备度与公开可见参与仍然不能互换。
 
-### Agentic AI cohort
+### RQ2 · 仓库是否仍然接受外部协作
 
-样本从 `data/agentic-ai-projects.csv` 产生，并保留纳入快照。进入实证样本的仓库需要满足：
+Issue、PR 和 Discussion 需要分开判断。GitHub GraphQL API 的 `hasPullRequestsEnabled` 可以判断 PR 功能是否开启，`pullRequestCreationPolicy` 可以直接判断是任何人都能创建，还是仅限 collaborators。这两个仓库设置不能回答维护者是否接受或合并外部贡献，因此政策与结果仍需单独测量。
 
-1. 2024 年 1 月 1 日以后创建；
-2. 与大语言模型或 agent 执行流程有直接工程关系；
-3. 公开 GitHub 仓库可取得 Issue、PR、commit 和 contributor 记录；
-4. 观察期内没有完全迁移或归档；
-5. 排除只存放论文、模型权重列表或静态资料的仓库。
+每个仓库记录四层事实：
 
-目标规模约 100 个仓库。最终数量由数据完整性决定，不能为了凑整而放宽定义。
+1. GitHub 是否启用 Issue、PR 和 Discussion；
+2. `pullRequestCreationPolicy` 允许任何人还是仅 collaborators 创建 PR；
+3. `CONTRIBUTING`、README 或模板是否限制外部 PR；
+4. 2026 年是否实际出现外部作者提交的 PR；
+5. 外部 PR 是否被响应、合并，贡献者是否再次提交。
 
-### Traditional software controls
+DeepSeek Harness 是入口案例，不代表总体。它用于说明公开代码、开放核心 PR 和发展插件生态是三个独立选择。
 
-对照组从传统开发工具、云原生基础设施、数据库、可观测与开源应用中选择。每个 Agentic AI 仓库匹配一个或多个对照仓库，至少控制：
+主要输出：
 
-- 主要语言；
-- 组织或个人所有者；
-- 观察窗口开始时的 Stars 区间；
-- 活跃贡献者数量；
-- PR intake；
-- 仓库年龄与治理成熟度。
+- Issue、PR、Discussion 的可用状态；
+- 明示不接受或限制外部 PR 的仓库比例；
+- 外部 PR 的首次响应率、合并率和重复贡献率；
+- 关闭传统协作入口后，README 指向的插件、扩展或外部社区入口。
 
-传统项目不需要与 Agentic 项目同一天创建。比较使用等长的生命周期窗口，并另做同一自然月的稳健性检验，避免把生态年份差异误当成 Agent 效应。
+当前结果：Top 100 全部启用 Issue 和 PR 功能；98 个仓库的 PR 创建策略为 `ALL`，2 个为 `COLLABORATORS_ONLY`，分别是 `openai/codex` 与 `anthropics/claude-code`。人工复核政策后，48 个明确邀请贡献，12 个要求先开 Issue、获得预批准或只在限定范围内贡献，38 个未检测到限制信号。概率样本在 99/100 个仓库中观察到外部作者 PR；这一历史行为只用于分析实际协作，不再替代当前创建权限。DeepSeek Harness 作为分母外的治理反例保留。
+
+### RQ3 · Issue 和 PR 是变快了，还是堆积得更多
+
+2026 年以来创建的 Issue 和 PR 按仓库、年代、语言和生态位统计。开放项目存在右删失，不能只对已经关闭的项目计算平均处理时间。
+
+Issue 指标：
+
+- opened、closed 和月末 backlog；
+- backlog 的年龄分布；
+- 首次人类响应时间；
+- resolve / close 时间的 Kaplan-Meier 中位数；
+- 无人类响应、只有 bot 活动、reopen 的比例。
+
+PR 指标：
+
+- opened、merged、closed-unmerged 和月末 backlog；
+- 首次人类响应、首次 review、merge / close 时间；
+- review 数、change request、review 后新增 commit 和修改轮次；
+- 外部首次贡献者的合并率；
+- 合并后 30 天内 revert 或明确 follow-up fix 的近似信号。
+
+“关闭更快”不能单独解释为效率提升。它必须和 merged / rejected 结果、无人响应比例及 backlog 变化一起展示。
+
+当前结果：59.8% 的加权 PR 有 visible review；其中 54.23% 在首次 review 后增加 commit，CHANGES_REQUESTED 后增加 commit 的比例为 73.08%。Top 100 固定成熟度 PR unresolved 中位数为 9.1%，12 个长期对照为 8.2%；9/12 个对照也比 2022 年恶化。结果支持“存在迭代和更广泛 review pressure”，不支持把变化单独归因给 Agent。
+
+### RQ4 · 人和 Bot 如何共同参与线程
+
+Issue、PR、comment、review 和 merge actor 按公开证据分层：
+
+| 身份 | 判断规则 |
+| --- | --- |
+| Confirmed AI agent | GitHub 账号、PR、commit trailer、标签或项目文档明确说明由 Agent 生成或提交 |
+| Automation / bot | GitHub `Bot` 类型、GitHub App、已知自动化账号或 workflow 证据 |
+| Human account | 普通 GitHub 用户账号，且没有公开的 Agent 归因证据 |
+| Unknown | 账号或归因证据不足 |
+
+`Human account` 不表示代码完全由人手写。普通账号使用 Copilot、Cursor 或本地模型生成代码通常无法从公开 GitHub 数据可靠识别。研究只报告 confirmed / disclosed AI assistance，不根据代码风格、提交速度或文本语气猜测。
+
+线程参与结构至少分为：
+
+- automation-only：所有可见 actor 均为 Bot / Agent，没有人类账号评论、review 或执行合并；
+- human-present：至少一名人类账号参与；
+- maintainer-present：至少一名 `OWNER`、`MEMBER` 或 `COLLABORATOR` 参与；
+- unresolved-identity：存在无法分类账号。
+
+对话不能只用 comment 数量表示。Issue 记录独立 actor、身份切换次数和维护者响应轮次；PR 另外记录 review 后的代码更新和 change-request cycle。
+
+当前结果：Agent participation 仅打开 0.87% 的加权线程，但在 36.43% 中响应、在 32.65% 的 PR 中参与 review；GitHub User account 执行 78.3% 的 visible gate，maintainer-associated account 执行 35.88%，verified Agent participation 执行 3.85%。类别在 App-mediated User action 时可重叠。
+
+### RQ5 · Agent 是否降低协作成本
+
+跨仓库相关性无法回答因果问题。研究使用三种比较：
+
+1. **同仓库时间比较**：在可确认的 Agent adoption 时间点前后，比较相同长度窗口；
+2. **同仓库 PR 比较**：在同一仓库和相近月份内，匹配规模、文件类型相近的 confirmed Agent PR 与普通账号 PR；
+3. **长期活跃仓库对照**：从传统开发工具、云原生基础设施和开源应用中匹配语言、PR intake、贡献者规模和仓库年龄相近的仓库。
+
+如果 adoption 前趋势不平行，或者 Agent PR 数量太少，报告只写关联，不使用“提升”“导致”等因果措辞。
+
+第一轮判定：因果门槛未通过。Agent-visible threads 的 comments、reviews 和 GitHub merged flag 更高，但 Agent 使用是主动选择且可能发生在更重要或更困难的线程中；balanced adoption window 只有 11 个仓库，且 PR intake 在采用后更高，存在反向因果。所有效率结果降级为 descriptive association。
+
+效率与负担分别观察：
+
+| 结果 | 改善信号 | 负担信号 |
+| --- | --- | --- |
+| Intake | 有效外部贡献增加 | 低响应 Issue / PR 增加 |
+| Review | 首次有效 review 更快 | 每个 merged PR 的人类 review 和修改轮次增加 |
+| Throughput | merged PR / active maintainer 上升 | backlog 增长或 closed-unmerged 上升 |
+| Quality aftermath | follow-up fix / revert 不增加 | 合并后补救工作增加 |
+| Contributor entry | 首次贡献者被合并并再次贡献 | 一次性提交增加、重复贡献下降 |
+
+## 传统软件与历史对照
+
+对照不是一张随意挑选的知名项目名单。候选项目可以包括 Kubernetes、VS Code、Vue、Kata Containers、Prometheus、Envoy 和 Grafana，但最终需要按语言、PR intake、活跃贡献者和仓库年龄匹配。
+
+PyTorch 已经属于主样本的 Model Infra 层，不能同时作为独立对照组使用。它可以承担两个角色：
+
+- 在主样本中代表 2022-12-01 前创建的成熟模型基础设施；
+- 在自身 2022-2026 时间序列中观察协作变化。
+
+长期项目按自然年比较 2022、2023、2024、2025 和 2026 年。自然年变化同时受到 GitHub 产品变化、项目生命周期和宏观贡献趋势影响，因此还要查看各项目首次确认采用 Agent 的时间点。完整的年度迁移定义、状态向量和转移分析见 `collaboration-mode-migration-design-2022-2026.md`。
 
 ## 观察窗口
 
-主分析使用两个视角：
+主分析的数据窗口冻结于 2026-08-27；仓库设置、政策与 Agent marker 的最终核验完成于 2026-08-29。
 
-1. **Lifecycle view**：比较项目进入可观测协作阶段后的前 180 天；
-2. **Calendar view**：在相同自然月比较活动规模相近的仓库。
+- 仓库设置与 Agent marker：2026-05 快照口径复算，对比 2026-08 当前树；
+- Issue / PR 主窗口：2026-01-01 至 2026-08-27；
+- backlog：同时保留窗口开始前尚未关闭的存量；
+- 长期对照：2022-01-01 至 2026-08-27，2026 年按 year-to-date 单独标记；
+- adoption event study：采用日前后各 90 天或 180 天，按数据量预先固定。
 
-对于发布前长期私有、一次性导入大量历史 commit 的仓库，需要用第一个公开 release、Issue 或 PR 活动重新确定协作起点，并保留判断依据。
+发布前长期私有、一次性导入 commit 或从其他仓库拆分的项目，需要以第一个公开 release、Issue 或 PR 活动重新确定协作起点，并保留判断依据。
 
-## 身份与归因
+## 统计原则
 
-不得根据代码风格、提交速度或账号名称推测某个 PR 由 AI 生成。
+1. 保存样本纳入表、人工映射和排除理由；
+2. 所有比例同时给出分母，所有时间指标报告 median、IQR 和删失比例；
+3. 仓库是主要分析单位，不能让 PyTorch 等大仓库用事件总量淹没小仓库；
+4. 同时报告 macro average（各仓库等权）和 event-weighted 结果；
+5. 分层分析预先固定创建年代、语言、技术生态位和 Agent proximity；
+6. 样本量不足的层合并或只做描述，不追求显著性；
+7. 对超大项目、新发布项目、关闭 Issue/PR 的项目和边缘 Agentic 项目做敏感性分析；
+8. 用案例解释异常分布，不用案例代替总体结果。
 
-| 标记 | 允许使用的证据 |
-| --- | --- |
-| Confirmed AI agent | PR、commit、账号说明或项目文档明确说明由 agent 生成或提交 |
-| Automation / bot | GitHub bot 类型、已知自动化账号或公开 workflow 证据 |
-| Human account | 普通用户账号，且没有公开 AI 归因证据 |
-| Unknown | 证据不足，保留未知，不强行分类 |
+## 能回答与不能回答的部分
 
-“Human account”只描述公开账号类型，不表示代码一定完全由人手写。
+这项研究可以回答公开 GitHub 协作表面发生了什么：入口是否开放、Agent 信号是否出现、Issue/PR 如何流转、人类是否参与、backlog 和处理时间怎样变化。
 
-## 指标表
-
-| 维度 | 主指标 | 必须同时展示的边界 |
-| --- | --- | --- |
-| Intake | opened PRs per repository-month | 仓库规模与观察期 |
-| Acceptance | merged / closed external PRs | draft、bot 与 core team 分层 |
-| Responsiveness | median time to first human response | P25/P75 与无人响应比例 |
-| Review work | human reviews and revision rounds per PR | PR size 与文件类型 |
-| Throughput | merged PRs per active maintainer | 不能用 close 数代替 merge |
-| Contributor entry | first-time contributor merge rate | retained second contribution |
-| Concentration | top-5 reviewer share and Gini | reviewer 总人数 |
-| Quality aftermath | revert / follow-up fix within 30 days | 只能作为近似信号 |
-| Collaboration surface | Issue/PR/Discussion and external entry points | 关闭功能不等于没有社区 |
-
-所有中心趋势优先报告 median、IQR 和分布。Stars、OpenRank 和总量可以帮助描述样本，但不能代替协作结果。
-
-## 分析方法
-
-1. 保存样本纳入表和排除理由；
-2. 为每个仓库生成统一的 repository-month、PR 和 contributor 表；
-3. 在匹配前展示两组原始分布；
-4. 用语言、所有者类型、起始 Stars、活跃贡献者与 PR intake 做匹配；
-5. 对匹配后样本报告平衡性；
-6. 主结果同时给出 absolute difference、ratio 与不确定性区间；
-7. 对超大项目、新发布项目和关闭 Issue/PR 的项目做敏感性分析；
-8. 用案例解释分布中的异常，不用案例代替总体结果。
-
-## DeepSeek Harness case file
-
-DeepSeek Harness 适合作为入口案例，因为它能把几个经常被混在一起的问题拆开：
-
-- 代码是否公开；
-- 外部贡献入口是否开放；
-- 核心开发是否通过 Issue 和 PR 可见；
-- 插件或扩展生态是否允许第三方参与；
-- 发布热度是否已经转化为持续协作。
-
-当前可以确认的是，它创建时间很新，发布期关注度高，尚没有完整月 OpenRank。Issue、PR、贡献规则和生态入口需要按固定 case schema 留存截图、API 快照和核对日期，不能凭一次页面观察直接下结论。
-
-## Case schema
-
-每个案例至少保存：
-
-- repository and snapshot date；
-- creation、first release、first Issue、first PR；
-- Issue / PR / Discussion settings；
-- CONTRIBUTING、governance、code owners 与 agent instructions；
-- first-time contributor path；
-- 一个合并案例、一个关闭案例及 review 时间线；
-- 公开代码、外部贡献和生态扩展三项分别判断；
-- 证据链接与无法确认的部分。
-
-## 研究边界
-
-- GitHub 数据看不到企业内部的开发流程；
-- 公开账号无法可靠揭示 AI 辅助程度；
-- Agentic AI 项目年轻，删失和发布期效应会很强；
-- Stars 和 OpenRank描述关注与社区活动，不证明生产采用；
-- 快速关闭可能表示高效处理，也可能表示拒绝外部贡献；
-- revert 和 follow-up fix 只能近似描述后续质量问题。
-
-报告必须让读者看到这些边界，而不是把它们留在附录里。
+公开数据无法稳定识别普通开发者是否在本地使用 AI，也看不到企业内部 review、私有 issue tracker 和线下决策。Agent adoption 与协作结果之间还可能同时受到团队规模、融资、发布期和项目成熟度影响。报告需要把这些限制放在结果旁边，而不是藏在附录里。

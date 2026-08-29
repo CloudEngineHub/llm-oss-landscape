@@ -1,47 +1,47 @@
-# Source register and citation rules
+# 来源登记与引用规则
 
-The published source list lives in `../report/references.json`. The web report reads that file directly. This note defines how sources should be added as the collaboration study grows.
+正式发布的来源列表位于 `../report/references.json`，网页报告直接读取该文件。本文规定协作研究继续扩展时，应如何新增来源。
 
-## Citation families
+## 引用类别
 
-| Prefix | Family | Examples |
+| 前缀 | 类别 | 示例 |
 | --- | --- | --- |
-| D | Data and platform signals | GitHub, OpenDigger, OpenRouter, Hugging Face |
-| R | Surveys and ecosystem reports | CNCF survey, OpenInfra annual report |
-| S | Open infrastructure and standards | Kubernetes, SPIFFE, OpenTelemetry |
-| C | Project cases | Repository settings, contribution guides, governance material |
-| P | Research papers | Peer-reviewed papers and clearly labelled preprints |
-| E | Editorial and interaction references | Web-report or visual references, never used as finding evidence |
+| D | 数据与平台信号 | GitHub、OpenDigger、OpenRouter、Hugging Face |
+| R | 调查与生态报告 | CNCF 调查、OpenInfra 年报 |
+| S | 开放基础设施与标准 | Kubernetes、SPIFFE、OpenTelemetry |
+| C | 项目案例 | 仓库设置、贡献指南、治理材料 |
+| P | 研究论文 | 同行评审论文和明确标注的预印本 |
+| E | 编辑与交互参考 | 网页报告或视觉参考，不能作为研究发现的证据 |
 
-IDs are stable once published. New items take the next number within their family. Do not renumber existing references to close a gap.
+ID 一经发布即保持稳定。新增条目使用该类别中的下一个编号；不要为了填补空号而重新编号现有引用。
 
-## Minimum record
+## 最低记录要求
 
-Every published reference needs:
+每条正式发布的引用必须包含：
 
-- a stable ID;
-- the source title and publisher;
-- a direct HTTPS link;
-- the publication date or access date;
-- one sentence stating which claim, method or design decision it informed.
+- 稳定 ID；
+- 来源标题与发布者；
+- 直接 HTTPS 链接；
+- 发布日期或访问日期；
+- 一句话说明它支持了哪项结论、方法或设计决定。
 
-The `usedFor` field is deliberately reader-facing. It should name the actual use and should not say only “background research”.
+`usedFor` 字段面向读者，必须写明实际用途，不能只写“背景研究”。
 
-## Evidence rules
+## 证据规则
 
-1. Prefer a primary API, specification, repository, paper or foundation report.
-2. Put the source close to a material claim when the page offers a natural link. The bottom reference library is the complete audit trail, not a substitute for nearby attribution.
-3. Record platform boundaries. OpenRouter public app data is opt-in; Hugging Face downloads are artifact requests; Stars are attention; none of them is a user count or production-adoption measure.
-4. Separate observation from interpretation. A repository setting can be verified directly. Its governance consequences are an interpretation and should be written as such.
-5. For papers, record version, venue and DOI or arXiv identifier. Label preprints. When several papers disagree, cite the competing result rather than selecting one silently.
-6. Keep editorial references in the E family. They can inform interaction and reading structure, but they cannot support ecosystem findings.
+1. 优先使用一手 API、规范、仓库、论文或基金会报告。
+2. 页面存在自然链接位置时，应把来源放在重要结论附近。底部参考文献库是完整审计链，不能替代就近归因。
+3. 记录平台边界。OpenRouter 公开应用数据依赖主动归因；Hugging Face 下载量是 artifact 请求；Stars 表示注意力。它们都不是用户数或生产采用率。
+4. 把观察与解读分开。仓库设置可以直接核验；它对治理的影响属于解读，必须如此表述。
+5. 论文需记录版本、发表场所，以及 DOI 或 arXiv 标识，并明确标注预印本。如果多篇论文结论不一致，应并列引用相互竞争的结果，不能静默挑选。
+6. 编辑参考保留在 E 类。它们可以影响交互和阅读结构，但不能支持生态研究发现。
 
-## Future Collaboration chapter
+## 后续 Collaboration 章节
 
-The repository-level study should attach references at three levels:
+仓库层研究应在三个层级挂接引用：
 
-- **measurement** — prior work defining review load, contribution quality or human–AI collaboration measures;
-- **method** — papers supporting matched controls, causal limits and bot or agent attribution;
-- **interpretation** — empirical studies that help explain the observed result without replacing the repository evidence.
+- **测量**：定义 review 负担、贡献质量或人—AI 协同指标的既有研究；
+- **方法**：支持匹配对照、因果边界，以及 bot / Agent 归因方法的论文；
+- **解读**：帮助解释观察结果、但不替代仓库证据的实证研究。
 
-A paper belongs in the published list only after it is read closely enough to state what it contributes and what it does not establish.
+只有在精读到能够说明“它贡献了什么、不能证明什么”之后，一篇论文才能进入正式发布的引用列表。

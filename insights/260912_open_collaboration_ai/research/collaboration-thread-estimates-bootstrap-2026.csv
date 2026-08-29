@@ -1,0 +1,39 @@
+metric,view,point_estimate,ci_low_95,ci_high_95,eligible_threads,eligible_repositories,bootstrap_iterations,seed,interpretation
+agent_participation_present,population_weighted,0.403532,0.369867,0.43704,2000,100,4000,260912,Verified Agent identity or App-mediated User action visible in thread
+agent_participation_present,equal_repository,0.428,0.411988,0.4445,2000,100,4000,260912,Verified Agent identity or App-mediated User action visible in thread
+agent_participation_opened_thread,population_weighted,0.00874,0.005677,0.011999,2000,100,4000,260912,Verified Agent identity or App-mediated User action is opener
+agent_participation_opened_thread,equal_repository,0.0145,0.009988,0.0195,2000,100,4000,260912,Verified Agent identity or App-mediated User action is opener
+agent_participation_response_present,population_weighted,0.364307,0.330269,0.397462,2000,100,4000,260912,Verified Agent identity or App-mediated User action responds after opener
+agent_participation_response_present,equal_repository,0.3795,0.3625,0.396,2000,100,4000,260912,Verified Agent identity or App-mediated User action responds after opener
+known_automation_present,population_weighted,0.783052,0.767297,0.797444,2000,100,4000,260912,Any confirmed Bot or automation service account visible
+known_automation_present,equal_repository,0.7975,0.7835,0.812,2000,100,4000,260912,Any confirmed Bot or automation service account visible
+human_account_response,population_weighted,0.50987,0.472869,0.551021,2000,100,4000,260912,GitHub User account responds after opener
+human_account_response,equal_repository,0.594,0.575,0.613,2000,100,4000,260912,GitHub User account responds after opener
+maintainer_account_response,population_weighted,0.288294,0.259517,0.318756,2000,100,4000,260912,Maintainer-associated account responds after opener
+maintainer_account_response,equal_repository,0.381,0.3625,0.399513,2000,100,4000,260912,Maintainer-associated account responds after opener
+external_pr_author,population_weighted,0.733473,0.69678,0.76635,1425,100,4000,260912,PR opener has external GitHub association
+external_pr_author,equal_repository,0.66967,0.647563,0.691452,1425,100,4000,260912,PR opener has external GitHub association
+pr_review_observed,population_weighted,0.597982,0.552854,0.646829,1425,100,4000,260912,PR has a visible review
+pr_review_observed,equal_repository,0.679418,0.658444,0.700752,1425,100,4000,260912,PR has a visible review
+agent_review_event_present,population_weighted,0.326526,0.295136,0.362448,1425,100,4000,260912,PR has a visible Agent-attributed review event
+agent_review_event_present,equal_repository,0.373241,0.353514,0.39375,1425,100,4000,260912,PR has a visible Agent-attributed review event
+human_account_review_event_present,population_weighted,0.44105,0.401033,0.482392,1425,100,4000,260912,PR has a visible GitHub User review event
+human_account_review_event_present,equal_repository,0.519133,0.497384,0.5413,1425,100,4000,260912,PR has a visible GitHub User review event
+maintainer_account_review_event_present,population_weighted,0.256703,0.233652,0.283074,1425,100,4000,260912,PR has a visible maintainer-associated review event
+maintainer_account_review_event_present,equal_repository,0.334942,0.314764,0.355555,1425,100,4000,260912,PR has a visible maintainer-associated review event
+human_account_gate,population_weighted,0.783025,0.740527,0.823225,1626,100,4000,260912,Resolved thread's last visible gate actor is a GitHub User
+human_account_gate,equal_repository,0.885358,0.872268,0.897955,1626,100,4000,260912,Resolved thread's last visible gate actor is a GitHub User
+maintainer_account_gate,population_weighted,0.358812,0.328358,0.39357,1626,100,4000,260912,Resolved thread's last visible gate actor is maintainer-associated
+maintainer_account_gate,equal_repository,0.501466,0.483875,0.52022,1626,100,4000,260912,Resolved thread's last visible gate actor is maintainer-associated
+agent_gate,population_weighted,0.038526,0.014291,0.069326,1626,100,4000,260912,Resolved thread's last visible gate action has verified Agent participation
+agent_gate,equal_repository,0.016496,0.011093,0.02243,1626,100,4000,260912,Resolved thread's last visible gate action has verified Agent participation
+reviewed_pr_post_review_commit,population_weighted,0.542251,0.494538,0.592574,998,97,4000,260912,Reviewed PR adds a later commit
+reviewed_pr_post_review_commit,equal_repository,0.524559,0.495457,0.554963,998,97,4000,260912,Reviewed PR adds a later commit
+change_request_followup_commit,population_weighted,0.73079,0.637166,0.827888,65,33,4000,260912,Change request is followed by a commit
+change_request_followup_commit,equal_repository,0.721212,0.675758,0.767677,65,33,4000,260912,Change request is followed by a commit
+fixed_maturity_open,population_weighted,0.081678,0.05919,0.107334,1108,99,4000,260912,Jan-May item remains open at collection
+fixed_maturity_open,equal_repository,0.105401,0.08823,0.122795,1108,99,4000,260912,Jan-May item remains open at collection
+external_pr_github_merge_flag,population_weighted,0.410376,0.378261,0.444831,495,95,4000,260912,Resolved external PR has GitHub merged flag
+external_pr_github_merge_flag,equal_repository,0.546425,0.511009,0.583073,495,95,4000,260912,Resolved external PR has GitHub merged flag
+internal_pr_github_merge_flag,population_weighted,0.786241,0.75101,0.822361,251,75,4000,260912,Resolved maintainer/member PR has GitHub merged flag
+internal_pr_github_merge_flag,equal_repository,0.78037,0.747629,0.813413,251,75,4000,260912,Resolved maintainer/member PR has GitHub merged flag

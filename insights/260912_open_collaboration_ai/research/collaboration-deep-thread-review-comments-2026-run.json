@@ -1,0 +1,19 @@
+{
+  "started_at": "2026-08-29T09:13:03.883873+00:00",
+  "completed_at": "2026-08-29T09:17:31.398212+00:00",
+  "repositories": 9,
+  "pull_requests": 535,
+  "threads_complete": 535,
+  "missing_endpoints": 0,
+  "errors": [],
+  "review_comments": 1133,
+  "http_requests": 535,
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-deep-thread-review-comments-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-deep-thread-review-comments-2026-status.csv"
+  ],
+  "limitations": [
+    "Inline review comments are collected separately because the Issue timeline does not contain them.",
+    "A review comment records visible discussion, not whether the suggestion was correct or adopted."
+  ]
+}

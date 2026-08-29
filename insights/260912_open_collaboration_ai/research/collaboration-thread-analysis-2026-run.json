@@ -1,0 +1,19 @@
+{
+  "threads": 2000,
+  "repositories": 100,
+  "events_input": 50731,
+  "actor_registry_rows": 3687,
+  "threads_excluded_missing_timeline": 0,
+  "threads_with_zero_visible_events": 8,
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-analysis-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-analysis-2026-summary.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-agent-observed-tasks-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-analysis-2026-findings.md"
+  ],
+  "limitations": [
+    "GitHub User accounts are labelled human_account only at the public account-type level; undisclosed AI assistance remains unobservable.",
+    "Explicit disclosure candidates do not establish autonomous Agent authorship without manual evidence review.",
+    "Weighted estimates inherit the repository-stratified rejection-sample design and must be paired with equal-repository sensitivity results."
+  ]
+}

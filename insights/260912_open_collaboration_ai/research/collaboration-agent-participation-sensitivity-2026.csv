@@ -1,0 +1,3 @@
+scenario,actor_identities,candidate_identities_added,threads_with_participation,weighted_thread_share,equal_repository_thread_share,repositories_with_observed_participation,opener_threads,weighted_opener_share
+strict_verified,58,0,856,0.403532,0.428,89,29,0.00874
+expanded_agentlike_bot_upper_bound,60,2,857,0.403778,0.4285,89,29,0.00874

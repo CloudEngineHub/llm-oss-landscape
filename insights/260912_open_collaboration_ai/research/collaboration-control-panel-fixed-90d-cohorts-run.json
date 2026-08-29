@@ -1,0 +1,29 @@
+{
+  "started_at": "2026-08-28T17:55:19.226772+00:00",
+  "completed_at": "2026-08-28T17:56:54.985582+00:00",
+  "years": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "cohort_months_each_year": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "followup_days": 90,
+  "repositories": 12,
+  "rows": 300,
+  "errors": [],
+  "http_requests": 12,
+  "output": "insights/260912_open_collaboration_ai/research/collaboration-control-panel-fixed-90d-cohorts.csv",
+  "limitations": [
+    "Search is evaluated at collection time; later reopen events can revise historical closed-state counts.",
+    "The 90-day fixed horizon removes the partial-2026 follow-up bias but does not identify Agent participation.",
+    "The comparison panel remains purposive; the Top 100 and control panel are not a causal matched design."
+  ]
+}

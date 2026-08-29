@@ -1,0 +1,9 @@
+scope_type,scope_value,metric,repositories,median_post_to_pre_ratio,repositories_higher_after,repositories_lower_after,repositories_same
+overall,all,issues_opened_in_month,11,1.0112,6,5,0
+collaboration_niche,agent_application,issues_opened_in_month,1,2.8777,1,0,0
+collaboration_niche,agent_runtime_infra,issues_opened_in_month,1,0.9069,0,1,0
+collaboration_niche,model_infra,issues_opened_in_month,9,1.0112,5,4,0
+overall,all,prs_opened_in_month,11,1.3403,10,1,0
+collaboration_niche,agent_application,prs_opened_in_month,1,3.2508,1,0,0
+collaboration_niche,agent_runtime_infra,prs_opened_in_month,1,1.071,1,0,0
+collaboration_niche,model_infra,prs_opened_in_month,9,1.3403,8,1,0

@@ -1,0 +1,13 @@
+repo_name,control_domain,language_match_role,issues_opened_2022,issues_opened_2026,issues_opened_change,prs_opened_2022,prs_opened_2026,prs_opened_change,issue_unresolved_share_2022,issue_unresolved_share_2026,issue_unresolved_share_change,pr_unresolved_share_2022,pr_unresolved_share_2026,pr_unresolved_share_change,github_merge_flag_share_resolved_2022,github_merge_flag_share_resolved_2026,github_merge_flag_share_resolved_change
+apache/arrow,data_infrastructure,C++,1519,639,-880,1137,696,-441,0.3627,0.3271,-0.0357,0.0598,0.158,0.0982,0.0702,0.8123,0.7421
+apache/kafka,data_infrastructure,Java,0,0,0,599,1202,603,,,,0.1803,0.1531,-0.0272,0.8554,0.8487,-0.0067
+envoyproxy/envoy,cloud_native,C++,741,456,-285,1401,1994,593,0.2092,0.1469,-0.0622,0.0093,0.0201,0.0108,0.8163,0.7252,-0.0911
+fastapi/fastapi,application_framework,Python,318,30,-288,207,780,573,1.0,0.0,-1.0,0.4686,0.0538,-0.4148,0.6545,0.4417,-0.2128
+grafana/grafana,open_source_application,TypeScript,1727,1779,52,4171,8045,3874,0.2808,0.4295,0.1486,0.0105,0.0164,0.0059,0.8859,0.762,-0.1238
+kata-containers/kata-containers,cloud_native,Rust,502,143,-359,477,703,226,0.3147,0.5105,0.1957,0.0482,0.0825,0.0343,0.8238,0.7473,-0.0765
+kubernetes/kubernetes,cloud_native,Go,960,782,-178,2052,2528,476,0.4562,0.4552,-0.001,0.1866,0.218,0.0313,0.7496,0.7208,-0.0288
+microsoft/vscode,developer_tools,TypeScript,8963,22311,13348,1465,10826,9361,0.1785,0.2531,0.0746,0.0491,0.1088,0.0597,0.8701,0.803,-0.0671
+pandas-dev/pandas,data_library,Python,765,307,-458,1265,1898,633,0.4327,0.3257,-0.1069,0.0237,0.0585,0.0348,0.8543,0.7292,-0.1251
+prometheus/prometheus,cloud_native,Go,190,157,-33,422,838,416,0.3105,0.4013,0.0907,0.0948,0.1814,0.0866,0.7225,0.777,0.0545
+rust-lang/rust,language_toolchain,Rust,1786,1767,-19,3299,4834,1535,0.5017,0.4856,-0.0161,0.0673,0.0823,0.015,0.7969,0.7489,-0.048
+vuejs/core,application_framework,TypeScript,573,116,-457,235,436,201,0.2356,0.1121,-0.1235,0.3447,0.055,-0.2896,0.4805,0.8665,0.386

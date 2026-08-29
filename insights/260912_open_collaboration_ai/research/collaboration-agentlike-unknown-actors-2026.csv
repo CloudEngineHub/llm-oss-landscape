@@ -1,0 +1,3 @@
+actor_login,github_types,repository_count,thread_count,performed_via_apps,reason
+agent-framework-automation[bot],Bot,1,2,,Agent-like Bot/App identity without manually confirmed function
+review-notebook-app[bot],Bot,1,1,review-notebook-app,Agent-like Bot/App identity without manually confirmed function

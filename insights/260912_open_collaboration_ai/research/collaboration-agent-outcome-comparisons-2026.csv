@@ -1,0 +1,7 @@
+comparison,group,threads,repositories,estimated_population_weight,open_share_weighted,github_merge_flag_share_resolved_pr_weighted,median_resolution_days_resolved,median_first_maintainer_response_hours,median_visible_response_events,median_comments,median_reviews_pr,median_commits_pr
+mature_agent_opener_vs_user_opener,agent_opener,15,10,3431.4,0.0069,0.5772,0.31,0.2,3.0,2.0,1.0,3.0
+mature_agent_opener_vs_user_opener,github_user_opener,1053,99,455637.6,0.0839,0.5128,1.32,9.84,3.0,2.0,1.0,2.0
+all_agent_visible_vs_not_visible,agent_visible,856,89,379598.1,0.1124,0.5661,0.89,10.89,4.0,4.0,2.0,2.0
+all_agent_visible_vs_not_visible,agent_not_visible,1144,96,561091.9,0.2511,0.4748,1.2,8.07,1.0,1.0,1.0,1.0
+pr_agent_review_visible_vs_not_visible,agent_review_visible,522,81,191171.95,0.111,0.6424,0.9,11.88,6.0,5.0,2.0,3.0
+pr_agent_review_visible_vs_not_visible,agent_review_not_visible,903,97,394299.65,0.1513,0.4685,0.79,6.05,2.0,2.0,1.0,1.0

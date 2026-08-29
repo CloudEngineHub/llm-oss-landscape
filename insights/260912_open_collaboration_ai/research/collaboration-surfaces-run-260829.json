@@ -1,0 +1,24 @@
+{
+  "started_at": "2026-08-29T10:10:19.853709+00:00",
+  "completed_at": "2026-08-29T10:13:22.527839+00:00",
+  "repositories": 100,
+  "rows": 100,
+  "errors": 0,
+  "http_requests": 301,
+  "core_rate_limit": {
+    "limit": 5000,
+    "used": 1,
+    "remaining": 4999,
+    "reset": 1787998405
+  },
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-surfaces-top100-260829.csv"
+  ],
+  "limitations": [
+    "hasPullRequestsEnabled and pullRequestCreationPolicy are direct repository settings and are the primary evidence for who can create PRs.",
+    "The pulls endpoint remains a diagnostic only and must not replace pullRequestCreationPolicy.",
+    "A creation policy of ALL proves that an external user can create a PR; it does not prove maintainers will accept or merge it.",
+    "Contribution policy signals use an explicit phrase list and remain review candidates rather than final policy labels.",
+    "The path scan covers common contribution and template locations and may miss project-specific documentation paths."
+  ]
+}

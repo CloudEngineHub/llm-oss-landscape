@@ -1,0 +1,101 @@
+repo_name,llm_native_manual,llm_native_confidence,llm_native_reason
+openclaw/openclaw,llm_native,high,Personal assistant whose core execution loop depends on language models.
+NousResearch/hermes-agent,llm_native,high,Adaptive personal agent built around LLM tools memory and skills.
+pytorch/pytorch,traditional,high,General tensor and neural-network framework with a core value independent of LLMs.
+supabase/supabase,traditional,high,Postgres application platform whose database auth and realtime core predates and remains independent of LLMs.
+bytedance/deer-flow,llm_native,high,Long-horizon agent harness designed for LLM research coding and creation tasks.
+sgl-project/sglang,llm_native,high,Serving framework specifically optimized for large language and multimodal models.
+vllm-project/vllm,llm_native,high,Inference and serving engine created specifically for LLM workloads.
+larksuite/cli,mixed,medium,The CLI exposes ordinary Lark operations to both humans and agents; neither audience alone defines the whole product.
+volcengine/OpenViking,llm_native,high,Context database explicitly designed for agent memory RAG and skills.
+openai/codex,llm_native,high,Coding agent whose core behavior depends on an LLM.
+ollama/ollama,llm_native,high,Local model runtime and distribution workflow centered on LLM use.
+langchain-ai/deepagents,llm_native,high,Agent harness built directly on LLM reasoning and tool use.
+anomalyco/opencode,llm_native,high,Coding agent whose product has no meaningful non-LLM mode.
+flashinfer-ai/flashinfer,llm_native,high,Kernel library created for LLM inference and serving.
+NVIDIA/TensorRT-LLM,llm_native,high,Runtime and optimization stack explicitly scoped to LLM inference.
+anthropics/claude-code,llm_native,high,Agentic coding tool built around Claude model capabilities.
+jax-ml/jax,traditional,high,General numerical transformation and accelerator framework used far beyond LLMs.
+ai-dynamo/dynamo,llm_native,high,Distributed inference framework built for datacenter-scale generative model serving.
+apache/airflow,traditional,high,General workflow scheduler and data orchestration platform established before the LLM era.
+BerriAI/litellm,llm_native,high,Gateway and SDK whose core function is routing and governing LLM APIs.
+ggml-org/llama.cpp,llm_native,high,Inference runtime created around Llama-family and other language models.
+n8n-io/n8n,mixed,high,Workflow automation platform predating LLMs that now treats agents and MCP as a substantial product surface.
+ray-project/ray,traditional,high,General distributed computing runtime and ML libraries not dependent on LLM workloads.
+apache/spark,traditional,high,General large-scale data processing engine with an independent pre-LLM ecosystem.
+coder/coder,mixed,medium,Remote development environment platform now extending its established workspace model to agents.
+vercel/ai,llm_native,high,SDK created to build generative AI applications and agents.
+mastra-ai/mastra,llm_native,high,Framework created specifically for LLM applications agents and workflows.
+vllm-project/vllm-omni,llm_native,high,Multimodal model serving framework derived from the LLM-native vLLM stack.
+QwenLM/qwen-code,llm_native,high,Terminal coding agent designed around Qwen models and tool use.
+langgenius/dify,llm_native,high,Platform created for LLM applications RAG and agentic workflows.
+warpdotdev/warp,mixed,high,Terminal product founded before the agent wave and subsequently repositioned as an agentic development environment.
+paperclipai/paperclip,llm_native,high,Work management application created specifically for coordinating agents.
+vllm-project/vllm-ascend,llm_native,high,Hardware integration for the LLM-native vLLM serving stack.
+open-metadata/OpenMetadata,mixed,high,Data catalog and governance platform whose established core is now also used as context infrastructure for agents.
+microsoft/onnxruntime,traditional,high,General cross-platform ML inference runtime that is not specific to language models.
+CherryHQ/cherry-studio,llm_native,high,AI assistant and agent workspace built around access to foundation models.
+pingdotgg/t3code,llm_native,high,Control surface created to operate local coding agents.
+milvus-io/milvus,traditional,high,Vector database founded before the LLM wave and useful for general similarity search.
+earendil-works/pi,llm_native,high,Toolkit and CLI created around an LLM agent loop.
+NVIDIA/cudf,traditional,high,General GPU dataframe library independent of LLM workloads.
+triton-lang/triton,traditional,high,General GPU programming language and compiler with a core value beyond LLM kernels.
+zeroclaw-labs/zeroclaw,llm_native,high,Autonomous personal assistant infrastructure designed around LLM agents.
+docling-project/docling,mixed,medium,Document conversion toolkit positioned for GenAI while retaining substantial non-LLM document parsing utility.
+datahub-project/datahub,mixed,high,Metadata platform founded before the LLM wave and now expanded into context infrastructure for AI systems.
+lobehub/lobehub,llm_native,high,Agent operations workspace whose core purpose is organizing LLM agents.
+AstrBotDevs/AstrBot,llm_native,medium,Assistant framework centered on LLM-backed chat agents despite its early creation date.
+HKUDS/nanobot,llm_native,high,Personal agent framework built around LLM tools memory and workflows.
+NVIDIA/Model-Optimizer,mixed,medium,Model optimization library serves broad deep-learning models while adding LLM-specific deployment techniques.
+cline/cline,llm_native,high,Autonomous coding agent created around LLM reasoning and tool execution.
+OpenHands/software-agent-sdk,llm_native,high,SDK created specifically for building software-development agents.
+agentscope-ai/QwenPaw,llm_native,high,Personal assistant harness designed around LLM tools and skills.
+NVIDIA-NeMo/RL,llm_native,high,Reinforcement-learning toolkit designed for post-training foundation and language models.
+pydantic/pydantic-ai,llm_native,high,Framework created specifically for building LLM agents.
+google-gemini/gemini-cli,llm_native,high,Terminal agent built directly on Gemini model capabilities.
+apache/iceberg,traditional,high,General table format and data-lake infrastructure independent of LLMs.
+infiniflow/ragflow,llm_native,high,RAG and agent context engine whose core depends on language-model retrieval workflows.
+wandb/wandb,traditional,high,General experiment tracking and model lifecycle platform established before LLM-specific features.
+agno-agi/agno,mixed,medium,Repository predates ChatGPT and evolved from a broader data toolkit into an agent platform.
+Kilo-Org/kilocode,llm_native,high,Agentic engineering product created around coding agents.
+a2ui-project/a2ui,llm_native,high,Protocol created for agents to generate and update user interfaces.
+omnigent-ai/omnigent,llm_native,high,Meta-harness created to orchestrate and govern coding agents.
+activepieces/activepieces,mixed,high,Workflow automation product founded before ChatGPT that now includes agents and MCP as major capabilities.
+NVIDIA/Megatron-LM,llm_native,high,Training stack created for large transformer language models despite predating ChatGPT.
+diegosouzapw/OmniRoute,llm_native,high,Gateway created specifically for routing LLM providers and coding-agent traffic.
+mlflow/mlflow,mixed,high,General ML lifecycle platform whose current product now spans models LLM applications and agents.
+CopilotKit/CopilotKit,llm_native,high,Frontend framework created specifically for copilots agents and generative UI.
+langfuse/langfuse,llm_native,high,Observability and evaluation platform created for LLM applications.
+multica-ai/multica,llm_native,high,Managed platform created specifically to coordinate coding agents.
+coze-dev/coze-loop,llm_native,high,Optimization and observability platform created for agent development lifecycles.
+IBM/mcp-context-forge,llm_native,high,Gateway and registry created around MCP and agent tool calling.
+NVIDIA/OpenShell,llm_native,high,Runtime created specifically for executing autonomous agents safely.
+farion1231/cc-switch,llm_native,high,Desktop tool created to manage coding-agent providers skills and configuration.
+Comfy-Org/ComfyUI,traditional,medium,Node-based diffusion workflow UI whose core does not depend on language models or software agents.
+stablyai/orca,llm_native,high,Development environment created to coordinate fleets of coding agents.
+unslothai/unsloth,llm_native,high,Training and local-running stack centered on modern language models.
+langchain-ai/langchain,llm_native,high,Framework created around language-model chains and agents despite predating ChatGPT.
+openvinotoolkit/openvino,traditional,high,General AI inference optimization toolkit with a broad pre-LLM scope.
+microsoft/agent-framework,llm_native,high,Framework created specifically for AI agents and multi-agent workflows.
+comet-ml/opik,llm_native,high,Evaluation and observability platform created for LLM and agent workflows.
+marimo-team/marimo,mixed,medium,Reactive notebook retains a complete non-LLM workflow while adding an AI-native editor experience.
+weaviate/weaviate,traditional,high,Vector database and search engine established well before the LLM application wave.
+langflow-ai/langflow,llm_native,high,Visual builder created for LLM applications agents and workflows.
+esengine/DeepSeek-Reasonix,llm_native,high,Coding agent designed specifically around DeepSeek models and prompt caching.
+Arize-ai/phoenix,mixed,medium,Observability project began near the ChatGPT boundary and expanded from broader ML tracing into LLM and agent evaluation.
+apache/hudi,traditional,high,General data-lake storage and incremental processing system independent of LLMs.
+Significant-Gravitas/AutoGPT,llm_native,high,Autonomous agent project created as an application of GPT-class models.
+PaddlePaddle/Paddle,traditional,high,General deep-learning framework with a mature pre-LLM ecosystem.
+code-yeongyu/oh-my-openagent,llm_native,high,Agent harness created for Codex OpenCode and related coding agents.
+siyuan-note/siyuan,mixed,high,Knowledge-management application founded before ChatGPT that has since added agentic and MCP capabilities.
+verl-project/verl,llm_native,high,Post-training framework created for reinforcement learning on language models.
+huggingface/trl,llm_native,high,Library created to train transformer language models with reinforcement learning before ChatGPT.
+eosphoros-ai/DB-GPT,llm_native,high,Data assistant and agent framework created around GPT-class language models.
+danny-avila/LibreChat,llm_native,high,Self-hosted model chat and agent interface created around ChatGPT-style systems.
+apache/gravitino,traditional,high,General federated metadata catalog whose core remains independent of LLMs.
+charmbracelet/crush,llm_native,high,Agentic coding tool created around LLMs.
+aaif-goose/goose,llm_native,high,Extensible execution agent created around LLM tool use.
+open-webui/open-webui,llm_native,high,User interface created to operate local and hosted language models.
+livekit/agents,llm_native,high,Framework created specifically for realtime voice and video agents powered by foundation models.
+router-for-me/CLIProxyAPI,llm_native,high,API proxy created specifically for coding agents and LLM providers.
+kvcache-ai/Mooncake,llm_native,high,Serving platform created for an LLM service and its KV-cache workloads.

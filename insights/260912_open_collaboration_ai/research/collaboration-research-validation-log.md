@@ -1,0 +1,79 @@
+# 开源协作实证研究：验证与纠错记录
+
+更新日期：2026-08-29
+
+本文记录那些改变了测量设计、或推翻了初始解读的检查。它不是任务完成清单。
+
+## PR 创建权限曾被错误地降级为行为推断
+
+- 第一版把 Pulls REST endpoint 是否可访问记成 `pull_surface_observed`，并错误地写成 GitHub API 不能直接判断外部用户是否能创建 PR。
+- GitHub GraphQL 实际提供两个直接字段：`hasPullRequestsEnabled` 判断 PR 功能是否启用，`pullRequestCreationPolicy` 区分 `ALL` 与 `COLLABORATORS_ONLY`。
+- 2026 年 8 月 29 日重新采集 100 个仓库后，100 个都启用 PR；98 个策略为 `ALL`，2 个为 `COLLABORATORS_ONLY`，分别是 `openai/codex` 和 `anthropics/claude-code`。
+- “2026 年是否观察到外部作者 PR”只能描述历史行为，不能替代当前仓库创建权限。现在它只用于研究实际协作与处理结果。
+- 校验器已固定检查这两个直接字段、当前 98/2 分布和两个受限仓库，防止后续文档扫描覆盖仓库设置。
+
+## 仓库改名造成的假零值
+
+- Top 100 样本第 40 个仓库记录为 `rapidsai/cudf`，GitHub 当前返回的 canonical 名称是 `NVIDIA/cudf`。
+- 普通 repository endpoint 会把旧名称跳转到新名称；GitHub Search 不会。因此月度面板把该仓库在 2026 年的 Issue / PR 数量全部记成零，线程样本也把它当成“无合格活动”。
+- 2026 年 8 月 29 日用新名称复核，同一窗口有 2,920 个协作项，其中 544 个 Issue、2,376 个 PR。
+- 这意味着第一轮 99 个仓库、1,980 条线程不是正确样本。现在已将 current data 的仓库名统一为 `NVIDIA/cudf`，补抽 20 条并重算为 100 个仓库、2,000 条。
+- 原校验器只检查文件之间的行数和数字是否一致，没有检查 canonical 仓库名，因此未能发现这个错误。当前校验器改为强制检查 100 × 20 = 2,000 和 endpoint 完整性；仓库改名仍需要在采集入口继续做 canonical 校验。
+
+## Search 计数
+
+- 2026 年 100 仓库月度面板对前 10 个仓库重复采集两次。1—7 月 350 个完整月份单元格全部一致。数据采集过程中，8 月仍在变化，50 个单元格中有 8 个发生了 1—5 个协作项的变化。因此报告把 8 月视为仍在变化的部分月份。
+- 长期对照面板在观察窗口关闭后重复采集两次。12 个仓库、5 个年份、5 个月度队列和 8 个派生计数字段，共 2,400 个计数单元格，结果全部一致。
+- GitHub Search 计数还与 OpenClaw、Hermes Agent、PyTorch 和 Codex 的 repository connection 总数进行了对照，两者没有出现会推翻 Search 总体框架的矛盾。
+
+## 协作线程概率样本
+
+- 抽样框包含 2026 年 1 月 1 日至 8 月 29 日创建的 344,781 个 Issue 和 595,909 个 PR。
+- 修正后的文件包含 100 个仓库的 2,000 条线程：575 个 Issue 和 1,425 个 PR，每个仓库贡献 20 条。
+- 总体中的 Issue 占比为 36.7%，样本按总体权重估计为 37.8%，相差 1.1 个百分点。逐仓库比较时，样本 Issue 占比与总体占比的绝对差中位数为 6.0 个百分点，平均绝对差为 8.1 个百分点，与主动设置的每仓库 20 条上限一致。
+- 样本使用固定随机种子的 Issue 编号拒绝采样，保留各仓库自然的 Issue / PR 构成，并携带明确的逆概率权重。报告必须同时给出按仓库等权和按总体加权的估计。
+
+## Timeline endpoint 的选择
+
+- 10 条线程的 pilot 同时采集 Issue timeline、独立 PR review endpoint 和 commit endpoint；随后又仅用 timeline 重采同一批线程。
+- 丰富版本包含 145 行原始事件，仅 timeline 版本包含 132 行；差异来自 5 条重复 review 和 8 条重复 commit 记录。
+- 按事件 ID 和 commit SHA 去重后，pilot 汇总行的所有字段完全一致。因此全量采集最初采用仅 timeline 设计，把预期 API 成本从每个 PR 约 3 次请求降至每条线程 1 次，同时不改变已测试指标。
+- 第二轮 endpoint 检查发现，Issue timeline 不包含 PR 行内 review comment。现在这些评论通过 `/pulls/{number}/comments` 单独采集，再按仓库和 PR 编号合并。缺少这项补充会低估可见 review 循环。
+- 全样本还暴露了 pilot 的第二个局限：timeline 中的 commit 记录包含 SHA，但没有可用的 commit 时间戳。因此，仅 timeline 分析曾错误得出“review 后新增 commit 为零”，这个结果已被否决。随后为全部 1,425 个样本 PR 采集 `/pulls/{number}/commits` endpoint，并使用其中的 committer 时间戳进行事件顺序比较。
+- 最终 endpoint 完整度为：timeline 2,000/2,000，review comment 1,425/1,425，PR commit 1,425/1,425；无缺失 endpoint，无最终错误。合并后进入分析的公开事件为 50,731 条。
+
+## AI 归因
+
+- 第一版披露正则会把未勾选模板和“AI 生成摘要”误当成代码由 AI 生成。该规则已否决。
+- 当前严格规则要求勾选肯定项，或直接声明 Issue、PR、变更或代码由具名 AI 工具创建或辅助。2,000 条样本中有 9 条通过严格规则；它们只标记为公开披露的 AI 辅助，不自动升级为自主 Agent actor。
+- 明确披露使用 AI，仍不能证明某个自主 Agent 拥有该 GitHub 账户。研究把 `AI-assisted contribution` 与 `Agent actor` 分开报告。
+- 临时 actor registry 曾错误地把“披露 AI 辅助”的 GitHub `User` 账户提升为 `Agent candidate`，该规则已被否决。账户身份、披露的 AI 辅助和可观察的自动化功能，现在是三个独立字段。经验证的 coding、review、安全审查和支持类 Agent，与传统 CI、依赖、发布和合入自动化分开处理。
+
+## Agent 代码归因实验
+
+- 2026 年 8 月 29 日为全部 1,425 个样本 PR 补齐 GraphQL code metadata；1,425 / 1,425 成功。
+- 完整 PR body 复核发现两类新误判：未勾选的 `AI-generated` 模板选项，以及“如果存在 AI 代码则已逐行检查”的条件句。两类都已从肯定披露中排除。
+- 最高置信 Agent-only 要求 Agent opener、完整 commit 列表、全部 commit 可归因且没有普通或未知账号提交。852 个已合入样本 PR 中有 3 个通过。
+- 四个未合入 PR 的 GraphQL commit 总数与 REST 行数不一致。两个来自 open PR 继续更新，两个来自 REST 250 commit 上限。请求成功不再等同于 commit 归因完整；这四个 PR 不参与 Agent-only 判定。
+- 仓库内 2,000 次 bootstrap 得到的 Agent-only 已合入 PR 95% 区间为 0%—0.83%。稀有事件样本仍不足，当前结果只作为公开证据下界。
+
+## 固定成熟期结果与对照组
+
+- 如果没有相同随访时长，就不能直接比较不同月份当前仍 open 的数量。因此结果面板把 1—5 月队列冻结在“月末 + 90 天”，每个协作项获得 90—120 天观察期。
+- 12 个长期活跃对照仓库中，有 11 个在 2026 年 1—5 月收到的 PR 多于 2022 年；其中 9 个的固定成熟期未解决比例也更高。因此，review 压力上升并非 Agentic AI 仓库独有，不能仅凭聚合趋势归因于 Agent 使用。
+- 当前概率样本估计附带分层 bootstrap 区间。线程在每个冻结的 Top 100 仓库内部重采样。这些区间表示所选仓库集合内的线程抽样不确定性，不代表全部开源项目的不确定性。
+
+## 聚合事件数据不能支持当前效率结论
+
+- ClickHouse 仓库—年份表可以提供有用的历史骨架，但 GitHub Search 核验显示：在当前样本中，它对 2026 年新建 Issue 的覆盖率约为 20.2%，对新建 PR 的覆盖率约为 14.5%。
+- 此外，2026 年 PR 作者有 72.0% 缺失，payload 中没有任何 2026 年已合入 PR 能计算合入时长。
+- 因此，当前关于行为者构成、合入时长和生产率的结论使用 GitHub 线程证据，不使用 ClickHouse 聚合数据。
+
+## 解读检查
+
+- GitHub `User` 账户被标记为 `human account`，不能写成 `human-written code`。
+- GitHub `merged` 标记不是通用的“贡献已接受”标记。PyTorch 等项目可能通过其他工作流落地或镜像变更：PR 被关闭，但不会设置 `merged=true`。
+- 开放的协作入口、机器可读的 Agent 指令、可观察的 AI 归因和生产采用，是四个必须分开的指标。
+- 最终把关者最初没有任何维护者标签，因为关闭和合入事件并不总是重复携带作者关联信息。现在只在同一登录名于同一仓库样本的其他位置被公开观察为 OWNER、MEMBER 或 COLLABORATOR 时，才推断这种关联。如果没有这项修正，维护者把关估计会是不可能成立的零值，因此原结果已被否决。
+- 严格验证的 Agent 参与占加权线程的 40.353%。把两个未判定但疑似 Agent 的 bot 候选都纳入后，结果仅变为 40.378%；行为者身份不确定性没有驱动核心结论。
+- 出现 Agent 的线程有更多 review，也有更高的 GitHub `merged` 标记占比，但这是处理发生后的选择性比较。11 个仓库的采纳窗口还显示，加入指令后 PR 流入量更高，因此反向因果仍然合理。当前不声称存在生产率效应。

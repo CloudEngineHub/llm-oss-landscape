@@ -1,0 +1,15 @@
+{
+  "started_at": "2026-08-28T17:53:28.799417+00:00",
+  "completed_at": "2026-08-28T17:53:54.389012+00:00",
+  "repositories": 12,
+  "rows": 60,
+  "errors": [],
+  "http_requests": 12,
+  "output": "insights/260912_open_collaboration_ai/research/collaboration-control-panel-year-2022-2026.csv",
+  "limitations": [
+    "The comparison panel is purposively selected for long-lived, active projects and is not a causal matched control group.",
+    "Each annual denominator is the cohort created inside that calendar-year window; older backlog is excluded.",
+    "GitHub Search counts can be revised by later reopen events, so direction and magnitude require a repeat collection before publication.",
+    "The 2026 window ends on 29 August and is not directly comparable to a full calendar year without monthly normalization."
+  ]
+}

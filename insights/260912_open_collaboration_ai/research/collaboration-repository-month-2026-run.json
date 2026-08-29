@@ -1,0 +1,25 @@
+{
+  "started_at": "2026-08-29T08:54:32.498312+00:00",
+  "completed_at": "2026-08-29T08:54:35.573535+00:00",
+  "sample": "insights/260912_open_collaboration_ai/research/collaboration-sample-top100-2607.csv",
+  "window_start": "2026-01-01",
+  "window_end": "2026-08-29",
+  "repositories_requested": 100,
+  "repositories_complete": 100,
+  "rows": 800,
+  "errors": [],
+  "http_requests": 2,
+  "graphql_rate_limit": {
+    "limit": 5000,
+    "used": 0,
+    "remaining": 5000,
+    "reset": 1787997275
+  },
+  "output": "insights/260912_open_collaboration_ai/research/collaboration-repository-month-2026.csv",
+  "limitations": [
+    "GitHub Search counts are used for repository-month flow and must be replicated on a validation sample before publication.",
+    "Backlog is limited to items created inside the 2026 study window; older opening backlog is not included.",
+    "A later reopen can change current search state and slightly revise an earlier month-end count; timeline samples measure this risk.",
+    "Counts do not identify Agent participation. Actor and thread evidence are collected separately."
+  ]
+}

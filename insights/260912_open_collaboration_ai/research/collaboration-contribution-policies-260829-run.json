@@ -1,0 +1,24 @@
+{
+  "started_at": "2026-08-29T10:14:53.405588+00:00",
+  "completed_at": "2026-08-29T10:17:02.217488+00:00",
+  "repositories": 100,
+  "rows": 100,
+  "evidence_rows": 142,
+  "errors": 0,
+  "http_requests": 282,
+  "core_rate_limit": {
+    "limit": 5000,
+    "used": 0,
+    "remaining": 5000,
+    "reset": 1788002222
+  },
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-contribution-policies-260829.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-contribution-policy-evidence-260829.csv"
+  ],
+  "limitations": [
+    "Phrase matches are review candidates, not final policy labels.",
+    "A requirement to discuss an issue first is a gated contribution process, not a ban on external work.",
+    "The scan covers the frozen README plus known CONTRIBUTING, GOVERNANCE and pull-request-template paths and can miss rules hosted elsewhere."
+  ]
+}

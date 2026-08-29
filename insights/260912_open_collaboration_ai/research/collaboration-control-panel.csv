@@ -1,0 +1,13 @@
+control_rank,repo_name,control_domain,language_match_role,selection_note
+1,kubernetes/kubernetes,cloud_native,Go,Long-lived production infrastructure and a high-volume maintainer workflow
+2,microsoft/vscode,developer_tools,TypeScript,Long-lived developer tool with a large public Issue and PR surface
+3,vuejs/core,application_framework,TypeScript,Long-lived application framework and ecosystem-facing contribution model
+4,kata-containers/kata-containers,cloud_native,Rust,OpenInfra and CNCF-adjacent runtime infrastructure with security-sensitive review
+5,prometheus/prometheus,cloud_native,Go,CNCF monitoring infrastructure with a mature maintainer process
+6,envoyproxy/envoy,cloud_native,C++,CNCF networking infrastructure with a high-assurance review process
+7,grafana/grafana,open_source_application,TypeScript,Mature open-source application with substantial community intake
+8,apache/arrow,data_infrastructure,C++,Mature cross-language data infrastructure
+9,rust-lang/rust,language_toolchain,Rust,Long-lived compiler and language-governance workflow
+10,pandas-dev/pandas,data_library,Python,Mature Python data project with community Issue and PR review
+11,fastapi/fastapi,application_framework,Python,Python framework with high public attention and external contribution
+12,apache/kafka,data_infrastructure,Java,Mature distributed system with proposal and review governance

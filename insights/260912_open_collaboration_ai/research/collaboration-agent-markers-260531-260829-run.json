@@ -1,0 +1,28 @@
+{
+  "started_at": "2026-08-28T17:04:46.324596+00:00",
+  "completed_at": "2026-08-28T17:08:31.052251+00:00",
+  "sample": "insights/260912_open_collaboration_ai/research/collaboration-sample-top100-2607.csv",
+  "snapshots": [
+    "2026-05-31",
+    "2026-08-29"
+  ],
+  "repositories": 100,
+  "summary_rows": 200,
+  "evidence_rows": 913,
+  "scan_errors": 0,
+  "truncated_trees": 0,
+  "http_requests": 201,
+  "core_rate_limit": {
+    "limit": 5000,
+    "used": 0,
+    "remaining": 5000,
+    "reset": 1787940511
+  },
+  "limitations": [
+    "A public instruction or config proves repository preparation for agents; it does not prove use in a specific Issue or PR.",
+    "The scan observes the latest commit at or before each snapshot date on the current default branch.",
+    "The full-sample scan checks a declared set of root and .github instruction/config paths instead of downloading every recursive Git tree.",
+    "Structural missing years are not treated as zero adoption.",
+    "Residual .gitignore mentions are excluded from strict adoption rates."
+  ]
+}

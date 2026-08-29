@@ -1,0 +1,18 @@
+{
+  "started_at": "2026-08-28T18:44:13.171490+00:00",
+  "completed_at": "2026-08-28T18:44:45.242865+00:00",
+  "repositories": 32,
+  "repositories_complete": 32,
+  "errors": [],
+  "path_rows": 54,
+  "http_requests": 54,
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-agent-instruction-adoption-dates-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-agent-instruction-adoption-paths-2026.csv"
+  ],
+  "limitations": [
+    "The oldest commit returned for a current instruction path is a candidate adoption date, not proof of first tool use.",
+    "Renames, copied files and history rewriting can make current-path history later or earlier than the actual adoption event.",
+    "Dates inconsistent with the 2025 snapshot are flagged and excluded from event-study claims."
+  ]
+}

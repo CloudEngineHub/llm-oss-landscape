@@ -1,0 +1,16 @@
+{
+  "started_at": "2026-08-29T09:04:29.677627+00:00",
+  "completed_at": "2026-08-29T09:12:28.995929+00:00",
+  "repositories": 10,
+  "repository_stages": 30,
+  "sample_items": 900,
+  "items_per_stage_target": 30,
+  "errors": [],
+  "http_requests": 964,
+  "design": [
+    "launch: first 120 calendar days after repository creation",
+    "previous: 2025-09-01 through 2025-12-31",
+    "current: 2026-05-01 through 2026-08-28",
+    "uniform Issue-number rejection sample within each repository-stage"
+  ]
+}

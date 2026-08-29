@@ -1,0 +1,14 @@
+section,segment,period,repositories,issues_opened,issues_closed,issues_window_cohort_backlog,prs_opened,prs_closed,prs_merged,prs_window_cohort_backlog,issue_unresolved_share_event_weighted,issue_unresolved_share_repo_median,pr_unresolved_share_event_weighted,pr_unresolved_share_repo_median,pr_merge_share_resolved_event_weighted,pr_merge_share_resolved_repo_median
+monthly_flow,all_repositories,2026-01,100,26321,11833,14488,35541,26233,19127,9308,,,,,,
+monthly_flow,all_repositories,2026-02,100,35543,23437,26594,50332,39605,23262,20035,,,,,,
+monthly_flow,all_repositories,2026-03,100,49896,31263,45227,74835,64366,32608,30504,,,,,,
+monthly_flow,all_repositories,2026-04,100,50147,44707,50667,71172,64003,34176,37673,,,,,,
+monthly_flow,all_repositories,2026-05,100,44040,36312,58395,78774,66776,37834,49671,,,,,,
+monthly_flow,all_repositories,2026-06,100,41611,32415,67591,83093,72209,40771,60555,,,,,,
+monthly_flow,all_repositories,2026-07,100,49269,37499,79361,101490,78492,52487,83553,,,,,,
+monthly_flow,all_repositories,2026-08,100,47954,34121,93194,100672,61633,52110,122592,,,,,,
+window_outcome,all_repositories,2026-01-01..2026-08-29,100,344781,251587,93194,595909,473317,292375,122592,0.270299,0.340059,0.205723,0.165152,0.617715,0.783715
+window_outcome,agent_application,2026-01-01..2026-08-29,28,248131,187187,60944,259100,204457,97729,54643,0.245612,0.218219,0.210895,0.144348,0.477993,0.709149
+window_outcome,agent_framework,2026-01-01..2026-08-29,21,33619,22520,11099,99828,81294,61478,18534,0.330141,0.28497,0.185659,0.166561,0.756243,0.795194
+window_outcome,agent_runtime_infra,2026-01-01..2026-08-29,15,15310,10860,4450,47346,40962,33111,6384,0.29066,0.375671,0.134837,0.130608,0.808335,0.801615
+window_outcome,model_infra,2026-01-01..2026-08-29,36,47721,31020,16701,189635,146604,100057,43031,0.349972,0.398299,0.226915,0.191775,0.682498,0.789798

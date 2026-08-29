@@ -3345,8 +3345,13 @@
 }
 
 .communityLogoGrid figure[data-community="ant-open-source"] img {
-  width: 82%;
-  height: 82%;
+  width: 92%;
+  height: 92%;
+}
+
+.communityLogoGrid figure[data-community="alibaba-open-source"] img {
+  width: 78%;
+  height: 78%;
 }
 
 .communityLogoGrid figure[data-community="kaiyuanshe"] img {
