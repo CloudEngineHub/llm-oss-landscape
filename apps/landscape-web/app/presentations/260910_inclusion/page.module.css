@@ -792,6 +792,15 @@
 .studyFrame > div span { margin-top: 16px; display: block; color: var(--quiet); font-size: 13px; line-height: 1.55; }
 .studyFrame > small { padding: 18px 26px; display: block; color: var(--quiet); border-top: 1.5px solid var(--ink); font-family: var(--font-code); font-size: 9px; line-height: 1.5; letter-spacing: .05em; }
 
+.infrastructureSubchapter {
+  margin-top: clamp(88px, 11vw, 156px);
+  padding-top: clamp(46px, 6vw, 78px);
+  border-top: 4px solid var(--ink);
+  scroll-margin-top: 82px;
+}
+
+.infrastructureSubchapter .chapterTitle { max-width: 980px; }
+
 .infraBaseline {
   margin-top: 52px;
   display: grid;

@@ -8,13 +8,13 @@ The report should work as an online research publication rather than a transcrip
 
 ## Proposed reading path
 
-1. The current Agent Infra and Model Infra maps, with the latest additions and classification decisions.
-2. What changed in the ecosystem and what the signals can establish.
-3. What agents require from open infrastructure.
-4. The repository study: sample, controls, metrics and limitations.
-5. Findings on contributions, review, maintainer workload and where collaboration takes place.
-6. Cases that complicate the aggregate result, including DeepSeek Harness.
-7. Implications for internal software-development and deployment governance.
+1. **01A · The current maps** — the Agent Infra and Model Infra selections, latest additions and classification decisions.
+2. **01B · Signals in the map** — activity, age, language and the narrower usage checks outside GitHub.
+3. **01C · Open infrastructure** — how the Runtime pattern connects to Kubernetes, OpenInfra, isolation, identity and telemetry.
+4. **02A · Agent participation** — the repository sample, public Agent traces and where agents enter the workflow.
+5. **02B · The contribution process** — review, governance, maintainer pressure, DeepSeek Harness and the value that remains scarce when patches are cheap.
+
+Method, evidence boundaries and sources follow the findings. They remain directly reachable from the navigation without interrupting the main reading path.
 
 This ordering is provisional. The final structure should follow the strongest finding rather than preserve the presentation agenda.
 
