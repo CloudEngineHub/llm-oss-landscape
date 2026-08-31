@@ -42,6 +42,14 @@ We studied an open-source ecosystem built around coding agents, harnesses, runti
 
 An agent can alter a software system at two different moments. During execution, it can write and run code, use credentials and leave effects that outlive the task. Inside the repository, it can also read rules, make changes and respond to review. This report follows the infrastructure that contains the first kind of action and the maintainers who judge the second.
 
+## Executive summary
+
+The visible ecosystem is growing closest to everyday work. Applications still hold most Agent Infra activity, while newer selections are filling in the runtime beneath them: context, interoperability, tools and execution. The landscape describes where open-source work is accumulating; it does not measure production adoption.
+
+Repositories are preparing for agents before agents visibly start the work. Ninety-two of the Top 100 publish a coding-agent file or folder, but only 29 of 2,000 sampled Issues and pull requests were opened by a named Agent or App. Most observable Agent participation enters later, through review, discussion, triage or code revision.
+
+More work moved through repositories; the human gate did not get faster. In the same ten repositories, incoming work grew 165% from 2025 to 2026 while seven-day maintainer response and 30-day resolution rates fell. Agent-visible threads show more iteration, but this observational study does not establish that Agents caused either the higher volume or the weaker outcomes.
+
 ## Snapshot
 
 - 227 repositories in the May 2026 tracking pool;
