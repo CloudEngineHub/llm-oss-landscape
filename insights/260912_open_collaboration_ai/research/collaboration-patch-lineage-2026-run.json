@@ -1,0 +1,45 @@
+{
+  "started_at": "2026-08-29T16:11:06.384926+00:00",
+  "completed_at": "2026-08-29T16:11:17.898379+00:00",
+  "candidate_rule": "Merged PR with strict high-confidence agent_touched=true in the frozen 2026 probability sample.",
+  "candidate_cases": 10,
+  "analyzed_cases": 9,
+  "text_lines_in_first_agent_patches": 1225,
+  "retained_exact_lines": 765,
+  "human_rewritten_or_removed_lines": 123,
+  "agent_revised_or_removed_lines": 193,
+  "automation_rewritten_or_removed_lines": 0,
+  "unknown_rewritten_or_removed_lines": 144,
+  "retained_exact_share": 0.62449,
+  "human_rewrite_share": 0.100408,
+  "agent_revision_share": 0.157551,
+  "automation_revision_share": 0.0,
+  "unknown_revision_share": 0.117551,
+  "collaboration_paths": {
+    "agent_iterates_to_merge": 3,
+    "agent_then_human": 5,
+    "agent_then_unattributed": 1
+  },
+  "manual_alias_cases": [
+    "OpenHands/software-agent-sdk#2614",
+    "warpdotdev/warp#13382"
+  ],
+  "warnings": [
+    "vercel/ai#18818: non-linear PR chain at 7dfc6189e010; first-parent remap applied",
+    "vercel/ai#18818: non-linear PR chain at a5d4d0487295; first-parent remap applied",
+    "vercel/ai#18818: non-linear PR chain at 76e89493c54d; first-parent remap applied",
+    "microsoft/onnxruntime#28045: Git blame recovered 6 exact-origin line(s) from duplicate-line alignment",
+    "kvcache-ai/Mooncake#2686: Agent attribution is attached only to a merge commit; first-parent additions include upstream history, so line authorship is unresolved."
+  ],
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-patch-lineage-candidates-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-patch-lineage-cases-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-patch-lineage-files-2026.csv"
+  ],
+  "method": [
+    "The unit is a text line added by the first publicly attributable Agent commit in each PR.",
+    "Exact lines are carried across subsequent PR commits with a sequence diff; the first commit that changes or removes a line receives the disposition attribution.",
+    "The result measures exact textual survival, not semantic authorship or functional contribution.",
+    "GitHub User accounts are treated as human-visible accounts for commit attribution, but may still have used private AI assistance."
+  ]
+}

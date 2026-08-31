@@ -1,0 +1,22 @@
+{
+  "collected_at": "2026-08-30T12:53:52.196026+00:00",
+  "sample": "insights/260912_open_collaboration_ai/research/collaboration-sample-top100-2607.csv",
+  "output": "insights/260912_open_collaboration_ai/research/collaboration-repository-profile-2026.csv",
+  "repositories": 100,
+  "observation_start": "2026-01-01T00:00:00Z",
+  "observation_end_exclusive": "2026-08-30T00:00:00Z",
+  "github_requests": 347,
+  "github_rate_limit_remaining": 4127,
+  "definitions": {
+    "push_actors": "Distinct actor_id values on PushEvent records; this identifies people/accounts that pushed, not every commit author.",
+    "collaboration_actors": "Distinct actor_id values on Issue, Pull Request, comment, review and review-comment events.",
+    "github_releases": "Non-draft GitHub Releases published inside the observation window, including prereleases.",
+    "github_release_days": "Distinct UTC calendar days with at least one published GitHub Release; this reduces inflation from multi-package and canary automation."
+  },
+  "limitations": [
+    "PushEvent actor is the pusher and may differ from commit authors.",
+    "Actor counts include public automation accounts and the two actor groups can overlap.",
+    "GitHub Releases do not cover tags or releases published only to package registries.",
+    "The Releases endpoint is paged until its creation-time order crosses the study-window boundary; a draft created before 2026 and published in 2026 could be missed."
+  ]
+}

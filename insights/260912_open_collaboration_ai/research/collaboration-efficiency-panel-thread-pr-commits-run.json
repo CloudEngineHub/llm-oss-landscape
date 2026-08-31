@@ -1,0 +1,19 @@
+{
+  "started_at": "2026-08-30T17:14:28.143850+00:00",
+  "completed_at": "2026-08-30T17:19:27.848021+00:00",
+  "repositories": 9,
+  "pull_requests": 543,
+  "threads_complete": 543,
+  "missing_endpoints": 0,
+  "errors": [],
+  "commit_rows": 2617,
+  "http_requests": 548,
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-efficiency-panel-thread-pr-commits.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-efficiency-panel-thread-pr-commits-status.csv"
+  ],
+  "limitations": [
+    "Commit dates use the Git commit committer timestamp returned by the PR commits endpoint.",
+    "A commit after a review is an observable revision loop, not proof that the review caused the commit."
+  ]
+}

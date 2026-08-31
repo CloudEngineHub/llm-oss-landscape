@@ -16,7 +16,7 @@ The study asks a question that is already affecting software development: when A
 ## First synchronized slide map
 
 1. **Open** — When agents joined in, what happened to open-source collaboration?
-2. **May to current review** — the tracked pool grew from 227 to 277 projects;
+2. **May to current review** — ongoing review expanded the tracked pool from 227 to 277 projects; entering the pool did not automatically put a project on the landscape;
 3. **Landscape** — the crowded part and the growing part are different;
 4. **Two gates** — agents enter software before merge and after deployment;
 5. **DeepSeek Harness** — open code, outside contributions and ecosystem growth are separate choices;

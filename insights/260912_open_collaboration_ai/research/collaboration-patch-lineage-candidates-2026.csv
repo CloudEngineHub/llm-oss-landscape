@@ -1,0 +1,11 @@
+repo_name,number,html_url,attribution_class,opener_login,opener_automation_confidence,commits_total,first_agent_commit_sha,first_agent_commit_author,manual_alias_used,manual_alias_note,included,exclusion_reason
+vercel/ai,18818,https://github.com/vercel/ai/pull/18818,agent_only_traceable,ai-sdk-factory[bot],high,6,564b0ffe8b41c20735d90f2185be969a07fff262,ai-sdk-factory,false,,true,
+warpdotdev/warp,13382,https://github.com/warpdotdev/warp/pull/13382,agent_human_mixed_or_partial,warp-agent-staging[bot],high,3,22fe39dcf2d6f613253aeb1290a8801b0b9e4fde,oz-agent,true,PR opened by warp-agent-staging[bot]; oz-agent is the code-producing service identity before the human handoff.,true,
+open-metadata/OpenMetadata,25243,https://github.com/open-metadata/OpenMetadata/pull/25243,agent_human_mixed_or_partial,Copilot,high,18,c602f9c8f73dcc7db05eeae2fc3e6d86c0c04174,Copilot,false,,true,
+microsoft/onnxruntime,28045,https://github.com/microsoft/onnxruntime/pull/28045,agent_human_mixed_or_partial,Copilot,high,12,7686a239d520374fbe394f400e6fc1ef4e942994,Copilot,false,,true,
+OpenHands/software-agent-sdk,2614,https://github.com/OpenHands/software-agent-sdk/pull/2614,agent_human_mixed_or_partial,all-hands-bot,high,9,e3cecb047fb7af5519bcb2d2f8a6f32f0ac30063,openhands-agent,true,PR opened by all-hands-bot; openhands-agent is the code-producing service identity in the PR commit chain.,true,
+mlflow/mlflow,19721,https://github.com/mlflow/mlflow/pull/19721,agent_human_mixed_or_partial,danielseong1,,4,9810c260cd20d4c43aed330c1a04d927d14f7a3b,claude,false,,true,
+mlflow/mlflow,21621,https://github.com/mlflow/mlflow/pull/21621,agent_only_traceable,Copilot,high,3,51fa0ecc8ae7a2ec84fe7359bc7613c80cac68a4,Copilot,false,,true,
+mlflow/mlflow,22355,https://github.com/mlflow/mlflow/pull/22355,agent_human_mixed_or_partial,TomeHirata,,4,9b1972431feb98326fd05bd8c4d22863b2ed1947,Copilot,false,,true,
+mlflow/mlflow,22659,https://github.com/mlflow/mlflow/pull/22659,agent_only_traceable,Copilot,high,3,8e7150e691e545ed66cca287dcbf965b7f9c790f,Copilot,false,,true,
+kvcache-ai/Mooncake,2686,https://github.com/kvcache-ai/Mooncake/pull/2686,agent_human_mixed_or_partial,UNIDY2002,,2,,,false,,false,"Agent attribution is attached only to a merge commit; first-parent additions include upstream history, so line authorship is unresolved."

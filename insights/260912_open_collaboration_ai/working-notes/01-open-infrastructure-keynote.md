@@ -2,6 +2,10 @@
 
 > Working extraction from the mother research. Timing and slide language may change as the evidence is completed.
 
+> The event-specific rehearsal script is now maintained at
+> `insights/presentations/260908-kubecon-openinfra-pytorch/01-five-minute-keynote-script.md`.
+> This file remains the working extraction from the mother research.
+
 Speaker: Xiaoya Xia
 Format: five-minute keynote
 Event: KubeCon + CloudNativeCon + OpenInfra Summit + PyTorch Conference China
@@ -23,7 +27,7 @@ Drawing on new ecosystem data from Agentic AI and Cloud Native Infra, this keyno
 
 Playback route: `/presentations/260910_inclusion/open-infrastructure/present`
 
-Controls: arrow keys, page up/down or space to advance; number keys `1–6` to
+Controls: arrow keys, page up/down or space to advance; number keys `1–7` to
 jump; `Enter` for fullscreen.
 
 ## Slide map and speaker notes
@@ -38,28 +42,35 @@ carry.
 
 In the cloud-native model, we usually know the workload when we deploy it. An
 agent can write a new program inside a task, run it for four minutes, open a pull
-request and then release its environment. The runtime may be gone, while the
-effect remains. Even that short-lived environment needs isolation, narrowly
+request and then release its environment. The task process and its environment
+may already be gone, while the effect remains. Even that short-lived environment needs isolation, narrowly
 scoped authority and a record which survives cleanup.
 
 ### 3. The agent layer is young. The base below it is not · `1:15–2:15`
 
-The tracked project pool grew from 227 repositories in May to 277 in the current
-review. Agent Infra is the younger layer: 55 percent of its selected projects
-were created in 2025 or later, compared with 17 percent in Model Infra. Thirteen
-of the 23 Agent Infra selections outside the May tracking pool sit in Runtime.
+Ongoing ecosystem review expanded the tracked project pool from 227 repositories
+in May to 277 in the current review. Projects entered through activity-based
+discovery, targeted GitHub searches and editorial review; the pool is broader
+than the final landscape selection. Agent Infra is the younger layer: 55 percent
+of its selected projects were created in 2025 or later, compared with 17 percent
+in Model Infra. Thirteen of the 23 Agent Infra selections outside the May
+tracking pool sit in Runtime.
 The visible attention is still concentrated near applications, while the map is
 becoming denser around isolated execution, tool control and durable context.
 These counts describe ecosystem activity, not production adoption.
 
-### 4. The installed base is already carrying AI · `2:15–3:05`
+### 4. The cloud-native stack is becoming the task envelope · `2:15–3:05`
 
-This does not mean we need a second infrastructure universe. CNCF reports that
-82 percent of container users run Kubernetes in production, and 66 percent of
-organisations hosting generative AI already use Kubernetes for some or all
-inference. OpenInfra documents more than 55 million OpenStack cores in
-production. The existing substrate is large and already carrying AI. The
-question is where it has to change.
+The change is visible across several project roles, not just in infrastructure
+surveys. Kubernetes Agent Sandbox and Kata Containers handle lifecycle and
+isolation. Kagent, Dapr Agents and OpenChoreo connect agents to cloud-native
+operations, durable state and recovery. Kgateway and agentgateway put LLM, MCP
+and agent traffic behind a control and data plane. OpenTelemetry and Jaeger are
+working on the record needed to reconstruct agent execution. Some of these
+projects were built for agents; others are mature infrastructure projects
+adding an agent-specific interface or semantic layer. Together they show where
+the established stack is being pulled, without pretending this is already an
+ecosystem-wide adoption rate.
 
 ### 5. A production agent needs a task envelope · `3:05–4:35`
 
@@ -80,15 +91,16 @@ where runtime, authority, context and evidence now need to meet.
 
 ## Current argument
 
-The cloud-native substrate is already carrying production AI. The agent-specific pressure appears at the task boundary: short-lived execution, delegated authority, durable context and evidence of what a tool actually changed.
+Established open infrastructure is already being adapted for agent execution. The agent-specific pressure appears at the task boundary: short-lived execution, delegated authority, durable context and evidence of what a tool actually changed.
 
-The talk needs one connected path through the evidence. Sandbox orchestration is the strongest opening example because it links a new Agent Infra category directly to Kubernetes Agent Sandbox and Kata Containers. OpenTelemetry gives a second concrete example: the telemetry pipeline is established, while agent and tool-call semantics are still under development.
+The talk needs one connected path through the evidence. Sandbox orchestration is the strongest opening example because it links a new Agent Infra category directly to Kubernetes Agent Sandbox and Kata Containers. The broader four-role matrix prevents the keynote from implying that isolation is the only response. OpenTelemetry and Jaeger give a second concrete example: the telemetry pipeline is established, while agent and tool-call semantics are still under development.
 
 Accelerator scheduling belongs in the supporting data. Kubernetes DRA and Kueue show that open infrastructure is already adapting to scarce devices and mixed AI workloads, although that work cannot be attributed to agents alone.
 
 ## Evidence boundary
 
 - GitHub Stars and OpenRank describe attention and community activity. They do not establish production use.
-- CNCF survey percentages describe the installed cloud-native base and AI workload usage, not agent adoption.
-- OpenInfra production-core counts establish OpenStack scale. Project integrations and case studies must be cited separately.
+- Agent Sandbox, Kata Containers, kagent, Dapr Agents, OpenChoreo, kgateway, agentgateway, OpenTelemetry and Jaeger document capabilities or integration paths; they do not establish production adoption rates.
+- Confidential Containers and Istio are labelled as established or adjacent infrastructure adapting toward AI workloads, not Agent-specific projects.
+- OpenTelemetry's GenAI agent semantics are still in Development and should not be described as a finished standard.
 - Any claim that an existing project is being changed specifically for agents needs a project source, release note or maintainer statement.

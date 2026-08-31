@@ -1,0 +1,18 @@
+row_type,order,label,repo_name,repositories,release_days,release_records
+distribution_bucket,1,None,,2,,
+distribution_bucket,2,1 day,,2,,
+distribution_bucket,3,2-9,,13,,
+distribution_bucket,4,10-29,,26,,
+distribution_bucket,5,30-89,,27,,
+distribution_bucket,6,90-179,,24,,
+distribution_bucket,7,180+,,6,,
+release_day_leader,1,,ggml-org/llama.cpp,,239,2002
+release_day_leader,2,,QwenLM/qwen-code,,221,491
+release_day_leader,3,,openai/codex,,206,677
+release_day_leader,4,,router-for-me/CLIProxyAPI,,202,439
+release_day_leader,5,,vercel/ai,,192,14974
+release_day_leader,6,,flashinfer-ai/flashinfer,,185,221
+release_day_leader,7,,google-gemini/gemini-cli,,165,325
+release_day_leader,8,,lobehub/lobehub,,161,639
+release_day_leader,9,,stablyai/orca,,157,940
+release_day_leader,10,,anthropics/claude-code,,150,201

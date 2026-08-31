@@ -1,0 +1,55 @@
+comparison,metric,item_scope,direction,repositories,earlier_value,later_value,absolute_change,relative_change,positive_deltas,negative_deltas,ties,exact_signflip_p,bh_q,interpretation
+2024_to_2026,human_response_7d,all,later_minus_earlier,8,0.612183,0.510855,-0.101328,-0.16552,2,6,0,0.171875,0.356971,higher is faster human response
+2024_to_2026,human_response_7d,issue,later_minus_earlier,8,0.49375,0.439583,-0.054167,-0.109705,3,3,2,0.625,0.703125,higher is faster human response to issues
+2024_to_2026,human_response_7d,pull_request,later_minus_earlier,8,0.683347,0.519759,-0.163588,-0.239392,1,6,1,0.03125,0.120536,higher is faster human response to pull requests
+2024_to_2026,maintainer_response_7d,all,later_minus_earlier,8,0.452831,0.241601,-0.21123,-0.466465,0,7,1,0.015625,0.105469,higher is faster maintainer response
+2024_to_2026,maintainer_response_7d,issue,later_minus_earlier,8,0.302083,0.125,-0.177083,-0.586207,2,4,2,0.1875,0.361607,higher is faster maintainer response to issues
+2024_to_2026,maintainer_response_7d,pull_request,later_minus_earlier,8,0.526018,0.262708,-0.26331,-0.500572,0,8,0,0.007812,0.105462,higher is faster maintainer response to pull requests
+2024_to_2026,issue_closed_30d,issue,later_minus_earlier,8,0.482143,0.391667,-0.090476,-0.187654,3,4,1,0.59375,0.697011,higher is faster issue resolution
+2024_to_2026,pr_merged_30d,pull_request,later_minus_earlier,8,0.701371,0.552072,-0.149299,-0.212867,2,5,1,0.0625,0.210938,higher is faster pull-request integration
+2024_to_2026,pr_closed_unmerged_30d,pull_request,later_minus_earlier,8,0.216683,0.308633,0.091949,0.424348,5,3,0,0.234375,0.395508,"higher can mean faster rejection, not productive throughput"
+2024_to_2026,maintainer_actions_30d,all,later_minus_earlier,8,1.28161,1.792061,0.510451,0.398289,3,5,0,0.445312,0.59446,higher means more visible maintainer work per thread
+2024_to_2026,maintainer_actions_30d,issue,later_minus_earlier,8,0.668899,0.3,-0.368899,-0.551502,4,4,0,0.4375,0.59446,higher means more visible maintainer work per issue
+2024_to_2026,maintainer_actions_30d,pull_request,later_minus_earlier,8,1.544433,2.103863,0.559431,0.362224,4,4,0,0.484375,0.59446,higher means more visible maintainer work per pull request
+2024_to_2026,conversation_runs_30d,all,later_minus_earlier,8,2.922228,3.740508,0.81828,0.280019,5,3,0,0.140625,0.34517,higher means more handoffs or dialogue turns
+2024_to_2026,conversation_runs_30d,issue,later_minus_earlier,8,2.272768,2.260417,-0.012351,-0.005434,4,4,0,0.992188,0.992188,higher means more issue dialogue handoffs
+2024_to_2026,conversation_runs_30d,pull_request,later_minus_earlier,8,3.168099,4.027515,0.859416,0.271272,5,3,0,0.164062,0.356971,higher means more pull-request dialogue handoffs
+2024_to_2026,opener_return_rounds_30d,all,later_minus_earlier,8,0.736233,0.856607,0.120373,0.163499,4,4,0,0.453125,0.59446,higher means more contributor return cycles
+2024_to_2026,review_events_30d,pull_request,later_minus_earlier,8,2.128927,4.050662,1.921734,0.902677,5,3,0,0.09375,0.253125,higher means more review activity per pull request
+2024_to_2026,human_review_events_30d,pull_request,later_minus_earlier,8,2.057147,2.705144,0.647997,0.314998,4,4,0,0.476562,0.59446,higher means more human review activity per pull request
+2024_to_2026,maintainer_review_events_30d,pull_request,later_minus_earlier,8,1.015337,1.595356,0.580019,0.571257,4,4,0,0.460938,0.59446,higher means more maintainer review activity per pull request
+2024_to_2026,agent_review_events_30d,pull_request,later_minus_earlier,8,0.01875,1.326678,1.307928,69.756174,6,0,2,0.03125,0.120536,higher means more agent review activity per pull request
+2024_to_2026,commits_after_first_review_30d,pull_request,later_minus_earlier,8,0.836975,1.561008,0.724032,0.865058,5,3,0,0.226562,0.395508,higher means more post-review revision activity
+2024_to_2026,commits_after_first_human_review_30d,pull_request,later_minus_earlier,8,0.826559,1.017382,0.190824,0.230865,4,4,0,0.765625,0.795072,higher means more revision activity after human review
+2024_to_2026,commits_after_first_agent_review_30d,pull_request,later_minus_earlier,8,0.0,0.879864,0.879864,,6,0,2,0.03125,0.120536,higher means more revision activity after agent review
+2024_to_2026,agent_visible_30d,all,later_minus_earlier,8,0.362249,0.652706,0.290456,0.801814,5,1,2,0.09375,0.253125,higher means more publicly visible agent participation
+2024_to_2026,coding_or_review_agent_visible_30d,all,later_minus_earlier,8,0.014423,0.404515,0.390092,27.046378,7,0,1,0.015625,0.105469,higher means more visible coding or review agent participation
+2024_to_2026,support_agent_visible_30d,all,later_minus_earlier,8,0.347826,0.448295,0.100469,0.288849,2,1,5,0.75,0.795072,higher means more visible support-agent participation
+2024_to_2026,automation_actions_30d,all,later_minus_earlier,8,3.788612,7.025392,3.23678,0.854345,8,0,0,0.007812,0.105462,higher means more conventional automation activity
+2025_to_2026,human_response_7d,all,later_minus_earlier,10,0.602976,0.468905,-0.13407,-0.222348,1,9,0,0.017578,0.063283,higher is faster human response
+2025_to_2026,human_response_7d,issue,later_minus_earlier,10,0.609952,0.41546,-0.194493,-0.318865,2,6,2,0.117188,0.241071,higher is faster human response to issues
+2025_to_2026,human_response_7d,pull_request,later_minus_earlier,9,0.623138,0.499045,-0.124093,-0.199142,1,8,0,0.019531,0.063283,higher is faster human response to pull requests
+2025_to_2026,maintainer_response_7d,all,later_minus_earlier,10,0.428666,0.200301,-0.228365,-0.532734,0,9,1,0.003906,0.042185,higher is faster maintainer response
+2025_to_2026,maintainer_response_7d,issue,later_minus_earlier,10,0.359206,0.107994,-0.251213,-0.699355,1,9,0,0.007812,0.042185,higher is faster maintainer response to issues
+2025_to_2026,maintainer_response_7d,pull_request,later_minus_earlier,9,0.491631,0.233519,-0.258113,-0.525013,0,9,0,0.003906,0.042185,higher is faster maintainer response to pull requests
+2025_to_2026,issue_closed_30d,issue,later_minus_earlier,10,0.486751,0.384482,-0.102269,-0.210105,3,6,1,0.292969,0.471507,higher is faster issue resolution
+2025_to_2026,pr_merged_30d,pull_request,later_minus_earlier,9,0.708257,0.546287,-0.161971,-0.228689,1,7,1,0.023438,0.063283,higher is faster pull-request integration
+2025_to_2026,pr_closed_unmerged_30d,pull_request,later_minus_earlier,9,0.181174,0.329896,0.148721,0.820873,7,2,0,0.0625,0.153409,"higher can mean faster rejection, not productive throughput"
+2025_to_2026,maintainer_actions_30d,all,later_minus_earlier,10,1.479611,1.437997,-0.041614,-0.028125,4,6,0,0.935547,0.953125,higher means more visible maintainer work per thread
+2025_to_2026,maintainer_actions_30d,issue,later_minus_earlier,10,0.782388,0.245882,-0.536506,-0.685728,1,9,0,0.005859,0.042185,higher means more visible maintainer work per issue
+2025_to_2026,maintainer_actions_30d,pull_request,later_minus_earlier,9,1.928846,1.870101,-0.058745,-0.030456,4,4,1,0.945312,0.953125,higher means more visible maintainer work per pull request
+2025_to_2026,conversation_runs_30d,all,later_minus_earlier,10,3.099785,3.241681,0.141897,0.045776,5,5,0,0.597656,0.701596,higher means more handoffs or dialogue turns
+2025_to_2026,conversation_runs_30d,issue,later_minus_earlier,10,2.312374,2.022059,-0.290315,-0.125549,3,7,0,0.535156,0.701596,higher means more issue dialogue handoffs
+2025_to_2026,conversation_runs_30d,pull_request,later_minus_earlier,9,3.711294,3.894828,0.183534,0.049453,3,6,0,0.777344,0.874512,higher means more pull-request dialogue handoffs
+2025_to_2026,opener_return_rounds_30d,all,later_minus_earlier,10,0.816741,0.751331,-0.06541,-0.080087,5,5,0,0.546875,0.701596,higher means more contributor return cycles
+2025_to_2026,review_events_30d,pull_request,later_minus_earlier,9,3.13521,4.58207,1.44686,0.461487,6,3,0,0.367188,0.550782,higher means more review activity per pull request
+2025_to_2026,human_review_events_30d,pull_request,later_minus_earlier,9,2.390795,2.978646,0.587851,0.245881,5,4,0,0.585938,0.701596,higher means more human review activity per pull request
+2025_to_2026,maintainer_review_events_30d,pull_request,later_minus_earlier,9,1.373353,1.418094,0.044741,0.032578,4,4,1,0.953125,0.953125,higher means more maintainer review activity per pull request
+2025_to_2026,agent_review_events_30d,pull_request,later_minus_earlier,9,0.733304,1.586677,0.853373,1.163738,5,3,1,0.296875,0.471507,higher means more agent review activity per pull request
+2025_to_2026,commits_after_first_review_30d,pull_request,later_minus_earlier,9,0.976708,1.887562,0.910854,0.932575,6,3,0,0.109375,0.241071,higher means more post-review revision activity
+2025_to_2026,commits_after_first_human_review_30d,pull_request,later_minus_earlier,9,0.889364,1.311747,0.422383,0.474927,4,5,0,0.46875,0.666118,higher means more revision activity after human review
+2025_to_2026,commits_after_first_agent_review_30d,pull_request,later_minus_earlier,9,0.443405,1.245064,0.80166,1.807964,6,1,2,0.140625,0.253125,higher means more revision activity after agent review
+2025_to_2026,agent_visible_30d,all,later_minus_earlier,10,0.334647,0.543904,0.209256,0.625304,8,0,2,0.007812,0.042185,higher means more publicly visible agent participation
+2025_to_2026,coding_or_review_agent_visible_30d,all,later_minus_earlier,10,0.130869,0.345351,0.214482,1.638898,7,1,2,0.023438,0.063283,higher means more visible coding or review agent participation
+2025_to_2026,support_agent_visible_30d,all,later_minus_earlier,10,0.285784,0.358636,0.072853,0.254923,4,0,6,0.125,0.241071,higher means more visible support-agent participation
+2025_to_2026,automation_actions_30d,all,later_minus_earlier,10,4.041805,6.55903,2.517224,0.622797,9,1,0,0.011719,0.052735,higher means more conventional automation activity

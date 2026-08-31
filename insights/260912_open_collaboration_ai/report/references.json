@@ -23,55 +23,25 @@
         "id": "D03",
         "title": "OpenRouter App & Agent Rankings",
         "publisher": "OpenRouter",
-        "date": "checked August 27, 2026",
+        "date": "checked August 29, 2026",
         "url": "https://openrouter.ai/apps/",
-        "usedFor": "DeepSeek Harness public app rank and weekly growth signal."
+        "usedFor": "Alignment between the public global Top 20 apps and projects in the current Agent Infra landscape."
       },
       {
         "id": "D04",
-        "title": "OpenRouter App Rankings API",
-        "publisher": "OpenRouter",
+        "title": "ZenMux App Leaderboard API",
+        "publisher": "ZenMux",
         "date": "accessed August 2026",
-        "url": "https://openrouter.ai/docs/api/api-reference/datasets/get-app-rankings",
-        "usedFor": "Ranking scope, public attribution boundary and trending definition."
+        "url": "https://zenmux.ai/docs/api/platform/statistics-app-leaderboard.html",
+        "usedFor": "Definition, freshness and scope of ZenMux application and Agent usage rankings."
       },
       {
         "id": "D05",
-        "title": "Hugging Face Hub API documentation",
-        "publisher": "Hugging Face",
-        "date": "accessed August 2026",
-        "url": "https://huggingface.co/docs/hub/en/api",
-        "usedFor": "Resolving official public-weight repositories in the June model-usage sample."
-      },
-      {
-        "id": "D06",
-        "title": "ZenMux model API marketplace",
+        "title": "ZenMux Model Leaderboard API",
         "publisher": "ZenMux",
-        "date": "June 2026 frozen sample",
-        "url": "https://zenmux.ai/",
-        "usedFor": "One half of the normalized cross-platform model-usage comparison."
-      }
-    ]
-  },
-  {
-    "label": "Surveys and ecosystem reports",
-    "description": "These sources establish the installed open-infrastructure base; they do not measure agent adoption.",
-    "items": [
-      {
-        "id": "R01",
-        "title": "Annual Cloud Native Survey 2025",
-        "publisher": "CNCF",
-        "date": "2026",
-        "url": "https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/",
-        "usedFor": "Kubernetes production use and the share of GenAI-hosting organizations using Kubernetes for inference."
-      },
-      {
-        "id": "R02",
-        "title": "OpenInfra Annual Report 2025",
-        "publisher": "OpenInfra Foundation",
-        "date": "2026",
-        "url": "https://openinfra.org/annual-report/2025/",
-        "usedFor": "Documented OpenStack production-core scale."
+        "date": "June 2026 snapshot",
+        "url": "https://zenmux.ai/docs/api/platform/statistics-leaderboard.html",
+        "usedFor": "Single-platform model token ranking in the frozen June 2026 export."
       }
     ]
   },
@@ -89,6 +59,14 @@
       },
       {
         "id": "S02",
+        "title": "Kubernetes Agent Sandbox threat model",
+        "publisher": "Kubernetes SIGs",
+        "date": "accessed August 2026",
+        "url": "https://github.com/kubernetes-sigs/agent-sandbox/blob/main/docs/security/threat_model.md",
+        "usedFor": "Threat boundaries for untrusted LLM-generated code and secure RuntimeClass guidance."
+      },
+      {
+        "id": "S03",
         "title": "Kata Containers Agent Sandbox integration",
         "publisher": "Kata Containers",
         "date": "accessed August 2026",
@@ -96,7 +74,15 @@
         "usedFor": "VM-backed isolation as a boundary for agent-generated code."
       },
       {
-        "id": "S03",
+        "id": "S04",
+        "title": "Open source software community projects",
+        "publisher": "OpenInfra Foundation",
+        "date": "accessed August 2026",
+        "url": "https://openinfra.org/projects/",
+        "usedFor": "Kata Containers' place in the OpenInfra ecosystem and its workload-isolation role."
+      },
+      {
+        "id": "S05",
         "title": "Deploying the SPIRE Agent",
         "publisher": "SPIFFE / SPIRE",
         "date": "accessed August 2026",
@@ -104,7 +90,7 @@
         "usedFor": "Workload and delegated identity capabilities, including impersonation risk."
       },
       {
-        "id": "S04",
+        "id": "S06",
         "title": "OpenTelemetry GenAI agent span conventions",
         "publisher": "OpenTelemetry",
         "date": "accessed August 2026",
@@ -112,7 +98,7 @@
         "usedFor": "Current semantic conventions for agents and tool execution, including development status."
       },
       {
-        "id": "S05",
+        "id": "S07",
         "title": "Kubernetes v1.34 Dynamic Resource Allocation updates",
         "publisher": "Kubernetes",
         "date": "September 2025",
@@ -120,7 +106,7 @@
         "usedFor": "The current accelerator-allocation substrate and its GA status."
       },
       {
-        "id": "S06",
+        "id": "S08",
         "title": "Kueue overview",
         "publisher": "Kubernetes SIG Scheduling",
         "date": "accessed August 2026",
@@ -128,12 +114,92 @@
         "usedFor": "Quota-aware scheduling across batch, training and inference workloads."
       },
       {
-        "id": "S07",
+        "id": "S09",
         "title": "Kueue topology-aware scheduling",
         "publisher": "Kueue",
         "date": "accessed August 2026",
         "url": "https://kueue.sigs.k8s.io/docs/concepts/topology_aware_scheduling/",
         "usedFor": "Placement constraints for network-sensitive distributed work."
+      },
+      {
+        "id": "S10",
+        "title": "Kagent: Bringing Agentic AI to Cloud Native",
+        "publisher": "CNCF",
+        "date": "April 2025",
+        "url": "https://www.cncf.io/blog/2025/04/15/kagent-bringing-agentic-ai-to-cloud-native/",
+        "usedFor": "Agents operating Kubernetes, Prometheus, Istio and Argo through cloud-native tools."
+      },
+      {
+        "id": "S11",
+        "title": "Dapr Agents v1.0",
+        "publisher": "CNCF",
+        "date": "March 2026",
+        "url": "https://www.cncf.io/announcements/2026/03/23/general-availability-of-dapr-agents-delivers-production-reliability-for-enterprise-ai/",
+        "usedFor": "Durable workflows, persistent state, retries, identity and multi-agent coordination."
+      },
+      {
+        "id": "S12",
+        "title": "Platform engineering for the agentic enterprise",
+        "publisher": "CNCF",
+        "date": "July 2026",
+        "url": "https://www.cncf.io/blog/2026/07/21/platform-engineering-for-the-agentic-enterprise-managing-applications-resources-and-ai-agents/",
+        "usedFor": "OpenChoreo as one governed platform for human and Agent consumers."
+      },
+      {
+        "id": "S13",
+        "title": "Kgateway v2.1 and agentgateway integration",
+        "publisher": "CNCF",
+        "date": "November 2025",
+        "url": "https://www.cncf.io/blog/2025/11/18/kgateway-v2-1-is-released/",
+        "usedFor": "Control and data planes connecting LLMs, MCP tools, AI agents and inference workloads."
+      },
+      {
+        "id": "S14",
+        "title": "Istio in the AI era",
+        "publisher": "CNCF",
+        "date": "March 2026",
+        "url": "https://www.cncf.io/announcements/2026/03/25/istio-brings-future-ready-service-mesh-to-the-ai-era-with-new-ambient-multicluster-gateway-api-inference-extension-and-more/",
+        "usedFor": "An established service mesh extending gateway and traffic capabilities toward AI workloads."
+      },
+      {
+        "id": "S15",
+        "title": "How Jaeger is evolving to trace AI agents with OpenTelemetry",
+        "publisher": "CNCF",
+        "date": "May 2026",
+        "url": "https://www.cncf.io/blog/2026/05/26/how-jaeger-is-evolving-to-trace-ai-agents-with-opentelemetry/",
+        "usedFor": "Agent execution paths, GenAI semantic conventions and MCP, ACP and AG-UI work."
+      },
+      {
+        "id": "S16",
+        "title": "Confidential Containers becomes a CNCF incubating project",
+        "publisher": "CNCF",
+        "date": "July 2026",
+        "url": "https://www.cncf.io/blog/2026/07/22/confidential-containers-becomes-a-cncf-incubating-project/",
+        "usedFor": "Adjacent attested isolation substrate for confidential AI workloads."
+      },
+      {
+        "id": "S17",
+        "title": "Kubernetes Agent Sandbox roadmap",
+        "publisher": "Kubernetes SIGs",
+        "date": "accessed August 2026",
+        "url": "https://github.com/kubernetes-sigs/agent-sandbox/blob/main/roadmap.md",
+        "usedFor": "Warm-pool selection, traffic-based suspend and resume, and remaining lifecycle work."
+      },
+      {
+        "id": "S18",
+        "title": "Agentgateway request and token rate limits",
+        "publisher": "Agentgateway",
+        "date": "accessed August 2026",
+        "url": "https://agentgateway.dev/docs/standalone/latest/configuration/resiliency/rate-limits/",
+        "usedFor": "Request and token budgets, plus the stated limits of local counters."
+      },
+      {
+        "id": "S19",
+        "title": "Agentgateway MCP per-tool rate limits",
+        "publisher": "Agentgateway",
+        "date": "accessed August 2026",
+        "url": "https://agentgateway.dev/docs/kubernetes/2.2.x/mcp/rate-limit/",
+        "usedFor": "Per-tool limits across MCP traffic and task-level traffic-governance gaps."
       }
     ]
   },
@@ -145,9 +211,9 @@
         "id": "C01",
         "title": "DeepSeek Harness repository",
         "publisher": "DeepSeek",
-        "date": "checked August 2026",
+        "date": "checked 30 August 2026",
         "url": "https://github.com/deepseek-ai/deepseek-harness",
-        "usedFor": "Repository surface, license and project structure."
+        "usedFor": "Repository creation date, stars, forks, surface, license and project structure."
       },
       {
         "id": "C02",

@@ -8,7 +8,7 @@ This directory is the canonical source for one research project with three audie
 
 Five-minute keynote: **What AI Agents Need from Open Infrastructure**
 
-The keynote uses Agentic AI, CNCF and OpenInfra ecosystem data to explain how the workload changes when agents generate code, call tools and carry state. It should end with a small number of infrastructure responses that the audience can connect to Kubernetes, OpenStack, Kata Containers, OpenTelemetry and adjacent open projects.
+The keynote uses Agentic AI landscape data and project evidence from adjacent open infrastructure ecosystems to explain how the workload changes when agents generate code, call tools and carry state. It should end with a small number of responses that the audience can connect to Kubernetes Agent Sandbox, the OpenInfra-hosted Kata Containers project, OpenTelemetry and adjacent open projects.
 
 Official event page: <https://www.lfopensource.cn/kubecon-cloudnativecon-openinfra-summit-pytorch-conference-china/>
 

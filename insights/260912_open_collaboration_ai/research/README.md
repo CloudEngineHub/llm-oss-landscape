@@ -51,6 +51,15 @@ cuDF 改名错误已经修复：样本和当前数据统一使用 `NVIDIA/cudf`�
 | `collaboration-sample-top100-2607.csv` | 100 个仓库及 LLM / 技术领域人工分类 |
 | `collaboration-surfaces-top100-260829.csv` | 100 个仓库的 Issue / Discussion / PR 开关和 PR 创建策略 |
 | `collaboration-contribution-policies-reviewed-260829.csv` | API 创建权限、贡献文档与人工复核后的政策分类 |
+| `collaboration-repository-profile-2026.csv` | 2026 年 Push / Issue / PR actor 广度和 GitHub Release 节奏 |
+| `collaboration-repository-profile-2026-run.json` | 上述仓库画像的窗口、定义、API 请求和限制 |
+| `collaboration-repository-profile-2026-findings.md` | Top 100 仓库画像、贡献政策和 Release 口径的中文说明 |
+| `collaboration-repository-month-2026.csv` | 100 仓库 × 8 个月的 2026 Issue / PR 流入与同 cohort backlog |
+| `collaboration-repository-fixed-window-2022-2026.csv` | 100 仓库 × 5 年、每年同一观察窗口的历史对照 |
+| `collaboration-activity-flow-2022-2026-summary.csv` | 冻结样本、固定 cohort 和技术类型的汇总结果 |
+| `collaboration-release-distribution-2026-summary.csv` | Release day 分布和高频仓库 |
+| `collaboration-activity-flow-findings.md` | 独立协作流量与发版节奏 insight 的中文解释 |
+| `collaboration-activity-flow-validation.json` | 面板交叉复核和同日重复采集结果 |
 | `collaboration-thread-sample-2026.csv` | 2,000 条概率样本、抽样概率和权重 |
 | `collaboration-thread-events-2026.csv` | GitHub timeline |
 | `collaboration-thread-review-comments-2026.csv` | PR inline review comment |
@@ -63,6 +72,10 @@ cuDF 改名错误已经修复：样本和当前数据统一使用 `NVIDIA/cudf`�
 | `collaboration-agent-code-attribution-2026.csv` | 每个 PR 的 Agent-only、Agent-human mixed 与公开披露判定 |
 | `collaboration-agent-code-estimates-2026.csv` | Agent 代码归因的概率加权估计与 bootstrap 区间 |
 | `collaboration-agent-code-key-metrics-2026.csv` | 最需要阅读的五个核心数字 |
+| `collaboration-patch-lineage-candidates-2026.csv` | 10 个 Agent-touched 已合入 PR 的纳入状态和逐案证据 |
+| `collaboration-patch-lineage-cases-2026.csv` | 第一笔有效 Agent patch 到最终 head 的逐案保留与改写结果 |
+| `collaboration-patch-lineage-files-2026.csv` | 文件和文件类型层面的 patch lineage 结果 |
+| `collaboration-patch-lineage-findings.md` | 这轮逐行实验的中文说明、案例和边界 |
 
 校验：
 
@@ -70,6 +83,9 @@ cuDF 改名错误已经修复：样本和当前数据统一使用 `NVIDIA/cudf`�
 .venv/bin/python scripts/validate_collaboration_empirical.py
 .venv/bin/python scripts/collect_collaboration_pr_code_metadata.py
 .venv/bin/python scripts/analyze_collaboration_agent_code.py
+.venv/bin/python scripts/analyze_collaboration_patch_lineage.py
+.venv/bin/python scripts/collect_collaboration_fixed_window_2022_2026.py
+.venv/bin/python scripts/analyze_collaboration_activity_flow.py
 ```
 
 ## 想复算分类比较和深挖
