@@ -1,0 +1,16 @@
+{
+  "started_at": "2026-08-30T16:57:26.004639+00:00",
+  "completed_at": "2026-08-30T17:02:52.105453+00:00",
+  "repositories": 10,
+  "repository_periods": 30,
+  "sample_items": 840,
+  "items_per_period_target": 30,
+  "errors": [],
+  "http_requests": 640,
+  "design": [
+    "same ten repository cases in each observable year",
+    "same May 1 through August 28 calendar window",
+    "uniform Issue-number rejection sample within each repository-period",
+    "2026 rows reuse the previously validated deep sample"
+  ]
+}

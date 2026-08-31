@@ -20,7 +20,7 @@ Five reading chapters keep that structure visible:
 
 1. **01A · The current maps** — which projects and layers hold activity;
 2. **01B · Signals in the map** — growth, age, language and external usage checks;
-3. **01C · Open infrastructure** — what the emerging Runtime layer asks of the installed base;
+3. **01C · Open infrastructure** — how established projects are adapting to agent execution;
 4. **02A · Agent participation** — where agents appear in repository work;
 5. **02B · The contribution process** — review, governance, maintainer pressure and the contribution that remains scarce.
 
@@ -32,11 +32,15 @@ Five reading chapters keep that structure visible:
 
 When agents joined in, what happened to open-source collaboration?
 
+## Byline
+
+Produced By Ant Open Source & InclusionAI · September 2026
+
 ## Standfirst
 
 We studied an open-source ecosystem built around coding agents, harnesses, runtimes, gateways, memory systems and sandboxes. These projects are young, highly visible and unusually close to the daily work of producing software.
 
-Agents now enter software in two places. Before merge, they can act as contributors. After deployment, they can act as workloads and operators. The first boundary is governed by maintainers. The second is governed by infrastructure.
+An agent can alter a software system at two different moments. During execution, it can write and run code, use credentials and leave effects that outlive the task. Inside the repository, it can also read rules, make changes and respond to review. This report follows the infrastructure that contains the first kind of action and the maintainers who judge the second.
 
 ## Snapshot
 
@@ -45,6 +49,8 @@ Agents now enter software in two places. Before merge, they can act as contribut
 - 143 projects selected for the current Agent Infra and Model Infra maps;
 - 84 Agent Infra projects and 59 Model Infra projects;
 - 31 current selections were not present in the May tracking pool.
+
+These counts define the project universe used in the landscape analysis. They are sample boundaries for the findings that follow.
 
 Label: ecosystem selection · not production adoption
 
@@ -60,7 +66,7 @@ after the speaker and attribution have been confirmed.
 
 # 01 · Landscape and Open Infrastructure
 
-The landscape is the starting point for this study. It shows where open-source work is accumulating before we ask whether agents are changing collaboration or production infrastructure. The current selection contains 143 repositories: 84 in Agent Infra and 59 in Model Infra. They are drawn from a 277-repository canonical list and compared with a 227-repository tracking pool preserved in May 2026.
+The landscape is the starting point for this study. It shows where open-source work is accumulating before we examine what agents ask of production infrastructure and how they change development collaboration. The current selection contains 143 repositories: 84 in Agent Infra and 59 in Model Infra. They are drawn from a 277-repository canonical list and compared with a 227-repository tracking pool preserved in May 2026.
 
 The two maps describe different parts of the system. Agent Infra covers applications, development frameworks and the runtime services an agent uses while completing a task. Model Infra covers model serving, training, data and compute. A place on either map is an editorial ecosystem selection. It does not establish production adoption.
 
@@ -80,13 +86,15 @@ These leader lists describe activity within the selected repositories. [OpenRank
 
 ### Figure 01 · Agent Infra and Model Infra Landscape 2026
 
-The interactive report presents the complete Agent Infra and Model Infra maps at this point, before the analytical findings. Readers can switch between them and inspect each selected repository's section, GitHub metadata and July OpenRank.
+The interactive report presents the complete Agent Infra and Model Infra maps at this point, before the analytical findings. Readers can switch between them and inspect each selected repository's section, GitHub metadata and July OpenRank. The summary below each map shows its share of projects created since 2025 and the share of July OpenRank held by its five activity leaders.
 
 ## 01B · Signals in the map
 
 ### Applications hold the activity. Runtime holds more of the new selections
 
-The tracked pool grew by 50 repositories between May and the current review. Applications still hold most of the visible Agent Infra activity: 32 projects account for 55% of the layer's combined July OpenRank. Runtime has almost the same number of selected projects, but a much smaller share of activity. It contains 31 projects and 22% of Agent Infra OpenRank.
+Since May, ongoing ecosystem review has expanded the tracked pool from 227 to 277 repositories. Applications still hold most of the visible Agent Infra activity: 32 projects account for 55% of the layer's combined July OpenRank. Runtime has almost the same number of selected projects, but a much smaller share of activity. It contains 31 projects and 22% of Agent Infra OpenRank.
+
+Projects entered the tracking pool through activity-based discovery, targeted GitHub searches and editorial review. Inclusion in the pool does not mean automatic selection for the landscape.
 
 The newer selections are concentrated lower in the stack. Runtime accounts for 13 of the 23 Agent Infra projects that were not in the May tracking pool. Application accounts for seven and Framework for three. The pattern suggests that ecosystem coverage is filling in around context, tool control, interoperability and execution, even while attention remains concentrated in products close to users.
 
@@ -190,57 +198,92 @@ The 31 Runtime projects can be read as an execution path. An agent retrieves con
 
 This sequence is an editorial reading of the current map, not a prescribed architecture or maturity model. It is useful because each step becomes an infrastructure responsibility when agent actions reach production. Context needs a lifecycle, interfaces need policy, tool calls need scoped authority, generated code needs isolation and the resulting effect needs a durable trace.
 
-### Signals outside GitHub support two narrower observations
-
-GitHub is the main evidence source for how these projects are built. It cannot show every use of an application or model. We therefore used two external checks, with their coverage limits kept visible.
-
-OpenRouter's public, opt-in [App & Agent ranking](https://openrouter.ai/apps/) placed DeepSeek Harness fifth globally when checked on 27 August 2026. The same page listed it among the week's fastest-growing applications, above 999%. This shows attributed usage on OpenRouter alongside the project's rapid GitHub attention. It does not estimate total users, revenue or production deployments.
-
-The second check combines a frozen June 2026 model-usage sample from OpenRouter and ZenMux with official model repositories on Hugging Face. Five of the top ten composite usage ranks had a resolved public-weight repository; 24 of the top 50 met the same condition. OpenRouter and ZenMux token counts were converted to within-platform percentiles before combination, so a larger platform did not dominate the score. Hugging Face downloads were excluded from the usage ranking.
-
-The result is evidence that public-weight models remain competitive within this two-platform sample. “Public-weight” describes access to model weights. It does not mean that every model meets the Open Source Initiative's definition of open-source AI.
-
-### Figure 08 · What the external signals cover
-
-| Evidence | Observed signal | Coverage boundary |
-| --- | --- | --- |
-| OpenRouter App & Agent ranking | DeepSeek Harness ranked fifth globally and appeared above 999% in weekly growth | Public, attributed OpenRouter traffic only |
-| OpenRouter + ZenMux + Hugging Face sample | 5 of the top 10 and 24 of the top 50 usage ranks had a resolved public-weight repository | June 2026 two-platform sample; weight access is not an open-source license test |
-
 ### What the map establishes
 
-User-facing applications still hold the largest share of Agent Infra activity, while newer selections are filling in the Runtime layer. Agent Infra is also much younger and more TypeScript-heavy than Model Infra. The external usage checks support the direction of the map, but remain narrower than the GitHub project evidence.
+User-facing applications still hold the largest share of Agent Infra activity, while newer selections are filling in the Runtime layer. Agent Infra is also much younger and more TypeScript-heavy than Model Infra. The map cannot tell us by itself which workloads have reached an external platform or how established infrastructure projects are responding.
 
-The boundaries matter just as much. “Outside the May pool” means a repository was absent from the preserved 227-project tracking list; it does not prove that the repository itself was newly created. OpenRank uses the complete July 2026 month. Stars use the canonical snapshot updated on 23 August, and contributor counts were refreshed on 27 August. OpenRouter rankings cover public applications that opt into attribution. The two-platform model sample covers June 2026. None of these measures establishes production adoption.
+“Outside the May pool” means a repository was absent from the preserved 227-project tracking list; it does not prove that the repository itself was newly created. OpenRank uses the complete July 2026 month. Stars use the canonical snapshot updated on 23 August, and contributor counts were refreshed on 27 August. None of these measures establishes production adoption.
 
 ## 01C · Open infrastructure
 
-### The runtime can disappear while its authority and effects remain
+### Agent execution is variable, stateful and capable of side effects
 
-An agent can generate code during a task, run it in a short-lived environment and change an external system. The sandbox may last four minutes. The pull request, message or deployment it creates lasts longer.
+An agent can generate code after a task starts, fan out across model and tool calls, pause, retry and change an external system. Some runs are short. Others wait on a person or a remote service. Public token totals show that traffic exists, but they do not reveal task-level fan-out, peak concurrency or QPS. The stable infrastructure problem is broader: the task has to keep its isolation, authority, budget, state and evidence while its processes come and go.
 
-The infrastructure boundary therefore extends beyond the lifetime of a process. Authority needs an expiry. Context and evidence need their own lifecycle.
+This is where the current landscape meets established open infrastructure. The evidence needs two separate views. Platform traffic checks whether the applications on the map are also being called. Project documentation shows which parts of the cloud-native and OpenInfra stack are being extended for agent work.
 
-### The installed base is already carrying AI
+### The same workload is visible beyond repository activity
 
-CNCF's 2025 survey reports that 82% of container users run Kubernetes in production. Among organisations hosting generative AI, 66% use Kubernetes for some or all inference workloads. OpenInfra's 2025 annual report documents more than 55 million OpenStack production cores.
+Nine of the twenty applications in OpenRouter's public, opt-in [global ranking](https://openrouter.ai/apps/) on 29 August 2026 map directly to the current Agent Infra landscape. Seven are in the Top 10. The overlap is not confined to one launch: it includes personal agents, coding tools and a coding harness.
 
-These figures establish the substrate. They do not measure agent adoption.
+### Figure 08 · Platform traffic outside GitHub
 
-### Figure 09 · Existing base, new task boundary
+| OpenRouter rank | App on the current landscape | Agent Infra section | Attributed tokens |
+| ---: | --- | --- | ---: |
+| 1 | Hermes Agent | Personal AI assistants | 1.65T |
+| 3 | Claude Code | Agentic coding | 485B |
+| 4 | pi | Agentic coding | 367B |
+| 5 | Kilo Code | Agentic coding | 341B |
+| 6 | Cline | Agentic coding | 253B |
+| 7 | Codex | Agentic coding | 190B |
+| 9 | OpenClaw | Personal AI assistants | 150B |
+| 10 | DeepSeek Harness | Coding workflows & harnesses | 125B |
+| 18 | OpenHands | Agentic coding | 33.2B |
 
-Place the three installed-base figures beside one agent task: generate code, start an isolated environment, borrow authority, call a tool, leave an external effect, then delete the environment while retaining evidence.
+OpenRouter measures traffic attributed to public apps that opt into tracking. It does not measure unique users, deployments or traffic routed elsewhere. The value of the alignment is narrower: the application categories drawing repository activity are also visible in one independent usage channel.
+
+ZenMux provides a second, deliberately separate lens. In the frozen ZenMux platform export for 1–30 June 2026, three of the four most-used model endpoints linked to official public weight repositories: DeepSeek V4 Pro, GLM 5.2 and DeepSeek V4 Flash. Claude Opus 4.8 ranked first. The ranking below is from ZenMux alone; it is not the cross-platform composite used in the previous CommunityOverCode analysis.
+
+| ZenMux rank | Model endpoint | June tokens | Weight access |
+| ---: | --- | ---: | --- |
+| 1 | Claude Opus 4.8 | 283.6B | Closed / no public weights resolved |
+| 2 | DeepSeek V4 Pro | 265.2B | Public weights |
+| 3 | GLM 5.2 | 143.3B | Public weights |
+| 4 | DeepSeek V4 Flash | 140.9B | Public weights |
+| 5 | Claude Opus 4.7 | 125.4B | Closed / no public weights resolved |
+
+ZenMux now exposes [app](https://zenmux.ai/docs/api/platform/statistics-app-leaderboard.html) and [model](https://zenmux.ai/docs/api/platform/statistics-leaderboard.html) leaderboards with daily aggregation. The June values above come from the study's frozen platform export and should be refreshed before publication. OpenRouter and ZenMux token totals are never added together.
+
+### Open infrastructure is taking on the task in several places
+
+The response is broader than sandboxing. Eleven projects provide direct or adjacent evidence across four jobs. The table distinguishes projects built explicitly for agents from established infrastructure adapting to them.
+
+### Figure 09 · Open infrastructure projects around the task
+
+| Runtime job | Projects | What the primary material shows |
+| --- | --- | --- |
+| Run and isolate | Kubernetes Agent Sandbox; Kata Containers; Confidential Containers | Sandbox lifecycle and warm pools; VM-backed isolation; an attested confidential-computing substrate for sensitive AI workloads |
+| Coordinate and operate | kagent; Dapr Agents; OpenChoreo | Agents operating Kubernetes, Prometheus, Istio and Argo; durable workflows, state, retries and SPIFFE identity; one platform serving humans and agents through different interfaces |
+| Connect and govern | kgateway; agentgateway; Istio | Control and data planes for LLM, MCP and agent traffic; service-mesh and gateway policy extending toward AI workloads |
+| Trace and explain | OpenTelemetry; Jaeger | Agent, workflow and execute-tool semantics; an established tracing project adapting its UI and protocol layer to agent execution paths |
+
+Not every project in this table is an Agent project. Confidential Containers is an AI-relevant isolation substrate, and Istio is an established service mesh adapting its traffic layer. Prometheus and Argo appear because kagent ships tools that operate them; that is evidence that agents are becoming consumers of the existing stack, not evidence that Prometheus or Argo were redesigned around agents.
 
 ### A production agent needs a task envelope
 
 | Agent behaviour | Established open infrastructure | Work still open |
 | --- | --- | --- |
-| Run short-lived, untrusted code | Kubernetes lifecycle and Kata isolation | fast, portable sandbox profiles |
-| Borrow authority for one task | SPIFFE/SPIRE workload identity | delegation bound to tools, scope and expiry |
-| Carry context across processes | open data and workflow systems | context lifecycle and provenance |
-| Change an external system | OpenTelemetry trace pipeline | causal evidence from decision to effect |
+| Start an environment and run unknown code | Kubernetes lifecycle, Agent Sandbox and Kata isolation | strong isolation with low startup latency; safe warm-pool reset and portable profiles |
+| Call models, APIs and MCP tools | gateways, service mesh and agentgateway | task-wide budgets, fan-out limits, backpressure and cancellation across the whole chain |
+| Pause, resume or retry long work | Dapr workflows, messaging and state systems | checkpoints, idempotency and compensation after a tool has already produced an effect |
+| Borrow authority for one task | SPIFFE/SPIRE workload identity and policy systems | delegation bound to user intent, tools, resources, approval state and expiry |
+| Carry context across processes | databases, object storage and context projects | lineage, TTL, deletion, inheritance and recovery from poisoned context |
+| Change an external system | OpenTelemetry and Jaeger trace pipelines | causal evidence from model work to tool execution and the external result |
+| Mix inference, tools and sandbox compute | Kubernetes DRA and Kueue | task-level SLOs, capacity prediction and cost attribution across heterogeneous resources |
 
-This table is a working synthesis. It is not a new standard or maturity model.
+This table is a working synthesis, not a new standard or maturity model. “Task envelope” means that the identity, budget, environment, state and evidence for one run share a lifecycle. Today those controls live in different systems and do not yet travel as one object.
+
+### The workload is bursty before it is simply “large”
+
+The available public evidence does not support a universal claim that Agents always create high-QPS workloads. A more defensible pattern is task-level variability. One run may make a serial model call, fan out to several tools, retry after a timeout and then wait for approval. The same total traffic can therefore have very different peaks, failure amplification and cost.
+
+Agentgateway already exposes request and token limits, plus per-tool limits for MCP. Its documentation also states that local counters are not exact global limits and do not survive a restart. That leaves an open systems problem: a task budget has to remain valid across gateways, model calls, tools and execution environments, and cancellation has to reach the work already in flight.
+
+### Recovery cannot mean repeating every step
+
+Dapr Agents packages durable workflows, retries, failure recovery and persistent state as production capabilities. This confirms that long-running and interrupted tasks are already an infrastructure concern. The remaining difficulty appears when a failed step has changed another system. Retrying may create the same resource twice, send the same message twice or repeat a deployment action.
+
+Open workflow systems already provide useful machinery. Agent runtimes still need a shared way to distinguish replayable computation from an action that requires an idempotency key, compensation, external verification or human approval.
 
 ### Sandboxes become runtime objects
 
@@ -262,9 +305,63 @@ The useful trace begins before the tool call and ends at the external effect.
 
 The study freezes the 100 highest-OpenRank repositories in the 277-project tracking pool. OpenRank decides the sample and does no further analytical work. Each repository was then reviewed as `llm_native`, `traditional` or `mixed`, with a confidence level and a short reason.
 
-The review produced 68 LLM-native projects, 18 traditional projects and 14 mixed projects. A binary creation-date rule would miss 19 of them: 14 projects genuinely span both worlds, and five directly contradict the date proxy. LangChain, Megatron-LM and TRL predate ChatGPT but were built around language models. ComfyUI and Apache Gravitino were created later, yet their core value does not depend on an LLM.
+The review produced 68 LLM-native projects, 18 traditional projects and 14 mixed projects. `Mixed` means the repository still has a complete non-LLM purpose, while AI or agents have become a substantial product surface; n8n, Warp and MLflow fall into this group. A binary creation-date rule would miss 19 projects: 14 genuinely span both worlds, and five directly contradict the date proxy. LangChain, Megatron-LM and TRL predate ChatGPT but were built around language models. ComfyUI and Apache Gravitino were created later, yet their core value does not depend on an LLM.
 
-The thread study uses a repository-stratified probability sample rather than a convenience sample of prominent pull requests. All 100 repositories contribute 20 sampled threads. The result is 2,000 Issues and pull requests, linked to 50,731 public timeline, review-comment and PR-commit events. Population-weighted estimates and an equal-repository view are reported together so that a handful of very large repositories cannot silently define the whole ecosystem.
+### What is in the Top 100?
+
+| Lens | Distribution |
+| --- | --- |
+| Technical role | 36 Model Infra · 28 Agent applications · 21 Agent frameworks · 15 Agent runtime infrastructure |
+| Project identity, manually reviewed | 68 LLM-native · 18 traditional · 14 mixed |
+| Repository creation | 72 created in December 2022 or later · 28 created earlier |
+| GitHub primary language | 44 Python · 26 TypeScript · 11 Go · 19 other languages |
+
+The sample is a highly visible, active slice of the tracked ecosystem. It should not be read as the typical open-source repository.
+
+### The report uses one repository frame and six derived pools
+
+The denominator changes when the question changes. The online report now keeps charts from the same pool together and marks each change before the next group begins.
+
+| Sample pool | How it was selected | What it is used for |
+| --- | --- | --- |
+| Top 100 repository frame | The 100 highest-July-2026-OpenRank repositories inside the 277-project tracking pool | Repository profile, contribution settings and policies, coding-agent files, release activity and complete 2026 Issue/PR counts |
+| Fixed 53-repository historical cohort | The current Top 100 mechanically filtered to repositories already public by 1 January 2024 | Compare the same January–August activity window in 2024, 2025 and 2026 while keeping repository membership fixed; it still has survivor bias |
+| 2,000-thread probability sample | 20 randomly sampled Issues or pull requests from each Top 100 repository, created from 1 January to 29 August 2026; 575 Issues and 1,425 PRs | Visible Agent activity, review and gate behavior, task types and revision loops; 50,731 public events belong to these same threads |
+| 10-PR code-lineage subset | Every merged PR inside the 1,425 sampled PRs where a high-confidence coding-Agent identity changed code | Who changed the first Agent patch and how much exact text remained; nine PRs are line-traceable and one remains a non-traceable case |
+| Ten-repository matched panels | A deliberately varied set spanning project age, LLM relationship and technical role | A 900-thread lifecycle panel across three project stages, plus an 840-thread fixed-window panel across 2024–2026 |
+| Seven illustrative cases | Four threads from the 2,000-thread sample and three from the ten-repository panels, chosen because the public sequence is legible | Explain different coordination patterns; these cases do not estimate prevalence |
+| Twelve long-lived controls | Kubernetes, VS Code, Vue, Kata Containers, Prometheus, Envoy, Grafana, Arrow, Rust, pandas, FastAPI and Kafka | Check whether rising PR intake and unresolved work also appear in established non-Agentic repositories; this is a comparison set, not a matched causal control |
+
+The Top 100 is not random. The ten-repository set is also not random. Only the 20 threads drawn inside each repository use probability sampling, and population estimates apply repository-specific weights.
+
+### Pull requests are arriving faster than issues
+
+Between 1 January and 29 August 2026, the Top 100 opened about 346,600 Issues and 599,900 pull requests. That is 1.73 pull requests for every Issue. The monthly ratio rose from 1.35 in January to 2.10 in the first 29 days of August.
+
+The gap remains after controlling for repository entry. We mechanically filtered the current Top 100 to the 53 repositories that were already public on or before 1 January 2024, then compared the same 1 January–29 August window in each year. This keeps repository membership fixed, but it does not remove survivorship bias: these are long-lived repositories in today's Top 100, not the repositories that ranked highest in 2024.
+
+| Fixed 53-repository cohort | Issues opened | Pull requests opened | PR / Issue |
+| --- | ---: | ---: | ---: |
+| 2024 | 52,993 | 96,341 | 1.82× |
+| 2025 | 72,072 | 124,314 | 1.72× |
+| 2026 | 67,967 | 243,837 | 3.59× |
+
+Across the fixed cohort, PR intake rose from 124,314 in 2025 to 243,837 in 2026. That is a 96.1% increase. Issue intake fell 5.7% over the same period. The result supports a narrow claim: the visible change stream became heavier. It does not tell us how much came from coding Agents, dependency bots or human contributors.
+
+| 2026 intake by technical role | Repositories | Issues | Issue cohort unresolved | Pull requests | PR cohort unresolved | PR / Issue |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Agent applications | 28 | 249,400 | 24.6% | 261,105 | 21.2% | 1.05× |
+| Agent frameworks | 21 | 33,826 | 33.2% | 100,424 | 18.8% | 2.97× |
+| Agent runtime infrastructure | 15 | 15,365 | 29.1% | 47,494 | 13.6% | 3.09× |
+| Model infrastructure | 36 | 47,994 | 35.0% | 190,847 | 22.8% | 3.98× |
+
+Model infrastructure has the highest unresolved Issue share: 35.0% of Issues opened inside the window were still open at the cutoff. The unresolved figures only follow items opened during this study window; they are not the repositories' full historical backlog. The flow is also concentrated. Claude Code, OpenClaw, Hermes Agent, OpenCode and Codex account for 54.5% of Issue intake, while the five PR leaders account for 34.7% of pull requests.
+
+### Some repositories publish GitHub Releases almost every day
+
+From 1 January to 29 August 2026—a 241-day window—98 repositories published at least one non-draft GitHub Release. A release day is a UTC date with at least one such record. The median repository published on 34 distinct days; the middle half spans 15 to 102 days, and six repositories published on at least 180 days.
+
+Release records use the same 2026 window; they are not all-time repository totals. Vercel AI's 14,974 records fall on 192 dates, reflecting a multi-package and canary pipeline. llama.cpp published 2,002 records across 239 of the 241 days. At this frequency the metric mainly describes release automation, not a human product-release cadence. It still misses tag-only releases and versions published only to PyPI, npm or another registry.
 
 ### Open collaboration is still the default surface
 
@@ -285,50 +382,71 @@ All 100 repositories have Issues and Pull Requests enabled. The creation setting
 
 GitHub's repository settings directly answer whether Pull Requests are enabled and who can create one. They do not tell us whether maintainers will accept or merge an outside change. Creation permission, declared contribution policy and actual outcomes require separate evidence.
 
-### Machine-readable collaboration rules arrived in 2025 and spread fast
+We therefore read the API settings first, froze common contribution documents, and manually reviewed every candidate phrase that looked restrictive. Forty-eight repositories explicitly invite contribution. Twelve ask for an Issue first, prior agreement or a change within a stated scope. Thirty-eight contain no restrictive signal in the reviewed files. The remaining two — Codex and Claude Code — leave Pull Requests visible but set creation access to collaborators only.
 
-The annual scan looks for active repository instructions and config directories on the latest default-branch commit at or before each snapshot. `.gitignore` mentions are treated as residue and excluded.
+The distinction is visible in individual repositories. Mastra asks code contributors to open an Issue before a Pull Request. Open WebUI applies that gate to first-time contributors except for localization work. “No restrictive signal detected” only reports what the scan found; it is not the same as an explicit invitation.
 
-### Figure 11 · Public Agent instructions and active config
+DeepSeek Harness sits outside this Top 100 denominator. Its MIT-licensed core keeps Issues and Pull Requests closed while directing outside development toward plugins. It is a useful comparison because open source code, an open core contribution path and an extension ecosystem are separate choices.
 
-| Snapshot | Observable repositories | Active instruction | Instruction or active config |
-| --- | ---: | ---: | ---: |
-| 2022-12-31 | 28 | 0 | 0 |
-| 2023-12-31 | 51 | 0 | 0 |
-| 2024-12-31 | 62 | 0 | 0 |
-| 2025-12-31 | 86 | 42（48.8%） | 48（55.8%） |
-| 2026-08-29 | 100 | 86（86.0%） | 92（92.0%） |
+### 92 repositories have set up files or folders for coding agents
 
-The cleanest comparison uses the 86 repositories observable in both 2025 and 2026. Forty-two retained a strict instruction, 32 added one and 12 had none in either snapshot. None removed the instruction from the declared target paths.
+In 92 of the Top 100 repositories, the default branch contains something created for a coding-agent workflow. This includes instruction files such as `AGENTS.md` and `CLAUDE.md`, as well as tool folders such as `.claude`, `.cursor`, `.codex` and `.gemini`.
 
-The most common current signals are cross-agent instructions in 80 repositories and Claude Code files in 71. Codex appears in 22, GitHub Copilot in 20, Cursor in 17 and Gemini in 12. A repository can carry more than one tool signal.
+We count both forms as repository-level adoption. The project has added files or folders specifically for a coding agent, so the report presents them as one measure.
 
-This evidence does not support a large decline in Cursor adoption. The full annual scan moves from 13 repositories in 2025 to 17 in 2026. The earlier 92% estimate used a broader definition that included `.gitignore` residue; the new 92% figure requires an active instruction or config.
+The current files show a clear hierarchy. Eighty repositories publish instructions that more than one coding agent can follow. Seventy-one include Claude Code files, 22 Codex, 20 GitHub Copilot, 17 Cursor and 12 Gemini. A repository can support several agents at once.
+
+| Files found on the default branch | Repositories |
+| --- | ---: |
+| Instructions that work across coding agents | 80 / 100 |
+| Claude Code | 71 / 100 |
+| Codex | 22 / 100 |
+| GitHub Copilot | 20 / 100 |
+| Cursor | 17 / 100 |
+| Gemini | 12 / 100 |
+
+LobeHub, Opik, Cline and OmniRoute each publish files for four agent-specific formats. This is the visible repository surface that maintainers choose to support; it should not be read as a ranking of actual tool usage.
+
+This evidence does not support a large decline in Cursor adoption. The full annual scan moves from 13 repositories in 2025 to 17 in 2026. The earlier 92% estimate used a broader definition that included `.gitignore` residue. The current 92% count requires an actual instruction file or tool-specific folder on the default branch; `.gitignore` residue is excluded.
 
 ### The rules have moved into Model Infra
 
-Strict instruction coverage reaches 20 of 21 Agent Framework repositories and 14 of 15 Agent Runtime Infra repositories. It is also present in 28 of 36 Model Infra repositories.
+Coding-agent files or folders appear in 20 of 21 Agent Framework repositories, all 15 Agent Runtime Infra repositories and 32 of 36 Model Infra repositories.
 
-### Figure 12 · Strict instruction coverage by technical niche
+### Figure 11 · Coding-agent setup by technical niche
 
 | Technical niche | Coverage |
 | --- | ---: |
 | Agent Framework | 20 / 21（95.2%） |
-| Agent Runtime Infra | 14 / 15（93.3%） |
-| Agent Application | 24 / 28（85.7%） |
-| Model Infra | 28 / 36（77.8%） |
+| Agent Runtime Infra | 15 / 15（100.0%） |
+| Agent Application | 25 / 28（89.3%） |
+| Model Infra | 32 / 36（88.9%） |
 
 PyTorch, Spark, Iceberg, ONNX Runtime, Milvus, Triton and OpenVINO all carry machine-readable instructions in the current snapshot. The change is therefore wider than the repositories that sell an Agent experience directly.
 
-The instruction text also covers more than implementation. Among the 86 repositories with a strict instruction, 81 mention tests or validation, 79 mention Issue work or planning, 72 mention code review and 63 mention release or dependency work. These are rulebook signals, not observed task completions.
+The instruction text also covers more than implementation. Among the 86 repositories where we could read explicit instructions, 81 mention tests or validation, 79 mention Issue work or planning, 72 mention code review and 63 mention release or dependency work. These counts describe what the files ask an agent to do; they do not show how often the work happened.
 
-### Agents are widely visible, but mostly after a thread has begun
+### The 2,000-thread sample follows public collaboration in detail
 
-Readiness and use are different measurements. Verified coding, review, security-review and support Agent identities — including separately labelled App-mediated User actions — appear in 89 of the 100 repositories in the probability sample. They are visible in an estimated 40.35% of threads (95% bootstrap interval 36.99–43.70%). The equal-repository estimate is 42.8%, so the result is not an artefact of the largest repositories.
+This part of the study uses a repository-stratified probability sample rather than a convenience sample of prominent pull requests. All 100 repositories contribute 20 threads created between 1 January and 29 August 2026. The natural Issue/PR mix is 575 Issues and 1,425 pull requests. Those 2,000 threads link to 50,731 public timeline, review-comment and PR-commit events.
 
-Only 0.9% of weighted threads are opened by a verified Agent identity. Agent participation responds after the opener in 36.5% and appears in review events in 32.7% of pull requests. The public footprint is therefore concentrated in the middle of collaboration, not at the entrance.
+Each sampled thread represents a different number of items in its repository. Population-weighted estimates therefore use the repository's full Issue/PR count divided by 20. This lets the study describe the full 940,690-item sampling frame without letting a busy repository contribute more hand-reviewed examples than a smaller one.
 
-### Figure 13A · Where verified Agent participation appears
+### Agents rarely open the conversation. Most visible Agent work happens later.
+
+A coding or review agent left a visible action in 856 of the 2,000 Issues and pull requests we reviewed. We saw this in 89 of the 100 repositories. Only 29 Issues or pull requests were opened by an Agent account or App. After adjusting for different sampling rates in large and small repositories, visible Agent activity appears in 40.35% of the full sampling frame, while Agent-opened work accounts for 0.9%.
+
+On GitHub, this usually looks like CodeRabbit reviewing a pull request, Gemini Code Assist leaving review comments, or OpenHands acting through its GitHub App. Agent activity responds after the opener in 36.5% of weighted Issues and pull requests and appears in review events in 32.7% of pull requests. The public trail is therefore concentrated after submission, not at the point where work first enters the project.
+
+#### How we counted visible Agent activity
+
+We counted an action only when GitHub named a known coding or review Agent, exposed the GitHub App behind the action, or the contribution explicitly said it was Agent-generated. Dependabot, GitHub Actions, release bots and other conventional automation are classified separately.
+
+The registry behind this count contains 58 public identities tied to coding, review, security review or support Agent work. Fifty are GitHub Bot accounts. Eight are User accounts with additional service or App evidence. Forty-seven identities have direct identity or App evidence; eleven rely on documented function.
+
+This method deliberately leaves ordinary User accounts unclassified. A developer can use Cursor, Claude Code or Codex locally and submit the result through a normal GitHub account, and GitHub usually exposes no reliable provenance for that path. Wording, timing and code style are not treated as proof. These figures therefore describe Agent work that is visible on GitHub, not all AI-assisted development and not the amount of code generated with AI.
+
+### Figure 12A · Where verified Agent participation appears
 
 | Visible stage | Agent | GitHub User account | Maintainer-associated account |
 | --- | ---: | ---: | ---: |
@@ -342,7 +460,7 @@ The event mix supports the same interpretation. Verified Agent identities produc
 
 Agent services are only one part of repository automation. GitHub Actions, project automation, Codecov, merge queues and dependency bots remain the most widely visible conventional layer. Coding Agents include Copilot, Codex, Cursor, Claude, Devin, Gemini CLI, Kilo Code and Warp service identities; review Agents include CodeRabbit, Gemini Code Assist, Greptile and similar services; support and security roles include Dosu, automated triage and security-review Apps. Identity and functional role are preserved separately in the actor registry.
 
-### Figure 13A.1 · Bot/App and Agent participation by thread type
+### Figure 12A.1 · Bot/App and Agent participation by thread type
 
 | Weighted thread presence | Issues | Pull requests |
 | --- | ---: | ---: |
@@ -359,7 +477,7 @@ The first three rows overlap: an Agent service often acts through a Bot or GitHu
 
 A visible review appears in 59.7% of weighted pull requests. Among reviewed PRs, 54.2% add a commit after the first review. Among the 63 sampled PRs with a visible `CHANGES_REQUESTED` review, 72.7% add a later commit.
 
-### Figure 13B · Observable review-to-revision loops
+### Figure 12B · Observable review-to-revision loops
 
 | Signal | Weighted estimate | 95% bootstrap interval |
 | --- | ---: | ---: |
@@ -369,17 +487,46 @@ A visible review appears in 59.7% of weighted pull requests. Among reviewed PRs,
 
 Agent-attributed change requests are followed by a later commit in 80.5% of weighted cases, compared with 71.1% for GitHub User change requests. The denominator is small and participation is selected. This is evidence of an iteration loop, not evidence that an Agent caused the revision or reduced maintainer effort.
 
-### Open contribution remains the norm, with alignment gates around it
+### Most of the first Agent patch stayed. The route to merge still varied.
 
-Repository settings come first: 98 repositories use `ALL`, while Codex and Claude Code use `COLLABORATORS_ONLY`. A frozen scan of README, CONTRIBUTING, GOVERNANCE and PR-template text was then followed by manual review of every restrictive phrase candidate. Forty-eight repositories explicitly invite contribution. Twelve ask for an Issue first, pre-approval or a change within a specified scope. Thirty-eight have no restrictive signal in the reviewed files. No repository disables the Pull Request feature, but two restrict who can create one.
+The probability sample contains ten merged PRs where a verified Coding Agent opened the contribution or authored a commit. We reviewed all ten rather than selecting the cleanest examples. Nine expose a line-traceable Agent patch. The tenth, [Mooncake #2686](https://github.com/kvcache-ai/Mooncake/pull/2686), attaches the Agent identity to a two-parent merge commit: its first-parent commit diff includes thousands of upstream lines while the whole PR changes only twenty. It remains in the casebook but not in the line denominator.
 
-The outcome trace shows that external contribution is real across most of the sample: the historical window contains at least one external-association PR in 99 of 100 repositories. This is behavior evidence, not a substitute for the current creation setting. External accounts represent 73.35% of the weighted PR population (95% interval 69.68–76.64%).
+Across the nine traceable PRs, the first effective Agent commits added 1,225 text lines. Of those, 765 lines — 62.4% — remain as exact text in the final PR head. Later human-account commits first changed or removed 123 lines; later Agent commits changed 193; 144 were changed by commits without a resolvable GitHub author.
+
+### Figure 12B.1 · What happened to the first observable Agent patch
+
+| Disposition | Lines | Share of first Agent patch |
+| --- | ---: | ---: |
+| Exact text retained | 765 | 62.4% |
+| Changed or removed by a later human-account commit | 123 | 10.0% |
+| Changed or removed by a later Agent commit | 193 | 15.8% |
+| Later commit author unresolved | 144 | 11.8% |
+
+Five cases follow a visible Agent-to-human code handoff. Their pooled line retention is 81.0%, although ONNX Runtime contributes 611 of the 753 starting lines. The case-level median is more useful here: 70.5% of the first patch survives unchanged, while 27.3% is later changed by a human account. The five cases range from no exact lines retained to the entire first patch retained.
+
+| Pull request | First Agent patch | Exact retained | Human-account change | Later Agent change | Unresolved | Path |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| [vercel/ai #18818](https://github.com/vercel/ai/pull/18818) | 172 | 0 | 0 | 172 | 0 | Agent iterates to merge |
+| [warpdotdev/warp #13382](https://github.com/warpdotdev/warp/pull/13382) | 44 | 31 | 12 | 1 | 0 | Agent → human |
+| [OpenMetadata #25243](https://github.com/open-metadata/OpenMetadata/pull/25243) | 62 | 21 | 29 | 12 | 0 | Agent → human |
+| [ONNX Runtime #28045](https://github.com/microsoft/onnxruntime/pull/28045) | 611 | 533 | 78 | 0 | 0 | Agent → human |
+| [OpenHands #2614](https://github.com/OpenHands/software-agent-sdk/pull/2614) | 11 | 0 | 4 | 7 | 0 | Agent → human |
+| [MLflow #19721](https://github.com/mlflow/mlflow/pull/19721) | 262 | 118 | 0 | 0 | 144 | Agent → unresolved author |
+| [MLflow #21621](https://github.com/mlflow/mlflow/pull/21621) | 33 | 33 | 0 | 0 | 0 | Agent iterates to merge |
+| [MLflow #22355](https://github.com/mlflow/mlflow/pull/22355) | 25 | 25 | 0 | 0 | 0 | Agent → human |
+| [MLflow #22659](https://github.com/mlflow/mlflow/pull/22659) | 5 | 4 | 0 | 1 | 0 | Agent iterates to merge |
+
+This small case study changes the question. A human commit after an Agent does not necessarily replace the Agent patch; it may add around it. An Agent-only commit chain can still rewrite its own first attempt completely. Final diff ownership hides both paths.
+
+The unit here is an exact text line added by the first attributable Agent commit that contains code; empty planning commits are skipped. Each line is carried through subsequent PR commits, and the first commit that changes or removes it receives the public account attribution. Git blame resolves duplicate-line alignment. This does not measure semantic authorship: a GitHub User may have used private AI assistance, and an unchanged line may still be functionally wrong or trivial. The ten cases are an audit of rare public traces, not a population estimate.
+
+The outcome trace later returns to actual submissions. The historical window contains at least one external-association PR in 99 of 100 repositories. This is behavior evidence, not a substitute for the current creation setting. External accounts represent 73.35% of the weighted PR population (95% interval 69.68–76.64%).
 
 ### DeepSeek Harness makes a different governance choice
 
-DeepSeek Harness does not enter the Top 100 denominator. It remains useful as a case outside the distribution. The code is released under MIT and Discussions are open. Issues are disabled, the Pulls endpoint returned 404 in two checks, and the contribution guide says that external pull requests are not being accepted for now. Community development is directed towards third-party plugins.
+DeepSeek Harness does not enter the Top 100 denominator. It remains useful as a case outside the distribution. The repository was opened on 13 August 2026 and reached 204,176 GitHub stars and 23,597 forks by 30 August, seventeen days later. The code is released under MIT and Discussions are open. Issues are disabled, the Pulls endpoint returned 404 in two checks, and the contribution guide says that external pull requests are not being accepted for now. Community development is directed towards third-party plugins.
 
-### Figure 13C · DeepSeek Harness contribution surface
+### Figure 12C · DeepSeek Harness contribution surface
 
 | Surface | Current state |
 | --- | --- |
@@ -391,15 +538,29 @@ DeepSeek Harness does not enter the Top 100 denominator. It remains useful as a 
 
 Open code, open core contribution and a wider plugin ecosystem are three separate governance choices.
 
-### Agent-visible threads look different. That is not yet an efficiency effect.
+### Ten repositories provide the longer comparison
 
-Agent-visible threads carry more visible work: their median sample thread has four comments and two reviews, compared with one comment and one review when no verified Agent is visible. Their resolved PRs also carry GitHub's merged flag more often, 56.5% versus 47.1%. The open share is lower, 11.3% versus 25.2%.
+The deeper panel contains Codex, Claude Code, LangChain, Dify, n8n, Langfuse, Coder, Milvus, vLLM and PyTorch. They were chosen to cover different project ages, LLM relationships, technical roles and contribution models. This is a contrast set, not a random Top 10.
 
-It would be tempting to call this a productivity gain. The comparison does not support that conclusion. Agent participation is voluntary, can occur after a thread becomes important or difficult, and is more common in some repository types than others. Only 15 mature sampled threads were opened by an Agent identity, across ten repositories. There is no random assignment and no adequate pre-trend for thread-level use.
+The lifecycle panel samples 30 threads from each repository in three stages: its first 120 days, 2025 Q4 and May–August 2026. That produces 900 threads. It is used to compare one repository with itself as it matures. The online chart shows four repositories at a time so the trajectories remain readable; the underlying panel contains all ten.
 
-The repository adoption check points to the same selection problem. Among eleven repositories with a confirmed first-instruction date and two complete months on each side, median Issue intake is almost unchanged after adoption (1.01×), while median PR intake is 1.34× higher. A repository may adopt Agent rules because contribution pressure is already increasing. The observed sequence cannot tell us which direction causes the other.
+The efficiency panel asks a different question and uses fixed calendar windows. It samples 30 threads per repository from 1 May to 28 August in 2024, 2025 and 2026. Codex and Claude Code did not yet exist in the 2024 window, so the full panel contains 240 threads in 2024 and 300 in each later year, or 840 in total. The visible 2025–2026 comparison therefore uses 600 threads. The 2026 early-Agent comparison uses 300 threads before applying metric-specific seven- and 30-day eligibility rules.
 
-### Figure 14 · Fixed-maturity pressure is not unique to Agentic AI
+### Agents expanded throughput. Human attention did not scale with it.
+
+We sampled the same ten repositories in the same 1 May–28 August window in 2024, 2025 and 2026. The matched panel contains 840 Issues and pull requests, with complete public timelines for every thread. Response is measured within seven days and outcomes within 30 days; threads that remained unanswered or unresolved stay in the denominator.
+
+The ten-repository intake grew from 38,429 threads in 2025 to 101,853 in 2026, an increase of 165%. Visible Agent participation rose from 33.5% to 54.4%; coding and review agents alone rose from 13.1% to 34.5%. Human response within seven days fell from 60.3% to 46.9%, while maintainer response fell from 42.9% to 20.0%. Thirty-day Issue closure fell from 48.7% to 38.4%. Thirty-day PR merge fell from 70.8% to 54.6%.
+
+Maintainer activity per thread stayed nearly flat, 1.48 actions in 2025 and 1.44 in 2026. The incoming population was 2.65 times larger, so the volume-weighted estimate of visible maintainer actions rose from roughly 48,000 to 77,000. The total is an estimate with a wide interval, not a census. The pattern is clearer than the exact count: maintainers spent no more attention on an average thread while facing much more work overall.
+
+Inside the 2026 sample, PRs with a coding or review Agent visible in the first 24 hours had a 48.7% 30-day merge rate, compared with 47.2% when no Agent was visible. They also had more conversation runs, maintainer reviews and commits after the first review. The Agent comparison remains observational: difficult or important threads may be more likely to attract an Agent. It shows denser iteration without a clear outcome advantage.
+
+### Seven public threads show what the hand-offs look like
+
+The interactive casebook contains Coder #25800, ONNX Runtime #28045, LangChain #37607, PyTorch #182986, Supabase #42193, Gemini CLI #24026 and n8n #33411. Four come from the 2,000-thread sample and three from the ten-repository panels. They were chosen because the public sequence is easy to follow and because they show different coordination patterns. They are placed after the quantitative panels and should not be read as representative rates.
+
+### Figure 13 · Fixed-maturity pressure is not unique to Agentic AI
 
 | Panel | Median unresolved PR share at fixed maturity |
 | --- | ---: |
@@ -416,9 +577,9 @@ External accounts create most pull requests, but the gate filters them different
 
 The first empirical pass therefore answers the four research questions with different confidence:
 
-1. **Adoption is high at the repository boundary and substantial in public traces.** Eighty-six repositories publish strict instructions; verified Agent participation is visible in 40.4% of weighted threads, mostly in review, triage and discussion rather than opening work.
+1. **Coding-agent adoption is already widespread.** Ninety-two repositories carry coding-agent files or folders. Named Agent accounts or Apps appear in an estimated 40.4% of Issues and pull requests, mostly in review, triage and replies rather than opening the work.
 2. **Collaboration remains a hand-off process.** External developers supply most PR intake, Agents are common in the middle, and User or maintainer-associated accounts still dominate the visible gate.
-3. **Iteration is observable; an efficiency gain is not identified.** Reviews often lead to new commits, but voluntary Agent use, rising intake and long-lived control trends prevent a causal productivity claim. The evidence is consistent with both useful automation and more judgment pressure.
+3. **Agents expanded iteration capacity without improving timely outcomes in the matched panel.** Intake and Agent participation rose, while human response, Issue closure and PR merge fell. Early Agent-visible threads produced more review and revision activity, but no clear merge-rate advantage.
 4. **The scarce contribution is not another patch.** It is a well-chosen problem, repository fit, evidence that reduces uncertainty, review that moves work toward a decision, and an accountable gate that survives later scrutiny.
 
 The last answer is an interpretation grounded in the observed supply-and-filtering pattern, not a finished universal contribution metric. A publication-grade metric would also need post-merge reverts, follow-up fixes, contributor return and durable test or benchmark evidence.
@@ -431,8 +592,9 @@ The last answer is an interpretation grounded in the observed supply-and-filteri
 - The May baseline comes from `data/history_snapshot/2605_agentic_projects.csv`.
 - OpenRank uses the complete July 2026 month.
 - Stars and GitHub primary-language labels use the canonical project snapshot updated on 23 August 2026.
-- OpenRouter App & Agent rankings are public and opt-in. The cited application rank was checked on 27 August 2026.
-- The open-weight usage comparison uses the frozen June 2026 OpenRouter and ZenMux sample, with weight access resolved through official Hugging Face repositories.
+- OpenRouter App & Agent rankings are public and opt-in. The Top 20 alignment was checked on 29 August 2026 and will move as platform traffic changes.
+- ZenMux figures use a frozen single-platform export for 1–30 June 2026. Weight access means an official public weight repository was resolved; it is not an OSI license determination. The values are not combined with OpenRouter traffic.
+- Agent Sandbox, Kata Containers, kagent, Dapr Agents, OpenChoreo, kgateway, agentgateway, Istio, OpenTelemetry and Jaeger are cited as project-level evidence of engineering work around agent execution. Confidential Containers is labelled as an adjacent AI substrate. Their documentation does not establish how widely those capabilities are deployed.
 - Collaboration estimates use a frozen Top 100 and a repository-stratified probability sample of 2,000 threads from 100 repositories. Bootstrap intervals resample threads within repository and describe sampling uncertainty inside this selected Top 100, not all open source.
 - Public actor labels separate verified Agent services, conventional automation, App-mediated User actions and GitHub User account types. They cannot observe undisclosed local AI use.
 - Review-to-commit sequence uses dedicated PR commit timestamps. Timeline commit rows without a timestamp are not interpreted as no later revision.
@@ -452,15 +614,21 @@ Open infrastructure evidence: `../research/open-infrastructure-trends.md`
 - [GitHub REST API documentation](https://docs.github.com/en/rest/repos/repos)
 - [OpenRank metric documentation](https://open-digger.cn/en/docs/user_docs/metrics/openrank)
 - [OpenRouter App & Agent Rankings](https://openrouter.ai/apps/)
-- [OpenRouter App Rankings API](https://openrouter.ai/docs/api/api-reference/datasets/get-app-rankings)
-- [Hugging Face Hub API](https://huggingface.co/docs/hub/en/api)
-- [ZenMux](https://zenmux.ai/)
-- [Annual Cloud Native Survey 2025](https://www.cncf.io/reports/the-cncf-annual-cloud-native-survey/)
-- [OpenInfra Annual Report 2025](https://openinfra.org/annual-report/2025/)
+- [ZenMux App Leaderboard API](https://zenmux.ai/docs/api/platform/statistics-app-leaderboard.html)
+- [ZenMux Model Leaderboard API](https://zenmux.ai/docs/api/platform/statistics-leaderboard.html)
 - [Agent Sandbox quickstart](https://github.com/kubernetes-sigs/agent-sandbox/blob/main/examples/quickstart/README.md)
+- [Agent Sandbox threat model](https://github.com/kubernetes-sigs/agent-sandbox/blob/main/docs/security/threat_model.md)
 - [Kata Containers Agent Sandbox integration](https://katacontainers.io/blog/kata-containers-agent-sandbox-integration/)
+- [OpenInfra Foundation projects](https://openinfra.org/projects/)
 - [Deploying the SPIRE Agent](https://spiffe.io/docs/latest/deploying/spire_agent/)
 - [OpenTelemetry GenAI agent span conventions](https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md)
+- [Kagent: Bringing Agentic AI to Cloud Native](https://www.cncf.io/blog/2025/04/15/kagent-bringing-agentic-ai-to-cloud-native/)
+- [Dapr Agents v1.0](https://www.cncf.io/announcements/2026/03/23/general-availability-of-dapr-agents-delivers-production-reliability-for-enterprise-ai/)
+- [OpenChoreo and the agentic enterprise](https://www.cncf.io/blog/2026/07/21/platform-engineering-for-the-agentic-enterprise-managing-applications-resources-and-ai-agents/)
+- [Kgateway v2.1 and agentgateway](https://www.cncf.io/blog/2025/11/18/kgateway-v2-1-is-released/)
+- [Istio in the AI era](https://www.cncf.io/announcements/2026/03/25/istio-brings-future-ready-service-mesh-to-the-ai-era-with-new-ambient-multicluster-gateway-api-inference-extension-and-more/)
+- [Jaeger tracing AI agents with OpenTelemetry](https://www.cncf.io/blog/2026/05/26/how-jaeger-is-evolving-to-trace-ai-agents-with-opentelemetry/)
+- [Confidential Containers becomes a CNCF incubating project](https://www.cncf.io/blog/2026/07/22/confidential-containers-becomes-a-cncf-incubating-project/)
 - [Kubernetes v1.34 Dynamic Resource Allocation updates](https://kubernetes.io/blog/2025/09/01/kubernetes-v1-34-dra-updates/)
 - [Kueue overview](https://kueue.sigs.k8s.io/docs/overview/)
 - [Kueue topology-aware scheduling](https://kueue.sigs.k8s.io/docs/concepts/topology_aware_scheduling/)

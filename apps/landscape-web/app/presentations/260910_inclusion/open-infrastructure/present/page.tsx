@@ -56,6 +56,7 @@ export default function OpenInfrastructureKeynotePage() {
 
   return (
     <OpenInfrastructureKeynote
+      projects={projects}
       stats={{
         ...researchStats,
         agentRecentShare: Math.round((researchStats.agentRecent / researchStats.agent) * 100),

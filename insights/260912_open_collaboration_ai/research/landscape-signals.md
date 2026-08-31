@@ -1,7 +1,7 @@
 # Landscape 趋势信号：证据与图表映射
 
 状态：01 Landscape 章节已验证的证据登记
-快照日期：2026-08-27
+快照日期：2026-08-29
 读者：产品相关方与开源基础设施实践者
 发布目标：`../report/online-report.md`
 
@@ -13,7 +13,7 @@
 
 - 面向 Agent 的产品与模型基础设施，仍然是两套不同的工程栈。
 - Agent Runtime 项目正在围绕“从上下文到外部实际影响”的执行路径聚集。
-- OpenRouter 和模型 Hub 的证据只提供有限的外部交叉检查；GitHub 仍是观察项目建设与协作的主要证据层。
+- OpenRouter 提供有限的使用侧交叉检查；Agent Sandbox、Kata Containers 和 OpenTelemetry 的官方材料用来核对 Runtime 需求是否已经进入相邻的开源基础设施生态。
 
 ## GitHub 数据来源与定义
 
@@ -111,35 +111,74 @@ Agent Infra 的 section 汇总为 Application、Framework 和 Runtime；Model In
 | Isolation | Development sandboxes | 4 | Coder, Agent Sandbox |
 | Evidence | Observability & evaluation | 4 | Langfuse, Opik |
 
-## 外部证据
+## GitHub 之外的平台流量证据
 
 ### OpenRouter 应用与 Agent 排名
 
 来源：<https://openrouter.ai/apps/>
-核对日期：2026-08-27
+核对日期：2026-08-29
 
-- DeepSeek Harness 在公开全球应用排名中位列第 5。
-- 它还进入页面的周增长最快列表，增长超过 999%。
+- 当前 Top 20 中有 9 个应用可以直接对齐到 Agent Infra：Hermes Agent、Claude Code、pi、Kilo Code、Cline、Codex、OpenClaw、DeepSeek Harness、OpenHands。
+- 其中 7 个进入 Top 10。DeepSeek Harness 位列第 10，并进入周增长最快列表，增长超过 999%。
 - 覆盖范围仅限主动加入 OpenRouter 归因的公开应用。
 - Token 数量表示平台流量，不是独立用户数或部署数。
 
-API 定义：<https://openrouter.ai/docs/api/api-reference/datasets/get-app-rankings>
-
-### OpenRouter、ZenMux 与 Hugging Face 模型样本
+### ZenMux 平台模型用量
 
 来源：
 
-- `insights/presentations/260807-CoC-KN/large-models-refresh/data/monthly_models_top50_open_closed.csv`
-- `insights/presentations/260807-CoC-KN/large-models-refresh/data/monthly_source_summary.json`
-- Hugging Face Hub API: <https://huggingface.co/docs/hub/en/api>
+- 冻结数据：`../../presentations/260807-CoC-KN/large-models-refresh/data/raw/zenmux_monthly_usage_snapshot.json`
+- [ZenMux Model Leaderboard API](https://zenmux.ai/docs/api/platform/statistics-leaderboard.html)
+- [ZenMux App Leaderboard API](https://zenmux.ai/docs/api/platform/statistics-app-leaderboard.html)
 
-观察窗口：2026 年 6 月 1—30 日
+时间窗：2026-06-01 至 2026-06-30
 
-- 综合使用排名前 10 的模型中，有 5 个能在 Hugging Face 上解析到官方公开权重仓库。
-- 前 50 名中有 24 个满足同一条件。
-- OpenRouter 与 ZenMux 的原始 Token 数先转换为平台内部百分位，再进行组合。
-- Hugging Face 下载量未纳入跨模型使用综合指标。
-- Open-weight 是访问条件分类，不是 OSI 许可证认定。
+- ZenMux 单平台 Top 5 依次为 Claude Opus 4.8、DeepSeek V4 Pro、GLM 5.2、DeepSeek V4 Flash、Claude Opus 4.7。
+- Top 4 中有 3 个 endpoint 能对应到官方公开权重仓库：DeepSeek V4 Pro、GLM 5.2、DeepSeek V4 Flash。
+- 这是 ZenMux 单平台冻结数据，不是上次 CoC 分享使用的 OpenRouter + ZenMux 复合分数。
+- OpenRouter 与 ZenMux 的原始 Token 数不相加。不同平台规模不同，直接相加会制造一个没有清晰含义的“总量”。
+- ZenMux 目前还提供 App Leaderboard，按 token 或成本列出调用 ZenMux 的应用、Agent、客户端和 gateway；接口是 T-1 日聚合，但需要 Management API Key。本轮没有拿文档示例值冒充实时平台数据。
+
+## 开放基础设施项目证据
+
+### Agent Sandbox 与 Kata Containers
+
+来源：
+
+- <https://github.com/kubernetes-sigs/agent-sandbox/blob/main/examples/quickstart/README.md>
+- <https://github.com/kubernetes-sigs/agent-sandbox/blob/main/docs/security/threat_model.md>
+- <https://katacontainers.io/blog/kata-containers-agent-sandbox-integration/>
+- <https://openinfra.org/projects/>
+
+- Agent Sandbox 提供 Sandbox、SandboxTemplate、SandboxClaim 和 SandboxWarmPool，分别处理环境定义、申请和预热分配。
+- 项目威胁模型明确写明 Sandbox Pod 经常运行不可信的 LLM 生成代码，并建议通过 RuntimeClass 使用 gVisor 或 Kata Containers。
+- Kata Containers 是 OpenInfra Foundation 托管的项目，并已作为 Agent Sandbox 的 VM-backed isolation 选项接入。这里能证明项目能力和集成方向，不能给出生态采用率。
+
+### OpenTelemetry GenAI semantic conventions
+
+来源：<https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md>
+
+- 当前文档已经定义 agent、workflow、plan 和 execute-tool spans。
+- 整份 agent span 规范仍标记为 Development。
+- 这说明成熟 telemetry 项目正在补 Agent 语义层；它还不是已经稳定完成的标准。
+
+### CNCF / OpenInfra 项目矩阵
+
+| 作用 | 项目 | 证据强度 | 一手材料能证明什么 |
+| --- | --- | --- | --- |
+| 运行与隔离 | Kubernetes Agent Sandbox | 直接 | 为短期 Agent 环境提供 Sandbox、Template、Claim、WarmPool，威胁模型明确覆盖不可信 LLM 生成代码 |
+| 运行与隔离 | Kata Containers | 直接 / OpenInfra | 已作为 Agent Sandbox 的 VM-backed isolation 接入 |
+| 运行与隔离 | Confidential Containers | 相邻基础设施 | 为 confidential AI 提供 TEE 与 attestation；不是 Agent 专用项目 |
+| 协调与运维 | kagent | 直接 | 在 Kubernetes 中运行 Agent，并提供操作 Kubernetes、Prometheus、Istio、Argo 的工具 |
+| 协调与运维 | Dapr Agents | 直接 | durable workflow、state、retry、SPIFFE identity 与 multi-agent coordination |
+| 协调与运维 | OpenChoreo | 直接 | 同一平台同时面向人和 Agent，Agent 通过 MCP 使用平台能力 |
+| 连接与治理 | kgateway | 直接 | Kubernetes control plane 覆盖 AI gateway，v2.1 接入 agentgateway |
+| 连接与治理 | agentgateway | 直接 / LF | data plane 明确覆盖 LLM、MCP tool、AI agent 与 inference traffic |
+| 连接与治理 | Istio | 适配中 | 把 service-mesh 与 gateway 能力延伸到 AI / inference traffic；不是 Agent 专用项目 |
+| 追踪与解释 | OpenTelemetry | 直接 / 规范开发中 | 定义 agent、workflow、execute-tool spans |
+| 追踪与解释 | Jaeger | 适配中 | 基于 OpenTelemetry 扩展 Agent 执行路径、MCP / ACP / AG-UI 与 GenAI 可视化 |
+
+这张表不把 Prometheus、Argo 直接计为“Agent Infra 项目”。更准确的关系是：kagent 已经把它们作为 Agent 可操作的现有系统。这证明 Agent 正在成为云原生平台的消费者，但不能证明这些项目自身已经围绕 Agent 完成重构。
 
 ## 图表映射
 
@@ -148,7 +187,8 @@ API 定义：<https://openrouter.ai/docs/api/api-reference/datasets/get-app-rank
 | Landscape 总览 | 解读前，样本究竟包含什么？ | 可切换的完整 Agent Infra 与 Model Infra 图 | 入选仓库、层级、section、7 月 OpenRank | 两张图是后续发现的证据底座 | 现有全景图配色 |
 | 工程栈 | 各层主要由哪些语言主导？ | 两张 100% 堆叠条形图 | 层级、主要语言、仓库数 | Agent 产品偏 TypeScript；Model Infra 以 Python 为主 | 粉、蓝、紫、墨色、中性色 |
 | Runtime 路径 | Agent Runtime 正在哪里成形？ | 有序五步带状图 | Runtime section、项目数、示例 | Runtime 密度沿上下文、接口、行动、隔离与证据路径分布 | 粉至蓝的有序描边 |
-| GitHub 之外 | 外部平台是否推翻 GitHub 图景？ | 两张证据卡片 | 排名、周增长、权重访问 | 使用数据同样指向 Coding Agent 与开放权重模型 | 紫色强调、中性容器 |
+| 平台流量证据 | 全景图上的应用是否也出现在外部调用中？ | OpenRouter Top 20 × Agent Infra 对照表 + ZenMux 单平台模型榜 | App 排名、Token、Landscape section、ZenMux 模型端点 | Coding 与 personal agent 不只获得仓库关注，也在独立平台流量中出现 | 紫色强调、平台分栏 |
+| 开放基础设施项目证据 | 现有开源基础设施具体在接什么工作？ | 四条职责泳道 | 项目、职责、证据强度、一手链接 | 适配发生在隔离、协调、连接治理与追踪四个位置 | 粉蓝分层、克制标签 |
 
 ## 本轮未纳入的分析
 

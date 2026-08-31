@@ -231,7 +231,8 @@ function Scene({ id, stats }: { id: SceneId; stats: PresentationStats }) {
     return (
       <article className={styles.talkSlide}>
         <TalkHeading eyebrow="MAY → CURRENT REVIEW">
-          The tracked pool grew by {stats.trackedDelta} projects.
+          Ongoing review expanded the tracked pool by {stats.trackedDelta}{" "}
+          projects.
         </TalkHeading>
         <div className={styles.poolTimeline}>
           <section>
@@ -251,7 +252,9 @@ function Scene({ id, stats }: { id: SceneId; stats: PresentationStats }) {
           </aside>
         </div>
         <p className={styles.slideConclusion}>
-          The number changed. The more useful signal is where the map became denser.
+          Projects entered through activity-based discovery, targeted GitHub
+          searches and editorial review. Selection for the map was a separate
+          decision.
         </p>
       </article>
     );

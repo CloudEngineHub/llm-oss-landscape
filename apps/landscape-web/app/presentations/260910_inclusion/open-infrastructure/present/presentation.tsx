@@ -17,6 +17,8 @@ import {
 } from "react";
 
 import LandscapeLogo from "@/app/components/landscape-logo";
+import LandscapeExplorer from "@/app/components/landscape-explorer";
+import type { LandscapeProject } from "@/lib/landscape-types";
 
 import type { InclusionResearchStats } from "../../research-data";
 import styles from "./presentation.module.css";
@@ -42,19 +44,22 @@ type SwipeStart = {
 
 const scenes = [
   { id: "cover", label: "OPEN" },
+  { id: "landscape", label: "LANDSCAPE" },
+  { id: "signal", label: "TREND" },
   { id: "workload", label: "WORKLOAD" },
-  { id: "landscape", label: "ECOSYSTEM" },
-  { id: "installed-base", label: "INSTALLED BASE" },
+  { id: "project-bridge", label: "PROJECTS" },
   { id: "task-envelope", label: "RESPONSE" },
-  { id: "close", label: "CLOSE" },
+  { id: "handoff", label: "NEXT" },
 ] as const;
 
 type SceneId = (typeof scenes)[number]["id"];
 
 export default function OpenInfrastructureKeynote({
   stats,
+  projects,
 }: {
   stats: KeynoteStats;
+  projects: LandscapeProject[];
 }) {
   const [sceneIndex, setSceneIndex] = useState(0);
   const swipeStart = useRef<SwipeStart | null>(null);
@@ -88,7 +93,7 @@ export default function OpenInfrastructureKeynote({
       if (event.key === "Home") setSceneIndex(0);
       if (event.key === "End") setSceneIndex(scenes.length - 1);
       if (event.key === "Enter") void enterFullscreen();
-      if (/^[1-6]$/.test(event.key)) setSceneIndex(Number(event.key) - 1);
+      if (/^[1-7]$/.test(event.key)) setSceneIndex(Number(event.key) - 1);
     };
 
     window.addEventListener("keydown", handleKeyDown);
@@ -155,7 +160,7 @@ export default function OpenInfrastructureKeynote({
           data-stage-scene={scene.id}
           key={scene.id}
         >
-          <Scene id={scene.id} stats={stats} />
+          <Scene id={scene.id} stats={stats} projects={projects} />
         </div>
 
         <footer className={styles.controls}>
@@ -201,13 +206,24 @@ export default function OpenInfrastructureKeynote({
   );
 }
 
-function Scene({ id, stats }: { id: SceneId; stats: KeynoteStats }) {
+function Scene({
+  id,
+  stats,
+  projects,
+}: {
+  id: SceneId;
+  stats: KeynoteStats;
+  projects: LandscapeProject[];
+}) {
   if (id === "cover") return <CoverSlide />;
+  if (id === "landscape") {
+    return <LandscapeMapSlide projects={projects} stats={stats} />;
+  }
+  if (id === "signal") return <LandscapeSignalSlide stats={stats} />;
   if (id === "workload") return <WorkloadSlide />;
-  if (id === "landscape") return <LandscapeSignalSlide stats={stats} />;
-  if (id === "installed-base") return <InstalledBaseSlide />;
+  if (id === "project-bridge") return <ProjectBridgeSlide />;
   if (id === "task-envelope") return <TaskEnvelopeSlide />;
-  return <ClosingSlide />;
+  return <DemoHandoffSlide />;
 }
 
 function CoverSlide() {
@@ -216,6 +232,15 @@ function CoverSlide() {
       <div className={styles.coverMark}>
         <LandscapeLogo title="Agentic AI Landscape" />
         <span>AGENTIC AI LANDSCAPE · 2026</span>
+      </div>
+      <div
+        className={styles.coverBrands}
+        aria-label="Produced by Ant Open Source and InclusionAI"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/community-logos/ant-open-source.png" alt="Ant Open Source" />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/community-logos/inclusionai.png" alt="InclusionAI" />
       </div>
       <h1>
         What AI Agents Need
@@ -226,21 +251,68 @@ function CoverSlide() {
           <strong>Xiaoya Xia</strong>
           <span>Ant Open Source</span>
         </p>
-        <p>
-          KubeCon + CloudNativeCon + OpenInfra Summit
-          <span>+ PyTorch Conference China · Shanghai</span>
+        <p className={styles.coverEvent}>
+          KubeCon + CloudNativeCon + OpenInfra Summit + PyTorch Conference China
+          <span>8 September 2026 · Shanghai</span>
         </p>
       </div>
-      <TaskReceipt status="TASK CREATED" />
+    </article>
+  );
+}
+
+function LandscapeMapSlide({
+  projects,
+  stats,
+}: {
+  projects: LandscapeProject[];
+  stats: KeynoteStats;
+}) {
+  const [view, setView] = useState<"agent" | "model">("agent");
+
+  return (
+    <article className={styles.landscapeMapSlide}>
+      <div className={styles.liveLandscape}>
+        <LandscapeExplorer
+          projects={projects}
+          embedOnly={view}
+          presentationMode
+        />
+      </div>
+      <div className={styles.landscapeSwitcher} aria-label="Landscape view">
+        <span>EXPLORE THE MAP</span>
+        <button
+          type="button"
+          data-active={view === "agent"}
+          aria-pressed={view === "agent"}
+          onClick={() => setView("agent")}
+        >
+          Agent Infra · {stats.agent}
+        </button>
+        <button
+          type="button"
+          data-active={view === "model"}
+          aria-pressed={view === "model"}
+          onClick={() => setView("model")}
+        >
+          Model Infra · {stats.model}
+        </button>
+      </div>
     </article>
   );
 }
 
 function WorkloadSlide() {
+  const traits = [
+    ["UNKNOWN", "Code appears during the task"],
+    ["VARIABLE", "Model and tool calls can fan out"],
+    ["INTERRUPTIBLE", "Work pauses, retries and resumes"],
+    ["DURABLE", "Authority, state and effects outlive a process"],
+  ];
+
   return (
     <article className={styles.workloadSlide}>
       <SlideHeading eyebrow="THE WORKLOAD">
-        The code can appear after deployment.
+        The process is temporary. The task is not.
       </SlideHeading>
       <div className={styles.workloadSequence}>
         <div className={styles.deployedArtifact}>
@@ -265,39 +337,45 @@ function WorkloadSlide() {
           <code>repository · pull request #482</code>
         </div>
       </div>
-      <p className={styles.workloadPoint}>
-        A four-minute environment still needs a hard boundary, scoped authority
-        and a record that survives cleanup.
-      </p>
-      <TaskReceipt status="CODE GENERATED · SANDBOX 04:18 · EFFECT RECORDED" />
+      <div className={styles.workloadTraits}>
+        {traits.map(([label, text]) => (
+          <section key={label}>
+            <span>{label}</span>
+            <p>{text}</p>
+          </section>
+        ))}
+      </div>
     </article>
   );
 }
 
 function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
+  const applicationShare = Math.round(
+    stats.agentMacro.find((group) => group.label === "Application")
+      ?.openrankShare ?? 0,
+  );
+
   return (
     <article className={styles.landscapeSignalSlide}>
       <SlideHeading eyebrow="AGENTIC AI ECOSYSTEM">
-        The agent layer is young. The base below it is not.
+        Attention sits at the top. New demand is forming below.
       </SlideHeading>
-      <div className={styles.layerComparison}>
-        <div className={styles.agentLayer}>
-          <span>AGENT INFRA</span>
-          <strong>{stats.agent}</strong>
-          <p>{stats.agentRecentShare}% created in 2025 or later</p>
-        </div>
-        <div className={styles.modelLayer}>
-          <span>MODEL INFRA</span>
-          <strong>{stats.model}</strong>
-          <p>{stats.modelRecentShare}% created in 2025 or later</p>
-        </div>
-        <div className={styles.totalMark}>
-          MAY {stats.mayTracked} → NOW {stats.currentTracked} TRACKED
-        </div>
-      </div>
-      <div className={styles.runtimeSignal}>
-        <strong>{stats.runtimeOutsideMay}/{stats.agentOutsideMay}</strong>
-        <span>Agent Infra projects outside the May pool sit in Runtime</span>
+      <div className={styles.signalNumbers}>
+        <section>
+          <strong>{applicationShare}%</strong>
+          <p>of selected Agent Infra OpenRank still sits in Application</p>
+          <span>JULY 2026</span>
+        </section>
+        <section>
+          <strong>{stats.agentRecentShare}%</strong>
+          <p>of Agent Infra projects were created in 2025 or later</p>
+          <span>MODEL INFRA: {stats.modelRecentShare}%</span>
+        </section>
+        <section>
+          <strong>{stats.runtimeOutsideMay}/{stats.agentOutsideMay}</strong>
+          <p>Agent Infra selections outside the May pool sit in Runtime</p>
+          <span>CURRENT SELECTION</span>
+        </section>
       </div>
       <div className={styles.pressureRail}>
         {stats.pressure.map((section) => (
@@ -316,43 +394,62 @@ function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
         ))}
       </div>
       <SourceLine>
-        Source: May tracking snapshot + current agentic-ai-projects.csv. Counts
-        describe the selected ecosystem, not production adoption.
+        Source: current landscape selection + May tracking snapshot. OpenRank
+        describes community activity, not production adoption.
       </SourceLine>
     </article>
   );
 }
 
-function InstalledBaseSlide() {
+function ProjectBridgeSlide() {
+  const lanes = [
+    {
+      role: "RUN & ISOLATE",
+      projects: ["Agent Sandbox", "Kata Containers", "Confidential Containers"],
+      note: "Lifecycle, VM isolation and attestation",
+    },
+    {
+      role: "COORDINATE",
+      projects: ["kagent", "Dapr Agents", "OpenChoreo"],
+      note: "Operations, durable state and recovery",
+    },
+    {
+      role: "CONNECT & GOVERN",
+      projects: ["kgateway", "agentgateway", "Istio"],
+      note: "LLM, MCP and agent traffic under policy",
+    },
+    {
+      role: "TRACE & EXPLAIN",
+      projects: ["OpenTelemetry", "Jaeger"],
+      note: "Agent semantics and execution paths",
+    },
+  ];
+
   return (
     <article className={styles.installedBaseSlide}>
-      <SlideHeading eyebrow="CNCF + OPENINFRA">
-        The installed base is already carrying AI.
+      <SlideHeading eyebrow="OPEN INFRASTRUCTURE PROJECTS">
+        Open projects are already moving into the task path.
       </SlideHeading>
-      <div className={styles.baselineNumbers}>
-        <section>
-          <strong>82%</strong>
-          <p>Kubernetes in production among container users</p>
-          <span>CNCF 2025 survey</span>
-        </section>
-        <section>
-          <strong>66%</strong>
-          <p>GenAI-hosting organisations using Kubernetes for inference</p>
-          <span>CNCF 2025 survey</span>
-        </section>
-        <section>
-          <strong>55M+</strong>
-          <p>Documented OpenStack cores in production</p>
-          <span>OpenInfra 2025 annual report</span>
-        </section>
+      <div className={styles.projectLanes}>
+        {lanes.map((lane) => (
+          <section key={lane.role}>
+            <span>{lane.role}</span>
+            <div>
+              {lane.projects.map((project) => (
+                <strong key={project}>{project}</strong>
+              ))}
+            </div>
+            <p>{lane.note}</p>
+          </section>
+        ))}
       </div>
       <p className={styles.dataBoundary}>
-        These figures establish the substrate. They do not measure agent
-        adoption.
+        Some were built for agents. Others are established projects adding an
+        agent-specific interface, traffic path or evidence model.
       </p>
       <SourceLine>
-        Sources: CNCF Annual Cloud Native Survey 2025 · OpenInfra Annual Report
-        2025
+        Sources: CNCF and project documentation · Kata Containers / OpenInfra ·
+        OpenTelemetry GenAI semantic conventions
       </SourceLine>
     </article>
   );
@@ -361,35 +458,47 @@ function InstalledBaseSlide() {
 function TaskEnvelopeSlide() {
   const responses = [
     {
-      step: "RUN",
-      need: "Short-lived, untrusted code",
-      existing: "Kubernetes lifecycle + Kata isolation",
-      gap: "Fast, portable sandbox profiles",
+      step: "START",
+      need: "Unknown code in a short-lived environment",
+      existing: "Agent Sandbox + Kata Containers",
+      gap: "Low-latency isolation and safe warm reuse",
+    },
+    {
+      step: "CALL",
+      need: "Model and tool calls fan out or retry",
+      existing: "Gateways + agentgateway",
+      gap: "Task budgets, backpressure and cancellation",
+    },
+    {
+      step: "RESUME",
+      need: "Work outlives one process",
+      existing: "Dapr workflows + state systems",
+      gap: "Safe replay after an external side effect",
     },
     {
       step: "ACT",
       need: "Authority borrowed for one task",
       existing: "SPIFFE/SPIRE workload identity",
-      gap: "Delegation tied to tools and expiry",
+      gap: "Intent, tool scope, approval and expiry",
     },
     {
-      step: "REMEMBER",
-      need: "Context survives the process",
-      existing: "Open data and workflow systems",
-      gap: "Context lifecycle and provenance",
+      step: "PLACE",
+      need: "Inference, tools and sandbox compute mix",
+      existing: "Kubernetes DRA + Kueue",
+      gap: "Task SLOs, capacity and cost attribution",
     },
     {
       step: "PROVE",
       need: "A tool changes an external system",
-      existing: "OpenTelemetry trace pipeline",
+      existing: "OpenTelemetry + Jaeger",
       gap: "Causal evidence from decision to effect",
     },
   ];
 
   return (
     <article className={styles.taskEnvelopeSlide}>
-      <SlideHeading eyebrow="WHERE OPEN INFRA CAN RESPOND">
-        A production agent needs a task envelope.
+      <SlideHeading eyebrow="WHERE THE STACK IS STILL OPEN">
+        The missing layer is task-wide control.
       </SlideHeading>
       <div className={styles.envelopeLegend}>
         <span>AGENT BEHAVIOUR</span>
@@ -407,48 +516,47 @@ function TaskEnvelopeSlide() {
         ))}
       </div>
       <SourceLine>
-        Project evidence: Kubernetes Agent Sandbox · Kata Containers · SPIRE
-        Delegated Identity API · OpenTelemetry GenAI semantic conventions
+        Project evidence: Agent Sandbox · Kata · agentgateway · Dapr · SPIRE ·
+        Kueue · OpenTelemetry
       </SourceLine>
     </article>
   );
 }
 
-function ClosingSlide() {
+function DemoHandoffSlide() {
   return (
-    <article className={styles.closingSlide}>
-      <div className={styles.closingReceipt}>
-        <span>TASK 8F21 · COMPLETE</span>
-        <dl>
-          <div>
-            <dt>RUNTIME</dt>
-            <dd>released</dd>
-          </div>
-          <div>
-            <dt>AUTHORITY</dt>
-            <dd>expired</dd>
-          </div>
-          <div>
-            <dt>EFFECT</dt>
-            <dd>pull request #482</dd>
-          </div>
-          <div>
-            <dt>EVIDENCE</dt>
-            <dd>retained</dd>
-          </div>
-        </dl>
+    <article className={styles.handoffSlide}>
+      <div className={styles.handoffIntro}>
+        <span>NEXT · ONE TASK, RUN LIVE</span>
+        <h2>Building an Agent Runtime with Open Infrastructure</h2>
       </div>
-      <h2>
-        A sandbox can disappear in minutes.
-        <em>Its evidence should not.</em>
-      </h2>
-      <p>
-        Open infrastructure already has most of the building blocks. The task
-        boundary is where they now need to meet.
-      </p>
-      <div className={styles.closingMeta}>
-        <LandscapeLogo title="Agentic AI Landscape" />
-        <span>What AI Agents Need from Open Infrastructure</span>
+      <div className={styles.demoChain}>
+        <section>
+          <span>01 · LIFECYCLE</span>
+          <strong>Kubernetes Agent Sandbox</strong>
+          <p>creates, warms and releases the task environment</p>
+        </section>
+        <i aria-hidden="true" />
+        <section>
+          <span>02 · BOUNDARY</span>
+          <strong>Kata Containers</strong>
+          <p>puts untrusted code behind a dedicated guest kernel</p>
+        </section>
+        <i aria-hidden="true" />
+        <section>
+          <span>03 · DELIVERY</span>
+          <strong>Open runtime chain</strong>
+          <p>executes containers and delivers images and model artifacts</p>
+        </section>
+      </div>
+      <div className={styles.handoffFooter}>
+        <div>
+          <strong>Xu Wang</strong>
+          <span>Ant Group · CNCF + OpenInfra Foundation</span>
+        </div>
+        <p>
+          The next keynote turns this ecosystem signal into a working stack.
+        </p>
       </div>
     </article>
   );
@@ -478,16 +586,6 @@ function ProjectMark({ name, repo }: { name: string; repo: string }) {
       <img src={`/api/project-logo/${encodeURIComponent(owner)}`} alt="" />
       {name}
     </span>
-  );
-}
-
-function TaskReceipt({ status }: { status: string }) {
-  return (
-    <div className={styles.taskReceipt}>
-      <span>TASK 8F21</span>
-      <strong>{status}</strong>
-      <span>OPEN INFRA · 2026</span>
-    </div>
   );
 }
 

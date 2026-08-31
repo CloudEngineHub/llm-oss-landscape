@@ -1,0 +1,27 @@
+comparison,metric,item_scope,repositories,agent_exposed_value,no_visible_agent_value,absolute_difference,positive_deltas,negative_deltas,ties,exact_signflip_p,bh_q,interpretation
+2026_any_early_visible_agent_vs_no_agent_first_24h,human_response_7d,all,8,0.441176,0.357525,0.083652,5,2,1,0.5,0.733506,"human response; descriptive, not causal"
+2026_any_early_visible_agent_vs_no_agent_first_24h,maintainer_response_7d,all,8,0.207843,0.11753,0.090313,3,1,4,0.375,0.733506,"maintainer response; descriptive, not causal"
+2026_any_early_visible_agent_vs_no_agent_first_24h,issue_closed_30d,issue,4,0.583333,0.625,-0.041667,2,2,0,1.0,1.0,"issue resolution; descriptive, not causal"
+2026_any_early_visible_agent_vs_no_agent_first_24h,pr_merged_30d,pull_request,6,0.43602,0.5,-0.06398,3,2,1,0.75,0.880208,"pull-request integration; descriptive, not causal"
+2026_any_early_visible_agent_vs_no_agent_first_24h,maintainer_actions_30d,all,8,1.243155,0.95625,0.286905,4,1,3,0.25,0.65,visible maintainer actions; burden proxy
+2026_any_early_visible_agent_vs_no_agent_first_24h,conversation_runs_30d,all,8,3.888965,3.203125,0.68584,5,3,0,0.507812,0.733506,dialogue handoffs; coordination-load proxy
+2026_any_early_visible_agent_vs_no_agent_first_24h,review_events_30d,pull_request,6,7.107204,5.358333,1.748871,4,2,0,0.78125,0.880208,review activity; burden and quality-control proxy
+2026_any_early_visible_agent_vs_no_agent_first_24h,human_review_events_30d,pull_request,6,4.10525,2.608333,1.496917,4,2,0,0.40625,0.733506,human review activity; burden proxy
+2026_any_early_visible_agent_vs_no_agent_first_24h,maintainer_review_events_30d,pull_request,6,1.401801,0.608333,0.793468,5,0,1,0.0625,0.203125,maintainer review activity; burden proxy
+2026_any_early_visible_agent_vs_no_agent_first_24h,agent_review_events_30d,pull_request,6,3.001954,2.722222,0.279731,4,1,1,0.8125,0.880208,agent review activity; automated quality-control proxy
+2026_any_early_visible_agent_vs_no_agent_first_24h,commits_after_first_review_30d,pull_request,6,4.620543,0.913889,3.706654,6,0,0,0.03125,0.203125,post-review revisions; rework proxy
+2026_any_early_visible_agent_vs_no_agent_first_24h,commits_after_first_human_review_30d,pull_request,6,3.520055,0.830556,2.689499,5,1,0,0.0625,0.203125,revisions after human review; rework proxy
+2026_any_early_visible_agent_vs_no_agent_first_24h,commits_after_first_agent_review_30d,pull_request,6,2.780342,0.388889,2.391453,5,0,1,0.0625,0.203125,revisions after agent review; automated feedback proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,human_response_7d,all,8,0.572794,0.37632,0.196474,6,1,1,0.0625,0.264061,"human response; descriptive, not causal"
+2026_early_coding_or_review_agent_vs_none_first_24h,maintainer_response_7d,all,8,0.273284,0.160329,0.112955,4,2,2,0.34375,0.496528,"maintainer response; descriptive, not causal"
+2026_early_coding_or_review_agent_vs_none_first_24h,issue_closed_30d,issue,1,0.0,1.0,-1.0,0,1,0,1.0,1.0,"issue resolution; descriptive, not causal"
+2026_early_coding_or_review_agent_vs_none_first_24h,pr_merged_30d,pull_request,8,0.486951,0.472173,0.014778,5,2,1,0.90625,0.981771,"pull-request integration; descriptive, not causal"
+2026_early_coding_or_review_agent_vs_none_first_24h,maintainer_actions_30d,all,8,2.057349,1.355208,0.702141,5,2,1,0.4375,0.517045,visible maintainer actions; burden proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,conversation_runs_30d,all,8,4.667811,2.995685,1.672127,7,1,0,0.085938,0.264061,dialogue handoffs; coordination-load proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,review_events_30d,pull_request,8,6.7413,3.891667,2.849634,4,4,0,0.289062,0.496528,review activity; burden and quality-control proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,human_review_events_30d,pull_request,8,3.75206,2.370833,1.381227,4,4,0,0.3125,0.496528,human review activity; burden proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,maintainer_review_events_30d,pull_request,8,1.599473,0.864583,0.73489,5,2,1,0.40625,0.517045,maintainer review activity; burden proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,agent_review_events_30d,pull_request,8,2.980311,1.5,1.480311,6,1,1,0.265625,0.496528,agent review activity; automated quality-control proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,commits_after_first_review_30d,pull_request,8,3.935783,0.7625,3.173283,8,0,0,0.007812,0.101556,post-review revisions; rework proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,commits_after_first_human_review_30d,pull_request,8,2.712569,0.689583,2.022985,5,3,0,0.101562,0.264061,revisions after human review; rework proxy
+2026_early_coding_or_review_agent_vs_none_first_24h,commits_after_first_agent_review_30d,pull_request,8,2.555632,0.3125,2.243132,7,0,1,0.015625,0.101562,revisions after agent review; automated feedback proxy

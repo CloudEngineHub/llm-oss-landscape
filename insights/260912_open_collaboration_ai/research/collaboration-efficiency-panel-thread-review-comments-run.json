@@ -1,0 +1,19 @@
+{
+  "started_at": "2026-08-30T17:14:28.157052+00:00",
+  "completed_at": "2026-08-30T17:19:09.107539+00:00",
+  "repositories": 9,
+  "pull_requests": 543,
+  "threads_complete": 543,
+  "missing_endpoints": 0,
+  "errors": [],
+  "review_comments": 1041,
+  "http_requests": 543,
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-efficiency-panel-thread-review-comments.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-efficiency-panel-thread-review-comments-status.csv"
+  ],
+  "limitations": [
+    "Inline review comments are collected separately because the Issue timeline does not contain them.",
+    "A review comment records visible discussion, not whether the suggestion was correct or adopted."
+  ]
+}

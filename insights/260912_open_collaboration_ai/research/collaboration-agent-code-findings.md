@@ -107,11 +107,13 @@
 - Agent 参与过代码的 PR 比完整 Agent-only 多约三倍，协作中的修改和接管比“一次生成直接合入”更常见；
 - 公开 GitHub 身份只能看到 Agent 工作的一小部分。这个实验测到的是可审计的来源，不是实际 AI 使用率。
 
-## 下一轮还缺什么
+## Patch lineage 已经补到哪一步
 
-1. 对 14 个已合入候选 PR 做逐个 case review，保存 Agent 身份与声明的直接证据；
-2. 对 Agent-human mixed PR 做 patch lineage：比较 Agent 初始 commit、review 后 commit 和最终 head，计算 Agent 新增行的留存率与人类重写率；
-3. 把 source code、测试、文档、lockfile 和生成文件分开，避免把所有增删行都叫作“代码”；
-4. 在 10 个深挖仓库中做全年 census，验证每仓库 20 条线程的稀有事件估计是否稳定。
+严格 `agent_touched` 的 10 个已合入 PR 已经完成逐案复核和 patch lineage。九个案例可逐行追踪；Mooncake 的 Agent 署名只出现在双父 merge commit，退出逐行分母。结果见 `collaboration-patch-lineage-findings.md`。
 
-在完成前两项以前，外部报告可以写“公开证据下界”，不宜写“今年有 X% 的开源代码由 AI 完全生成”。
+还缺两项：
+
+1. 对普通账号主动披露 AI 生成的另外 4 个候选继续做 case review；
+2. 在 10 个深挖仓库中做全年 census，验证每仓库 20 条线程的稀有事件估计是否稳定。
+
+外部报告仍只能写“公开证据下界”和 10 个案例中的协作路径，不宜写“今年有 X% 的开源代码由 AI 完全生成”。

@@ -142,6 +142,14 @@ GitHub timeline 可以返回 Issue 与 PR 的 comment、review、commit、force-
 
 最终完整性结果：2,000/2,000 条线程 timeline 成功；1,425/1,425 个 PR 的 review comments 成功；1,425/1,425 个 PR 的 commits 成功；缺失 endpoint 与采集错误均为零。合并后进入分析的公开事件为 50,731 条。
 
+报告的仓库画像不使用 `participants_2607`。这个字段只覆盖 2026 年 7 月可见的 Issue / PR 事件参与者，并且受 OpenDigger 回填影响，不能解释为仓库贡献者规模。`50,731` 也不作为仓库活动总量展示：它是围绕 2,000 条抽样线程采集的 timeline、review comment 和 PR commit 事件行数。
+
+仓库画像只负责解释 Top 100 是哪些项目。Issue / PR 流量、同 cohort backlog 和 GitHub Release 节奏在页面上另设独立 insight，不再和语言、创建日期等样本特征放在同一组数字卡片里。参与人数本轮不展示。
+
+协作流量使用两张可相互复核的面板：repository-month frame 给出 2026 年月度流入；matched fixed-window frame 为 2022—2026 每年使用同一个 1 月 1 日至 8 月 29 日窗口。固定 cohort 从当前冻结 Top 100 中机械筛选 `created_at <= 2024-01-01` 的仓库，共 53 个；它不是人工选样，也不是 2024 年的历史 Top 53。这个口径能控制新仓库进入，却仍保留“今天仍在 Top 100”的幸存者偏差。
+
+Release 节奏按有发布记录的 UTC 日期去重，以降低多包和 canary 自动发布对总量的放大；只打 tag 或只发布到包仓库的版本不在其中。
+
 ### 线程指标
 
 | 指标 | 定义 |
@@ -161,7 +169,7 @@ GitHub timeline 可以返回 Issue 与 PR 的 comment、review、commit、force-
 
 100 个仓库的 repository-month 流量和 cohort backlog 保持完整 count。评论、review 和 timeline 采用 repository-stratified probability sample。
 
-冻结窗口包含 344,781 个 Issue 和 595,909 个 PR。逐条调用 timeline 不能扩展到全 population。因此：
+刷新后的冻结窗口包含约 346,600 个 Issue 和 599,900 个 PR。GitHub Search 会有索引回填，因此正文使用约数；同一次快照的明细仍保存精确计数。逐条调用 timeline 不能扩展到全 population。因此：
 
 - repository-month 使用重复验证的 GitHub Search count，并以 connection total 做独立 sanity check；
 - 对 100 个仓库各抽取 20 条线程；`NVIDIA/cudf` canonical 名称已经写回主数据和当前研究产物；

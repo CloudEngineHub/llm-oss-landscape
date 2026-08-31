@@ -1,0 +1,22 @@
+{
+  "fixed_window_rows": 500,
+  "fixed_window_unique_keys": 500,
+  "monthly_rows": 800,
+  "monthly_unique_keys": 800,
+  "current_cross_panel_metric_cells": 500,
+  "current_cross_panel_differences": 0,
+  "independent_repeat": {
+    "available": true,
+    "rows": 500,
+    "metric_cells_compared": 2500,
+    "changed_cells": 0,
+    "absolute_count_difference": 0
+  },
+  "known_limitations": [
+    "The historical panel freezes the current Top 100 and therefore has survivorship bias.",
+    "The constant cohort controls repository entry but still reflects project-specific growth and concentration.",
+    "Search counts include human contributors and automation and cannot identify AI-generated code.",
+    "Unresolved counts only cover items opened inside the matched window, not older backlog.",
+    "GitHub Search indexes can be backfilled; headline totals should be rounded in prose."
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "generated_at": "2026-08-30T17:27:00.170692+00:00",
+  "threads": 840,
+  "repositories": 10,
+  "years": [
+    "2024",
+    "2025",
+    "2026"
+  ],
+  "timeline_complete_threads": 840,
+  "timeline_completeness": 1.0,
+  "review_endpoint_complete_prs": 543,
+  "commit_endpoint_complete_prs": 543,
+  "unique_thread_keys": 840,
+  "event_keys_outside_sample": 0,
+  "candidate_identity_event_share": 0.017917360744322108,
+  "candidate_identity_response_event_share": 0.017269402681836653,
+  "eligible_7d_threads": 777,
+  "review_events": 1041,
+  "commit_events": 2617,
+  "actor_registry_accounts": 1634,
+  "population_threads_by_year": {
+    "2024": 25561,
+    "2025": 38429,
+    "2026": 101853
+  },
+  "eligible_30d_threads": 599,
+  "eligible_90d_threads": 185,
+  "design": "same-repository same-calendar-window probability sample; fixed-horizon outcomes; paired repository sign-flip inference",
+  "causal_claim_allowed": false
+}

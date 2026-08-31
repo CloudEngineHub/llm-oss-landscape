@@ -1,0 +1,4 @@
+panel_year,repositories,population_threads,population_change_from_2025,eligible_30d_population_estimate,maintainer_actions_per_thread_weighted,estimated_maintainer_actions_30d,estimated_maintainer_actions_ci_low,estimated_maintainer_actions_ci_high,human_review_events_per_pr_weighted,estimated_human_review_events_30d,agent_actions_per_thread_weighted,estimated_agent_actions_30d,automation_actions_per_thread_weighted,estimated_automation_actions_30d
+2024,8,25561,-0.334851,17784,1.254686,22314,16020,29178,2.085613,26316,0.908281,16153,5.375598,95602
+2025,10,38429,0.0,25667,1.88031,48261,34510,65068,3.156876,46700,1.021056,26207,5.708883,146527
+2026,10,101853,1.65042,74615,1.029428,76811,44556,116184,3.207367,113197,1.440853,107509,6.020961,449254
