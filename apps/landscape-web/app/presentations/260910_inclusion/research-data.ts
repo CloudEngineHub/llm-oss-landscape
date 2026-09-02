@@ -156,6 +156,13 @@ export type CollaborationResearchStats = {
   participationMacroShare: number;
   participationOpenerShare: number;
   participationResponseShare: number;
+  threadParticipationStages: Array<{
+    id: "opened" | "response" | "review" | "final-state";
+    denominator: number;
+    agent: number;
+    user: number;
+    repositoryTeam: number;
+  }>;
   knownAutomationShare: number;
   agentReviewShare: number;
   userReviewShare: number;
@@ -444,6 +451,9 @@ function collaborationResearchStats(): CollaborationResearchStats {
 
   const transitions = readCsv("collaboration-control-2022-2026-transitions.csv");
   const threadRows = readCsv("collaboration-thread-analysis-2026.csv");
+  const threadEvents = readCsv("collaboration-thread-events-2026.csv");
+  const reviewCommentEvents = readCsv("collaboration-thread-review-comments-2026.csv");
+  const prCommitEvents = readCsv("collaboration-thread-pr-commits-2026.csv");
   const taskRows = readCsv("collaboration-agent-observed-tasks-2026.csv");
   const markerTransitions = readCsv("collaboration-marker-transitions-2025-2026.csv");
   const deepStages = readCsv("collaboration-deep-stage-metrics-2026.csv");
@@ -452,6 +462,83 @@ function collaborationResearchStats(): CollaborationResearchStats {
     taskRows
       .filter((row) => row.task === task)
       .reduce((sum, row) => sum + numberValue(row.observed_events), 0);
+  const repositoryTeamAssociations = new Set(["OWNER", "MEMBER", "COLLABORATOR"]);
+  const countThreads = (
+    rows: Array<Record<string, string>>,
+    predicate: (row: Record<string, string>) => boolean,
+  ) => rows.filter(predicate).length;
+  const pullRequestThreads = threadRows.filter(
+    (row) => row.item_type === "pull_request",
+  );
+  const resolvedThreadsWithVisibleFinalActor = threadRows.filter(
+    (row) => row.outcome !== "open" && Boolean(row.gate_actor_login),
+  );
+  const threadParticipationStages: CollaborationResearchStats["threadParticipationStages"] = [
+    {
+      id: "opened",
+      denominator: threadRows.length,
+      agent: countThreads(
+        threadRows,
+        (row) => row.agent_participation_opened_thread === "yes",
+      ),
+      user: countThreads(
+        threadRows,
+        (row) => row.opener_class === "human_account",
+      ),
+      repositoryTeam: countThreads(
+        threadRows,
+        (row) => repositoryTeamAssociations.has(row.author_association),
+      ),
+    },
+    {
+      id: "response",
+      denominator: threadRows.length,
+      agent: countThreads(
+        threadRows,
+        (row) => row.agent_participation_response_present === "yes",
+      ),
+      user: countThreads(
+        threadRows,
+        (row) => row.no_human_account_response === "no",
+      ),
+      repositoryTeam: countThreads(
+        threadRows,
+        (row) => row.no_maintainer_account_response === "no",
+      ),
+    },
+    {
+      id: "review",
+      denominator: pullRequestThreads.length,
+      agent: countThreads(
+        pullRequestThreads,
+        (row) => row.agent_review_event_present === "yes",
+      ),
+      user: countThreads(
+        pullRequestThreads,
+        (row) => row.human_account_review_event_present === "yes",
+      ),
+      repositoryTeam: countThreads(
+        pullRequestThreads,
+        (row) => row.maintainer_account_review_event_present === "yes",
+      ),
+    },
+    {
+      id: "final-state",
+      denominator: resolvedThreadsWithVisibleFinalActor.length,
+      agent: countThreads(
+        resolvedThreadsWithVisibleFinalActor,
+        (row) => row.agent_gate === "yes",
+      ),
+      user: countThreads(
+        resolvedThreadsWithVisibleFinalActor,
+        (row) => row.human_account_gate === "yes",
+      ),
+      repositoryTeam: countThreads(
+        resolvedThreadsWithVisibleFinalActor,
+        (row) => row.maintainer_account_gate === "yes",
+      ),
+    },
+  ];
 
   const countBy = (column: string, value: string) =>
     sample.filter((row) => row[column] === value).length;
@@ -702,7 +789,7 @@ function collaborationResearchStats(): CollaborationResearchStats {
       ],
     },
     activityFlow: {
-      window: "1 Jan–29 Aug 2026",
+      window: "1 Jan–31 Aug 2026",
       issuesOpened: issueTotal,
       issuesUnresolved: sumActivity(currentActivity, "issues_unresolved_from_cohort"),
       pullRequestsOpened: pullRequestTotal,
@@ -760,7 +847,7 @@ function collaborationResearchStats(): CollaborationResearchStats {
       constantCohortRepositories: constantCohortRepos.size,
       history: activityHistory,
       releases: {
-        observationDays: 241,
+        observationDays: 243,
         repositoriesWithRelease: releaseDays.filter((value) => value > 0).length,
         medianReleaseDays: quantileValue(releaseDays, 0.5),
         lowerQuartileReleaseDays: quantileValue(releaseDays, 0.25),
@@ -803,10 +890,11 @@ function collaborationResearchStats(): CollaborationResearchStats {
     ).length,
     participationSampleThreads: numberValue(strict.threads_with_participation),
     participationOpenerSampleThreads: numberValue(strict.opener_threads),
-    participationThreadShare: numberValue(strict.weighted_thread_share),
-    participationMacroShare: numberValue(strict.equal_repository_thread_share),
-    participationOpenerShare: numberValue(strict.weighted_opener_share),
+    participationThreadShare: numberValue(strict.sample_thread_share),
+    participationMacroShare: numberValue(strict.repository_mean_thread_share),
+    participationOpenerShare: numberValue(strict.sample_opener_share),
     participationResponseShare: numberValue(overall.agent_participation_response_present_share_weighted),
+    threadParticipationStages,
     knownAutomationShare: numberValue(overall.known_automation_bot_present_share_weighted),
     agentReviewShare: numberValue(overall.agent_review_event_present_share_pr_weighted),
     userReviewShare: numberValue(overall.human_account_review_event_present_share_pr_weighted),
@@ -834,7 +922,8 @@ function collaborationResearchStats(): CollaborationResearchStats {
     changeRequestFollowupCommitShare: numberValue(overall.change_requested_pr_followup_commit_share_weighted),
     agentChangeRequestFollowupCommitShare: numberValue(overall.agent_change_requested_pr_followup_commit_share_weighted),
     humanChangeRequestFollowupCommitShare: numberValue(overall.human_change_requested_pr_followup_commit_share_weighted),
-    publicEventsAnalyzed: 50_731,
+    publicEventsAnalyzed:
+      threadEvents.length + reviewCommentEvents.length + prCommitEvents.length,
     agentTaskEvents: {
       review: taskEvents("code_review"),
       triage: taskEvents("triage_and_routing") + taskEvents("review_routing"),

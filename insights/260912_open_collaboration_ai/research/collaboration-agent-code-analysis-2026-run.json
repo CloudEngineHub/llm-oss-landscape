@@ -1,21 +1,33 @@
 {
-  "completed_at": "2026-08-29T10:06:34.617987+00:00",
-  "sample_threads": 2000,
-  "sample_pull_requests": 1425,
-  "sample_merged_pull_requests": 852,
-  "commit_rows": 7237,
+  "completed_at": "2026-09-01T10:48:20.272425+00:00",
+  "sample_threads": 5000,
+  "sample_pull_requests": 3567,
+  "sample_merged_pull_requests": 2125,
+  "commit_rows": 21253,
   "coding_agent_identities": 22,
   "expanded_coding_agent_identities": 27,
   "metadata_complete": true,
   "commit_endpoints_complete": true,
+  "commit_histories_fully_attributable": false,
   "validation_errors": [],
   "validation_warnings": [
+    "commit attribution incomplete coder/coder#23323: metadata=0, rows=33",
+    "commit attribution incomplete vllm-project/vllm-omni#595: metadata=476, rows=250",
+    "commit attribution incomplete QwenLM/qwen-code#3778: metadata=447, rows=250",
+    "commit attribution incomplete paperclipai/paperclip#1567: metadata=360, rows=250",
     "commit attribution incomplete pingdotgg/t3code#8393: metadata=4, rows=3",
     "commit attribution incomplete a2ui-project/a2ui#2349: metadata=27, rows=15",
     "commit attribution incomplete activepieces/activepieces#13548: metadata=1605, rows=250",
-    "commit attribution incomplete NVIDIA/Megatron-LM#4523: metadata=501, rows=250"
+    "commit attribution incomplete NVIDIA/Megatron-LM#4523: metadata=501, rows=250",
+    "commit attribution incomplete unslothai/unsloth#4210: metadata=3444, rows=250",
+    "commit attribution incomplete weaviate/weaviate#11874: metadata=881, rows=250",
+    "commit attribution incomplete apache/hudi#18143: metadata=858, rows=250",
+    "commit attribution incomplete Significant-Gravitas/AutoGPT#12594: metadata=396, rows=250",
+    "commit attribution incomplete code-yeongyu/oh-my-openagent#6124: metadata=10000, rows=250",
+    "commit attribution incomplete huggingface/trl#6605: metadata=361, rows=250",
+    "commit attribution incomplete danny-avila/LibreChat#14080: metadata=3523, rows=250"
   ],
-  "p99_merged_pr_change_lines": 8297.25,
+  "p99_merged_pr_change_lines": 10449.439999999835,
   "outputs": [
     "insights/260912_open_collaboration_ai/research/collaboration-agent-code-attribution-2026.csv",
     "insights/260912_open_collaboration_ai/research/collaboration-agent-code-estimates-2026.csv",
@@ -26,6 +38,8 @@
     "Public GitHub attribution cannot observe AI used locally under a normal user account without disclosure.",
     "Agent-touched PR code volume is not the same as AI-generated code volume when humans also committed.",
     "PR additions and deletions include tests, documentation, generated files, lockfiles, and other non-source changes.",
-    "Agent-only is based on current PR commits; exact line survival across mixed Agent-human histories requires patch lineage."
+    "Agent-only is based on current PR commits; exact line survival across mixed Agent-human histories requires patch lineage.",
+    "GitHub exposes at most 250 commits through the PR commit connection for very large PRs. Those PRs remain eligible for Agent-touched detection, but never for the strict Agent-only class unless commit attribution is complete.",
+    "All shares are direct shares of the fixed 5,000-thread sample; no repository-traffic weights are applied."
   ]
 }

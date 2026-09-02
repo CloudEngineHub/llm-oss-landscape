@@ -1,24 +1,24 @@
 {
-  "started_at": "2026-08-30T14:03:43.444725+00:00",
-  "completed_at": "2026-08-30T14:03:44.148607+00:00",
+  "started_at": "2026-09-01T09:04:31.822335+00:00",
+  "completed_at": "2026-09-01T09:09:01.536624+00:00",
   "sample": "insights/260912_open_collaboration_ai/research/collaboration-sample-top100-2607.csv",
   "windows": [
-    "2022-01-01..2022-08-29",
-    "2023-01-01..2023-08-29",
-    "2024-01-01..2024-08-29",
-    "2025-01-01..2025-08-29",
-    "2026-01-01..2026-08-29"
+    "2022-01-01..2022-08-31",
+    "2023-01-01..2023-08-31",
+    "2024-01-01..2024-08-31",
+    "2025-01-01..2025-08-31",
+    "2026-01-01..2026-08-31"
   ],
   "repositories_requested": 100,
   "repositories_complete": 100,
   "rows": 500,
   "errors": [],
-  "http_requests": 1,
+  "http_requests": 101,
   "graphql_rate_limit": {
     "limit": 5000,
     "used": 0,
     "remaining": 5000,
-    "reset": 1788102224
+    "reset": 1788257341
   },
   "2026_replication_differences": [],
   "output": "insights/260912_open_collaboration_ai/research/collaboration-repository-fixed-window-2022-2026.csv",
@@ -26,6 +26,6 @@
     "The panel freezes the current Top 100 and therefore has survivorship bias; it is not a historical Top 100 for each year.",
     "Repository creation dates determine structural non-observation before a repository became public.",
     "GitHub Search counts are aggregate results. The complete 2026 row is replicated against the independently collected monthly panel.",
-    "Unresolved counts follow the matched cohort opened inside each Jan 1-Aug 29 window and exclude older backlog."
+    "Unresolved counts follow the matched cohort opened inside each Jan 1-Aug 31 window and exclude older backlog."
   ]
 }

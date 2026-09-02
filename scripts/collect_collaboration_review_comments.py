@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect inline pull-request review comments for the probability thread sample."""
+"""Collect inline review comments for PRs in the fixed repository sample."""
 
 from __future__ import annotations
 
@@ -7,7 +7,9 @@ import argparse
 import csv
 import json
 import os
+import threading
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -36,6 +38,32 @@ STATUS_FIELDS = [
     "error",
 ]
 
+GRAPHQL_QUERY = """
+query PullRequestReviewComments($ids: [ID!]!) {
+  nodes(ids: $ids) {
+    ... on PullRequest {
+      id
+      reviewThreads(first: 100) {
+        nodes {
+          comments(first: 100) {
+            nodes {
+              databaseId
+              createdAt
+              body
+              author { login __typename }
+              authorAssociation
+              commit { oid }
+            }
+            pageInfo { hasNextPage }
+          }
+        }
+        pageInfo { hasNextPage }
+      }
+    }
+  }
+}
+"""
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
@@ -44,6 +72,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--status", type=Path, default=DEFAULT_STATUS)
     parser.add_argument("--run-output", type=Path, default=DEFAULT_RUN)
     parser.add_argument("--max-repos", type=int)
+    parser.add_argument("--workers", type=int, default=8)
+    parser.add_argument("--transport", choices=("rest", "graphql"), default="rest")
+    parser.add_argument("--batch-size", type=int, default=30)
     parser.add_argument("--fresh", action="store_true")
     return parser.parse_args()
 
@@ -95,6 +126,113 @@ def display_path(path: Path) -> str:
         return str(path.resolve())
 
 
+def chunks(rows: list[dict[str, str]], size: int) -> list[list[dict[str, str]]]:
+    return [rows[index : index + size] for index in range(0, len(rows), size)]
+
+
+def graphql_review_event(sample_row: dict[str, str], node: dict[str, Any], collected_at: str) -> dict[str, Any]:
+    author = node.get("author") if isinstance(node.get("author"), dict) else {}
+    return normalize(
+        sample_row,
+        {
+            "id": node.get("databaseId", ""),
+            "created_at": node.get("createdAt", ""),
+            "body": node.get("body", ""),
+            "user": {"login": author.get("login", ""), "type": author.get("__typename", "")}
+            if author.get("login") else None,
+            "author_association": node.get("authorAssociation", ""),
+            "commit_id": ((node.get("commit") or {}).get("oid", "")),
+        },
+        collected_at,
+    )
+
+
+def collect_graphql(args: argparse.Namespace, sample: list[dict[str, str]], token: str) -> None:
+    client = GitHubClient(token)
+    existing_events = [] if args.fresh else read_csv(args.output)
+    existing_statuses = [] if args.fresh else read_csv(args.status)
+    completed = {
+        (row["repo_name"], row["number"])
+        for row in existing_statuses
+        if row.get("scan_status") in {"ok", "missing_endpoint"}
+    }
+    pending = [row for row in sample if (row["repo_name"], row["number"]) not in completed]
+    events_by_key: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
+    for row in existing_events:
+        events_by_key[(row["repo_name"], row["number"])].append(row)
+    status_by_key = {(row["repo_name"], row["number"]): row for row in existing_statuses}
+    started_at = datetime.now(UTC).isoformat()
+    batches = chunks(pending, args.batch_size)
+    for index, batch in enumerate(batches, start=1):
+        print(f"[{index}/{len(batches)}] {len(batch)} pull requests via GraphQL", flush=True)
+        collected_at = datetime.now(UTC).isoformat()
+        try:
+            data = client.graphql(GRAPHQL_QUERY, {"ids": [row["node_id"] for row in batch]})
+            nodes = data.get("nodes") or []
+            for sample_row, node in zip(batch, nodes, strict=False):
+                key = sample_row["repo_name"], sample_row["number"]
+                connection = (node or {}).get("reviewThreads") or {}
+                thread_nodes = connection.get("nodes") or []
+                truncated = (connection.get("pageInfo") or {}).get("hasNextPage") or any(
+                    ((thread.get("comments") or {}).get("pageInfo") or {}).get("hasNextPage")
+                    for thread in thread_nodes
+                )
+                if not node:
+                    status_by_key[key] = {
+                        "sample_rank": sample_row["sample_rank"], "repo_name": sample_row["repo_name"],
+                        "number": sample_row["number"], "scan_status": "error", "error": "GraphQL PR node missing",
+                    }
+                    continue
+                if truncated:
+                    status_by_key[key] = {
+                        "sample_rank": sample_row["sample_rank"], "repo_name": sample_row["repo_name"],
+                        "number": sample_row["number"], "scan_status": "error",
+                        "error": "GraphQL review-comment connection exceeds 100 rows; retry with REST",
+                    }
+                    continue
+                raw_comments = [comment for thread in thread_nodes for comment in ((thread.get("comments") or {}).get("nodes") or [])]
+                collected = [graphql_review_event(sample_row, item, collected_at) for item in raw_comments]
+                events_by_key[key] = collected
+                status_by_key[key] = {
+                    "sample_rank": sample_row["sample_rank"], "repo_name": sample_row["repo_name"],
+                    "number": sample_row["number"], "review_comments": len(collected), "pages": 1,
+                    "endpoint_status": "ok", "scan_status": "ok", "error": "",
+                }
+        except Exception as exc:
+            for sample_row in batch:
+                key = sample_row["repo_name"], sample_row["number"]
+                status_by_key[key] = {
+                    "sample_rank": sample_row["sample_rank"], "repo_name": sample_row["repo_name"],
+                    "number": sample_row["number"], "scan_status": "error", "error": str(exc)[:500],
+                }
+        ordered_events = [event for row in sample for event in events_by_key.get((row["repo_name"], row["number"]), [])]
+        ordered_status = [status_by_key[(row["repo_name"], row["number"])] for row in sample if (row["repo_name"], row["number"]) in status_by_key]
+        write_csv(args.output, EVENT_FIELDS, ordered_events)
+        write_csv(args.status, STATUS_FIELDS, ordered_status)
+
+    relevant = [status_by_key[(row["repo_name"], row["number"])] for row in sample if (row["repo_name"], row["number"]) in status_by_key]
+    ordered_events = [event for row in sample for event in events_by_key.get((row["repo_name"], row["number"]), [])]
+    run = {
+        "started_at": started_at,
+        "completed_at": datetime.now(UTC).isoformat(),
+        "transport": "graphql",
+        "repositories": len({row["repo_name"] for row in sample}),
+        "pull_requests": len(sample),
+        "threads_complete": sum(row.get("scan_status") == "ok" for row in relevant),
+        "missing_endpoints": sum(row.get("scan_status") == "missing_endpoint" for row in relevant),
+        "errors": [row for row in relevant if row.get("scan_status") == "error"],
+        "review_comments": len(ordered_events),
+        "http_requests": client.requests,
+        "outputs": [display_path(args.output), display_path(args.status)],
+        "limitations": [
+            "GraphQL batches collect up to 100 review threads and 100 comments per thread; larger PRs are left for REST retry.",
+            "A review comment records visible discussion, not whether the suggestion was correct or adopted.",
+        ],
+    }
+    args.run_output.write_text(json.dumps(run, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(json.dumps(run, ensure_ascii=False, indent=2), flush=True)
+
+
 def main() -> None:
     args = parse_args()
     sample = [row for row in read_csv(args.sample) if row.get("item_type") == "pull_request"]
@@ -109,7 +247,46 @@ def main() -> None:
     token = (os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN") or "").strip()
     if not token:
         raise SystemExit("GITHUB_TOKEN or GH_TOKEN is required")
-    client = GitHubClient(token)
+    if args.transport == "graphql":
+        collect_graphql(args, sample, token)
+        return
+    thread_local = threading.local()
+    worker_clients: list[GitHubClient] = []
+    clients_lock = threading.Lock()
+
+    def worker_client() -> GitHubClient:
+        client = getattr(thread_local, "client", None)
+        if client is None:
+            client = GitHubClient(token)
+            thread_local.client = client
+            with clients_lock:
+                worker_clients.append(client)
+        return client
+
+    def collect_one(sample_row: dict[str, str]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        collected_at = datetime.now(UTC).isoformat()
+        try:
+            comments, pages, endpoint_status = paginate(
+                worker_client(), f"/repos/{sample_row['repo_name']}/pulls/{sample_row['number']}/comments"
+            )
+            return [normalize(sample_row, item, collected_at) for item in comments], {
+                "sample_rank": sample_row["sample_rank"],
+                "repo_name": sample_row["repo_name"],
+                "number": sample_row["number"],
+                "review_comments": len(comments),
+                "pages": pages,
+                "endpoint_status": endpoint_status,
+                "scan_status": "ok" if endpoint_status == "ok" else "missing_endpoint",
+                "error": "",
+            }
+        except Exception as exc:
+            return [], {
+                "sample_rank": sample_row["sample_rank"],
+                "repo_name": sample_row["repo_name"],
+                "number": sample_row["number"],
+                "scan_status": "error",
+                "error": str(exc)[:500],
+            }
     events = [] if args.fresh else read_csv(args.output)
     statuses = [] if args.fresh else read_csv(args.status)
     completed = {
@@ -122,6 +299,7 @@ def main() -> None:
         print(f"[{index}/{len(repos)}] {repo}", flush=True)
         repo_events = [row for row in events if row.get("repo_name") != repo]
         repo_status = [row for row in statuses if row.get("repo_name") != repo]
+        pending = []
         for sample_row in grouped[repo]:
             key = repo, sample_row["number"]
             if key in completed:
@@ -136,34 +314,12 @@ def main() -> None:
                     if row.get("repo_name") == repo and row.get("number") == sample_row["number"]
                 )
                 continue
-            collected_at = datetime.now(UTC).isoformat()
-            try:
-                comments, pages, endpoint_status = paginate(
-                    client, f"/repos/{repo}/pulls/{sample_row['number']}/comments"
-                )
-                repo_events.extend(normalize(sample_row, item, collected_at) for item in comments)
-                repo_status.append(
-                    {
-                        "sample_rank": sample_row["sample_rank"],
-                        "repo_name": repo,
-                        "number": sample_row["number"],
-                        "review_comments": len(comments),
-                        "pages": pages,
-                        "endpoint_status": endpoint_status,
-                        "scan_status": "ok" if endpoint_status == "ok" else "missing_endpoint",
-                        "error": "",
-                    }
-                )
-            except Exception as exc:
-                repo_status.append(
-                    {
-                        "sample_rank": sample_row["sample_rank"],
-                        "repo_name": repo,
-                        "number": sample_row["number"],
-                        "scan_status": "error",
-                        "error": str(exc)[:500],
-                    }
-                )
+            pending.append(sample_row)
+        if pending:
+            with ThreadPoolExecutor(max_workers=args.workers) as executor:
+                for collected_events, status in executor.map(collect_one, pending):
+                    repo_events.extend(collected_events)
+                    repo_status.append(status)
         events = repo_events
         statuses = repo_status
         write_csv(args.output, EVENT_FIELDS, events)
@@ -178,7 +334,7 @@ def main() -> None:
         "missing_endpoints": sum(row.get("scan_status") == "missing_endpoint" for row in relevant),
         "errors": [row for row in relevant if row.get("scan_status") == "error"],
         "review_comments": len(events),
-        "http_requests": client.requests,
+        "http_requests": sum(client.requests for client in worker_clients),
         "outputs": [display_path(args.output), display_path(args.status)],
         "limitations": [
             "Inline review comments are collected separately because the Issue timeline does not contain them.",

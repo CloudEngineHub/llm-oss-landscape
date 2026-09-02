@@ -29,7 +29,7 @@ DEFAULT_RUN_OUTPUT = ROOT / (
     "collaboration-repository-year-run-260829.json"
 )
 YEARS = range(2022, 2027)
-OBSERVATION_END_EXCLUSIVE = "2026-08-30"
+OBSERVATION_END_EXCLUSIVE = "2026-09-01"
 
 
 OUTPUT_FIELDS = [
@@ -260,7 +260,7 @@ def build_panel(
                 "year": year,
                 "observation_status": status,
                 "observation_end": (
-                    "2026-08-29" if year == 2026 else f"{year}-12-31"
+                    "2026-08-31" if year == 2026 else f"{year}-12-31"
                 ),
                 "created_at": repo["created_at"],
                 "llm_native_manual": repo["llm_native_manual"],
@@ -314,7 +314,7 @@ def main() -> None:
         "clickhouse_query_id": metadata["query_id"],
         "clickhouse_summary": metadata["summary"],
         "limitations": [
-            "2026 is year-to-date through 2026-08-29.",
+            "2026 is year-to-date through 2026-08-31.",
             "No event row is not interpreted as zero collaboration.",
             "ClickHouse aggregates support trends and cross-checks; item-level GitHub APIs remain the source for current Issue and PR truth.",
             "Bot counts only use public actor types on author and comment fields and do not infer undisclosed AI assistance.",

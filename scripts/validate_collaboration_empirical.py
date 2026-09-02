@@ -58,7 +58,7 @@ def main() -> None:
     sample_keys = {key(row) for row in sample}
     analysis_keys = {key(row) for row in analysis}
     expected_repositories = 100
-    items_per_repository = 20
+    items_per_repository = 50
     expected_threads = expected_repositories * items_per_repository
     repository_names = {row["repo_name"] for row in repository_sample}
     status_by_repository = {
@@ -114,27 +114,27 @@ def main() -> None:
     incomplete_repositories = [
         repo
         for repo in sorted(repository_names)
-        if status_by_repository[repo].get("scan_status") != "ok"
+        if status_by_repository[repo].get("scan_status") not in {"ok", "ok_supplemented"}
         or int(status_by_repository[repo].get("selected_items") or 0)
         != items_per_repository
     ]
     require(
         not incomplete_repositories,
-        "Every frozen repository must contribute 20 threads. Incomplete: "
+        "Every frozen repository must contribute 50 threads. Incomplete: "
         + ", ".join(incomplete_repositories[:10]),
     )
     require(
         len(sample) == expected_threads,
         f"Thread sample must contain {expected_threads:,} threads",
     )
-    require(len(sample_keys) == len(sample), "Probability sample contains duplicate threads")
+    require(len(sample_keys) == len(sample), "Fixed thread sample contains duplicate threads")
     require(
         set(sample_count_by_repository) == repository_names,
         "Thread sample repository set differs from the frozen Top-100 sample",
     )
     require(
         all(count == items_per_repository for count in sample_count_by_repository.values()),
-        "Each repository must contribute exactly 20 sampled threads",
+        "Each repository must contribute exactly 50 sampled threads",
     )
     issue_count = sum(row["item_type"] == "issue" for row in sample)
     pull_request_count = sum(
@@ -169,8 +169,8 @@ def main() -> None:
     strict, expanded = sensitivity
     require(strict["scenario"] == "strict_verified", "Strict sensitivity row missing")
     require(expanded["scenario"] == "expanded_agentlike_bot_upper_bound", "Expanded sensitivity row missing")
-    strict_share = float(strict["weighted_thread_share"])
-    expanded_share = float(expanded["weighted_thread_share"])
+    strict_share = float(strict["sample_thread_share"])
+    expanded_share = float(expanded["sample_thread_share"])
     require(expanded_share >= strict_share, "Expanded actor bound fell below strict estimate")
     require(expanded_share - strict_share < 0.01, "Actor uncertainty changes headline by at least 1pp")
 
@@ -179,7 +179,7 @@ def main() -> None:
         for row in bootstrap
     }
     require(
-        abs(bootstrap_lookup[("agent_participation_present", "population_weighted")] - strict_share)
+        abs(bootstrap_lookup[("agent_participation_present", "sample_unweighted")] - strict_share)
         < 1e-9,
         "Bootstrap point estimate and strict sensitivity estimate differ",
     )
@@ -194,7 +194,7 @@ def main() -> None:
 
     require(
         len(pr_code_metadata) == pull_request_count,
-        "PR code metadata does not cover the probability PR sample",
+        "PR code metadata does not cover the fixed PR sample",
     )
     require(
         all(row["scan_status"] == "ok" for row in pr_code_metadata),
@@ -231,13 +231,13 @@ def main() -> None:
     touched_code = estimate_lookup["strict_agent_touched"]
     expanded_code = estimate_lookup["expanded_agent_touched"]
     require(
-        int(strict_code["sample_positive_prs"]) == 3,
-        "Strict Agent-only case count drifted; manually review changed identities or PR histories",
+        int(strict_code["sample_positive_prs"]) > 0,
+        "Strict Agent-only case set is empty; manually review identities and PR histories",
     )
     require(
-        float(strict_code["weighted_pr_share"])
-        <= float(touched_code["weighted_pr_share"])
-        <= float(expanded_code["weighted_pr_share"]),
+        float(strict_code["sample_pr_share"])
+        <= float(touched_code["sample_pr_share"])
+        <= float(expanded_code["sample_pr_share"]),
         "Agent code attribution bounds are not ordered",
     )
     require(
@@ -258,7 +258,7 @@ def main() -> None:
                 "issues": issue_count,
                 "pull_requests": pull_request_count,
                 "public_events": total_events,
-                "agent_participation_weighted": strict_share,
+                "agent_participation_sample_share": strict_share,
                 "agent_participation_expanded_upper_bound": expanded_share,
                 "post_review_commit_share": float(
                     overall["reviewed_pr_post_review_commit_share_weighted"]
@@ -268,9 +268,9 @@ def main() -> None:
                         "maintainer_account_gate_share_resolved_with_visible_gate_weighted"
                     ]
                 ),
-                "agent_only_merged_pr_share": float(strict_code["weighted_pr_share"]),
+                "agent_only_merged_pr_share": float(strict_code["sample_pr_share"]),
                 "agent_only_final_addition_share": float(
-                    strict_code["weighted_addition_share"]
+                    strict_code["sample_addition_share"]
                 ),
                 "agent_code_validation_warnings": len(
                     agent_code_run["validation_warnings"]

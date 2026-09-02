@@ -26,7 +26,7 @@ WINDOWS = {
     2023: (date(2023, 1, 1), date(2023, 12, 31)),
     2024: (date(2024, 1, 1), date(2024, 12, 31)),
     2025: (date(2025, 1, 1), date(2025, 12, 31)),
-    2026: (date(2026, 1, 1), date(2026, 8, 29)),
+    2026: (date(2026, 1, 1), date(2026, 8, 31)),
 }
 
 FIELDS = [
@@ -193,7 +193,7 @@ def main() -> None:
             "The comparison panel is purposively selected for long-lived, active projects and is not a causal matched control group.",
             "Each annual denominator is the cohort created inside that calendar-year window; older backlog is excluded.",
             "GitHub Search counts can be revised by later reopen events, so direction and magnitude require a repeat collection before publication.",
-            "The 2026 window ends on 29 August and is not directly comparable to a full calendar year without monthly normalization.",
+            "The 2026 window ends on 31 August and is not directly comparable to a full calendar year without monthly normalization.",
         ],
     }
     args.run_output.write_text(json.dumps(run, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

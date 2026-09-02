@@ -1,3 +1,17 @@
 actor_login,github_types,repository_count,thread_count,performed_via_apps,reason
-agent-framework-automation[bot],Bot,1,2,,Agent-like Bot/App identity without manually confirmed function
-review-notebook-app[bot],Bot,1,1,review-notebook-app,Agent-like Bot/App identity without manually confirmed function
+gemini-code-assist,Bot|User,16,175,,Agent-like Bot/App identity without manually confirmed function
+chatgpt-codex-connector,Bot,14,77,,Agent-like Bot/App identity without manually confirmed function
+copilot-pull-request-reviewer,Bot,19,72,,Agent-like Bot/App identity without manually confirmed function
+devin-ai-integration,Bot,2,13,,Agent-like Bot/App identity without manually confirmed function
+autofix-ci[bot],User,2,9,,Agent-like Bot/App identity without manually confirmed function
+kilo-code-bot,Bot,1,6,,Agent-like Bot/App identity without manually confirmed function
+agent-framework-automation[bot],Bot,1,5,,Agent-like Bot/App identity without manually confirmed function
+veria-ai[bot],Bot,1,3,veria-ai,Agent-like Bot/App identity without manually confirmed function
+copilot-swe-agent,Bot,2,2,,Agent-like Bot/App identity without manually confirmed function
+review-notebook-app[bot],Bot,2,2,review-notebook-app,Agent-like Bot/App identity without manually confirmed function
+supabase-supabase-autofixer[bot],Bot,1,2,,Agent-like Bot/App identity without manually confirmed function
+autogpt-pr-reviewer,Bot,1,1,,Agent-like Bot/App identity without manually confirmed function
+cline-cloud,Bot,1,1,,Agent-like Bot/App identity without manually confirmed function
+cline-cloud[bot],Bot,1,1,,Agent-like Bot/App identity without manually confirmed function
+cloud-code-bot[bot],Bot|User,1,1,,Agent-like Bot/App identity without manually confirmed function
+gru-agent[bot],Bot,1,1,gru-agent,Agent-like Bot/App identity without manually confirmed function

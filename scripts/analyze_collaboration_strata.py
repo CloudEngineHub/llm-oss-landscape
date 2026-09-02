@@ -139,8 +139,8 @@ def main() -> None:
     for row in threads:
         threads_by_repo[row["repo_name"]].append(row)
     for repo in sample_by_repo:
-        if len(threads_by_repo[repo]) != 20:
-            raise SystemExit(f"{repo} has {len(threads_by_repo[repo])} analyzed threads; expected 20")
+        if len(threads_by_repo[repo]) != 50:
+            raise SystemExit(f"{repo} has {len(threads_by_repo[repo])} analyzed threads; expected 50")
         for metric, (_, field, scope) in THREAD_METRICS.items():
             rows = [row for row in threads_by_repo[repo] if eligible(row, scope)]
             repo_values[repo][metric] = float(np.mean([yes(row[field]) for row in rows])) if rows else float("nan")
@@ -209,7 +209,7 @@ def main() -> None:
     lines = [
         "# 不同类型仓库的 Agent marker 与协作模式比较",
         "",
-        "这里先把每个仓库的 20 条线程压成一个仓库级比例，再比较仓库类型。这样做是为了避免 PyTorch 一类大仓库因为线程总量大，就在统计上拥有几十倍于小仓库的话语权。",
+        "这里把每个仓库的 50 条线程压成一个仓库级比例，再比较仓库类型。每个仓库的样本量相同，不再按仓库总流量加权。",
         "",
         "## 先说结论",
         "",

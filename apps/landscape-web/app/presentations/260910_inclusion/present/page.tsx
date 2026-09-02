@@ -13,12 +13,9 @@ export default function InclusionPresentationPage() {
   const { projects, stats: researchStats } = getInclusionResearchData();
   const agentProjects = projects.filter((project) => project.stage !== "model");
   const modelProjects = projects.filter((project) => project.stage === "model");
-  const rankedProjects = projects
-    .filter((project) => project.openrank !== null)
-    .sort((a, b) => (b.openrank ?? 0) - (a.openrank ?? 0));
-
   return (
     <InclusionPresentation
+      projects={projects}
       stats={{
         ...researchStats,
         agentParticipants: agentProjects.reduce(
@@ -29,26 +26,6 @@ export default function InclusionPresentationPage() {
           (total, project) => total + (project.participants ?? 0),
           0,
         ),
-        agentTrend: Array.from({ length: 12 }, (_, index) =>
-          Math.round(
-            agentProjects.reduce(
-              (total, project) => total + (project.trend[index] ?? 0),
-              0,
-            ),
-          ),
-        ),
-        modelTrend: Array.from({ length: 12 }, (_, index) =>
-          Math.round(
-            modelProjects.reduce(
-              (total, project) => total + (project.trend[index] ?? 0),
-              0,
-            ),
-          ),
-        ),
-        leaders: rankedProjects.slice(0, 3).map((project) => ({
-          name: project.name,
-          openrank: project.openrank ?? 0,
-        })),
       }}
     />
   );

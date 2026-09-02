@@ -5,39 +5,39 @@ llm_identity,traditional,agent_marker_instruction,仓库存在 Agent 指令文�
 llm_identity,llm_native,agent_marker_any,仓库存在任一活跃 Agent marker,68,0.926471,0.852941,0.985294,repository-level share
 llm_identity,mixed,agent_marker_any,仓库存在任一活跃 Agent marker,14,1.0,1.0,1.0,repository-level share
 llm_identity,traditional,agent_marker_any,仓库存在任一活跃 Agent marker,18,0.833333,0.611111,1.0,repository-level share
-llm_identity,llm_native,agent_participation,Agent 参与线程,68,0.435294,0.3625,0.511048,repository-level share
-llm_identity,mixed,agent_participation,Agent 参与线程,14,0.575,0.439286,0.703661,repository-level share
-llm_identity,traditional,agent_participation,Agent 参与线程,18,0.286111,0.175,0.413889,repository-level share
-llm_identity,llm_native,agent_opened_thread,Agent 发起线程,68,0.014706,0.004412,0.027941,repository-level share
-llm_identity,mixed,agent_opened_thread,Agent 发起线程,14,0.028571,0.0,0.064286,repository-level share
-llm_identity,traditional,agent_opened_thread,Agent 发起线程,18,0.002778,0.0,0.008333,repository-level share
-llm_identity,llm_native,agent_response,Agent 参与回复,68,0.383088,0.311765,0.452941,repository-level share
-llm_identity,mixed,agent_response,Agent 参与回复,14,0.510714,0.389286,0.642857,repository-level share
-llm_identity,traditional,agent_response,Agent 参与回复,18,0.263889,0.15,0.4,repository-level share
-llm_identity,llm_native,human_conversation,有人类账号参与对话,68,0.977206,0.966176,0.986765,repository-level share
-llm_identity,mixed,human_conversation,有人类账号参与对话,14,0.967857,0.935714,0.992857,repository-level share
-llm_identity,traditional,human_conversation,有人类账号参与对话,18,0.936111,0.852778,0.986111,repository-level share
-llm_identity,llm_native,maintainer_present,维护者账号参与,68,0.543382,0.475735,0.609577,repository-level share
-llm_identity,mixed,maintainer_present,维护者账号参与,14,0.589286,0.457143,0.700089,repository-level share
-llm_identity,traditional,maintainer_present,维护者账号参与,18,0.433333,0.325,0.55,repository-level share
-llm_identity,llm_native,automation_only_response,回复只有自动化账号,68,0.255147,0.207353,0.302941,repository-level share
-llm_identity,mixed,automation_only_response,回复只有自动化账号,14,0.217857,0.160714,0.275,repository-level share
-llm_identity,traditional,automation_only_response,回复只有自动化账号,18,0.1,0.058333,0.147222,repository-level share
-llm_identity,llm_native,external_pr,外部贡献者发起 PR,68,0.646451,0.584549,0.705574,repository-level share
-llm_identity,mixed,external_pr,外部贡献者发起 PR,14,0.629455,0.510782,0.756729,repository-level share
-llm_identity,traditional,external_pr,外部贡献者发起 PR,18,0.788665,0.713181,0.860296,repository-level share
-llm_identity,llm_native,agent_review,Agent 参与 review,68,0.396761,0.318663,0.473456,repository-level share
-llm_identity,mixed,agent_review,Agent 参与 review,14,0.426645,0.290851,0.564,repository-level share
-llm_identity,traditional,agent_review,Agent 参与 review,18,0.242853,0.133528,0.369513,repository-level share
-llm_identity,llm_native,human_review,人类账号参与 review,68,0.456567,0.390546,0.521482,repository-level share
-llm_identity,mixed,human_review,人类账号参与 review,14,0.593402,0.459322,0.706553,repository-level share
-llm_identity,traditional,human_review,人类账号参与 review,18,0.697727,0.60713,0.769999,repository-level share
-llm_identity,llm_native,visible_review,存在可见 review,68,0.644398,0.577919,0.707875,repository-level share
-llm_identity,mixed,visible_review,存在可见 review,14,0.745819,0.647352,0.83129,repository-level share
-llm_identity,traditional,visible_review,存在可见 review,18,0.760069,0.673243,0.829827,repository-level share
-llm_identity,llm_native,post_review_commit,review 后继续提交,65,0.529391,0.469429,0.591011,repository-level share
-llm_identity,mixed,post_review_commit,review 后继续提交,14,0.517859,0.420361,0.630558,repository-level share
-llm_identity,traditional,post_review_commit,review 后继续提交,18,0.51232,0.448447,0.578781,repository-level share
+llm_identity,llm_native,agent_participation,Agent 参与线程,68,0.444412,0.369699,0.522941,repository-level share
+llm_identity,mixed,agent_participation,Agent 参与线程,14,0.562857,0.415714,0.705714,repository-level share
+llm_identity,traditional,agent_participation,Agent 参与线程,18,0.281111,0.174444,0.404444,repository-level share
+llm_identity,llm_native,agent_opened_thread,Agent 发起线程,68,0.018824,0.004706,0.040882,repository-level share
+llm_identity,mixed,agent_opened_thread,Agent 发起线程,14,0.028571,0.005714,0.06,repository-level share
+llm_identity,traditional,agent_opened_thread,Agent 发起线程,18,0.003333,0.0,0.01,repository-level share
+llm_identity,llm_native,agent_response,Agent 参与回复,68,0.390294,0.317059,0.462647,repository-level share
+llm_identity,mixed,agent_response,Agent 参与回复,14,0.501429,0.368571,0.635714,repository-level share
+llm_identity,traditional,agent_response,Agent 参与回复,18,0.262222,0.151083,0.387778,repository-level share
+llm_identity,llm_native,human_conversation,有人类账号参与对话,68,0.977059,0.96764,0.984706,repository-level share
+llm_identity,mixed,human_conversation,有人类账号参与对话,14,0.961429,0.932857,0.984286,repository-level share
+llm_identity,traditional,human_conversation,有人类账号参与对话,18,0.94,0.867778,0.982222,repository-level share
+llm_identity,llm_native,maintainer_present,维护者账号参与,68,0.548529,0.478228,0.615301,repository-level share
+llm_identity,mixed,maintainer_present,维护者账号参与,14,0.57,0.451429,0.672857,repository-level share
+llm_identity,traditional,maintainer_present,维护者账号参与,18,0.438889,0.346667,0.533333,repository-level share
+llm_identity,llm_native,automation_only_response,回复只有自动化账号,68,0.261471,0.216176,0.308529,repository-level share
+llm_identity,mixed,automation_only_response,回复只有自动化账号,14,0.225714,0.171429,0.282857,repository-level share
+llm_identity,traditional,automation_only_response,回复只有自动化账号,18,0.11,0.071111,0.153333,repository-level share
+llm_identity,llm_native,external_pr,外部贡献者发起 PR,68,0.658446,0.598844,0.716037,repository-level share
+llm_identity,mixed,external_pr,外部贡献者发起 PR,14,0.660866,0.554144,0.775218,repository-level share
+llm_identity,traditional,external_pr,外部贡献者发起 PR,18,0.769108,0.709188,0.828124,repository-level share
+llm_identity,llm_native,agent_review,Agent 参与 review,68,0.403825,0.328598,0.477557,repository-level share
+llm_identity,mixed,agent_review,Agent 参与 review,14,0.417703,0.292436,0.54231,repository-level share
+llm_identity,traditional,agent_review,Agent 参与 review,18,0.238803,0.134357,0.362079,repository-level share
+llm_identity,llm_native,human_review,人类账号参与 review,68,0.460618,0.398112,0.520709,repository-level share
+llm_identity,mixed,human_review,人类账号参与 review,14,0.581188,0.473863,0.677821,repository-level share
+llm_identity,traditional,human_review,人类账号参与 review,18,0.693151,0.604351,0.763918,repository-level share
+llm_identity,llm_native,visible_review,存在可见 review,68,0.654845,0.59011,0.716813,repository-level share
+llm_identity,mixed,visible_review,存在可见 review,14,0.73672,0.650492,0.814386,repository-level share
+llm_identity,traditional,visible_review,存在可见 review,18,0.765617,0.681962,0.830841,repository-level share
+llm_identity,llm_native,post_review_commit,review 后继续提交,66,0.53935,0.492068,0.583121,repository-level share
+llm_identity,mixed,post_review_commit,review 后继续提交,14,0.534029,0.477811,0.58807,repository-level share
+llm_identity,traditional,post_review_commit,review 后继续提交,18,0.511103,0.452454,0.571498,repository-level share
 technical_area,agent_application,agent_marker_instruction,仓库存在 Agent 指令文件,28,0.857143,0.714286,0.964286,repository-level share
 technical_area,agent_framework,agent_marker_instruction,仓库存在 Agent 指令文件,21,0.952381,0.857143,1.0,repository-level share
 technical_area,agent_runtime_infra,agent_marker_instruction,仓库存在 Agent 指令文件,15,0.933333,0.8,1.0,repository-level share
@@ -46,47 +46,47 @@ technical_area,agent_application,agent_marker_any,仓库存在任一活跃 Agent
 technical_area,agent_framework,agent_marker_any,仓库存在任一活跃 Agent marker,21,0.952381,0.857143,1.0,repository-level share
 technical_area,agent_runtime_infra,agent_marker_any,仓库存在任一活跃 Agent marker,15,1.0,1.0,1.0,repository-level share
 technical_area,model_infra,agent_marker_any,仓库存在任一活跃 Agent marker,36,0.888889,0.777778,0.972222,repository-level share
-technical_area,agent_application,agent_participation,Agent 参与线程,28,0.396429,0.269643,0.525,repository-level share
-technical_area,agent_framework,agent_participation,Agent 参与线程,21,0.502381,0.388095,0.619048,repository-level share
-technical_area,agent_runtime_infra,agent_participation,Agent 参与线程,15,0.433333,0.26,0.60675,repository-level share
-technical_area,model_infra,agent_participation,Agent 参与线程,36,0.406944,0.316667,0.497222,repository-level share
-technical_area,agent_application,agent_opened_thread,Agent 发起线程,28,0.0125,0.001786,0.030357,repository-level share
-technical_area,agent_framework,agent_opened_thread,Agent 发起线程,21,0.040476,0.009524,0.078571,repository-level share
+technical_area,agent_application,agent_participation,Agent 参与线程,28,0.390714,0.267143,0.517161,repository-level share
+technical_area,agent_framework,agent_participation,Agent 参与线程,21,0.511429,0.387619,0.632405,repository-level share
+technical_area,agent_runtime_infra,agent_participation,Agent 参与线程,15,0.438667,0.26,0.618667,repository-level share
+technical_area,model_infra,agent_participation,Agent 参与线程,36,0.413889,0.322778,0.506111,repository-level share
+technical_area,agent_application,agent_opened_thread,Agent 发起线程,28,0.015,0.002857,0.031429,repository-level share
+technical_area,agent_framework,agent_opened_thread,Agent 发起线程,21,0.051429,0.010476,0.117143,repository-level share
 technical_area,agent_runtime_infra,agent_opened_thread,Agent 发起线程,15,0.0,0.0,0.0,repository-level share
-technical_area,model_infra,agent_opened_thread,Agent 发起线程,36,0.006944,0.0,0.015278,repository-level share
-technical_area,agent_application,agent_response,Agent 参与回复,28,0.358929,0.244643,0.478571,repository-level share
-technical_area,agent_framework,agent_response,Agent 参与回复,21,0.42381,0.309524,0.542917,repository-level share
-technical_area,agent_runtime_infra,agent_response,Agent 参与回复,15,0.356667,0.206667,0.51,repository-level share
-technical_area,model_infra,agent_response,Agent 参与回复,36,0.379167,0.293021,0.468056,repository-level share
-technical_area,agent_application,human_conversation,有人类账号参与对话,28,0.967857,0.948214,0.983929,repository-level share
-technical_area,agent_framework,human_conversation,有人类账号参与对话,21,0.964286,0.935714,0.985714,repository-level share
-technical_area,agent_runtime_infra,human_conversation,有人类账号参与对话,15,0.983333,0.97,0.993333,repository-level share
-technical_area,model_infra,human_conversation,有人类账号参与对话,36,0.965278,0.923611,0.990278,repository-level share
-technical_area,agent_application,maintainer_present,维护者账号参与,28,0.521429,0.416071,0.625,repository-level share
-technical_area,agent_framework,maintainer_present,维护者账号参与,21,0.430952,0.309524,0.552381,repository-level share
-technical_area,agent_runtime_infra,maintainer_present,维护者账号参与,15,0.656667,0.556667,0.753333,repository-level share
-technical_area,model_infra,maintainer_present,维护者账号参与,36,0.541667,0.455556,0.627778,repository-level share
-technical_area,agent_application,automation_only_response,回复只有自动化账号,28,0.276786,0.192857,0.3625,repository-level share
-technical_area,agent_framework,automation_only_response,回复只有自动化账号,21,0.292857,0.221429,0.361905,repository-level share
-technical_area,agent_runtime_infra,automation_only_response,回复只有自动化账号,15,0.17,0.096667,0.253333,repository-level share
-technical_area,model_infra,automation_only_response,回复只有自动化账号,36,0.159722,0.119444,0.201389,repository-level share
-technical_area,agent_application,external_pr,外部贡献者发起 PR,28,0.664126,0.567217,0.754829,repository-level share
-technical_area,agent_framework,external_pr,外部贡献者发起 PR,21,0.725319,0.62274,0.820492,repository-level share
-technical_area,agent_runtime_infra,external_pr,外部贡献者发起 PR,15,0.532142,0.422014,0.631065,repository-level share
-technical_area,model_infra,external_pr,外部贡献者发起 PR,36,0.698824,0.618844,0.774622,repository-level share
-technical_area,agent_application,agent_review,Agent 参与 review,28,0.39139,0.272855,0.512252,repository-level share
-technical_area,agent_framework,agent_review,Agent 参与 review,21,0.398709,0.278582,0.523258,repository-level share
-technical_area,agent_runtime_infra,agent_review,Agent 参与 review,15,0.32588,0.175804,0.497876,repository-level share
-technical_area,model_infra,agent_review,Agent 参与 review,36,0.364004,0.264927,0.46374,repository-level share
-technical_area,agent_application,human_review,人类账号参与 review,28,0.376354,0.265087,0.490082,repository-level share
-technical_area,agent_framework,human_review,人类账号参与 review,21,0.437796,0.334211,0.537491,repository-level share
-technical_area,agent_runtime_infra,human_review,人类账号参与 review,15,0.604101,0.496744,0.697757,repository-level share
-technical_area,model_infra,human_review,人类账号参与 review,36,0.642226,0.574235,0.707926,repository-level share
-technical_area,agent_application,visible_review,存在可见 review,28,0.570536,0.454112,0.688372,repository-level share
-technical_area,agent_framework,visible_review,存在可见 review,21,0.654593,0.556664,0.746323,repository-level share
-technical_area,agent_runtime_infra,visible_review,存在可见 review,15,0.73745,0.647162,0.824655,repository-level share
-technical_area,model_infra,visible_review,存在可见 review,36,0.754405,0.693377,0.809098,repository-level share
-technical_area,agent_application,post_review_commit,review 后继续提交,25,0.530464,0.429958,0.634991,repository-level share
-technical_area,agent_framework,post_review_commit,review 后继续提交,21,0.515704,0.41035,0.616656,repository-level share
-technical_area,agent_runtime_infra,post_review_commit,review 后继续提交,15,0.427945,0.326645,0.536321,repository-level share
-technical_area,model_infra,post_review_commit,review 后继续提交,36,0.565879,0.512181,0.621569,repository-level share
+technical_area,model_infra,agent_opened_thread,Agent 发起线程,36,0.006667,0.001111,0.013333,repository-level share
+technical_area,agent_application,agent_response,Agent 参与回复,28,0.337857,0.226429,0.450714,repository-level share
+technical_area,agent_framework,agent_response,Agent 参与回复,21,0.431429,0.313333,0.544762,repository-level share
+technical_area,agent_runtime_infra,agent_response,Agent 参与回复,15,0.374667,0.2133,0.545333,repository-level share
+technical_area,model_infra,agent_response,Agent 参与回复,36,0.392778,0.298319,0.486111,repository-level share
+technical_area,agent_application,human_conversation,有人类账号参与对话,28,0.961429,0.942857,0.977161,repository-level share
+technical_area,agent_framework,human_conversation,有人类账号参与对话,21,0.970476,0.949524,0.985714,repository-level share
+technical_area,agent_runtime_infra,human_conversation,有人类账号参与对话,15,0.985333,0.973333,0.996,repository-level share
+technical_area,model_infra,human_conversation,有人类账号参与对话,36,0.965,0.928889,0.987222,repository-level share
+technical_area,agent_application,maintainer_present,维护者账号参与,28,0.505,0.404982,0.602857,repository-level share
+technical_area,agent_framework,maintainer_present,维护者账号参与,21,0.449524,0.328571,0.567643,repository-level share
+technical_area,agent_runtime_infra,maintainer_present,维护者账号参与,15,0.650667,0.542667,0.753333,repository-level share
+technical_area,model_infra,maintainer_present,维护者账号参与,36,0.551111,0.473319,0.631667,repository-level share
+technical_area,agent_application,automation_only_response,回复只有自动化账号,28,0.280714,0.200714,0.364286,repository-level share
+technical_area,agent_framework,automation_only_response,回复只有自动化账号,21,0.306667,0.225714,0.385714,repository-level share
+technical_area,agent_runtime_infra,automation_only_response,回复只有自动化账号,15,0.170667,0.112,0.232,repository-level share
+technical_area,model_infra,automation_only_response,回复只有自动化账号,36,0.168333,0.128875,0.209458,repository-level share
+technical_area,agent_application,external_pr,外部贡献者发起 PR,28,0.697178,0.600277,0.787984,repository-level share
+technical_area,agent_framework,external_pr,外部贡献者发起 PR,21,0.718292,0.626528,0.806789,repository-level share
+technical_area,agent_runtime_infra,external_pr,外部贡献者发起 PR,15,0.56135,0.454429,0.659471,repository-level share
+technical_area,model_infra,external_pr,外部贡献者发起 PR,36,0.690139,0.619108,0.756474,repository-level share
+technical_area,agent_application,agent_review,Agent 参与 review,28,0.382891,0.268388,0.499715,repository-level share
+technical_area,agent_framework,agent_review,Agent 参与 review,21,0.405498,0.290208,0.525369,repository-level share
+technical_area,agent_runtime_infra,agent_review,Agent 参与 review,15,0.336136,0.18733,0.492068,repository-level share
+technical_area,model_infra,agent_review,Agent 参与 review,36,0.37022,0.274337,0.468662,repository-level share
+technical_area,agent_application,human_review,人类账号参与 review,28,0.380372,0.275996,0.477798,repository-level share
+technical_area,agent_framework,human_review,人类账号参与 review,21,0.436335,0.338053,0.534214,repository-level share
+technical_area,agent_runtime_infra,human_review,人类账号参与 review,15,0.616133,0.521821,0.695408,repository-level share
+technical_area,model_infra,human_review,人类账号参与 review,36,0.635553,0.566595,0.6976,repository-level share
+technical_area,agent_application,visible_review,存在可见 review,28,0.573696,0.456616,0.688427,repository-level share
+technical_area,agent_framework,visible_review,存在可见 review,21,0.648485,0.55125,0.739129,repository-level share
+technical_area,agent_runtime_infra,visible_review,存在可见 review,15,0.764677,0.686741,0.836216,repository-level share
+technical_area,model_infra,visible_review,存在可见 review,36,0.763134,0.707464,0.810636,repository-level share
+technical_area,agent_application,post_review_commit,review 后继续提交,26,0.539942,0.470679,0.607264,repository-level share
+technical_area,agent_framework,post_review_commit,review 后继续提交,21,0.499302,0.419416,0.569101,repository-level share
+technical_area,agent_runtime_infra,post_review_commit,review 后继续提交,15,0.485069,0.394787,0.572348,repository-level share
+technical_area,model_infra,post_review_commit,review 后继续提交,36,0.568708,0.523141,0.613325,repository-level share

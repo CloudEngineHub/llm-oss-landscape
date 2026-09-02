@@ -2,7 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeftIcon, ExternalLinkIcon, PlayIcon } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  DownloadIcon,
+  ExternalLinkIcon,
+  PlayIcon,
+} from "lucide-react";
 import {
   type CSSProperties,
   type ReactNode,
@@ -24,7 +29,6 @@ import type {
 } from "./research-data";
 import {
   CollaborationCasebook,
-  CollaborationCommitAttribution,
   CollaborationEvolution,
 } from "./collaboration-evidence";
 import { EditableText, ReportCopyEditor } from "./report-copy-editor";
@@ -104,7 +108,7 @@ const infraShifts = [
     openInfra:
       "SPIFFE/SPIRE already provides workload identity and delegated identity, while explicitly warning about impersonation risk.",
     openChallenge:
-      "Identity does not carry user intent. Tool scope, resource scope, approval state, budget and expiry still need to travel with the task.",
+      "An identity says who the workload is. The task still needs to carry which tools and resources it may use, who approved it, how much it may spend and when that authority expires.",
     href: "https://spiffe.io/docs/latest/deploying/spire_agent/",
   },
   {
@@ -128,13 +132,13 @@ const infraShifts = [
     before: "Teams inspect service requests, logs and resources",
     after: "Teams need to reconstruct a decision and its side effect",
     detail:
-      "A successful request does not show whether the agent made the right change. Useful evidence links model work, tool execution, sandbox events and the external result.",
+      "A successful request confirms transport, while the useful question is whether the Agent made the intended change. Answering it requires a trace from model work through tool execution and sandbox events to the external result.",
     mapSignal:
       "4 agent observability projects; the category is stable, while tool and protocol layers are growing around it.",
     openInfra:
       "OpenTelemetry is widely deployed, but its GenAI agent and tool conventions are still marked Development.",
     openChallenge:
-      "A trace still has to connect model work, tool execution and the external result. Critical evidence cannot depend only on the agent's own account.",
+      "The trace still has to connect model work, tool execution and the external result. Independent platform records are essential when the Agent itself is one of the actors being audited.",
     href: "https://github.com/open-telemetry/semantic-conventions-genai/blob/main/docs/gen-ai/gen-ai-agent-spans.md",
   },
   {
@@ -158,13 +162,13 @@ const infraShifts = [
     before: "A request follows a bounded downstream path",
     after: "One task can fan out across models and tools",
     detail:
-      "Calls may be serial, parallel or retried. The traffic is often bursty at task level, but public token totals do not reveal QPS, concurrency or fan-out.",
+      "Calls may be serial, parallel or retried. Public token totals combine those patterns, so task-level QPS, concurrency and fan-out remain hidden inside the aggregate.",
     mapSignal:
       "Tools, protocols and gateways are filling in around the application layer. Nine OpenRouter Top 20 apps align to the current landscape.",
     openInfra:
       "Agentgateway supports request and token limits, plus per-tool limits for MCP traffic.",
     openChallenge:
-      "Budgets, fan-out caps, backpressure and cancellation need to cross gateway, model, tool and runtime boundaries. Local counters are not exact global limits.",
+      "Budgets, fan-out caps, backpressure and cancellation need to cross gateway, model, tool and runtime boundaries. Agentgateway's local counters reset with the process, leaving task-wide limits to be coordinated across components.",
     href: "https://agentgateway.dev/docs/standalone/latest/configuration/resiliency/rate-limits/",
   },
 ] as const;
@@ -517,31 +521,43 @@ export default function InclusionConfStory({
     collaboration.repositoryProfile.repositoryItems.find(
       (item) => item.repo === profileRepository,
     ) ?? collaboration.repositoryProfile.repositoryItems[0];
-  const threadRows = [
-    {
-      label: "Agent participation",
-      tone: "agent",
-      values: [
-        collaboration.participationOpenerShare,
-        collaboration.agentReviewShare,
-        collaboration.agentGateShare,
-      ],
+  const collaborationStageCopy = {
+    opened: {
+      label: "Issue or pull request opened",
+      scope: `${collaboration.sampleThreads.toLocaleString("en-US")} sampled threads`,
+      interpretation:
+        "Agent-attributed openers remain unusual. Most work enters through a GitHub User account.",
     },
-    {
-      label: "GitHub User account",
-      tone: "user",
-      values: [null, collaboration.userReviewShare, collaboration.userGateShare],
+    response: {
+      label: "Someone responded after opening",
+      scope: `${collaboration.sampleThreads.toLocaleString("en-US")} sampled threads`,
+      interpretation:
+        "Named Agents are already part of discussion and triage, alongside User and repository-team accounts.",
     },
-    {
-      label: "Maintainer-associated account",
-      tone: "maintainer",
-      values: [
-        null,
-        collaboration.maintainerReviewShare,
-        collaboration.maintainerGateShare,
-      ],
+    review: {
+      label: "A pull request was reviewed",
+      scope: `${collaboration.samplePullRequests.toLocaleString("en-US")} sampled pull requests`,
+      interpretation:
+        "Review is the clearest public point of Agent participation in the contribution process.",
     },
-  ] as const;
+    "final-state": {
+      label: "Last public action that resolved the thread",
+      scope: `${collaboration.threadParticipationStages
+        .find((stage) => stage.id === "final-state")!
+        .denominator.toLocaleString("en-US")} resolved threads with an identifiable actor`,
+      interpretation:
+        "A GitHub User account performs the last visible merge, close or reopen action in most resolved threads.",
+    },
+  } as const;
+  const collaborationActorLabels = {
+    agent: "Named Agent or Agent-attributed App",
+    user: "GitHub User account",
+    repositoryTeam: "Repository team account",
+  } as const;
+  const collaborationStages = collaboration.threadParticipationStages.map((stage) => ({
+    ...stage,
+    ...collaborationStageCopy[stage.id],
+  }));
   const taskFootprint = [
     { label: "Review", value: collaboration.agentTaskEvents.review },
     { label: "Triage & routing", value: collaboration.agentTaskEvents.triage },
@@ -552,15 +568,15 @@ export default function InclusionConfStory({
   const taskMaximum = Math.max(...taskFootprint.map((item) => item.value));
   const iterationSignals = [
     {
-      label: "PRs with a visible review",
+      label: "Any review recorded · 2,522 / 3,567 PRs",
       value: collaboration.reviewedPrShare,
     },
     {
-      label: "Reviewed PRs with a later commit",
+      label: "Another commit after first review · 1,386 / 2,522 reviewed PRs",
       value: collaboration.reviewedPrFollowupCommitShare,
     },
     {
-      label: "Change requests with a later commit",
+      label: "Another commit after CHANGES_REQUESTED · 123 / 161 PRs",
       value: collaboration.changeRequestFollowupCommitShare,
     },
   ];
@@ -573,7 +589,7 @@ export default function InclusionConfStory({
       later: formatCompact(efficiency.population.later),
       change: `+${Math.round(efficiency.population.growth * 100)}%`,
       reading:
-        "The same repositories received 2.65 times as many new threads. This is the pressure entering the collaboration system, not a measure of work completed.",
+        "The same repositories received 2.65 times as many new threads, sharply increasing the queue that maintainers and automation had to process.",
     },
     {
       measure: "Threads with a visible Agent",
@@ -581,7 +597,7 @@ export default function InclusionConfStory({
       later: formatPercent(efficiency.adoption.allAgentsLater, 1),
       change: `+${((efficiency.adoption.allAgentsLater - efficiency.adoption.allAgentsEarlier) * 100).toFixed(1)} pp`,
       reading:
-        "Named Agents and Apps became visible in a majority of sampled threads by 2026. Public traces still miss undisclosed local tool use.",
+        "Named Agents and Apps became visible in a majority of sampled threads by 2026, up 20.9 percentage points from the same 2025 panel.",
     },
     {
       measure: "Human response within 7 days",
@@ -605,7 +621,7 @@ export default function InclusionConfStory({
       later: formatExperimentValue(panelMetric("issue_closed_30d").later, "percent"),
       change: `${((panelMetric("issue_closed_30d").later - panelMetric("issue_closed_30d").earlier) * 100).toFixed(1)} pp`,
       reading:
-        "Faster intake did not translate into faster Issue resolution inside the fixed 30-day window.",
+        "Only 38.4% of new Issues closed within 30 days in 2026, down 10.3 percentage points from 2025.",
     },
     {
       measure: "Pull requests merged within 30 days",
@@ -621,7 +637,7 @@ export default function InclusionConfStory({
       later: formatExperimentValue(panelMetric("maintainer_actions_30d").later, "count"),
       change: `${(panelMetric("maintainer_actions_30d").later - panelMetric("maintainer_actions_30d").earlier).toFixed(2)}`,
       reading:
-        "Visible maintainer attention per thread was essentially flat. It did not expand with the much larger incoming population.",
+        "Visible maintainer actions stayed near 1.4 per thread even as the same repositories received far more incoming work.",
     },
     {
       measure: "Estimated visible maintainer actions",
@@ -629,18 +645,18 @@ export default function InclusionConfStory({
       later: formatCompact(efficiency.maintainerActionEstimate.later),
       change: `+${Math.round(((efficiency.maintainerActionEstimate.later / efficiency.maintainerActionEstimate.earlier) - 1) * 100)}%`,
       reading:
-        "Flat attention per thread multiplied by much higher intake implies more total maintainer work. This is a volume-weighted estimate, not a census.",
+        "Applying the observed per-thread rate to the full intake suggests that total visible maintainer work rose with the much larger queue.",
     },
   ];
   const exposureInterpretation: Record<string, string> = {
     pr_merged_30d:
-      "The outcome is nearly unchanged. Early visible Agent activity does not correspond to a clear merge advantage in this sample.",
+      "The 30-day merge rate is nearly unchanged: 48.7% with an early visible Agent and 47.2% without one.",
     conversation_runs_30d:
       "Agent-visible threads move through more distinct rounds of public discussion.",
     maintainer_review_events_30d:
       "Maintainers leave more review events when an Agent is visible early.",
     commits_after_first_review_30d:
-      "More code revisions follow the first review, showing a denser correction loop rather than a shorter path to acceptance.",
+      "More commits follow the first review, adding another visible round of revision before the outcome is known.",
   };
 
   useEffect(() => {
@@ -689,29 +705,51 @@ export default function InclusionConfStory({
           <a href="#collaboration">02 Open-source collaboration</a>
           <a href="#method">Method &amp; sources</a>
         </div>
-        <div className={styles.navActions} aria-label="Play presentations">
-          <Link
-            className={`${styles.playLink} ${styles.playInfra}`}
-            href="/presentations/260910_inclusion/open-infrastructure/present"
+        <div className={styles.navActions} aria-label="Download the report">
+          <a
+            className={`${styles.downloadLink} ${styles.downloadEnglish}`}
+            href="/reports/agentic-open-source-collaboration-2026.en.pdf"
+            download
           >
-            <PlayIcon aria-hidden="true" />
-            <span>5 MIN</span>
-            <strong>Open Infrastructure</strong>
-          </Link>
-          <Link
-            className={`${styles.playLink} ${styles.playCollaboration}`}
-            href="/presentations/260910_inclusion/present"
+            <DownloadIcon aria-hidden="true" />
+            <span>English PDF</span>
+          </a>
+          <a
+            className={`${styles.downloadLink} ${styles.downloadChinese}`}
+            href="/reports/agentic-open-source-collaboration-2026.zh-CN.pdf"
+            download
           >
-            <PlayIcon aria-hidden="true" />
-            <span>10 MIN</span>
-            <strong>Collaboration</strong>
-          </Link>
+            <DownloadIcon aria-hidden="true" />
+            <span>中文 PDF</span>
+          </a>
           <Link className={styles.navBack} href="/">
             <ArrowLeftIcon aria-hidden="true" />
             <span>Landscape</span>
           </Link>
         </div>
       </nav>
+
+      <aside
+        className={styles.floatingPresentations}
+        aria-label="Open presentation mode"
+      >
+        <Link
+          className={`${styles.playLink} ${styles.playInfra}`}
+          href="/presentations/260910_inclusion/open-infrastructure/present"
+        >
+          <PlayIcon aria-hidden="true" />
+          <span>5 MIN</span>
+          <strong>Open Infrastructure</strong>
+        </Link>
+        <Link
+          className={`${styles.playLink} ${styles.playCollaboration}`}
+          href="/presentations/260910_inclusion/present"
+        >
+          <PlayIcon aria-hidden="true" />
+          <span>10 MIN</span>
+          <strong>Collaboration</strong>
+        </Link>
+      </aside>
 
       <header className={styles.hero}>
         <h1 className={styles.heroTitle}>
@@ -753,32 +791,31 @@ export default function InclusionConfStory({
         <h2>What this report finds</h2>
         <div>
           <article>
-            <h3>The visible ecosystem is growing closest to everyday work.</h3>
+            <h3>Runtime work is catching up with the applications people already use.</h3>
             <p>
-              Applications still hold most Agent Infra activity, while newer
-              selections are filling in the runtime beneath them: context,
-              interoperability, tools and execution. The landscape describes
-              where open-source work is accumulating; it does not measure
-              production adoption.
+              Applications hold 55% of Agent Infra&apos;s July OpenRank. Runtime
+              accounts for 13 of the 23 Agent Infra selections absent from the
+              May tracking pool, filling in around context, interoperability,
+              tool control and execution.
             </p>
           </article>
           <article>
-            <h3>Repositories are preparing for agents before agents visibly start the work.</h3>
+            <h3>Repositories prepare Agents to contribute, but Agents rarely open the work.</h3>
             <p>
               Ninety-two of the Top 100 publish a coding-agent file or folder,
-              but only 29 of 2,000 sampled Issues and pull requests were opened
-              by a named Agent or App. Most observable Agent participation enters
-              later, through review, discussion, triage or code revision.
+              but only {collaboration.participationOpenerSampleThreads.toLocaleString("en-US")} of {collaboration.sampleThreads.toLocaleString("en-US")} sampled Issues and pull requests were opened
+              by a named Agent or App. Agent participation appears in {collaboration.participationSampleThreads.toLocaleString("en-US")} threads,
+              mostly after submission through review, discussion, triage or revision.
             </p>
           </article>
           <article>
-            <h3>More work moved through repositories; the human gate did not get faster.</h3>
+            <h3>Agent activity grew with the queue. Maintainer attention did not.</h3>
             <p>
               In the same ten repositories, incoming work grew 165% from 2025
-              to 2026 while seven-day maintainer response and 30-day resolution
-              rates fell. Agent-visible threads show more iteration, but this
-              observational study does not establish that Agents caused either
-              the higher volume or the weaker outcomes.
+              to 2026 while seven-day maintainer response fell from 42.9% to
+              20.0% and 30-day resolution rates also declined. Across the wider
+              sample, GitHub User accounts still perform 88.5% of the last visible
+              actions that resolve a thread.
             </p>
           </article>
         </div>
@@ -921,7 +958,7 @@ export default function InclusionConfStory({
           {stats.runtimeOutsideMay} of the {stats.agentOutsideMay} Agent
           Infra projects that were not in the May tracking pool. Projects enter
           the pool through activity-based discovery and editorial review;
-          tracking does not guarantee selection for the map.
+          a second editorial pass decides which tracked projects belong on the map.
         </p>
 
         <div className={styles.macroEvidence} data-reveal>
@@ -1187,22 +1224,24 @@ export default function InclusionConfStory({
 
         <section className={styles.chapterArgument} data-reveal>
           <div>
-            <h3>Repository preparation, public Agent activity and collaboration outcomes are three different questions.</h3>
+            <h3>Repository setup, public Agent work and outcomes tell different parts of the story.</h3>
             <p>
               We first inspect the repository itself: contribution rules,
               coding-agent instructions and release practices. We then follow
-              a probability sample of public Issues and pull requests to see
+              a fixed 50-thread sample from each repository to see
               where named Agents and Apps actually appear. Finally, matched
-              repository panels compare activity and outcomes over time. Keeping
-              these layers separate prevents an <code>AGENTS.md</code> file from
-              being mistaken for proof that an Agent did the work.
+              repository panels compare activity and outcomes over time. One layer
+              shows how a project prepares for Agent use, another shows where Agents
+              enter public collaboration, and the third follows what happens to the
+              work afterward.
             </p>
             <p>
               The denominator changes with the question. The table below makes
               each evidence base explicit before the chapter uses it; only the
-              20 threads drawn inside each Top 100 repository are probability
-              sampled. The Top 100 and the ten-repository panel are selected
-              views of a highly active ecosystem, not a census of open source.
+              50 threads retained inside each Top 100 repository form the
+              repository-balanced sample. The Top 100 represents the most active
+              repositories in the tracked landscape, while the ten-repository panel
+              provides a closer comparison across project types and years.
             </p>
           </div>
           <div className={styles.reportTableWrap}>
@@ -1226,8 +1265,8 @@ export default function InclusionConfStory({
                   <td>Same-window activity in 2024, 2025 and 2026, with membership held fixed but survivorship bias retained.</td>
                 </tr>
                 <tr>
-                  <th>2,000-thread probability sample</th>
-                  <td>20 randomly sampled threads per repository: 575 Issues, 1,425 PRs and 50,731 linked public events.</td>
+                  <th>5,000-thread repository-balanced sample</th>
+                  <td>50 sampled threads per repository: {(collaboration.sampleThreads - collaboration.samplePullRequests).toLocaleString("en-US")} Issues, {collaboration.samplePullRequests.toLocaleString("en-US")} PRs and {collaboration.publicEventsAnalyzed.toLocaleString("en-US")} linked public events.</td>
                   <td>Visible Agent activity, review and gate behavior, task types and revision loops.</td>
                 </tr>
                 <tr>
@@ -1238,7 +1277,7 @@ export default function InclusionConfStory({
                 <tr>
                   <th>Ten-repository matched panels</th>
                   <td>A deliberately varied contrast set spanning age, LLM relationship and technical role.</td>
-                  <td>Lifecycle change and fixed-window comparisons across 2024–2026; useful for patterns, not causal attribution.</td>
+                  <td>How participation, response and 30-day outcomes move inside the same repositories across 2024–2026.</td>
                 </tr>
               </tbody>
             </table>
@@ -1331,7 +1370,7 @@ export default function InclusionConfStory({
           <header>
             <h3>Pull requests are arriving faster than issues.</h3>
             <p>
-              From 1 January to 29 August 2026, the Top 100 opened about {formatCompact(activityFlow.pullRequestsOpened)} pull requests and {formatCompact(activityFlow.issuesOpened)} issues. That is {activityFlow.pullRequestIssueRatio.toFixed(2)} pull requests for every issue. The totals include human work and automation; they do not measure AI-generated code.
+              From 1 January to 31 August 2026, the Top 100 opened about {formatCompact(activityFlow.pullRequestsOpened)} pull requests and {formatCompact(activityFlow.issuesOpened)} issues. That is {activityFlow.pullRequestIssueRatio.toFixed(2)} pull requests for every issue. The totals include human work and automation; they do not measure AI-generated code.
             </p>
           </header>
 
@@ -1368,7 +1407,7 @@ export default function InclusionConfStory({
               <div>
                 <h4>The PR-to-Issue ratio rose from {activityFlow.monthly[0].ratio.toFixed(2)} to {activityFlow.monthly.at(-1)?.ratio.toFixed(2)}.</h4>
               </div>
-              <p>August ends on the 29th. Bar height uses one shared scale; hover or focus a month to read exact counts.</p>
+              <p>January through August are complete calendar months. Bar height uses one shared scale; hover or focus a month to read exact counts.</p>
             </div>
             <div className={styles.monthlyFlowChart}>
               {activityFlow.monthly.map((item, index) => (
@@ -1406,7 +1445,7 @@ export default function InclusionConfStory({
               <div>
                 <h4>The same repositories opened {Math.round(fixedCohortPullRequestGrowth)}% more PRs than last year.</h4>
               </div>
-              <p>These 53 repositories were already public by 1 January 2024, and each year uses the same 1 January–29 August window. Their PR intake rose from {formatCompact(activityFlow.history[1].pullRequests)} in 2025 to {formatCompact(activityFlow.history[2].pullRequests)} in 2026, while Issue intake fell slightly from {formatCompact(activityFlow.history[1].issues)} to {formatCompact(activityFlow.history[2].issues)}.</p>
+              <p>These 53 repositories were already public by 1 January 2024, and each year uses the same 1 January–31 August window. Their PR intake rose from {formatCompact(activityFlow.history[1].pullRequests)} in 2025 to {formatCompact(activityFlow.history[2].pullRequests)} in 2026, while Issue intake fell slightly from {formatCompact(activityFlow.history[1].issues)} to {formatCompact(activityFlow.history[2].issues)}.</p>
             </div>
             <div className={styles.historyFlowChart}>
               {activityFlow.history.map((item, index) => (
@@ -1472,7 +1511,7 @@ export default function InclusionConfStory({
               <div>
                 <h4>Some repositories publish GitHub Releases almost every day.</h4>
               </div>
-              <p>From 1 January to 29 August 2026 ({activityFlow.releases.observationDays} days), {activityFlow.releases.repositoriesWithRelease}/100 repositories published a non-draft GitHub Release. Release days deduplicate those records by UTC date; frequent records often reflect automation. Prereleases are included, while tag-only and package-registry publication are outside this view.</p>
+              <p>From 1 January to 31 August 2026 ({activityFlow.releases.observationDays} days), {activityFlow.releases.repositoriesWithRelease}/100 repositories published a non-draft GitHub Release. Release days deduplicate those records by UTC date; frequent records often reflect automation. Prereleases are included, while tag-only and package-registry publication are outside this view.</p>
             </div>
             <div className={styles.releaseFlowGrid}>
               <div className={styles.releaseHistogram} aria-label="Repositories by number of release days">
@@ -1575,7 +1614,7 @@ export default function InclusionConfStory({
           <details className={styles.governanceMethod}>
             <summary>How the contribution policy was classified</summary>
             <p>
-              We read GitHub&apos;s <code>has_pull_requests</code> and <code>pull_request_creation_policy</code> first, then reviewed frozen copies of README, CONTRIBUTING, GOVERNANCE and Pull Request templates. “No restrictive signal detected” means that this scan found no gate; it does not mean the project explicitly invited a contribution.
+              We read GitHub&apos;s <code>has_pull_requests</code> and <code>pull_request_creation_policy</code> first, then reviewed frozen copies of README, CONTRIBUTING, GOVERNANCE and Pull Request templates. Repositories enter “No restrictive signal detected” when this scan finds neither an explicit invitation nor a stated gate.
             </p>
           </details>
         </div>
@@ -1655,15 +1694,14 @@ export default function InclusionConfStory({
                 <strong>{collaboration.codingAgentRepositories} of 100 repositories</strong>
                 {" "}publish at least one coding-agent file or tool folder on the
                 default branch. These artifacts tell an Agent how to build, test,
-                review or navigate a particular codebase. They are repository
-                infrastructure for delegated work, not evidence that every
-                contribution was generated by an Agent.
+                review or navigate a particular codebase. Their presence shows
+                which projects have made Agent-specific setup part of the repository.
               </p>
               <p>
                 Cross-agent instructions are the most common format, followed by
                 Claude Code-specific files. The categories overlap: one repository
-                can publish several formats at once, so the bars should be read as
-                compatibility coverage rather than a ranking of tool usage.
+                can publish several formats at once. The bars therefore compare
+                compatibility coverage across file formats.
               </p>
             </div>
             <div className={styles.agentCoverageChart}>
@@ -1709,8 +1747,8 @@ export default function InclusionConfStory({
           <header>
             <h3>Coding-agent files now appear inside model infrastructure.</h3>
             <p>
-              Explicit instruction files are most common in frameworks, but they
-              already appear in 28 of 36 Model Infra repositories. Coding agents
+              Explicit instruction files are most common in frameworks, but coding-agent
+              files or folders already appear in 32 of 36 Model Infra repositories. Coding agents
               are therefore being given project-specific rules beside compilers,
               runtimes, data systems and model-serving code—not only inside apps.
             </p>
@@ -1747,68 +1785,114 @@ export default function InclusionConfStory({
 
         <SamplePoolHeader
           label="Thread sample"
-          title="2,000 Issues and pull requests"
-          body="We randomly sampled 20 threads from each repository between 1 January and 29 August 2026: 575 Issues and 1,425 pull requests. The charts in this group all use those same threads and the 50,731 public events attached to them. Results are weighted so that a thread from a busy repository does not count the same as one from a smaller repository."
+          title="5,000 Issues and pull requests"
+          body={`Between 1 January and 31 August 2026, we sampled 50 Issues or pull requests from each of the Top 100 repositories: ${(collaboration.sampleThreads - collaboration.samplePullRequests).toLocaleString("en-US")} Issues and ${collaboration.samplePullRequests.toLocaleString("en-US")} pull requests. The charts show what happened in these ${collaboration.sampleThreads.toLocaleString("en-US")} threads and their ${collaboration.publicEventsAnalyzed.toLocaleString("en-US")} linked public events. Each thread counts once.`}
         />
 
         <section className={styles.visibleAgentActivity} data-reveal>
           <header>
-            <h3>Agents rarely open the conversation. Most visible Agent work happens later.</h3>
-            <p>
-              We found coding and review agents replying, reviewing or changing code in
-              {" "}{collaboration.participationSampleThreads.toLocaleString("en-US")} of
-              the {collaboration.sampleThreads.toLocaleString("en-US")} Issues and pull
-              requests we reviewed. Only {collaboration.participationOpenerSampleThreads}
-              {" "}were opened by an Agent account or App.
-            </p>
+            <EditableText as="h3" copyKey="collaborationEntryTitle" />
+            <EditableText as="p" copyKey="collaborationEntryBody" />
           </header>
-          <div className={styles.reportTableWrap}>
-            <table className={styles.reportTable}>
+          <div className={styles.reportNarrative}>
+            <p>
+              In this report, a visible Agent action is one where GitHub names the
+              Agent or the App behind it—for example, a CodeRabbit review, a Gemini
+              Code Assist comment or an OpenHands App action. Local use of Cursor,
+              Claude Code or Codex stays under the developer&apos;s ordinary User
+              account, so those contributions remain in the User column.
+            </p>
+          </div>
+          <details className={styles.participationDefinitions}>
+            <summary>How the sample and actor labels are defined</summary>
+            <div>
+              <section>
+                <h4>5,000 sampled threads</h4>
+                <p>
+                  We sampled 50 Issues or pull requests from each of the 100
+                  repositories. Every thread counts once. Each row below states its
+                  own denominator because opening, response, review and resolution do
+                  not apply to the same set of records.
+                </p>
+              </section>
+              <section>
+                <h4>Named Agent or Agent-attributed App</h4>
+                <p>
+                  GitHub exposes a known coding, review, support or security Agent,
+                  identifies the App behind the action, or the contribution explicitly
+                  attributes the work to an Agent. Conventional CI, dependency and
+                  release bots are classified separately.
+                </p>
+              </section>
+              <section>
+                <h4>GitHub User account</h4>
+                <p>
+                  GitHub reports the actor as account type User. Local use of Cursor,
+                  Claude Code or Codex usually stays under this account, because GitHub
+                  exposes no separate Agent identity for that path.
+                </p>
+              </section>
+              <section>
+                <h4>Repository team account</h4>
+                <p>
+                  GitHub associates the account with the repository as OWNER, MEMBER
+                  or COLLABORATOR. This is a repository relationship, so it can overlap
+                  with a User account or an Agent-attributed action.
+                </p>
+              </section>
+              <section>
+                <h4>Last public action that resolved the thread</h4>
+                <p>
+                  The latest visible merge, close or reopen event in a thread that was
+                  resolved when collected. It identifies who executed the public state
+                  change, which may differ from the person who reviewed or decided it.
+                </p>
+              </section>
+            </div>
+          </details>
+          <div className={styles.participationTableWrap}>
+            <table className={styles.participationTable}>
               <thead>
                 <tr>
-                  <th>Observation</th>
-                  <th>Reviewed sample</th>
-                  <th>Weighted estimate</th>
-                  <th>How to read it</th>
+                  <th>Stage in the public thread</th>
+                  {Object.values(collaborationActorLabels).map((label) => (
+                    <th key={label}>{label}</th>
+                  ))}
+                  <th>What the result shows</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th>Named Agent or App acted anywhere in the thread</th>
-                  <td>{collaboration.participationSampleThreads.toLocaleString("en-US")} / {collaboration.sampleThreads.toLocaleString("en-US")}</td>
-                  <td>{formatPercent(collaboration.participationThreadShare, 1)}</td>
-                  <td>Visible activity usually appears after a person or conventional integration has opened the work.</td>
-                </tr>
-                <tr>
-                  <th>Repository had at least one observed Agent action</th>
-                  <td>{collaboration.observedParticipationRepositories} / 100 repositories</td>
-                  <td>Not estimated</td>
-                  <td>Public Agent traces are widespread across the selected repositories, even when their share of threads differs.</td>
-                </tr>
-                <tr>
-                  <th>Agent account or App opened the thread</th>
-                  <td>{collaboration.participationOpenerSampleThreads} / {collaboration.sampleThreads.toLocaleString("en-US")}</td>
-                  <td>{formatPercent(collaboration.participationOpenerShare, 1)}</td>
-                  <td>Agent-originated intake is rare. The larger visible role is reviewing, discussing, triaging or revising existing work.</td>
-                </tr>
+                {collaborationStages.map((stage, index) => (
+                  <tr key={stage.id}>
+                    <th>
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <div>
+                        <strong>{stage.label}</strong>
+                        <small>{stage.scope}</small>
+                      </div>
+                    </th>
+                    {(["agent", "user", "repositoryTeam"] as const).map((actor) => (
+                      <td
+                        data-actor={actor}
+                        data-label={collaborationActorLabels[actor]}
+                        key={actor}
+                      >
+                        <strong>
+                          {formatPercent(stage[actor] / stage.denominator, 1)}
+                        </strong>
+                        <span>
+                          {stage[actor].toLocaleString("en-US")} of{" "}
+                          {stage.denominator.toLocaleString("en-US")}
+                        </span>
+                      </td>
+                    ))}
+                    <td data-label="What the result shows">
+                      <p>{stage.interpretation}</p>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
-          </div>
-          <div className={styles.reportNarrative}>
-            <p>
-              On GitHub, this can look like CodeRabbit reviewing a pull request,
-              Gemini Code Assist leaving review comments or OpenHands acting
-              through its GitHub App. We count an action only when GitHub exposes
-              the Agent or App identity, or when the contribution explicitly
-              attributes the work to an Agent.
-            </p>
-            <p>
-              This makes the estimate conservative. Work performed locally in
-              Cursor, Claude Code or Codex usually appears under an ordinary User
-              account and cannot be distinguished from unaided work in public
-              metadata. “Visible Agent activity” therefore describes observable
-              collaboration behavior, not total AI-assisted development.
-            </p>
           </div>
         </section>
 
@@ -1841,7 +1925,7 @@ export default function InclusionConfStory({
           <div className={styles.automationSplit}>
             <header>
               <strong>Automation is broader than Agent use</strong>
-              <span>Probability-weighted thread presence</span>
+              <span>Share of sampled threads</span>
             </header>
             {collaboration.automationByItem.map((item) => (
               <div key={item.label}>
@@ -1862,57 +1946,6 @@ export default function InclusionConfStory({
                   <strong>{formatPercent(item.automationOnly, 2)}</strong>
                   <span>No visible GitHub User account</span>
                 </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className={styles.threadMap} data-reveal>
-          <header>
-            <EditableText as="h3" copyKey="collaborationEntryTitle" />
-            <EditableText as="p" copyKey="collaborationEntryBody" />
-          </header>
-          <div className={styles.threadMapTable}>
-            <div className={styles.threadMapHead}>
-              <span>Visible actor</span>
-              <b>Open</b>
-              <b>Review</b>
-              <b>Gate</b>
-            </div>
-            {threadRows.map((row, rowIndex) => (
-              <div
-                className={styles.threadMapRow}
-                data-tone={row.tone}
-                key={row.label}
-              >
-                <strong>{row.label}</strong>
-                {row.values.map((value, columnIndex) => (
-                  <div
-                    data-stage={["Open", "Review", "Gate"][columnIndex]}
-                    key={`${row.label}-${columnIndex}`}
-                  >
-                    {value === null ? (
-                      <span className={styles.notEstimated}>Not estimated</span>
-                    ) : (
-                      <>
-                        <span>{formatPercent(value, 1)}</span>
-                        <i
-                          style={
-                            {
-                              "--collaboration-delay": `${
-                                rowIndex * 100 + columnIndex * 70
-                              }ms`,
-                              "--collaboration-rate": `${Math.max(
-                                value * 100,
-                                0.8,
-                              )}%`,
-                            } as CollaborationBarStyle
-                          }
-                        />
-                      </>
-                    )}
-                  </div>
-                ))}
               </div>
             ))}
           </div>
@@ -1967,22 +2000,14 @@ export default function InclusionConfStory({
                   <td>Agents participate in review, but they do not dominate the decision path across the sample.</td>
                 </tr>
                 <tr>
-                  <th>Resolved threads with a visible GitHub User gate</th>
+                  <th>Resolved threads where the final visible gate came from a GitHub User account</th>
                   <td>{formatPercent(collaboration.userGateShare, 1)}</td>
-                  <td>Acceptance, closure and the decision that survives review remain concentrated in User-account actions.</td>
+                  <td>The final visible action that closed or accepted the work came from a GitHub User account.</td>
                 </tr>
               </tbody>
             </table>
           </div>
         </div>
-
-        <SamplePoolHeader
-          label="Code-lineage subset"
-          title="10 merged pull requests"
-          body="These are all merged PRs inside the 1,425 sampled PRs where a high-confidence coding-Agent identity changed the code. Nine can be followed line by line and form the 62.4% result below. Mooncake #2686 remains a case, but its two-parent merge commit prevents a clean line-level comparison. This is a small case study, not an ecosystem-wide rate."
-        />
-
-        <CollaborationCommitAttribution research={collaboration} />
 
         <div id="patch-lineage" className={styles.lineageStudy} data-reveal>
           <header>
@@ -2093,7 +2118,7 @@ export default function InclusionConfStory({
         <SamplePoolHeader
           label="Matched repository panels"
           title="10 repositories selected for contrast"
-          body="This is a deliberately varied set, not a random Top 10. It covers new and established projects, LLM-native and traditional software, and applications, frameworks, runtimes and model infrastructure. The lifecycle panel uses 900 threads across three stages. The fixed-window panel uses 840 threads across 2024–2026."
+          body="We selected ten repositories that span new and established projects, Agent applications, frameworks, runtimes and model infrastructure. The lifecycle panel follows 900 threads across three stages in each project’s history. The fixed-window panel follows 840 threads in the same May–August period across 2024–2026, so change inside each repository can be read against a stable calendar window."
           details={(
             <ul>
               <li>openai/codex</li>
@@ -2171,21 +2196,16 @@ export default function InclusionConfStory({
               <div className={styles.reportNarrative}>
                 <p>
                   The matched repositories absorbed far more work in 2026, and
-                  Agent participation became much easier to see. That expansion
-                  did not produce a corresponding improvement in the public
-                  outcomes readers usually associate with collaboration
-                  efficiency: early human response, Issue closure and PR merge
-                  all became less likely inside the fixed windows.
+                  Agent participation became much easier to see. At the same time,
+                  a smaller share of threads received an early human response,
+                  closed as an Issue or merged as a pull request inside the fixed
+                  windows.
                 </p>
                 <p>
-                  Maintainer actions per thread stayed almost unchanged. Applied
-                  to a 2.65-times-larger incoming population, that implies roughly
-                  {formatCompact(efficiency.maintainerActionEstimate.earlier)}
-                  {" "}visible maintainer actions in 2025 and{" "}
-                  {formatCompact(efficiency.maintainerActionEstimate.later)}
-                  {" "}in 2026. The exact total has a wide uncertainty interval,
-                  but the direction is clear: attention did not scale per thread,
-                  while the overall amount of work facing maintainers increased.
+                  Maintainer actions per sampled thread stayed almost unchanged:
+                  1.48 in 2025 and 1.44 in 2026. The same level of visible attention
+                  per thread was therefore spread across an incoming population
+                  that had grown to 2.65 times its earlier size.
                 </p>
               </div>
             </div>
@@ -2225,35 +2245,29 @@ export default function InclusionConfStory({
                 <p>
                   Within the 2026 sample, early Agent visibility corresponds to
                   more conversation, more maintainer review and more commits
-                  after the first review. The 30-day merge rate, however, is
-                  almost the same. The observable change is a denser iteration
-                  loop, not a clearly better acceptance outcome.
-                </p>
-                <p>
-                  This comparison is observational. Agents are not assigned at
-                  random, and difficult or important threads may be more likely
-                  to attract them. The table can show how Agent-visible work
-                  differs; it cannot show that the Agent caused the difference.
+                  after the first review. The 30-day merge rate is almost the same:
+                  48.7% when an Agent appears in the first 24 hours and 47.2% when
+                  none is visible. The clearest difference is how many public
+                  revision rounds the thread goes through before the outcome.
                 </p>
               </div>
             </div>
           )}
 
           <div className={styles.reportFinding}>
-            <h4>What the experiment supports</h4>
+            <h4>The queue grew faster than the public review capacity around it.</h4>
             <p>
-              Agents expanded the capacity to produce feedback and revisions.
-              They did not remove the need for maintainer judgment, and the
-              public human gate did not get faster in this panel. The best
-              supported conclusion is therefore narrower than “Agents improve
-              collaboration” or “Agents create burden”: throughput and iteration
-              increased, while timely human outcomes weakened and total visible
-              maintainer work probably rose.
+              The repositories handled much more incoming work and showed more
+              Agent activity, especially in review and revision. Timely human
+              response, Issue closure and PR merge all weakened in the same panel.
+              The result is more public iteration inside a much larger queue,
+              without a matching rise in the visible maintainer attention available
+              to each thread.
             </p>
           </div>
 
           <div className={styles.reportMethod}>
-            <h4>Comparison design and limits</h4>
+            <h4>How the comparison was made</h4>
             <p>
               We sampled the same ten repositories in the same 1 May–28 August
               window in 2024, 2025 and 2026. The full three-year panel contains{" "}
@@ -2261,9 +2275,9 @@ export default function InclusionConfStory({
               {efficiency.eligibleSevenDayThreads} have a complete seven-day
               response window and {efficiency.eligibleThirtyDayThreads} have a
               complete 30-day outcome window. Threads left unanswered or
-              unresolved remain in the denominator. Visible Agent use is
-              observational, not randomly assigned, and public traces cannot
-              reveal undisclosed local AI use.
+              unresolved remain in the denominator. Read this as a workload
+              comparison: harder threads may also be more likely to attract an
+              Agent.
             </p>
           </div>
         </section>
@@ -2271,45 +2285,11 @@ export default function InclusionConfStory({
         <SamplePoolHeader
           label="Illustrative cases"
           title="7 public collaboration traces"
-          body="Four cases come from the 2,000-thread sample and three come from the ten-repository panels. We chose them because the public sequence is easy to follow and each shows a different coordination pattern. They explain how collaboration can unfold; they do not estimate how often each pattern occurs."
+          body="Four cases come from the 5,000-thread sample and three from the ten-repository panels. Each one has a readable public sequence, allowing the casebook to show who opened the work, where an Agent entered, who revised it and who closed the loop. Together they explain the hand-offs hidden behind a simple merged, closed or fixed label."
         />
 
         <CollaborationCasebook />
 
-        <div className={styles.studyFrame} data-reveal>
-          <header>
-            <EditableText as="h3" copyKey="studyTitle" />
-            <EditableText as="p" copyKey="studyNote" />
-          </header>
-          <div className={styles.reportTableWrap}>
-            <table className={styles.reportTable}>
-              <thead>
-                <tr>
-                  <th>Evidence status</th>
-                  <th>What is included</th>
-                  <th>What readers may conclude</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>Complete inside the selected frame</th>
-                  <td>100 repository surfaces; {collaboration.sampleThreads.toLocaleString("en-US")} sampled threads; {collaboration.publicEventsAnalyzed.toLocaleString("en-US")} linked timeline, review-comment and PR-commit events; twelve long-lived controls.</td>
-                  <td>The report can describe the selected repositories and the public events attached to the sampled threads.</td>
-                </tr>
-                <tr>
-                  <th>Directly observed</th>
-                  <td>Repository rules, public actor identities, review loops, external author association, fixed-maturity outcomes and visible gate actions.</td>
-                  <td>The report can compare observable participation and outcomes when the definitions and denominator are held fixed.</td>
-                </tr>
-                <tr>
-                  <th>Not established</th>
-                  <td>Undisclosed local AI use, private maintainer work, task difficulty and the counterfactual outcome without an Agent.</td>
-                  <td>Agent participation is voluntary and selected. These results describe association and process change, not causal impact.</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
       </section>
 
       <section className={styles.closing}>
@@ -2330,12 +2310,11 @@ export default function InclusionConfStory({
             </p>
             <p>
               OpenRank, stars, forks and participant counts describe different
-              signals. Primary language is GitHub&apos;s repository-level label,
-              not a count of source lines. The OpenRouter app ranking is public
-              and opt-in. Agent Sandbox, Kata Containers and OpenTelemetry are
-              used as project evidence, not as measures of ecosystem-wide Agent
-              adoption. None of these sources establishes revenue or technical
-              superiority.
+              signals. Primary language comes from GitHub&apos;s repository-level
+              label. The OpenRouter app ranking is public and opt-in. Agent Sandbox,
+              Kata Containers and OpenTelemetry provide project-level evidence for
+              concrete engineering work around Agent execution. Revenue, deployment
+              scale and technical performance require separate sources.
             </p>
             <p>
               The Collaboration chapter freezes the tracked-pool Top 100 by
@@ -2346,6 +2325,13 @@ export default function InclusionConfStory({
               historical scale and quality checks, but its 2025–2026 PR author
               and merge-time payload is incomplete and is not used for a claim
               about productivity.
+            </p>
+            <p>
+              The public-thread analysis samples 50 Issues or pull requests from
+              each of the Top 100 repositories between 1 January and 31 August
+              2026. Every thread counts once. Actor labels follow the identity or
+              App attribution GitHub exposes; undisclosed local Agent use remains
+              under the developer&apos;s ordinary User account.
             </p>
           </div>
         </details>

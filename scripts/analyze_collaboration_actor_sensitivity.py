@@ -119,9 +119,6 @@ def main() -> None:
                 positives.append(row)
             if row.get("author_login") in identities:
                 opener_positives.append(row)
-        total_weight = sum(float(row["sampling_weight"]) for row in items)
-        positive_weight = sum(float(row["sampling_weight"]) for row in positives)
-        opener_weight = sum(float(row["sampling_weight"]) for row in opener_positives)
         macro = sum(sum(values) / len(values) for values in per_repo.values()) / len(per_repo)
         output.append(
             {
@@ -129,11 +126,11 @@ def main() -> None:
                 "actor_identities": len(identities),
                 "candidate_identities_added": 0 if scenario == "strict_verified" else len(candidates),
                 "threads_with_participation": len(positives),
-                "weighted_thread_share": round(positive_weight / total_weight, 6),
-                "equal_repository_thread_share": round(macro, 6),
+                "sample_thread_share": round(len(positives) / len(items), 6),
+                "repository_mean_thread_share": round(macro, 6),
                 "repositories_with_observed_participation": sum(any(values) for values in per_repo.values()),
                 "opener_threads": len(opener_positives),
-                "weighted_opener_share": round(opener_weight / total_weight, 6),
+                "sample_opener_share": round(len(opener_positives) / len(items), 6),
             }
         )
     write_csv(args.output, output)

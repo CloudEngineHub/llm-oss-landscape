@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect matched Jan 1-Aug 29 Issue/PR cohorts for the frozen Top 100."""
+"""Collect matched Jan 1-Aug 31 Issue/PR cohorts for the frozen Top 100."""
 
 from __future__ import annotations
 
@@ -91,7 +91,7 @@ def build_query(repo: str) -> tuple[str, dict[str, tuple[int, str]]]:
     aliases: dict[str, tuple[int, str]] = {}
     for year in YEARS:
         start = f"{year}-01-01"
-        end = f"{year}-08-29"
+        end = f"{year}-08-31"
         created = f"created:{start}..{end}"
         definitions = {
             "issues_opened": f"repo:{repo} is:issue {created}",
@@ -133,7 +133,7 @@ def collect_repo(client: GitHubClient, sample: dict[str, str]) -> list[dict[str,
             flags.append("prs_closed_exceeds_opened")
         if prs_merged > prs_closed:
             flags.append("prs_merged_exceeds_closed")
-        observable = created_at <= date(year, 8, 29)
+        observable = created_at <= date(year, 8, 31)
         if not observable and any(values.values()):
             flags.append("activity_before_repository_creation")
         rows.append(
@@ -141,7 +141,7 @@ def collect_repo(client: GitHubClient, sample: dict[str, str]) -> list[dict[str,
                 **{key: sample[key] for key in ("sample_rank", "repo_name", "created_at", "llm_native_manual", "collaboration_niche")},
                 "year": year,
                 "window_start": f"{year}-01-01",
-                "window_end": f"{year}-08-29",
+                "window_end": f"{year}-08-31",
                 "observable_in_window": "yes" if observable else "no",
                 **values,
                 "issues_unresolved_from_cohort": issues_opened - issues_closed,
@@ -226,7 +226,7 @@ def main() -> None:
         "started_at": started_at,
         "completed_at": datetime.now(UTC).isoformat(),
         "sample": str(args.sample.resolve().relative_to(ROOT)),
-        "windows": [f"{year}-01-01..{year}-08-29" for year in YEARS],
+        "windows": [f"{year}-01-01..{year}-08-31" for year in YEARS],
         "repositories_requested": len(sample),
         "repositories_complete": len({row["repo_name"] for row in rows} & {item["repo_name"] for item in sample}),
         "rows": len(rows),
@@ -239,7 +239,7 @@ def main() -> None:
             "The panel freezes the current Top 100 and therefore has survivorship bias; it is not a historical Top 100 for each year.",
             "Repository creation dates determine structural non-observation before a repository became public.",
             "GitHub Search counts are aggregate results. The complete 2026 row is replicated against the independently collected monthly panel.",
-            "Unresolved counts follow the matched cohort opened inside each Jan 1-Aug 29 window and exclude older backlog.",
+            "Unresolved counts follow the matched cohort opened inside each Jan 1-Aug 31 window and exclude older backlog.",
         ],
     }
     args.run_output.write_text(json.dumps(run, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

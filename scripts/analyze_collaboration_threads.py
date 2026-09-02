@@ -755,12 +755,12 @@ def main() -> None:
                 "observed_events": len(values),
                 "threads": len(unique_threads),
                 "repositories": len({row["repo_name"] for row in values}),
-                "weighted_thread_presence": round(sum(unique_threads.values()), 2),
+                "sample_threads": len(unique_threads),
             }
         )
     write_csv(
         args.agent_tasks,
-        ["automation_role", "task", "observed_events", "threads", "repositories", "weighted_thread_presence"],
+        ["automation_role", "task", "observed_events", "threads", "repositories", "sample_threads"],
         task_rows,
     )
     overall = summaries[0]
@@ -772,9 +772,9 @@ def main() -> None:
         for row in thread_rows
         if row["item_type"] == "pull_request" and row["external_author"] == "yes"
     }
-    findings = f"""# 2,000 条 Issue / PR 线程告诉了我们什么
+    findings = f"""# {len(thread_rows):,} 条 Issue / PR 线程告诉了我们什么
 
-状态：100 个仓库的概率样本已经完整采集并通过校验。账号标签只描述 GitHub 上公开可见的身份，不判断每一行代码究竟由谁输入。
+状态：100 个仓库各保留 50 条样本线程，已经完整采集并通过校验。下面直接描述这 {len(thread_rows):,} 条样本，不再按仓库总流量加权。账号标签只描述 GitHub 上公开可见的身份，不判断每一行代码究竟由谁输入。
 
 ## 样本覆盖
 
@@ -784,7 +784,7 @@ def main() -> None:
 
 ## Agent 已经进入协作，但很少独自跑完整流程
 
-- 可确认的 coding、review、security-review、support Agent 和 App 代理行为，出现在加权总体的 {fmt_share(overall['agent_participation_present_share_weighted'])}。这是公开可见参与率的下界，不是“多少代码由 AI 写”的比例。
+- 可确认的 coding、review、security-review、support Agent 和 App 代理行为，出现在样本线程的 {fmt_share(overall['agent_participation_present_share_weighted'])}。这是公开可见参与率的下界，不是“多少代码由 AI 写”的比例。
 - Agent 发起 {fmt_share(overall['agent_participation_opened_thread_share_weighted'])} 的线程，在 {fmt_share(overall['agent_participation_response_present_share_weighted'])} 的线程里参与后续回复。
 - GitHub `User` 账号在 {fmt_share(overall['human_account_present_any_share_weighted'])} 的线程里至少出现一次；发起之后有人类账号回复的比例是 {fmt_share(overall['human_account_response_share_weighted'])}，有维护者关联账号回复的比例是 {fmt_share(overall['maintainer_account_response_share_weighted'])}。
 - 在能看到最终 gate 账号的已解决线程中，GitHub `User` 执行 {fmt_share(overall['human_account_gate_share_resolved_with_visible_gate_weighted'])} 的 gate，维护者关联账号执行 {fmt_share(overall['maintainer_account_gate_share_resolved_with_visible_gate_weighted'])}，可确认 Agent 执行 {fmt_share(overall['agent_gate_share_resolved_with_visible_gate_weighted'])}。App 代理 User 时，这些类别可能重叠。
@@ -792,12 +792,12 @@ def main() -> None:
 ## 外部贡献仍然真实存在，但 patch 和通过 gate 不是一回事
 
 - 在有 PR 样本的仓库里，{len(repositories_with_external_pr)}/{len(repositories_with_prs)} 至少抽到一条外部贡献者 PR。这是概率样本证据，不是仓库全量普查。
-- 外部账号占加权 PR 流入的 {fmt_share(overall['external_pr_author_share_weighted'])}；仓库等权结果是 {fmt_share(overall['external_pr_author_share_macro_repository'])}。
+- 外部账号占样本 PR 的 {fmt_share(overall['external_pr_author_share_weighted'])}。
 - 到固定成熟度时，已解决外部 PR 中 {fmt_share(overall['external_pr_github_merge_flag_share_resolved_fixed_maturity_weighted'])} 带 GitHub merged flag；维护者或成员 PR 是 {fmt_share(overall['internal_pr_github_merge_flag_share_resolved_fixed_maturity_weighted'])}。这反映 gate 选择，不是质量分，也不能解释成 Agent 的因果效果。
 
 ## Review 是反复修改，不是点一下 approve
 
-- {fmt_share(overall['pr_review_observed_share_weighted'])} 的加权 PR 出现可见 review。
+- {fmt_share(overall['pr_review_observed_share_weighted'])} 的样本 PR 出现可见 review。
 - 在出现 review 的 PR 中，{fmt_share(overall['reviewed_pr_post_review_commit_share_weighted'])} 在第一次 review 后继续提交代码。
 - 在收到 `CHANGES_REQUESTED` 的 PR 中，{fmt_share(overall['change_requested_pr_followup_commit_share_weighted'])} 之后又有 commit。这个数字说明修改循环真实存在，但不能单独证明 review 是人还是 Agent 发起，也不能证明修改有效。
 
@@ -805,7 +805,7 @@ def main() -> None:
 
 - GitHub `User` 只表示公开账号类型，不表示工作完全没有 AI 辅助。
 - `Agent marker` 是仓库里的 Agent 指令或配置，不等于实际使用率。
-- 加权结果回答全部活动怎样，仓库等权结果回答典型仓库怎样；两者必须并排看。
+- 每个仓库固定抽 50 条，因此这里回答的是“这 5,000 条样本中看到了什么”，不是按仓库真实流量还原整个生态。
 - Agent 参与不是随机分配，当前数据能说明关联和流程位置，不能直接声称生产率提升。
 """
     args.findings.write_text(findings, encoding="utf-8")
@@ -825,7 +825,7 @@ def main() -> None:
         "limitations": [
             "GitHub User accounts are labelled human_account only at the public account-type level; undisclosed AI assistance remains unobservable.",
             "Explicit disclosure candidates do not establish autonomous Agent authorship without manual evidence review.",
-            "Weighted estimates inherit the repository-stratified rejection-sample design and must be paired with equal-repository sensitivity results.",
+            "Every repository contributes 50 threads; reported shares describe this fixed 5,000-thread sample and are not reweighted by repository traffic.",
         ],
     }
     args.run_output.write_text(json.dumps(run, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

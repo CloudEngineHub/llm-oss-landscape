@@ -1,18 +1,18 @@
 {
-  "started_at": "2026-08-29T08:55:19.067886+00:00",
-  "completed_at": "2026-08-29T08:55:55.112478+00:00",
+  "started_at": "2026-09-01T10:28:58.113706+00:00",
+  "completed_at": "2026-09-01T10:39:41.332164+00:00",
   "repositories_requested": 100,
-  "threads_requested": 2000,
-  "threads_complete": 2000,
+  "threads_requested": 5000,
+  "threads_complete": 5000,
   "threads_missing_timeline": 0,
   "thread_errors": [],
-  "events": 39543,
-  "http_requests": 21,
+  "events": 105889,
+  "http_requests": 2490,
   "core_rate_limit": {
     "limit": 5000,
     "used": 0,
     "remaining": 5000,
-    "reset": 1787997355
+    "reset": 1788262781
   },
   "outputs": [
     "insights/260912_open_collaboration_ai/research/collaboration-thread-events-2026.csv",

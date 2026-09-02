@@ -1,19 +1,19 @@
 {
-  "started_at": "2026-08-30T13:58:53.518836+00:00",
-  "completed_at": "2026-08-30T14:03:38.674940+00:00",
+  "started_at": "2026-09-01T08:57:15.992660+00:00",
+  "completed_at": "2026-09-01T09:04:11.512674+00:00",
   "sample": "insights/260912_open_collaboration_ai/research/collaboration-sample-top100-2607.csv",
   "window_start": "2026-01-01",
-  "window_end": "2026-08-29",
+  "window_end": "2026-08-31",
   "repositories_requested": 100,
   "repositories_complete": 100,
   "rows": 800,
   "errors": [],
-  "http_requests": 101,
+  "http_requests": 103,
   "graphql_rate_limit": {
     "limit": 5000,
     "used": 0,
     "remaining": 5000,
-    "reset": 1788102218
+    "reset": 1788257051
   },
   "output": "insights/260912_open_collaboration_ai/research/collaboration-repository-month-2026.csv",
   "limitations": [

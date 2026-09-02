@@ -1,19 +1,20 @@
 {
-  "started_at": "2026-08-29T08:55:18.868418+00:00",
-  "completed_at": "2026-08-29T08:55:29.729871+00:00",
+  "started_at": "2026-09-01T10:22:44.779592+00:00",
+  "completed_at": "2026-09-01T10:24:02.018387+00:00",
+  "transport": "graphql",
   "repositories": 100,
-  "pull_requests": 1425,
-  "threads_complete": 1425,
+  "pull_requests": 3567,
+  "threads_complete": 3567,
   "missing_endpoints": 0,
   "errors": [],
-  "review_comments": 3951,
-  "http_requests": 16,
+  "review_comments": 11102,
+  "http_requests": 48,
   "outputs": [
     "insights/260912_open_collaboration_ai/research/collaboration-thread-review-comments-2026.csv",
     "insights/260912_open_collaboration_ai/research/collaboration-thread-review-comments-2026-status.csv"
   ],
   "limitations": [
-    "Inline review comments are collected separately because the Issue timeline does not contain them.",
+    "GraphQL batches collect up to 100 review threads and 100 comments per thread; larger PRs are left for REST retry.",
     "A review comment records visible discussion, not whether the suggestion was correct or adopted."
   ]
 }

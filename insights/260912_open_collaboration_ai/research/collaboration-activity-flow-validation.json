@@ -6,11 +6,7 @@
   "current_cross_panel_metric_cells": 500,
   "current_cross_panel_differences": 0,
   "independent_repeat": {
-    "available": true,
-    "rows": 500,
-    "metric_cells_compared": 2500,
-    "changed_cells": 0,
-    "absolute_count_difference": 0
+    "available": false
   },
   "known_limitations": [
     "The historical panel freezes the current Top 100 and therefore has survivorship bias.",

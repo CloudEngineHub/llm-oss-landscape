@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Stratified bootstrap intervals for the fixed Top-100 thread sample.
+"""Bootstrap intervals for descriptive shares in the fixed Top-100 thread sample.
 
 The repository set is treated as fixed. Threads are resampled within each
-repository, preserving the study's one-stratum-per-repository design. The
-intervals therefore describe item-sampling uncertainty inside the frozen
-Top-100, not uncertainty about every open-source repository.
+repository, preserving the study's 50-threads-per-repository design. The
+intervals describe uncertainty inside the 5,000 sampled threads. They do not
+reweight repositories by traffic or claim to estimate every open-source thread.
 """
 
 from __future__ import annotations
@@ -49,12 +49,8 @@ def percentile(values: list[float], probability: float) -> float:
     return ordered[lower] * (1 - fraction) + ordered[upper] * fraction
 
 
-def weighted_share(rows: list[dict[str, str]], positive: Callable[[dict[str, str]], bool]) -> float | None:
-    denominator = sum(float(row["sampling_weight"]) for row in rows)
-    if denominator <= 0:
-        return None
-    numerator = sum(float(row["sampling_weight"]) for row in rows if positive(row))
-    return numerator / denominator
+def sample_share(rows: list[dict[str, str]], positive: Callable[[dict[str, str]], bool]) -> float | None:
+    return sum(positive(row) for row in rows) / len(rows) if rows else None
 
 
 def macro_share(rows: list[dict[str, str]], positive: Callable[[dict[str, str]], bool]) -> float | None:
@@ -107,22 +103,17 @@ def main() -> None:
         if not eligible_rows:
             continue
 
-        bootstrap_weighted: list[float] = []
-        bootstrap_macro: list[float] = []
+        bootstrap_sample: list[float] = []
         for _ in range(args.iterations):
             sampled: list[dict[str, str]] = []
             for repo_rows in eligible_by_repo.values():
                 sampled.extend(rng.choice(repo_rows) for _ in range(len(repo_rows)))
-            weighted = weighted_share(sampled, positive)
-            macro = macro_share(sampled, positive)
-            if weighted is not None:
-                bootstrap_weighted.append(weighted)
-            if macro is not None:
-                bootstrap_macro.append(macro)
+            share = sample_share(sampled, positive)
+            if share is not None:
+                bootstrap_sample.append(share)
 
         for view, point, distribution in (
-            ("population_weighted", weighted_share(eligible_rows, positive), bootstrap_weighted),
-            ("equal_repository", macro_share(eligible_rows, positive), bootstrap_macro),
+            ("sample_unweighted", sample_share(eligible_rows, positive), bootstrap_sample),
         ):
             output.append(
                 {

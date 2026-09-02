@@ -1,21 +1,21 @@
 # 不同类型仓库的 Agent marker 与协作模式比较
 
-这里先把每个仓库的 20 条线程压成一个仓库级比例，再比较仓库类型。这样做是为了避免 PyTorch 一类大仓库因为线程总量大，就在统计上拥有几十倍于小仓库的话语权。
+这里把每个仓库的 50 条线程压成一个仓库级比例，再比较仓库类型。每个仓库的样本量相同，不再按仓库总流量加权。
 
 ## 先说结论
 
-在同时检验的 26 个比较中，经过多重比较修正后，3 个差异仍达到 q < 0.05。最值得继续解释的不是单个百分比，而是这些差异是否在更深的 10 仓库时间线研究中仍然成立。
+在同时检验的 26 个比较中，经过多重比较修正后，5 个差异仍达到 q < 0.05。最值得继续解释的不是单个百分比，而是这些差异是否在更深的 10 仓库时间线研究中仍然成立。
 
 ## 目前信号最强的差异
 
-- **人类账号参与 review / technical_area**：agent_application 为 37.6%，model_infra 为 64.2%，相差 26.59 个百分点；p=0.0002，BH 校正后 q=0.0026。
-- **人类账号参与 review / llm_identity**：llm_native 为 45.7%，traditional 为 69.8%，相差 24.12 个百分点；p=0.0020，BH 校正后 q=0.0260。
-- **回复只有自动化账号 / llm_identity**：traditional 为 10.0%，llm_native 为 25.5%，相差 15.51 个百分点；p=0.0056，BH 校正后 q=0.0364。
-- **回复只有自动化账号 / technical_area**：model_infra 为 16.0%，agent_framework 为 29.3%，相差 13.31 个百分点；p=0.0104，BH 校正后 q=0.0676。
-- **存在可见 review / technical_area**：agent_application 为 57.1%，model_infra 为 75.4%，相差 18.39 个百分点；p=0.0170，BH 校正后 q=0.0737。
-- **Agent 发起线程 / technical_area**：agent_runtime_infra 为 0.0%，agent_framework 为 4.0%，相差 4.05 个百分点；p=0.0243，BH 校正后 q=0.0790。
-- **Agent 参与线程 / llm_identity**：traditional 为 28.6%，mixed 为 57.5%，相差 28.89 个百分点；p=0.0280，BH 校正后 q=0.1213。
-- **仓库存在 Agent 指令文件 / llm_identity**：traditional 为 72.2%，mixed 为 100.0%，相差 27.78 个百分点；p=0.0574，BH 校正后 q=0.1504。
+- **人类账号参与 review / technical_area**：agent_application 为 38.0%，model_infra 为 63.6%，相差 25.52 个百分点；p=0.0001，BH 校正后 q=0.0013。
+- **回复只有自动化账号 / technical_area**：model_infra 为 16.8%，agent_framework 为 30.7%，相差 13.83 个百分点；p=0.0056，BH 校正后 q=0.0243。
+- **存在可见 review / technical_area**：agent_application 为 57.4%，agent_runtime_infra 为 76.5%，相差 19.1 个百分点；p=0.0052，BH 校正后 q=0.0243。
+- **人类账号参与 review / llm_identity**：llm_native 为 46.1%，traditional 为 69.3%，相差 23.25 个百分点；p=0.0019，BH 校正后 q=0.0247。
+- **回复只有自动化账号 / llm_identity**：traditional 为 11.0%，llm_native 为 26.1%，相差 15.15 个百分点；p=0.0051，BH 校正后 q=0.0331。
+- **Agent 发起线程 / technical_area**：agent_runtime_infra 为 0.0%，agent_framework 为 5.1%，相差 5.14 个百分点；p=0.0330，BH 校正后 q=0.1072。
+- **Agent 参与线程 / llm_identity**：traditional 为 28.1%，mixed 为 56.3%，相差 28.17 个百分点；p=0.0346，BH 校正后 q=0.1499。
+- **仓库存在 Agent 指令文件 / llm_identity**：traditional 为 72.2%，mixed 为 100.0%，相差 27.78 个百分点；p=0.0574，BH 校正后 q=0.1865。
 
 ## 怎么理解
 

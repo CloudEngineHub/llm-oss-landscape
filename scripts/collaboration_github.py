@@ -55,14 +55,43 @@ class GitHubClient:
     def __init__(self, token: str) -> None:
         self.session = requests.Session()
         self.session.trust_env = False
+        configured_pool = [
+            value.strip()
+            for value in os.getenv("GITHUB_TOKEN_POOL", "").split(",")
+            if value.strip()
+        ]
+        self.tokens = list(dict.fromkeys([token, *configured_pool]))
+        self.token_index = 0
+        self.token_switches = 0
         self.headers = {
             "Accept": "application/vnd.github+json",
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"Bearer {self.tokens[self.token_index]}",
             "X-GitHub-Api-Version": API_VERSION,
             "User-Agent": "agentic-ai-open-collaboration-research",
         }
         self.requests = 0
         self.blob_cache: dict[tuple[str, str], str | None] = {}
+
+    @property
+    def token_pool_size(self) -> int:
+        return len(self.tokens)
+
+    def _advance_token(self) -> bool:
+        """Move to the next configured token without logging secret material."""
+        if self.token_index + 1 >= len(self.tokens):
+            return False
+        self.token_index += 1
+        self.token_switches += 1
+        self.headers["Authorization"] = f"Bearer {self.tokens[self.token_index]}"
+        return True
+
+    @staticmethod
+    def _token_should_rotate(response: requests.Response) -> bool:
+        remaining = response.headers.get("x-ratelimit-remaining")
+        return response.status_code == 401 or (
+            response.status_code == 403
+            and (remaining == "0" or "rate limit exceeded" in response.text.lower())
+        )
 
     def get(
         self,
@@ -91,6 +120,8 @@ class GitHubClient:
             if response.status_code in allowed:
                 return response
             last_error = f"HTTP {response.status_code}: {response.text[:240]}"
+            if self._token_should_rotate(response) and self._advance_token():
+                continue
             if response.status_code not in {403, 429, 500, 502, 503, 504}:
                 break
             delay = int(response.headers.get("retry-after", 0)) or 2**attempt
@@ -120,6 +151,8 @@ class GitHubClient:
                 message = json.dumps(payload["errors"], ensure_ascii=False)[:300]
             else:
                 message = response.text[:300]
+            if self._token_should_rotate(response) and self._advance_token():
+                continue
             if response.status_code not in {403, 429, 500, 502, 503, 504}:
                 break
             delay = int(response.headers.get("retry-after", 0)) or 2**attempt

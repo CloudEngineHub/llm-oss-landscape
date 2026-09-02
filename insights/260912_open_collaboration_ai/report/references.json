@@ -42,6 +42,22 @@
         "date": "June 2026 snapshot",
         "url": "https://zenmux.ai/docs/api/platform/statistics-leaderboard.html",
         "usedFor": "Single-platform model token ranking in the frozen June 2026 export."
+      },
+      {
+        "id": "D06",
+        "title": "GitHub GraphQL pull request types",
+        "publisher": "GitHub",
+        "date": "accessed September 2026",
+        "url": "https://docs.github.com/en/graphql/reference/pulls",
+        "usedFor": "Definition of the repository policy controlling who may create pull requests."
+      },
+      {
+        "id": "D07",
+        "title": "GitHub REST API endpoints for timeline events",
+        "publisher": "GitHub",
+        "date": "accessed September 2026",
+        "url": "https://docs.github.com/en/rest/issues/timeline",
+        "usedFor": "Public comments, reviews, state changes and App-mediated actions linked to sampled Issues and pull requests."
       }
     ]
   },
@@ -230,6 +246,156 @@
         "date": "checked August 2026",
         "url": "https://github.com/volcengine/OpenViking",
         "usedFor": "A concrete example of the growing memory, knowledge and context category."
+      },
+      {
+        "id": "C04",
+        "title": "Mastra contribution guidance",
+        "publisher": "Mastra",
+        "date": "frozen August 2026",
+        "url": "https://github.com/mastra-ai/mastra/blob/75dd419e613fe9c39f846ffc500716141b74fda6/README.md",
+        "usedFor": "Issue-first contribution policy example in the Top 100 review."
+      },
+      {
+        "id": "C05",
+        "title": "Open WebUI pull request template",
+        "publisher": "Open WebUI",
+        "date": "frozen August 2026",
+        "url": "https://github.com/open-webui/open-webui/blob/d3e8bf3405e848cfba377814d0aa7ba7290e414d/.github/pull_request_template.md",
+        "usedFor": "First-time-contributor Issue gate and localization exception in the Top 100 review."
+      }
+    ]
+  },
+  {
+    "label": "Public collaboration traces",
+    "description": "Issues and pull requests used in the casebook and line-level patch history.",
+    "items": [
+      {
+        "id": "T01",
+        "title": "Coder pull request #25800",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/coder/coder/pull/25800",
+        "usedFor": "Contributor, Agent review and maintainer merge hand-off."
+      },
+      {
+        "id": "T02",
+        "title": "ONNX Runtime pull request #28045",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/microsoft/onnxruntime/pull/28045",
+        "usedFor": "Casebook sequence and Agent-to-human patch lineage."
+      },
+      {
+        "id": "T03",
+        "title": "LangChain pull request #37607",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/langchain-ai/langchain/pull/37607",
+        "usedFor": "Public collaboration hand-off case."
+      },
+      {
+        "id": "T04",
+        "title": "PyTorch pull request #182986",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/pytorch/pytorch/pull/182986",
+        "usedFor": "Public collaboration hand-off case."
+      },
+      {
+        "id": "T05",
+        "title": "Supabase issue #42193",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/supabase/supabase/issues/42193",
+        "usedFor": "Public Issue triage and response sequence."
+      },
+      {
+        "id": "T06",
+        "title": "Gemini CLI issue #24026",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/google-gemini/gemini-cli/issues/24026",
+        "usedFor": "Public Issue triage and response sequence."
+      },
+      {
+        "id": "T07",
+        "title": "n8n issue #33411",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/n8n-io/n8n/issues/33411",
+        "usedFor": "Public Issue triage and response sequence."
+      },
+      {
+        "id": "T08",
+        "title": "Vercel AI pull request #18818",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/vercel/ai/pull/18818",
+        "usedFor": "Agent-only revision path in the patch-lineage casebook."
+      },
+      {
+        "id": "T09",
+        "title": "Warp pull request #13382",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/warpdotdev/warp/pull/13382",
+        "usedFor": "Agent-to-human patch-lineage case."
+      },
+      {
+        "id": "T10",
+        "title": "OpenMetadata pull request #25243",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/open-metadata/OpenMetadata/pull/25243",
+        "usedFor": "Agent-to-human patch-lineage case."
+      },
+      {
+        "id": "T11",
+        "title": "OpenHands software-agent-sdk pull request #2614",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/OpenHands/software-agent-sdk/pull/2614",
+        "usedFor": "Agent-to-human patch-lineage case."
+      },
+      {
+        "id": "T12",
+        "title": "MLflow pull request #19721",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/mlflow/mlflow/pull/19721",
+        "usedFor": "Patch-lineage case with an unresolved later author."
+      },
+      {
+        "id": "T13",
+        "title": "MLflow pull request #21621",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/mlflow/mlflow/pull/21621",
+        "usedFor": "Agent revision path in the patch-lineage casebook."
+      },
+      {
+        "id": "T14",
+        "title": "MLflow pull request #22355",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/mlflow/mlflow/pull/22355",
+        "usedFor": "Patch-lineage case retained through merge."
+      },
+      {
+        "id": "T15",
+        "title": "MLflow pull request #22659",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/mlflow/mlflow/pull/22659",
+        "usedFor": "Agent revision path in the patch-lineage casebook."
+      },
+      {
+        "id": "T16",
+        "title": "Mooncake pull request #2686",
+        "publisher": "GitHub",
+        "date": "checked August 2026",
+        "url": "https://github.com/kvcache-ai/Mooncake/pull/2686",
+        "usedFor": "Two-parent merge case retained outside the line-retention denominator."
       }
     ]
   },

@@ -1,8 +1,8 @@
 # Open Collaboration 数据采集与识别协议
 
-版本：2026-08-29
+版本：2026-09-01
 
-状态：第二轮采集完成。`rapidsai/cudf` 迁移为 `NVIDIA/cudf` 造成的 GitHub Search 假零值已经修复；主样本 100 个仓库、2,000 条线程，全部 endpoint 完整并通过校验。
+状态：主统计窗口已经统一为 2026 年 1 月 1 日至 8 月 31 日。线程样本从原 2,000 条补到 5,000 条：旧样本完整保留，每库新增 30 条，最终 100 个仓库各 50 条。主结果直接展示样本中的实际计数和比例，不再按仓库流量加权。
 
 ## 数据源优先级
 
@@ -104,9 +104,9 @@ Pilot 后补充两条排除规则：
 
 ## 第三阶段：Issue 和 PR population frame
 
-主窗口为 2026-01-01T00:00:00Z 至快照时间。仓库级别保留逐月 Issue / PR population count、窗口 cohort backlog 和 outcome；线程级元数据使用概率抽样，不把 API 能否完整分页误写成 census。
+主窗口为 2026-01-01T00:00:00Z 至 2026-08-31T23:59:59Z。仓库级别保留逐月 Issue / PR population count、窗口 cohort backlog 和 outcome；线程级元数据使用固定仓库配额抽样，不把 API 能否完整分页误写成 census。
 
-本轮 GitHub Search population count 已做两类复核：十个仓库的重复采集在 350 个已结束月份单元格中完全一致；OpenClaw、Hermes Agent、PyTorch 和 Codex 又与 repository connection total 交叉核对。八月仍是 live window，重复采集出现 1–5 条的自然变化，因此只把一月至七月当作冻结月份。
+本轮 GitHub Search population count 已做两类复核：十个仓库的重复采集在已结束月份单元格中完全一致；OpenClaw、Hermes Agent、PyTorch 和 Codex 又与 repository connection total 交叉核对。采集发生在 9 月 1 日，因此一月至八月现在都作为完整月份；OpenRank 排名仍使用完整的 2026 年 7 月。
 
 ### Issue / PR 协作项
 
@@ -140,13 +140,13 @@ window_cohort_backlog = opened_since_2026_01_01 - closed_from_same_cohort
 
 GitHub timeline 可以返回 Issue 与 PR 的 comment、review、commit、force-push、reopen、merge 等事件。Pilot 曾显示 timeline 与专用 endpoint 的摘要数量一致，但正式样本暴露出一个关键限制：timeline 的 commit 事件包含 SHA，却没有足够的 commit timestamp，无法判断提交是否发生在 review 之后。因而最终分析使用三条互补链路：timeline 保留线程状态与 gate，Pull Request review-comment endpoint 补齐 inline review，Pull Request commits endpoint 提供带日期的提交。不能把 timeline 中缺失日期的 commit 解释为“没有 review 后修改”。
 
-最终完整性结果：2,000/2,000 条线程 timeline 成功；1,425/1,425 个 PR 的 review comments 成功；1,425/1,425 个 PR 的 commits 成功；缺失 endpoint 与采集错误均为零。合并后进入分析的公开事件为 50,731 条。
+最终完整性结果：5,000/5,000 条线程 timeline 成功；3,567/3,567 个 PR 的 review comments 成功；3,567/3,567 个 PR 的 commits endpoint 成功；缺失 endpoint 与采集错误均为零。合并、去重后进入分析的公开事件为 138,244 条，其中 timeline 105,889 条、inline review comment 11,102 条、PR commit 21,253 条。
 
-报告的仓库画像不使用 `participants_2607`。这个字段只覆盖 2026 年 7 月可见的 Issue / PR 事件参与者，并且受 OpenDigger 回填影响，不能解释为仓库贡献者规模。`50,731` 也不作为仓库活动总量展示：它是围绕 2,000 条抽样线程采集的 timeline、review comment 和 PR commit 事件行数。
+报告的仓库画像不使用 `participants_2607`。这个字段只覆盖 2026 年 7 月可见的 Issue / PR 事件参与者，并且受 OpenDigger 回填影响，不能解释为仓库贡献者规模。`138,244` 也不作为仓库活动总量展示：它只是围绕 5,000 条抽样线程采集的 timeline、review comment 和 PR commit 事件行数。
 
 仓库画像只负责解释 Top 100 是哪些项目。Issue / PR 流量、同 cohort backlog 和 GitHub Release 节奏在页面上另设独立 insight，不再和语言、创建日期等样本特征放在同一组数字卡片里。参与人数本轮不展示。
 
-协作流量使用两张可相互复核的面板：repository-month frame 给出 2026 年月度流入；matched fixed-window frame 为 2022—2026 每年使用同一个 1 月 1 日至 8 月 29 日窗口。固定 cohort 从当前冻结 Top 100 中机械筛选 `created_at <= 2024-01-01` 的仓库，共 53 个；它不是人工选样，也不是 2024 年的历史 Top 53。这个口径能控制新仓库进入，却仍保留“今天仍在 Top 100”的幸存者偏差。
+协作流量使用两张可相互复核的面板：repository-month frame 给出 2026 年月度流入；matched fixed-window frame 为 2022—2026 每年使用同一个 1 月 1 日至 8 月 31 日窗口。固定 cohort 从当前冻结 Top 100 中机械筛选 `created_at <= 2024-01-01` 的仓库，共 53 个；它不是人工选样，也不是 2024 年的历史 Top 53。这个口径能控制新仓库进入，却仍保留“今天仍在 Top 100”的幸存者偏差。
 
 Release 节奏按有发布记录的 UTC 日期去重，以降低多包和 canary 自动发布对总量的放大；只打 tag 或只发布到包仓库的版本不在其中。
 
@@ -167,16 +167,17 @@ Release 节奏按有发布记录的 UTC 日期去重，以降低多包和 canary
 
 ### 数据量过大时的处理
 
-100 个仓库的 repository-month 流量和 cohort backlog 保持完整 count。评论、review 和 timeline 采用 repository-stratified probability sample。
+100 个仓库的 repository-month 流量和 cohort backlog 保持完整 count。评论、review 和 timeline 使用每仓库固定 50 条的样本。
 
-刷新后的冻结窗口包含约 346,600 个 Issue 和 599,900 个 PR。GitHub Search 会有索引回填，因此正文使用约数；同一次快照的明细仍保存精确计数。逐条调用 timeline 不能扩展到全 population。因此：
+完整八个月的冻结窗口包含 349,826 个 Issue 和 606,741 个 PR。GitHub Search 会有索引回填，因此正文除精确方法表外可以使用约数；同一次快照的明细保存精确计数。逐条调用 timeline 不能扩展到全 population。因此：
 
 - repository-month 使用重复验证的 GitHub Search count，并以 connection total 做独立 sanity check；
-- 对 100 个仓库各抽取 20 条线程；`NVIDIA/cudf` canonical 名称已经写回主数据和当前研究产物；
-- 样本保留自然 Issue / PR 构成，最终为 575 个 Issue、1,425 个 PR；每条记录保存 inclusion probability 和 inverse-probability weight；
+- 原 2,000 条线程不动，对 100 个仓库各补 30 条，最终每库 50 条；`NVIDIA/cudf` canonical 名称已经写回主数据和当前研究产物；
+- 最终样本为 1,433 个 Issue、3,567 个 PR；旧 2,000 个 thread key 全部保留，新旧没有重复；
 - confirmed Agent / bot thread 另设明确标注的 discovery top-up，只用于过程案例，不混入采用率分母；
-- 抽样种子、抽样概率和权重必须保存；
-- macro view 对仓库等权，event-weighted view 使用 sampling weight；两者并列，不能选择更符合预期的一种；
+- 两阶段抽样方法和种子必须保留，使旧 2,000 条与新增 3,000 条可逐条区分；
+- 主报告不再使用 inverse-probability weight。每条样本只算一次，报告实际计数与样本占比；
+- 这个设计让每个仓库获得同等观察量，但不能解释为 956,567 条总体按真实流量的分布；
 - 不能简单设置“每个仓库前 100 条”，那会系统性偏向最近月份或某种结果。
 
 GitHub 认证用户的 REST API 通常有每小时 5,000 次主限额，同时存在 secondary rate limit。采集器需要读取 rate-limit headers、串行控制高成本 endpoint、指数退避并支持断点续跑。
@@ -254,10 +255,10 @@ Dependabot、Renovate 和 release bot 属于 automation，不自动算 AI Agent�
 6. 每个时间指标的删失比例；
 7. 2026 月度总量与 ClickHouse 是否方向一致，差异能否解释；
 8. LLM identity 与技术领域的分组差异是否以仓库为独立单位检验；
-9. macro average 与 event-weighted 结果是否被少数大仓库拉开；
+9. 5,000 条样本结果是否被少数仓库或少数超长线程拉开；
 10. 所有“Agent 提升效率”的表述是否有合适的对照和 adoption 时间证据。
 
-当前闸门结果：严格 Agent 参与估计为 40.353%，加入两类 unresolved agent-like bot 的上界为 40.378%，主结论不敏感；population-weighted 与 equal-repository 估计并列发布；Agent 可见结果差异仅作描述，不进入因果表述。
+当前发布闸门要求：5,000/5,000 条 timeline 完整；所有样本 PR 的 review-comment 与 commit endpoint 完整；严格 Agent 身份与 expanded agent-like upper bound 同时给出；Agent 可见结果差异只作描述，不进入因果表述。
 
 ## 官方 API 参考
 

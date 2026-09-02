@@ -16,6 +16,8 @@ from typing import Any
 import requests
 from dotenv import load_dotenv
 
+from collaboration_github import direct_network_setup
+
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_SAMPLE = ROOT / (
@@ -31,7 +33,7 @@ DEFAULT_RUN_OUTPUT = ROOT / (
     "collaboration-repository-profile-2026-run.json"
 )
 OBSERVATION_START = "2026-01-01T00:00:00Z"
-OBSERVATION_END_EXCLUSIVE = "2026-08-30T00:00:00Z"
+OBSERVATION_END_EXCLUSIVE = "2026-09-01T00:00:00Z"
 COLLABORATION_EVENT_TYPES = (
     "IssuesEvent",
     "PullRequestEvent",
@@ -272,6 +274,7 @@ def main() -> None:
     args = parse_args()
     sample = read_sample(args.sample)
     load_dotenv(ROOT / ".env")
+    direct_network_setup()
     actor_profile = clickhouse_profile(sample)
     headers = github_headers()
     output_by_repo: dict[str, dict[str, Any]] = {}

@@ -1,12 +1,12 @@
 # Top 100 仓库的 2026 年协作画像
 
-数据截止到 2026 年 8 月 29 日。这个文件保留仓库级采集口径。页面上的 Top 100 画像只说明样本的技术角色、项目身份、创建时间和语言；Issue / PR 流量与发版节奏已经拆成独立 insight，详见 `collaboration-activity-flow-findings.md`。参与人数本轮不展示。
+数据覆盖 2026 年 1 月 1 日至 8 月 31 日。这个文件保留仓库级采集口径。页面上的 Top 100 画像只说明样本的技术角色、项目身份、创建时间和语言；Issue / PR 流量与发版节奏已经拆成独立 insight，详见 `collaboration-activity-flow-findings.md`。参与人数本轮不展示。
 
 ## 为什么不用 Release 总数
 
-100 个仓库在窗口内一共有 27,775 条 GitHub Release。这个数字不适合放在页面上。Vercel AI 一家就有 14,974 条，主要来自多包和 canary 自动发布；llama.cpp 也有 2,002 条。总量更像发布流水线的事件量，不像读者理解的“发了多少版本”。
+100 个仓库在窗口内一共有 28,139 条 GitHub Release。这个数字不适合放在页面上。Vercel AI 一家就有 15,232 条，主要来自多包和 canary 自动发布；llama.cpp 也有 2,041 条。总量更像发布流水线的事件量，不像读者理解的“发了多少版本”。
 
-独立 insight 使用 release day 分布：98 个仓库今年至少发布过一次 GitHub Release；按 UTC 日期去重，仓库中位数是 34 个 release days，四分位区间是 15—102 天。这个指标仍然看不到只打 tag、只发 PyPI/npm 或在其他发布系统中完成的版本。
+独立 insight 使用 release day 分布：98 个仓库今年至少发布过一次 GitHub Release；按 UTC 日期去重，仓库中位数是 34 个 release days，四分位区间是 15—103 天。这个指标仍然看不到只打 tag、只发 PyPI/npm 或在其他发布系统中完成的版本。
 
 ## 为什么暂不展示参与人数
 

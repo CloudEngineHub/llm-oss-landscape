@@ -1,12 +1,12 @@
 {
-  "collected_at": "2026-08-30T12:53:52.196026+00:00",
+  "collected_at": "2026-09-01T09:16:22.251266+00:00",
   "sample": "insights/260912_open_collaboration_ai/research/collaboration-sample-top100-2607.csv",
   "output": "insights/260912_open_collaboration_ai/research/collaboration-repository-profile-2026.csv",
   "repositories": 100,
   "observation_start": "2026-01-01T00:00:00Z",
-  "observation_end_exclusive": "2026-08-30T00:00:00Z",
-  "github_requests": 347,
-  "github_rate_limit_remaining": 4127,
+  "observation_end_exclusive": "2026-09-01T00:00:00Z",
+  "github_requests": 349,
+  "github_rate_limit_remaining": 3965,
   "definitions": {
     "push_actors": "Distinct actor_id values on PushEvent records; this identifies people/accounts that pushed, not every commit author.",
     "collaboration_actors": "Distinct actor_id values on Issue, Pull Request, comment, review and review-comment events.",

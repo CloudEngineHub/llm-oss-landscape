@@ -77,7 +77,7 @@ def aggregate(scope: str, segment: str, year: int, rows: list[dict[str, str]]) -
         "scope": scope,
         "segment": segment,
         "year": year,
-        "window": f"{year}-01-01..{year}-08-29",
+        "window": f"{year}-01-01..{year}-08-31",
         "repositories": len(rows),
         "issues_opened": issues,
         "issues_unresolved": issue_unresolved,
@@ -249,13 +249,14 @@ def main() -> None:
     issue_top_five = sum(integer(row, "issues_opened") for row in top_issue[:5]) / current_total["issues_opened"]
     pr_top_five = sum(integer(row, "prs_opened") for row in top_pr[:5]) / current_total["prs_opened"]
     release_days_sorted = sorted(release_days)
+    vercel_profile = next(row for row in profile if row["repo_name"] == "vercel/ai")
     findings = f"""# Top 100 的协作流量与发版节奏
 
-数据截止 2026-08-29。Issue / PR 统计都使用冻结的当前 Top 100；历史对照使用每年相同的 1 月 1 日至 8 月 29 日窗口。
+数据截止 2026-08-31。Issue / PR 统计都使用冻结的当前 Top 100；历史对照使用每年相同的 1 月 1 日至 8 月 31 日窗口。
 
 ## 今年的 PR 流入明显高于 Issue
 
-窗口内约有 {current_total['issues_opened']:,} 条 Issue 和 {current_total['prs_opened']:,} 条 PR，PR 是 Issue 的 {current_total['pr_issue_ratio']:.2f} 倍。这个关系不是一开始就固定如此：月度比值从 1 月的 {monthly_totals[0][2] / monthly_totals[0][1]:.2f} 上升到 8 月前 29 天的 {monthly_totals[-1][2] / monthly_totals[-1][1]:.2f}。
+窗口内约有 {current_total['issues_opened']:,} 条 Issue 和 {current_total['prs_opened']:,} 条 PR，PR 是 Issue 的 {current_total['pr_issue_ratio']:.2f} 倍。这个关系不是一开始就固定如此：月度比值从 1 月的 {monthly_totals[0][2] / monthly_totals[0][1]:.2f} 上升到完整 8 月的 {monthly_totals[-1][2] / monthly_totals[-1][1]:.2f}。
 
 PR 多不等于 Agent 写了更多代码。这里包括人类提交、依赖更新、release 自动化和其他 Bot；GitHub 的总量数据无法拆出 AI 生成代码。
 
@@ -275,7 +276,7 @@ Issue 流入最高的五个仓库占 {issue_top_five:.1%}，PR 流入最高的�
 
 {sum(value > 0 for value in release_days)}/100 个仓库在窗口内发布过非 draft GitHub Release。按 UTC 日期去重后，仓库的 release day 中位数是 {statistics.median(release_days):.0f} 天，四分位区间是 {statistics.quantiles(release_days, n=4)[0]:.0f}—{statistics.quantiles(release_days, n=4)[2]:.0f} 天；{sum(value >= 180 for value in release_days)} 个仓库达到 180 天以上。
 
-Vercel AI 的 14,974 条 Release 记录只落在 192 个日期，说明 raw release count 很容易被多包和 canary 流水线放大。页面因此展示 release day 分布，并保留 tag-only、PyPI、npm 和其他 registry 不在此口径内的限制。
+Vercel AI 的 {integer(vercel_profile, 'github_releases'):,} 条 Release 记录只落在 {integer(vercel_profile, 'github_release_days')} 个日期，说明 raw release count 很容易被多包和 canary 流水线放大。页面因此展示 release day 分布，并保留 tag-only、PyPI、npm 和其他 registry 不在此口径内的限制。
 
 ## 数据复核
 

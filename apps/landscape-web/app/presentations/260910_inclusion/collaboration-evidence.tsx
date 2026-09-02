@@ -148,11 +148,11 @@ const threadCases = [
 
 const metricNotes: Record<string, string> = {
   agentParticipation:
-    "Verified Agent presence grows sharply in several projects, but that does not mean the Agent authored the accepted code.",
+    "This line follows how often a named Agent appears anywhere in the sampled thread as the repository moves from launch to 2026.",
   maintainerParticipation:
-    "A falling visible maintainer share can mean delegated triage—or simply that public GitHub traces moved elsewhere.",
+    "This line follows the share of sampled threads with a visible response from an owner, member or collaborator at each stage.",
   mergedWithin30Days:
-    "The 30-day GitHub merged flag is an outcome marker, not a productivity or quality score.",
+    "This line follows the share of sampled pull requests that reached GitHub's merged state within 30 days.",
 };
 
 function percent(value: number) {
@@ -166,11 +166,11 @@ export function CollaborationCasebook() {
   return (
     <section className={styles.casebook} data-reveal>
       <header>
-        <h3>Read the collaboration trace, not only the outcome.</h3>
+        <h3>The same outcome can hide very different hand-offs.</h3>
         <p>
-          Four cases come from the 2,000-thread sample and three from the ten-repository
-          panels. They were selected because the public sequence is legible. They are
-          examples of different coordination patterns, not representative rates.
+          Four cases come from the 5,000-thread sample and three from the ten-repository
+          panels. Their public timelines show where contributors, Agents, automation and
+          maintainers enter the work before a thread is merged, closed or fixed.
         </p>
       </header>
       <div className={styles.caseTabs} role="tablist" aria-label="Issue and pull request cases">
@@ -234,12 +234,13 @@ export function CollaborationEvolution({ research }: Props) {
   return (
     <section className={styles.evolutionLab} data-reveal>
       <header>
-        <h3>The same repository can change direction as it matures.</h3>
+        <h3>Agent participation changes as a repository matures.</h3>
         <p>
           The full lifecycle panel contains 900 threads from ten repositories: 30 in each
           project&apos;s launch window, 30 in 2025 Q4 and 30 in May–August 2026. This chart
-          shows four of those repositories so their stages remain readable. It compares
-          change inside a project; it is not an ecosystem-wide rate.
+          shows four at a time and compares each repository with its own earlier stages.
+          The trajectories reveal whether Agent participation, maintainer presence and
+          30-day merge outcomes moved together as the project grew.
         </p>
       </header>
       <div className={styles.evolutionControls}>

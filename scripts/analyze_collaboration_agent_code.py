@@ -36,7 +36,6 @@ DETAIL_FIELDS = [
     "llm_native_manual",
     "collaboration_niche",
     "outcome",
-    "sampling_weight",
     "additions",
     "deletions",
     "change_lines",
@@ -69,17 +68,17 @@ ESTIMATE_FIELDS = [
     "sample_positive_prs",
     "sample_merged_prs",
     "repositories_with_positive_pr",
-    "weighted_pr_share",
-    "weighted_pr_share_ci_low",
-    "weighted_pr_share_ci_high",
-    "weighted_addition_share",
-    "weighted_addition_share_ci_low",
-    "weighted_addition_share_ci_high",
-    "weighted_change_line_share",
-    "weighted_change_line_share_ci_low",
-    "weighted_change_line_share_ci_high",
+    "sample_pr_share",
+    "sample_pr_share_ci_low",
+    "sample_pr_share_ci_high",
+    "sample_addition_share",
+    "sample_addition_share_ci_low",
+    "sample_addition_share_ci_high",
+    "sample_change_line_share",
+    "sample_change_line_share_ci_low",
+    "sample_change_line_share_ci_high",
     "winsorized_change_line_share_p99",
-    "weighted_commits_in_positive_pr_share",
+    "sample_commits_in_positive_pr_share",
     "interpretation",
 ]
 
@@ -90,8 +89,8 @@ STRATA_FIELDS = [
     "sample_merged_prs",
     "sample_positive_prs",
     "repositories",
-    "weighted_pr_share",
-    "weighted_change_line_share",
+    "sample_pr_share",
+    "sample_change_line_share",
 ]
 
 KEY_METRIC_FIELDS = ["metric", "value", "sample_numerator", "sample_denominator", "note"]
@@ -148,13 +147,6 @@ def as_int(value: str | int | None) -> int:
         return 0
 
 
-def as_float(value: str | float | None) -> float:
-    try:
-        return float(value or 0)
-    except (TypeError, ValueError):
-        return 0.0
-
-
 def identity_key(login: str | None) -> str:
     return re.sub(r"\[bot\]$", "", (login or "").strip().lower())
 
@@ -181,10 +173,10 @@ def percentile(values: list[float], probability: float) -> float:
 
 
 def ratio(rows: list[dict[str, Any]], positive: Callable[[dict[str, Any]], bool], field: str) -> float:
-    denominator = sum(row["sampling_weight"] * row[field] for row in rows)
+    denominator = sum(row[field] for row in rows)
     if denominator <= 0:
         return 0.0
-    numerator = sum(row["sampling_weight"] * row[field] for row in rows if positive(row))
+    numerator = sum(row[field] for row in rows if positive(row))
     return numerator / denominator
 
 
@@ -230,21 +222,21 @@ def scenario_estimate(
     winsor_share = ratio(winsor_rows, positive, "winsorized_change_lines")
     return {
         "scenario": scenario,
-        "scope": "2026-01-01_to_2026-08-29_top100_probability_sample",
+        "scope": "2026-01-01_to_2026-08-31_top100_fixed_50_threads_per_repository_sample",
         "sample_positive_prs": len(positives),
         "sample_merged_prs": len(merged_rows),
         "repositories_with_positive_pr": len({row["repo_name"] for row in positives}),
-        "weighted_pr_share": round(pr_share, 6),
-        "weighted_pr_share_ci_low": round(pr_low, 6),
-        "weighted_pr_share_ci_high": round(pr_high, 6),
-        "weighted_addition_share": round(additions_share, 6),
-        "weighted_addition_share_ci_low": round(add_low, 6),
-        "weighted_addition_share_ci_high": round(add_high, 6),
-        "weighted_change_line_share": round(change_share, 6),
-        "weighted_change_line_share_ci_low": round(line_low, 6),
-        "weighted_change_line_share_ci_high": round(line_high, 6),
+        "sample_pr_share": round(pr_share, 6),
+        "sample_pr_share_ci_low": round(pr_low, 6),
+        "sample_pr_share_ci_high": round(pr_high, 6),
+        "sample_addition_share": round(additions_share, 6),
+        "sample_addition_share_ci_low": round(add_low, 6),
+        "sample_addition_share_ci_high": round(add_high, 6),
+        "sample_change_line_share": round(change_share, 6),
+        "sample_change_line_share_ci_low": round(line_low, 6),
+        "sample_change_line_share_ci_high": round(line_high, 6),
         "winsorized_change_line_share_p99": round(winsor_share, 6),
-        "weighted_commits_in_positive_pr_share": round(commits_share, 6),
+        "sample_commits_in_positive_pr_share": round(commits_share, 6),
         "interpretation": interpretation,
     }
 
@@ -288,10 +280,8 @@ def main() -> None:
         errors.append("PR commit endpoint contains incomplete rows")
 
     for item in sample:
-        weight = as_float(item.get("sampling_weight"))
         base = {
             "repo_name": item["repo_name"],
-            "sampling_weight": weight,
             "merged_indicator": 0,
             "additions": 0,
             "deletions": 0,
@@ -396,7 +386,6 @@ def main() -> None:
             "llm_native_manual": item.get("llm_native_manual", ""),
             "collaboration_niche": item.get("collaboration_niche", ""),
             "outcome": "merged" if merged else item.get("outcome", ""),
-            "sampling_weight": item.get("sampling_weight", ""),
             "additions": additions,
             "deletions": deletions,
             "change_lines": additions + deletions,
@@ -489,27 +478,23 @@ def main() -> None:
     ]
     write_csv(args.estimates_output, ESTIMATE_FIELDS, estimates)
 
-    total_weighted_commits = sum(row["sampling_weight"] * row["commits_total"] for row in merged_rows)
-    direct_weighted_commits = sum(
-        row["sampling_weight"] * row["direct_agent_commits"] for row in merged_rows
-    )
-    linked_weighted_commits = sum(
-        row["sampling_weight"] * row["linked_agent_commits"] for row in merged_rows
-    )
+    total_commits = sum(row["commits_total"] for row in merged_rows)
+    direct_commits = sum(row["direct_agent_commits"] for row in merged_rows)
+    linked_commits = sum(row["linked_agent_commits"] for row in merged_rows)
     strict_estimate = estimates[0]
     touched_estimate = estimates[1]
     expanded_touched_estimate = estimates[2]
     key_metrics = [
         {
             "metric": "strict_agent_only_merged_pr_share",
-            "value": strict_estimate["weighted_pr_share"],
+            "value": strict_estimate["sample_pr_share"],
             "sample_numerator": strict_estimate["sample_positive_prs"],
             "sample_denominator": strict_estimate["sample_merged_prs"],
-            "note": "Probability-weighted share; every current commit is Agent attributed.",
+            "note": "Share of sampled merged PRs in which every current commit is Agent attributed.",
         },
         {
             "metric": "strict_agent_only_final_addition_share",
-            "value": strict_estimate["weighted_addition_share"],
+            "value": strict_estimate["sample_addition_share"],
             "sample_numerator": sum(
                 row["additions"] for row in merged_rows if row["agent_only_traceable"]
             ),
@@ -518,30 +503,28 @@ def main() -> None:
         },
         {
             "metric": "verified_agent_touched_merged_pr_share",
-            "value": touched_estimate["weighted_pr_share"],
+            "value": touched_estimate["sample_pr_share"],
             "sample_numerator": touched_estimate["sample_positive_prs"],
             "sample_denominator": touched_estimate["sample_merged_prs"],
             "note": "Agent opened the PR or authored at least one current commit; may include human rewrites.",
         },
         {
             "metric": "expanded_agent_touched_merged_pr_share",
-            "value": expanded_touched_estimate["weighted_pr_share"],
+            "value": expanded_touched_estimate["sample_pr_share"],
             "sample_numerator": expanded_touched_estimate["sample_positive_prs"],
             "sample_denominator": expanded_touched_estimate["sample_merged_prs"],
             "note": "Sensitivity bound adding medium-confidence Coding Agent identities.",
         },
         {
             "metric": "directly_attributed_agent_commit_share",
-            "value": round(direct_weighted_commits / total_weighted_commits, 6)
-            if total_weighted_commits else 0,
+            "value": round(direct_commits / total_commits, 6) if total_commits else 0,
             "sample_numerator": sum(row["direct_agent_commits"] for row in merged_rows),
             "sample_denominator": sum(row["commits_total"] for row in merged_rows),
-            "note": "Commit author identity is a confirmed Coding Agent; weighted within sampled merged PRs.",
+            "note": "Commit author identity is a confirmed Coding Agent; share within sampled merged PRs.",
         },
         {
             "metric": "direct_or_pr_linked_agent_commit_share",
-            "value": round((direct_weighted_commits + linked_weighted_commits) / total_weighted_commits, 6)
-            if total_weighted_commits else 0,
+            "value": round((direct_commits + linked_commits) / total_commits, 6) if total_commits else 0,
             "sample_numerator": sum(
                 row["direct_agent_commits"] + row["linked_agent_commits"] for row in merged_rows
             ),
@@ -566,8 +549,8 @@ def main() -> None:
                         "sample_merged_prs": len(merged_subset),
                         "sample_positive_prs": sum(positive(row) for row in merged_subset),
                         "repositories": len({row["repo_name"] for row in merged_subset}),
-                        "weighted_pr_share": round(ratio(subset, positive, "merged_indicator"), 6),
-                        "weighted_change_line_share": round(ratio(subset, positive, "change_lines"), 6),
+                        "sample_pr_share": round(ratio(subset, positive, "merged_indicator"), 6),
+                        "sample_change_line_share": round(ratio(subset, positive, "change_lines"), 6),
                     }
                 )
     write_csv(args.strata_output, STRATA_FIELDS, strata_rows)
@@ -582,6 +565,7 @@ def main() -> None:
         "expanded_coding_agent_identities": len(expanded_coding_agents),
         "metadata_complete": len(metadata) == len(pr_samples),
         "commit_endpoints_complete": all(row.get("scan_status") == "ok" for row in commit_status),
+        "commit_histories_fully_attributable": not warnings,
         "validation_errors": errors,
         "validation_warnings": warnings,
         "p99_merged_pr_change_lines": p99,
@@ -596,6 +580,8 @@ def main() -> None:
             "Agent-touched PR code volume is not the same as AI-generated code volume when humans also committed.",
             "PR additions and deletions include tests, documentation, generated files, lockfiles, and other non-source changes.",
             "Agent-only is based on current PR commits; exact line survival across mixed Agent-human histories requires patch lineage.",
+            "GitHub exposes at most 250 commits through the PR commit connection for very large PRs. Those PRs remain eligible for Agent-touched detection, but never for the strict Agent-only class unless commit attribution is complete.",
+            "All shares are direct shares of the fixed 5,000-thread sample; no repository-traffic weights are applied.",
         ],
     }
     args.run_output.write_text(json.dumps(run, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

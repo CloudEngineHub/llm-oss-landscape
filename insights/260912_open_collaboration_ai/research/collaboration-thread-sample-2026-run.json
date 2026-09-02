@@ -1,27 +1,20 @@
 {
-  "started_at": "2026-08-29T08:54:54.642069+00:00",
-  "completed_at": "2026-08-29T08:55:06.462257+00:00",
-  "repositories_requested": 100,
+  "started_at": "2026-09-01T09:26:13.408702+00:00",
+  "completed_at": "2026-09-01T09:58:53.327813+00:00",
+  "study_window": "2026-01-01T00:00:00Z..2026-08-31T23:59:59Z",
+  "base_sample_preserved": 2000,
+  "supplemental_items_added": 3000,
+  "sample_items": 5000,
+  "items_per_repository": 50,
   "repositories_complete": 100,
   "repository_errors": [],
-  "sample_items": 2000,
-  "items_per_repository_target": 20,
-  "sampling_seed": 260829,
-  "http_requests": 22,
-  "core_rate_limit": {
-    "limit": 5000,
-    "used": 0,
-    "remaining": 5000,
-    "reset": 1787997306
-  },
-  "outputs": [
-    "insights/260912_open_collaboration_ai/research/collaboration-thread-sample-2026.csv",
-    "insights/260912_open_collaboration_ai/research/collaboration-thread-sample-2026-repositories.csv"
-  ],
+  "sampling_seed": 260831,
+  "http_requests": 3197,
+  "analysis_weighting": "none; every sampled thread counts once",
   "limitations": [
-    "The natural sample is uniform over accessible Issue-number slots inside each repository, with rejection of missing or out-of-window numbers.",
-    "Repository weights use the GitHub Search population count and require the separate Search-count stability check.",
-    "The sample preserves the natural Issue/PR mix. Rare item types may need a separately labelled top-up sample for process comparison.",
-    "Item metadata alone does not establish human-Agent collaboration; timeline and review events are collected next."
+    "The original 20 threads per repository were preserved; 30 more were sampled without replacement from numbers not already selected.",
+    "The first-stage sample ended on 2026-08-29 and the supplement uses the complete window through 2026-08-31.",
+    "Results are descriptive of these 5,000 sampled threads and are not population-weighted estimates.",
+    "Equal repository quotas make cross-repository coverage easier to inspect but do not reproduce the ecosystem-wide distribution of repository traffic."
   ]
 }

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Collect timeline, review, and commit events for the probability thread sample."""
+"""Collect timeline events for the fixed 50-threads-per-repository sample."""
 
 from __future__ import annotations
 
@@ -7,7 +7,9 @@ import argparse
 import csv
 import json
 import os
+import threading
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -77,6 +79,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--status", type=Path, default=DEFAULT_STATUS)
     parser.add_argument("--run-output", type=Path, default=DEFAULT_RUN)
     parser.add_argument("--max-repos", type=int)
+    parser.add_argument("--workers", type=int, default=8)
     parser.add_argument(
         "--include-pr-details",
         action="store_true",
@@ -233,7 +236,72 @@ def main() -> None:
     token = (os.getenv("GITHUB_TOKEN") or os.getenv("GH_TOKEN") or "").strip()
     if not token:
         raise SystemExit("GITHUB_TOKEN or GH_TOKEN is required")
-    client = GitHubClient(token)
+    thread_local = threading.local()
+    worker_clients: list[GitHubClient] = []
+    clients_lock = threading.Lock()
+
+    def worker_client() -> GitHubClient:
+        client = getattr(thread_local, "client", None)
+        if client is None:
+            client = GitHubClient(token)
+            thread_local.client = client
+            with clients_lock:
+                worker_clients.append(client)
+        return client
+
+    def collect_one(sample: dict[str, str]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+        client = worker_client()
+        collected_at = datetime.now(UTC).isoformat()
+        try:
+            timeline, timeline_pages, timeline_status = paginate(
+                client, f"/repos/{sample['repo_name']}/issues/{sample['number']}/timeline"
+            )
+            reviews: list[dict[str, Any]] = []
+            commits: list[dict[str, Any]] = []
+            review_pages = 0
+            commit_pages = 0
+            review_status = "not_collected"
+            commit_status = "not_collected"
+            if sample["item_type"] == "pull_request" and args.include_pr_details:
+                reviews, review_pages, review_status = paginate(
+                    client, f"/repos/{sample['repo_name']}/pulls/{sample['number']}/reviews"
+                )
+                commits, commit_pages, commit_status = paginate(
+                    client, f"/repos/{sample['repo_name']}/pulls/{sample['number']}/commits"
+                )
+            collected_events = [normalize_timeline(sample, item, collected_at) for item in timeline]
+            collected_events.extend(normalize_review(sample, item, collected_at) for item in reviews)
+            collected_events.extend(normalize_commit(sample, item, collected_at) for item in commits)
+            status = {
+                "sample_rank": sample["sample_rank"],
+                "repo_name": sample["repo_name"],
+                "item_type": sample["item_type"],
+                "number": sample["number"],
+                "timeline_events": len(timeline),
+                "timeline_comment_events": sum((item.get("event") or "commented") == "commented" for item in timeline),
+                "timeline_review_events": sum(item.get("event") == "reviewed" for item in timeline),
+                "timeline_commit_events": sum(item.get("event") == "committed" for item in timeline),
+                "timeline_endpoint_status": timeline_status,
+                "review_events": len(reviews),
+                "review_endpoint_status": review_status,
+                "commit_events": len(commits),
+                "commit_endpoint_status": commit_status,
+                "timeline_pages": timeline_pages,
+                "review_pages": review_pages,
+                "commit_pages": commit_pages,
+                "scan_status": "ok" if timeline_status == "ok" else "missing_timeline",
+                "error": "",
+            }
+            return collected_events, status
+        except Exception as exc:
+            return [], {
+                "sample_rank": sample["sample_rank"],
+                "repo_name": sample["repo_name"],
+                "item_type": sample["item_type"],
+                "number": sample["number"],
+                "scan_status": "error",
+                "error": str(exc)[:500],
+            }
 
     events = [] if args.fresh else read_csv(args.events)
     statuses = [] if args.fresh else read_csv(args.status)
@@ -248,66 +316,19 @@ def main() -> None:
         print(f"[{index}/{len(repos)}] {repo}", flush=True)
         repo_events = [row for row in events if row.get("repo_name") != repo]
         repo_statuses = [row for row in statuses if row.get("repo_name") != repo]
+        pending = []
         for sample in grouped[repo]:
             key = (repo, sample["number"])
             if key in completed:
                 repo_events.extend(row for row in events if row.get("repo_name") == repo and row.get("number") == sample["number"])
                 repo_statuses.extend(row for row in statuses if row.get("repo_name") == repo and row.get("number") == sample["number"])
                 continue
-            collected_at = datetime.now(UTC).isoformat()
-            try:
-                timeline, timeline_pages, timeline_status = paginate(
-                    client, f"/repos/{repo}/issues/{sample['number']}/timeline"
-                )
-                reviews: list[dict[str, Any]] = []
-                commits: list[dict[str, Any]] = []
-                review_pages = 0
-                commit_pages = 0
-                review_status = "not_collected"
-                commit_status = "not_collected"
-                if sample["item_type"] == "pull_request" and args.include_pr_details:
-                    reviews, review_pages, review_status = paginate(
-                        client, f"/repos/{repo}/pulls/{sample['number']}/reviews"
-                    )
-                    commits, commit_pages, commit_status = paginate(
-                        client, f"/repos/{repo}/pulls/{sample['number']}/commits"
-                    )
-                repo_events.extend(normalize_timeline(sample, item, collected_at) for item in timeline)
-                repo_events.extend(normalize_review(sample, item, collected_at) for item in reviews)
-                repo_events.extend(normalize_commit(sample, item, collected_at) for item in commits)
-                repo_statuses.append(
-                    {
-                        "sample_rank": sample["sample_rank"],
-                        "repo_name": repo,
-                        "item_type": sample["item_type"],
-                        "number": sample["number"],
-                        "timeline_events": len(timeline),
-                        "timeline_comment_events": sum((item.get("event") or "commented") == "commented" for item in timeline),
-                        "timeline_review_events": sum(item.get("event") == "reviewed" for item in timeline),
-                        "timeline_commit_events": sum(item.get("event") == "committed" for item in timeline),
-                        "timeline_endpoint_status": timeline_status,
-                        "review_events": len(reviews),
-                        "review_endpoint_status": review_status,
-                        "commit_events": len(commits),
-                        "commit_endpoint_status": commit_status,
-                        "timeline_pages": timeline_pages,
-                        "review_pages": review_pages,
-                        "commit_pages": commit_pages,
-                        "scan_status": "ok" if timeline_status == "ok" else "missing_timeline",
-                        "error": "",
-                    }
-                )
-            except Exception as exc:
-                repo_statuses.append(
-                    {
-                        "sample_rank": sample["sample_rank"],
-                        "repo_name": repo,
-                        "item_type": sample["item_type"],
-                        "number": sample["number"],
-                        "scan_status": "error",
-                        "error": str(exc)[:500],
-                    }
-                )
+            pending.append(sample)
+        if pending:
+            with ThreadPoolExecutor(max_workers=args.workers) as executor:
+                for collected_events, status in executor.map(collect_one, pending):
+                    repo_events.extend(collected_events)
+                    repo_statuses.append(status)
         events = repo_events
         statuses = repo_statuses
         write_csv(args.events, EVENT_FIELDS, events)
@@ -315,7 +336,8 @@ def main() -> None:
 
     repo_set = set(repos)
     relevant_status = [row for row in statuses if row["repo_name"] in repo_set]
-    rate = client.get("/rate_limit").json()["resources"]
+    rate_client = GitHubClient(token)
+    rate = rate_client.get("/rate_limit").json()["resources"]
     run = {
         "started_at": started_at,
         "completed_at": datetime.now(UTC).isoformat(),
@@ -327,7 +349,7 @@ def main() -> None:
         ),
         "thread_errors": [row for row in relevant_status if row.get("scan_status") == "error"],
         "events": sum(1 for row in events if row["repo_name"] in repo_set),
-        "http_requests": client.requests,
+        "http_requests": sum(client.requests for client in worker_clients) + rate_client.requests,
         "core_rate_limit": rate.get("core"),
         "outputs": [display_path(args.events), display_path(args.status)],
         "limitations": [

@@ -2,9 +2,9 @@
 
 ## 研究设计
 
-版本：2026-08-29 · 第二轮实证研究已完成
+版本：2026-09-01 · 主统计窗口更新到完整八个月，线程样本补到 5,000 条
 
-数据状态：`rapidsai/cudf` 改名为 `NVIDIA/cudf` 造成的 GitHub Search 假零值已经修复。主样本为 100 个仓库、2,000 条线程，全部 endpoint 完整并通过校验。实验过程的白话说明见 [这次实验到底是怎么做的](how-the-study-was-run.md)。
+数据状态：`rapidsai/cudf` 改名为 `NVIDIA/cudf` 造成的 GitHub Search 假零值已经修复。主样本保留原 2,000 条，再补 3,000 条，最终为 100 个仓库各 50 条。主报告直接呈现 5,000 条样本中的实际计数和比例，不再按仓库流量加权。实验过程的白话说明见 [这次实验到底是怎么做的](how-the-study-was-run.md)。
 
 研究对象：头部 Agentic AI 开源仓库、长期活跃的软件仓库对照组
 
@@ -91,7 +91,7 @@ Agent 承担的任务从文件路径和明确指令中做多标签编码，包�
 - 2026 年 5 月与 8 月的重复横截面对比；
 - 同一仓库在两个时间点的新增、保留和删除配置。
 
-当前结果：严格 instruction 覆盖 86/100；instruction 或 active config 覆盖 92/100。线程样本在 89/100 个仓库中观察到可验证 Agent 身份或 App 代理行为，加权线程比例为 40.35%，仓库等权为 42.8%。仓库准备度与公开可见参与仍然不能互换。
+当前结果：92/100 个仓库存在 coding-agent 指令文件或工具目录，其中 86 个能读到具体 instruction file。5,000 条线程样本在 95/100 个仓库中观察到可验证 Agent 身份或 App 代理行为，共 2,158 条、占样本 43.16%。仓库准备度与公开可见参与仍然不能互换。
 
 ### RQ2 · 仓库是否仍然接受外部协作
 
@@ -138,7 +138,7 @@ PR 指标：
 
 “关闭更快”不能单独解释为效率提升。它必须和 merged / rejected 结果、无人响应比例及 backlog 变化一起展示。
 
-当前结果：59.8% 的加权 PR 有 visible review；其中 54.23% 在首次 review 后增加 commit，CHANGES_REQUESTED 后增加 commit 的比例为 73.08%。Top 100 固定成熟度 PR unresolved 中位数为 9.1%，12 个长期对照为 8.2%；9/12 个对照也比 2022 年恶化。结果支持“存在迭代和更广泛 review pressure”，不支持把变化单独归因给 Agent。
+当前结果：3,567 个样本 PR 中，70.7% 有 visible review；其中 55.0% 在首次 review 后增加 commit，161 个收到 `CHANGES_REQUESTED` 的 PR 中有 123 个后来又提交，占 76.4%。Top 100 固定成熟度 PR unresolved 中位数为 9.1%，12 个长期对照为 8.2%；9/12 个对照也比 2022 年恶化。结果支持“存在迭代和更广泛 review pressure”，不支持把变化单独归因给 Agent。
 
 ### RQ4 · 人和 Bot 如何共同参与线程
 
@@ -162,7 +162,7 @@ Issue、PR、comment、review 和 merge actor 按公开证据分层：
 
 对话不能只用 comment 数量表示。Issue 记录独立 actor、身份切换次数和维护者响应轮次；PR 另外记录 review 后的代码更新和 change-request cycle。
 
-当前结果：Agent participation 仅打开 0.87% 的加权线程，但在 36.43% 中响应、在 32.65% 的 PR 中参与 review；GitHub User account 执行 78.3% 的 visible gate，maintainer-associated account 执行 35.88%，verified Agent participation 执行 3.85%。类别在 App-mediated User action 时可重叠。
+当前结果：Agent participation 打开了 87/5,000 条线程，占 1.74%；在 38.28% 的样本线程中响应、在 37.62% 的样本 PR 中参与 review。在 4,098 个已解决且能看到最终 actor 的线程中，GitHub User account 执行 88.48% 的 visible gate，maintainer-associated account 执行 52.37%，verified Agent participation 执行 1.93%。类别在 App-mediated User action 时可重叠。
 
 ### RQ5 · Agent 是否降低协作成本
 
@@ -199,12 +199,12 @@ PyTorch 已经属于主样本的 Model Infra 层，不能同时作为独立对�
 
 ## 观察窗口
 
-主分析的数据窗口冻结于 2026-08-27；仓库设置、政策与 Agent marker 的最终核验完成于 2026-08-29。
+Issue / PR 主统计窗口冻结于 2026-08-31；仓库设置、政策与 Agent marker 仍使用 2026-08-29 的核验快照。
 
 - 仓库设置与 Agent marker：2026-05 快照口径复算，对比 2026-08 当前树；
-- Issue / PR 主窗口：2026-01-01 至 2026-08-27；
-- backlog：同时保留窗口开始前尚未关闭的存量；
-- 长期对照：2022-01-01 至 2026-08-27，2026 年按 year-to-date 单独标记；
+- Issue / PR 主窗口：2026-01-01 至 2026-08-31；
+- backlog：主指标追踪窗口内新建但截至 8 月 31 日仍未解决的 cohort；更早存量不混入该比例；
+- 长期对照：2022-01-01 至 2026-08-31，2026 年按 year-to-date 单独标记；
 - adoption event study：采用日前后各 90 天或 180 天，按数据量预先固定。
 
 发布前长期私有、一次性导入 commit 或从其他仓库拆分的项目，需要以第一个公开 release、Issue 或 PR 活动重新确定协作起点，并保留判断依据。
@@ -214,7 +214,7 @@ PyTorch 已经属于主样本的 Model Infra 层，不能同时作为独立对�
 1. 保存样本纳入表、人工映射和排除理由；
 2. 所有比例同时给出分母，所有时间指标报告 median、IQR 和删失比例；
 3. 仓库是主要分析单位，不能让 PyTorch 等大仓库用事件总量淹没小仓库；
-4. 同时报告 macro average（各仓库等权）和 event-weighted 结果；
+4. 主样本每条线程只计一次；如需展示仓库之间的离散程度，另外给出仓库级分布，不再把流量权重混入主结论；
 5. 分层分析预先固定创建年代、语言、技术生态位和 Agent proximity；
 6. 样本量不足的层合并或只做描述，不追求显著性；
 7. 对超大项目、新发布项目、关闭 Issue/PR 的项目和边缘 Agentic 项目做敏感性分析；

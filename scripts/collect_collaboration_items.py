@@ -24,7 +24,7 @@ DEFAULT_ITEMS = RESEARCH / "collaboration-items-2026.csv"
 DEFAULT_REPOSITORIES = RESEARCH / "collaboration-items-2026-repositories.csv"
 DEFAULT_RUN = RESEARCH / "collaboration-items-2026-run.json"
 DEFAULT_SINCE = "2026-01-01T00:00:00Z"
-DEFAULT_UNTIL = "2026-08-29T23:59:59Z"
+DEFAULT_UNTIL = "2026-08-31T23:59:59Z"
 
 ITEM_FIELDS = [
     "sample_rank",

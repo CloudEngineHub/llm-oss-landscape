@@ -1,10 +1,10 @@
 {
-  "started_at": "2026-08-29T10:03:51.904707+00:00",
-  "completed_at": "2026-08-29T10:06:04.532201+00:00",
-  "sample_pull_requests": 1425,
-  "complete": 1425,
+  "started_at": "2026-09-01T09:59:45.130396+00:00",
+  "completed_at": "2026-09-01T10:04:34.643116+00:00",
+  "sample_pull_requests": 3567,
+  "complete": 3567,
   "errors": [],
-  "http_requests": 30,
+  "http_requests": 43,
   "output": "insights/260912_open_collaboration_ai/research/collaboration-pr-code-metadata-2026.csv",
   "notes": [
     "Additions and deletions are the final pull-request diff reported by GitHub.",

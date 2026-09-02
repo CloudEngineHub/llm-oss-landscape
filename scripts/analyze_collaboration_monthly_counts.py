@@ -122,7 +122,7 @@ def main() -> None:
         return {
             "section": "window_outcome",
             "segment": segment,
-            "period": "2026-01-01..2026-08-29",
+            "period": "2026-01-01..2026-08-31",
             "repositories": len(subset),
             "issues_opened": sum(integer(row, "issues_opened_cumulative") for row in subset),
             "issues_closed": sum(integer(row, "issues_closed_cumulative") for row in subset),
@@ -165,7 +165,7 @@ def main() -> None:
     )
     findings = f"""# 2026 年 Issue / PR 月度面板
 
-日期：2026-08-29。面板包含 100 个仓库 × 8 个月，所有仓库使用同一组冻结的 GitHub Search 查询。
+日期：2026-08-31。面板包含 100 个仓库 × 8 个完整月份，所有仓库使用同一组冻结的 GitHub Search 查询。
 
 ## 复核
 
@@ -179,7 +179,7 @@ def main() -> None:
 
 ## 两种汇总回答不同问题
 
-截至 8 月 29 日，按每条 PR 等权，已解决 PR 中 {all_outcomes['pr_merge_share_resolved_event_weighted']:.1%} 带 merged flag；仓库中位数是 {all_outcomes['pr_merge_share_resolved_repo_median']:.1%}。去掉 PR 流入最大的五个仓库后，按事件加权结果变为 {without_top_five['pr_merge_share_resolved_event_weighted']:.1%}。
+截至 8 月 31 日，按每条 PR 等权，已解决 PR 中 {all_outcomes['pr_merge_share_resolved_event_weighted']:.1%} 带 merged flag；仓库中位数是 {all_outcomes['pr_merge_share_resolved_repo_median']:.1%}。去掉 PR 流入最大的五个仓库后，按事件加权结果变为 {without_top_five['pr_merge_share_resolved_event_weighted']:.1%}。
 
 窗口内新建 Issue 的未解决比例，按事件加权是 {all_outcomes['issue_unresolved_share_event_weighted']:.1%}，仓库中位数是 {all_outcomes['issue_unresolved_share_repo_median']:.1%}；PR 分别是 {all_outcomes['pr_unresolved_share_event_weighted']:.1%} 和 {all_outcomes['pr_unresolved_share_repo_median']:.1%}。
 
@@ -188,7 +188,7 @@ def main() -> None:
 ## 边界
 
 - 这是 2026 年新流入 cohort 的未解决比例，不是仓库全部历史 backlog。
-- 8 月只观察到 29 日，不能直接和完整月份比较。
+- 1 月至 8 月都是完整月份，可以直接比较月度流量；但不同月份天数仍不相同。
 - GitHub Search 总量不能识别 Agent 或维护者投入，只用于提出问题，不能单独回答效率。
 """
     args.findings.write_text(findings, encoding="utf-8")

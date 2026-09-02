@@ -20,12 +20,14 @@ The talk opens with the updated Agent Infra and Model Infra maps. The open-infra
 
 ### 260910 release · interactive research report
 
-The report is the durable version of the work. It will combine the landscapes, repository-level evidence, comparable control repositories, case studies and sourced quotes from the CTO and chair. Quote text and attribution remain placeholders until approved copy is supplied.
+The report is the durable version of the work. It combines the landscapes, repository-level evidence, comparable control repositories and public case studies. The interactive page and the two standalone language editions use the same research tables and conclusions.
 
 ## Repository structure
 
 - `report/` contains publication material: the reader-facing manuscript, web reading structure, page copy and published reference library.
 - `report/online-report.md` is the mother manuscript. Completed analysis belongs here in full prose.
+- `report/open-source-collaboration-report.en.md` is the complete reader-facing English text edition.
+- `report/open-source-collaboration-report.zh-CN.md` is the complete reader-facing Chinese text edition.
 - `report/interactive-report-outline.md` contains interaction and reading-path notes, not research findings.
 - `report/web-copy.json` contains short editable page copy derived from the manuscript.
 - `report/references.json` is the reader-facing source library used by the web report.
@@ -38,7 +40,7 @@ The report is the durable version of the work. It will combine the landscapes, r
 - `research/open-collaboration-data-protocol.md` defines the GitHub collection, actor classification and data-quality gates.
 - `research/research-question-evidence-matrix.md` maps the four user research questions to the completed measurements, current answers and remaining causal limits.
 - `research/collaboration-research-validation-log.md` records rejected assumptions and design corrections, including the timeline timestamp gap and actor-class sensitivity test.
-- `research/collaboration-thread-sample-2026.csv`, `research/collaboration-thread-events-2026.csv`, `research/collaboration-thread-review-comments-2026.csv` and `research/collaboration-thread-pr-commits-2026.csv` form the auditable 2,000-thread event sample.
+- `research/collaboration-thread-sample-2026.csv`, `research/collaboration-thread-events-2026.csv`, `research/collaboration-thread-review-comments-2026.csv` and `research/collaboration-thread-pr-commits-2026.csv` form the auditable 5,000-thread event sample.
 - `research/collaboration-thread-analysis-2026-summary.csv` and `research/collaboration-thread-estimates-bootstrap-2026.csv` are the primary estimate and uncertainty tables consumed by Chapter 02.
 - `scripts/validate_collaboration_empirical.py` fails closed if the sample, endpoint completeness, event total, bootstrap point estimates or corrected review/gate metrics drift.
 - `research/collaboration-sample-top100-2607.csv` freezes the primary OpenRank Top 100 cohort and contains the editable `llm_native_manual` review column.

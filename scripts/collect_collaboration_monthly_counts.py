@@ -24,7 +24,7 @@ DEFAULT_SAMPLE = RESEARCH / "collaboration-sample-top100-2607.csv"
 DEFAULT_OUTPUT = RESEARCH / "collaboration-repository-month-2026.csv"
 DEFAULT_RUN = RESEARCH / "collaboration-repository-month-2026-run.json"
 WINDOW_START = date(2026, 1, 1)
-WINDOW_END = date(2026, 8, 29)
+WINDOW_END = date(2026, 8, 31)
 
 FIELDS = [
     "sample_rank",

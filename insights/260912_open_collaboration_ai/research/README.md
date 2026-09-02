@@ -5,7 +5,7 @@
 ## 先读这六份
 
 1. **[实验到底怎么做的](how-the-study-was-run.md)**
-   100 个仓库、2,000 条线程和 10 个深挖仓库分别怎么选，`线程`、`加权 PR`、`Agent marker` 分别是什么意思。
+   100 个仓库、5,000 条线程和 10 个深挖仓库分别怎么选，`线程`、不加权样本比例、`Agent marker` 分别是什么意思。
 
 2. **[研究问题与证据矩阵](research-question-evidence-matrix.md)**
    用户提出的四个问题，当前回答到哪一步，哪些只是关联，哪些仍缺证据。
@@ -35,10 +35,9 @@
 
 ## 当前主数据
 
-- 100 个仓库，每仓库 20 条，共 2,000 条线程；
+- 100 个仓库，每仓库保留 50 条，共 5,000 条线程；原有 20 条不变，另补 30 条；
 - 100 个仓库都启用 PR；98 个允许所有人创建，Codex 和 Claude Code 仅允许 collaborators 创建；
-- 575 条 Issue、1,425 条 PR；
-- 50,731 个公开 timeline、review comment 和 PR commit 事件；
+- 1,433 条 Issue、3,567 条 PR；
 - 10 个代表仓库，每仓库三个阶段、每阶段 30 条，共 900 条深挖线程；
 - 主样本与深挖样本的 endpoint 请求均成功。Agent 代码归因实验另发现四个未合入 PR 的 commit 列表因持续更新或 250 条上限而不完整，已从 Agent-only 判定中排除。
 
@@ -60,17 +59,17 @@ cuDF 改名错误已经修复：样本和当前数据统一使用 `NVIDIA/cudf`�
 | `collaboration-release-distribution-2026-summary.csv` | Release day 分布和高频仓库 |
 | `collaboration-activity-flow-findings.md` | 独立协作流量与发版节奏 insight 的中文解释 |
 | `collaboration-activity-flow-validation.json` | 面板交叉复核和同日重复采集结果 |
-| `collaboration-thread-sample-2026.csv` | 2,000 条概率样本、抽样概率和权重 |
+| `collaboration-thread-sample-2026.csv` | 5,000 条仓库平衡样本；页面直接报告样本计数和比例，不按仓库流量加权 |
 | `collaboration-thread-events-2026.csv` | GitHub timeline |
 | `collaboration-thread-review-comments-2026.csv` | PR inline review comment |
 | `collaboration-thread-pr-commits-2026.csv` | 带时间的 PR commit |
 | `collaboration-actor-registry-2026.csv` | 参与者身份、Agent 角色和证据 |
 | `collaboration-thread-analysis-2026.csv` | 每条线程的派生指标 |
-| `collaboration-thread-analysis-2026-summary.csv` | 总体、仓库等权和分类汇总 |
+| `collaboration-thread-analysis-2026-summary.csv` | 5,000 条样本及分类汇总 |
 | `collaboration-thread-estimates-bootstrap-2026.csv` | 仓库内 bootstrap 区间 |
-| `collaboration-pr-code-metadata-2026.csv` | 1,425 个样本 PR 的最终增删行、commit 总数和完整披露检查 |
+| `collaboration-pr-code-metadata-2026.csv` | 3,567 个样本 PR 的最终增删行、commit 总数和完整披露检查 |
 | `collaboration-agent-code-attribution-2026.csv` | 每个 PR 的 Agent-only、Agent-human mixed 与公开披露判定 |
-| `collaboration-agent-code-estimates-2026.csv` | Agent 代码归因的概率加权估计与 bootstrap 区间 |
+| `collaboration-agent-code-estimates-2026.csv` | Agent 代码归因的样本比例与 bootstrap 区间 |
 | `collaboration-agent-code-key-metrics-2026.csv` | 最需要阅读的五个核心数字 |
 | `collaboration-patch-lineage-candidates-2026.csv` | 10 个 Agent-touched 已合入 PR 的纳入状态和逐案证据 |
 | `collaboration-patch-lineage-cases-2026.csv` | 第一笔有效 Agent patch 到最终 head 的逐案保留与改写结果 |

@@ -1,17 +1,17 @@
 {
-  "generated_at": "2026-08-29T00:31:29+08:00",
+  "generated_at": "2026-09-01T18:14:25+08:00",
   "sample": "insights/260912_open_collaboration_ai/research/collaboration-sample-top100-2607.csv",
   "output": "insights/260912_open_collaboration_ai/research/collaboration-repository-year-2022-2026.csv",
-  "observation_end_exclusive": "2026-08-30",
+  "observation_end_exclusive": "2026-09-01",
   "sample_repositories": 100,
   "panel_rows": 500,
   "observed_repository_years": 331,
   "not_public_yet_repository_years": 167,
   "not_observed_repository_years": 2,
-  "clickhouse_query_id": "9cc80224-45bd-416c-b9b4-4c5b81825973",
-  "clickhouse_summary": "{\"read_rows\":\"1611012063\",\"read_bytes\":\"27874549703\",\"written_rows\":\"0\",\"written_bytes\":\"0\",\"total_rows_to_read\":\"1611012063\",\"result_rows\":\"0\",\"result_bytes\":\"0\",\"elapsed_ns\":\"7522808371\"}",
+  "clickhouse_query_id": "e5f64032-3828-4491-a3ab-b3a157e14dd1",
+  "clickhouse_summary": "{\"read_rows\":\"1612193741\",\"read_bytes\":\"27952602605\",\"written_rows\":\"0\",\"written_bytes\":\"0\",\"total_rows_to_read\":\"1612193741\",\"result_rows\":\"0\",\"result_bytes\":\"0\",\"elapsed_ns\":\"52910119470\"}",
   "limitations": [
-    "2026 is year-to-date through 2026-08-29.",
+    "2026 is year-to-date through 2026-08-31.",
     "No event row is not interpreted as zero collaboration.",
     "ClickHouse aggregates support trends and cross-checks; item-level GitHub APIs remain the source for current Issue and PR truth.",
     "Bot counts only use public actor types on author and comment fields and do not infer undisclosed AI assistance."

@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-08-28T17:53:28.799417+00:00",
-  "completed_at": "2026-08-28T17:53:54.389012+00:00",
+  "started_at": "2026-09-01T10:15:27.613781+00:00",
+  "completed_at": "2026-09-01T10:15:55.372793+00:00",
   "repositories": 12,
   "rows": 60,
   "errors": [],
@@ -10,6 +10,6 @@
     "The comparison panel is purposively selected for long-lived, active projects and is not a causal matched control group.",
     "Each annual denominator is the cohort created inside that calendar-year window; older backlog is excluded.",
     "GitHub Search counts can be revised by later reopen events, so direction and magnitude require a repeat collection before publication.",
-    "The 2026 window ends on 29 August and is not directly comparable to a full calendar year without monthly normalization."
+    "The 2026 window ends on 31 August and is not directly comparable to a full calendar year without monthly normalization."
   ]
 }
