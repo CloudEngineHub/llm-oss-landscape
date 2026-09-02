@@ -700,11 +700,6 @@ export default function InclusionConfStory({
           <LandscapeLogo className={styles.brandMark} />
           <span>Agentic AI Landscape</span>
         </Link>
-        <div className={styles.chapterNav}>
-          <a href="#landscape">01 Landscape &amp; infrastructure</a>
-          <a href="#collaboration">02 Open-source collaboration</a>
-          <a href="#method">Method &amp; sources</a>
-        </div>
         <div className={styles.navActions} aria-label="Download the report">
           <a
             className={`${styles.downloadLink} ${styles.downloadEnglish}`}
@@ -728,6 +723,20 @@ export default function InclusionConfStory({
           </Link>
         </div>
       </nav>
+
+      <aside className={styles.reportToc} aria-label="Report structure" tabIndex={0}>
+        <span className={styles.reportTocLabel}>Report structure</span>
+        <div className={styles.reportTocLinks}>
+          <a href="#landscape"><span>01</span> Landscape</a>
+          <a href="#infrastructure"><span>01A</span> Open infrastructure</a>
+          <a href="#collaboration"><span>02</span> Collaboration</a>
+          <a href="#repository-profile"><span>02A</span> Repository profile</a>
+          <a href="#collaboration-flow"><span>02B</span> Activity flow</a>
+          <a href="#patch-lineage"><span>02C</span> Patch lineage</a>
+          <a href="#method"><span>03</span> Method</a>
+          <a href="#references"><span>04</span> Sources</a>
+        </div>
+      </aside>
 
       <aside
         className={styles.floatingPresentations}
