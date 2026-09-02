@@ -1,0 +1,20 @@
+{
+  "started_at": "2026-09-02T07:56:12.045168+00:00",
+  "completed_at": "2026-09-02T08:01:16.817812+00:00",
+  "transport": "graphql",
+  "repositories": 81,
+  "pull_requests": 2327,
+  "threads_complete": 2327,
+  "missing_endpoints": 0,
+  "errors": [],
+  "commit_rows": 16097,
+  "http_requests": 126,
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-pr-commits-2025.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-pr-commits-2025-status.csv"
+  ],
+  "limitations": [
+    "GraphQL batches collect the first 100 commits and paginate larger PRs individually.",
+    "A commit after a review is an observable revision loop, not proof that the review caused the commit."
+  ]
+}

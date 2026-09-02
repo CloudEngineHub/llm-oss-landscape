@@ -27,10 +27,7 @@ import type {
   MacroGroup,
   RuntimePathPoint,
 } from "./research-data";
-import {
-  CollaborationCasebook,
-  CollaborationEvolution,
-} from "./collaboration-evidence";
+import { CollaborationCasebook } from "./collaboration-evidence";
 import { EditableText, ReportCopyEditor } from "./report-copy-editor";
 import styles from "./page.module.css";
 
@@ -449,9 +446,6 @@ export default function InclusionConfStory({
   const [shiftId, setShiftId] = useState<(typeof infraShifts)[number]["id"]>(
     "execution",
   );
-  const [efficiencyLens, setEfficiencyLens] = useState<"panel" | "threads">(
-    "panel",
-  );
   const [lineageCaseId, setLineageCaseId] = useState<
     (typeof patchLineageCases)[number]["id"]
   >(
@@ -497,23 +491,26 @@ export default function InclusionConfStory({
     (item) => item.id === lineageCaseId,
   )!;
   const collaboration = stats.collaboration;
-  const efficiency = collaboration.efficiencyExperiment;
   const activityFlow = collaboration.activityFlow;
+  const pressure = collaboration.systemPressure;
+  const threadPanel = collaboration.threadPanel;
   const monthlyFlowMaximum = Math.max(
     ...activityFlow.monthly.flatMap((item) => [item.issues, item.pullRequests]),
   );
-  const historyFlowMaximum = Math.max(
-    ...activityFlow.history.flatMap((item) => [item.issues, item.pullRequests]),
+  const pressure2025 = pressure.history.find((item) => item.year === 2025)!;
+  const pressure2026 = pressure.history.find((item) => item.year === 2026)!;
+  const threadPanel2025 = threadPanel.years.find((item) => item.year === 2025)!;
+  const threadPanel2026 = threadPanel.years.find((item) => item.year === 2026)!;
+  const pressurePullRequestGrowth =
+    (pressure2026.pullRequestsOpened / pressure2025.pullRequestsOpened - 1) * 100;
+  const push2025 = pressure.pushHistory.find((item) => item.year === 2025)!;
+  const push2026 = pressure.pushHistory.find((item) => item.year === 2026)!;
+  const pushBenchmarkMaximum = Math.max(
+    ...pressure.pushBenchmarks.map((item) => item.pushActors),
   );
-  const fixedCohortPullRequestGrowth =
-    ((activityFlow.history[2].pullRequests - activityFlow.history[1].pullRequests) /
-      activityFlow.history[1].pullRequests) *
-    100;
-  const historyPullRequestGrowth = activityFlow.history.map((item, index) => {
-    if (index === 0) return null;
-    const previous = activityFlow.history[index - 1].pullRequests;
-    return ((item.pullRequests - previous) / previous) * 100;
-  });
+  const pressureRoleMaximum = Math.max(
+    ...pressure.roleFlows.map((item) => item.pullRequestBalance),
+  );
   const releaseBucketMaximum = Math.max(
     ...activityFlow.releases.buckets.map((item) => item.count),
   );
@@ -521,58 +518,24 @@ export default function InclusionConfStory({
     collaboration.repositoryProfile.repositoryItems.find(
       (item) => item.repo === profileRepository,
     ) ?? collaboration.repositoryProfile.repositoryItems[0];
-  const collaborationStageCopy = {
-    opened: {
-      label: "Issue or pull request opened",
-      scope: `${collaboration.sampleThreads.toLocaleString("en-US")} sampled threads`,
-      interpretation:
-        "Agent-attributed openers remain unusual. Most work enters through a GitHub User account.",
-    },
-    response: {
-      label: "Someone responded after opening",
-      scope: `${collaboration.sampleThreads.toLocaleString("en-US")} sampled threads`,
-      interpretation:
-        "Named Agents are already part of discussion and triage, alongside User and repository-team accounts.",
-    },
-    review: {
-      label: "A pull request was reviewed",
-      scope: `${collaboration.samplePullRequests.toLocaleString("en-US")} sampled pull requests`,
-      interpretation:
-        "Review is the clearest public point of Agent participation in the contribution process.",
-    },
-    "final-state": {
-      label: "Last public action that resolved the thread",
-      scope: `${collaboration.threadParticipationStages
-        .find((stage) => stage.id === "final-state")!
-        .denominator.toLocaleString("en-US")} resolved threads with an identifiable actor`,
-      interpretation:
-        "A GitHub User account performs the last visible merge, close or reopen action in most resolved threads.",
-    },
-  } as const;
-  const collaborationActorLabels = {
-    agent: "Named Agent or Agent-attributed App",
-    user: "GitHub User account",
-    repositoryTeam: "Repository team account",
-  } as const;
-  const collaborationStages = collaboration.threadParticipationStages.map((stage) => ({
-    ...stage,
-    ...collaborationStageCopy[stage.id],
-  }));
+  const openedStage = collaboration.threadParticipationStages.find(
+    (stage) => stage.id === "opened",
+  )!;
+  const reviewStage = collaboration.threadParticipationStages.find(
+    (stage) => stage.id === "review",
+  )!;
+  const finalStateStage = collaboration.threadParticipationStages.find(
+    (stage) => stage.id === "final-state",
+  )!;
   const taskFootprint = [
     { label: "Review", value: collaboration.agentTaskEvents.review },
     { label: "Triage & routing", value: collaboration.agentTaskEvents.triage },
     { label: "Discussion", value: collaboration.agentTaskEvents.discussion },
-    { label: "Open a thread", value: collaboration.agentTaskEvents.openedThread },
-    { label: "Attributed commit", value: collaboration.agentTaskEvents.codeCommit },
   ];
   const taskMaximum = Math.max(...taskFootprint.map((item) => item.value));
   const iterationSignals = [
     {
-      label: "Any review recorded · 2,522 / 3,567 PRs",
-      value: collaboration.reviewedPrShare,
-    },
-    {
-      label: "Another commit after first review · 1,386 / 2,522 reviewed PRs",
+      label: "Another commit after first review · 1,385 / 2,521 reviewed PRs",
       value: collaboration.reviewedPrFollowupCommitShare,
     },
     {
@@ -580,84 +543,22 @@ export default function InclusionConfStory({
       value: collaboration.changeRequestFollowupCommitShare,
     },
   ];
-  const panelMetric = (key: string) =>
-    efficiency.panel.find((item) => item.key === key)!;
-  const efficiencyPanelRows = [
+  const reviewerFollowupComparison = [
     {
-      measure: "Incoming Issues and pull requests",
-      earlier: formatCompact(efficiency.population.earlier),
-      later: formatCompact(efficiency.population.later),
-      change: `+${Math.round(efficiency.population.growth * 100)}%`,
-      reading:
-        "The same repositories received 2.65 times as many new threads, sharply increasing the queue that maintainers and automation had to process.",
+      id: "agent",
+      label: "Named Agent or App",
+      followups: 13,
+      total: 17,
+      value: collaboration.agentChangeRequestFollowupCommitShare,
     },
     {
-      measure: "Threads with a visible Agent",
-      earlier: formatPercent(efficiency.adoption.allAgentsEarlier, 1),
-      later: formatPercent(efficiency.adoption.allAgentsLater, 1),
-      change: `+${((efficiency.adoption.allAgentsLater - efficiency.adoption.allAgentsEarlier) * 100).toFixed(1)} pp`,
-      reading:
-        "Named Agents and Apps became visible in a majority of sampled threads by 2026, up 20.9 percentage points from the same 2025 panel.",
-    },
-    {
-      measure: "Human response within 7 days",
-      earlier: formatExperimentValue(panelMetric("human_response_7d").earlier, "percent"),
-      later: formatExperimentValue(panelMetric("human_response_7d").later, "percent"),
-      change: `${((panelMetric("human_response_7d").later - panelMetric("human_response_7d").earlier) * 100).toFixed(1)} pp`,
-      reading:
-        "A smaller share of new threads received any visible response from a GitHub User account within the first week.",
-    },
-    {
-      measure: "Maintainer response within 7 days",
-      earlier: formatExperimentValue(panelMetric("maintainer_response_7d").earlier, "percent"),
-      later: formatExperimentValue(panelMetric("maintainer_response_7d").later, "percent"),
-      change: `${((panelMetric("maintainer_response_7d").later - panelMetric("maintainer_response_7d").earlier) * 100).toFixed(1)} pp`,
-      reading:
-        "The early human gate weakened most sharply: only one in five threads received a maintainer-associated response within seven days.",
-    },
-    {
-      measure: "Issues closed within 30 days",
-      earlier: formatExperimentValue(panelMetric("issue_closed_30d").earlier, "percent"),
-      later: formatExperimentValue(panelMetric("issue_closed_30d").later, "percent"),
-      change: `${((panelMetric("issue_closed_30d").later - panelMetric("issue_closed_30d").earlier) * 100).toFixed(1)} pp`,
-      reading:
-        "Only 38.4% of new Issues closed within 30 days in 2026, down 10.3 percentage points from 2025.",
-    },
-    {
-      measure: "Pull requests merged within 30 days",
-      earlier: formatExperimentValue(panelMetric("pr_merged_30d").earlier, "percent"),
-      later: formatExperimentValue(panelMetric("pr_merged_30d").later, "percent"),
-      change: `${((panelMetric("pr_merged_30d").later - panelMetric("pr_merged_30d").earlier) * 100).toFixed(1)} pp`,
-      reading:
-        "The share of PRs reaching the merged state within 30 days also fell, despite the larger volume of Agent-visible activity.",
-    },
-    {
-      measure: "Maintainer actions per thread",
-      earlier: formatExperimentValue(panelMetric("maintainer_actions_30d").earlier, "count"),
-      later: formatExperimentValue(panelMetric("maintainer_actions_30d").later, "count"),
-      change: `${(panelMetric("maintainer_actions_30d").later - panelMetric("maintainer_actions_30d").earlier).toFixed(2)}`,
-      reading:
-        "Visible maintainer actions stayed near 1.4 per thread even as the same repositories received far more incoming work.",
-    },
-    {
-      measure: "Estimated visible maintainer actions",
-      earlier: formatCompact(efficiency.maintainerActionEstimate.earlier),
-      later: formatCompact(efficiency.maintainerActionEstimate.later),
-      change: `+${Math.round(((efficiency.maintainerActionEstimate.later / efficiency.maintainerActionEstimate.earlier) - 1) * 100)}%`,
-      reading:
-        "Applying the observed per-thread rate to the full intake suggests that total visible maintainer work rose with the much larger queue.",
+      id: "user",
+      label: "GitHub User account",
+      followups: 106,
+      total: 137,
+      value: collaboration.humanChangeRequestFollowupCommitShare,
     },
   ];
-  const exposureInterpretation: Record<string, string> = {
-    pr_merged_30d:
-      "The 30-day merge rate is nearly unchanged: 48.7% with an early visible Agent and 47.2% without one.",
-    conversation_runs_30d:
-      "Agent-visible threads move through more distinct rounds of public discussion.",
-    maintainer_review_events_30d:
-      "Maintainers leave more review events when an Agent is visible early.",
-    commits_after_first_review_30d:
-      "More commits follow the first review, adding another visible round of revision before the outcome is known.",
-  };
 
   useEffect(() => {
     const page = pageRef.current;
@@ -730,9 +631,9 @@ export default function InclusionConfStory({
           <a href="#landscape"><span>01</span> Landscape</a>
           <a href="#infrastructure"><span>01A</span> Open infrastructure</a>
           <a href="#collaboration"><span>02</span> Collaboration</a>
-          <a href="#repository-profile"><span>02A</span> Repository profile</a>
-          <a href="#collaboration-flow"><span>02B</span> Activity flow</a>
-          <a href="#patch-lineage"><span>02C</span> Patch lineage</a>
+          <a href="#collaboration-flow"><span>02A</span> Workload</a>
+          <a href="#agent-setup"><span>02B</span> Agent setup</a>
+          <a href="#agent-workflow"><span>02C</span> Public workflow</a>
           <a href="#method"><span>03</span> Method</a>
           <a href="#references"><span>04</span> Sources</a>
         </div>
@@ -755,7 +656,7 @@ export default function InclusionConfStory({
           href="/presentations/260910_inclusion/present"
         >
           <PlayIcon aria-hidden="true" />
-          <span>10 MIN</span>
+          <span>15 MIN</span>
           <strong>Collaboration</strong>
         </Link>
       </aside>
@@ -809,22 +710,18 @@ export default function InclusionConfStory({
             </p>
           </article>
           <article>
-            <h3>Repositories prepare Agents to contribute, but Agents rarely open the work.</h3>
+            <h3>PR intake doubled. Completion did not keep pace.</h3>
             <p>
-              Ninety-two of the Top 100 publish a coding-agent file or folder,
-              but only {collaboration.participationOpenerSampleThreads.toLocaleString("en-US")} of {collaboration.sampleThreads.toLocaleString("en-US")} sampled Issues and pull requests were opened
-              by a named Agent or App. Agent participation appears in {collaboration.participationSampleThreads.toLocaleString("en-US")} threads,
-              mostly after submission through review, discussion, triage or revision.
+              Across the same 55 repositories, PR intake rose from 129,563 in
+              2025 to 265,447 in 2026. The share still open after 90 days doubled
+              to 11.3%, while the repository-median merge rate fell to 68.4%.
             </p>
           </article>
           <article>
-            <h3>Agent activity grew with the queue. Maintainer attention did not.</h3>
+            <h3>Agents expanded review and revision, not the final decision path.</h3>
             <p>
-              In the same ten repositories, incoming work grew 165% from 2025
-              to 2026 while seven-day maintainer response fell from 42.9% to
-              20.0% and 30-day resolution rates also declined. Across the wider
-              sample, GitHub User accounts still perform 88.5% of the last visible
-              actions that resolve a thread.
+              Only {collaboration.participationOpenerSampleThreads.toLocaleString("en-US")} of {collaboration.sampleThreads.toLocaleString("en-US")} sampled Issues and pull requests were opened
+              by a named Agent or App, while {reviewStage.agent.toLocaleString("en-US")} PRs received an Agent review. A GitHub User account performed {formatPercent(finalStateStage.user / finalStateStage.denominator, 1)} of final visible state changes.
             </p>
           </article>
         </div>
@@ -1233,64 +1130,63 @@ export default function InclusionConfStory({
 
         <section className={styles.chapterArgument} data-reveal>
           <div>
-            <h3>Repository setup, public Agent work and outcomes tell different parts of the story.</h3>
+            <h3>One Top 100, read at two levels.</h3>
             <p>
-              We first inspect the repository itself: contribution rules,
-              coding-agent instructions and release practices. We then follow
-              a fixed 50-thread sample from each repository to see
-              where named Agents and Apps actually appear. Finally, matched
-              repository panels compare activity and outcomes over time. One layer
-              shows how a project prepares for Agent use, another shows where Agents
-              enter public collaboration, and the third follows what happens to the
-              work afterward.
-            </p>
-            <p>
-              The denominator changes with the question. The table below makes
-              each evidence base explicit before the chapter uses it; only the
-              50 threads retained inside each Top 100 repository form the
-              repository-balanced sample. The Top 100 represents the most active
-              repositories in the tracked landscape, while the ten-repository panel
-              provides a closer comparison across project types and years.
+              Every result begins with the same 100 repositories. Complete records
+              show how much work arrived and what happened to it. Fifty public
+              threads per repository show the sequence of response and review.
+              Historical charts keep the same 55 repositories; their 2026 threads
+              are reused from the main sample.
             </p>
           </div>
-          <div className={styles.reportTableWrap}>
-            <table className={styles.reportTable}>
-              <thead>
-                <tr>
-                  <th>Evidence base</th>
-                  <th>What it contains</th>
-                  <th>What it can answer</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>Top 100 repository frame</th>
-                  <td>The 100 highest-July-2026-OpenRank repositories inside the 277-project tracking pool.</td>
-                  <td>Repository profile, contribution policy, Agent files, releases and complete 2026 Issue/PR counts.</td>
-                </tr>
-                <tr>
-                  <th>Fixed 53-repository cohort</th>
-                  <td>Repositories in the current Top 100 that were already public by 1 January 2024.</td>
-                  <td>Same-window activity in 2024, 2025 and 2026, with membership held fixed but survivorship bias retained.</td>
-                </tr>
-                <tr>
-                  <th>5,000-thread repository-balanced sample</th>
-                  <td>50 sampled threads per repository: {(collaboration.sampleThreads - collaboration.samplePullRequests).toLocaleString("en-US")} Issues, {collaboration.samplePullRequests.toLocaleString("en-US")} PRs and {collaboration.publicEventsAnalyzed.toLocaleString("en-US")} linked public events.</td>
-                  <td>Visible Agent activity, review and gate behavior, task types and revision loops.</td>
-                </tr>
-                <tr>
-                  <th>10-PR code-lineage subset</th>
-                  <td>Every sampled merged PR where a high-confidence coding Agent changed code; nine are line-traceable.</td>
-                  <td>How much of the first Agent patch remained and who changed it before merge.</td>
-                </tr>
-                <tr>
-                  <th>Ten-repository matched panels</th>
-                  <td>A deliberately varied contrast set spanning age, LLM relationship and technical role.</td>
-                  <td>How participation, response and 30-day outcomes move inside the same repositories across 2024–2026.</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className={styles.evidenceLayers}>
+            <article>
+              <header>
+                <span>Complete repository record</span>
+                <strong>Top 100</strong>
+              </header>
+              <p>
+                All public Issues and pull requests in the fixed windows, plus
+                repository profile, contribution policy, Agent files and releases.
+                This is where workload, backlog and outcome figures come from.
+              </p>
+              <div>
+                <span>Historical comparison</span>
+                <b>Same {pressure.matchedRepositories} repositories</b>
+                <p>
+                  A subset of the Top 100 with comparable activity in 2024, 2025
+                  and 2026. The membership stays fixed across the three years.
+                </p>
+              </div>
+            </article>
+            <article>
+              <header>
+                <span>Public thread timelines</span>
+                <strong>{collaboration.sampleThreads.toLocaleString("en-US")} in 2026</strong>
+              </header>
+              <p>
+                Fifty Issues or pull requests from each repository, including
+                {" "}{collaboration.publicEventsAnalyzed.toLocaleString("en-US")} linked public events. This is where response,
+                review and revision are read in sequence.
+              </p>
+              <div>
+                <span>Historical comparison</span>
+                <b>5,500 matched threads</b>
+                <p>
+                  Fifty threads from each of the same 55 repositories in 2025 and
+                  2026 create a like-for-like view of response, review and completion.
+                </p>
+              </div>
+            </article>
           </div>
+          <aside className={styles.evidenceDrilldown}>
+            <strong>Closer look inside the 2026 thread sample</strong>
+            <p>
+              We followed the ten merged pull requests in which a named coding
+              Agent changed code. Nine expose a clean line history, letting us see
+              what remained and who revised it before merge.
+            </p>
+          </aside>
         </section>
 
         <div
@@ -1375,6 +1271,11 @@ export default function InclusionConfStory({
           </div>
         </div>
 
+        <div className={styles.subchapterMarker} data-reveal>
+          <span>02A</span>
+          <strong>More code for repositories to absorb</strong>
+        </div>
+
         <div className={styles.activityFlow} data-reveal id="collaboration-flow">
           <header>
             <h3>Pull requests are arriving faster than issues.</h3>
@@ -1382,34 +1283,6 @@ export default function InclusionConfStory({
               From 1 January to 31 August 2026, the Top 100 opened about {formatCompact(activityFlow.pullRequestsOpened)} pull requests and {formatCompact(activityFlow.issuesOpened)} issues. That is {activityFlow.pullRequestIssueRatio.toFixed(2)} pull requests for every issue. The totals include human work and automation; they do not measure AI-generated code.
             </p>
           </header>
-
-          <div className={styles.activityFlowTotals}>
-            <article data-flow="issue">
-              <span>ISSUES OPENED</span>
-              <strong>{formatCompact(activityFlow.issuesOpened)}</strong>
-            </article>
-            <article data-flow="pull-request">
-              <span>PULL REQUESTS OPENED</span>
-              <strong>{formatCompact(activityFlow.pullRequestsOpened)}</strong>
-            </article>
-            <aside className={styles.activityConcentration}>
-              <div className={styles.activityConcentrationStats}>
-                <section data-flow="issue">
-                  <span>ISSUE TOP 5</span>
-                  <strong>{formatPercent(activityFlow.issueTopFiveShare)}</strong>
-                </section>
-                <section data-flow="pull-request">
-                  <span>PR TOP 5</span>
-                  <strong>{formatPercent(activityFlow.pullRequestTopFiveShare)}</strong>
-                </section>
-              </div>
-              <p>
-                Share of 2026 intake produced by the five busiest repositories
-                for each measure. Issue activity is more concentrated, so its
-                Top 100 total is more sensitive to a few unusually active projects.
-              </p>
-            </aside>
-          </div>
 
           <section className={styles.monthlyFlowPanel} data-reveal>
             <div className={styles.activityPanelHeading}>
@@ -1449,68 +1322,183 @@ export default function InclusionConfStory({
             </div>
           </section>
 
-          <section className={styles.historyFlowPanel} data-reveal>
+          <section className={styles.pressurePanel} data-reveal>
             <div className={styles.activityPanelHeading}>
               <div>
-                <h4>The same repositories opened {Math.round(fixedCohortPullRequestGrowth)}% more PRs than last year.</h4>
+                <h4>PR intake doubled. The review queue did not keep up.</h4>
               </div>
-              <p>These 53 repositories were already public by 1 January 2024, and each year uses the same 1 January–31 August window. Their PR intake rose from {formatCompact(activityFlow.history[1].pullRequests)} in 2025 to {formatCompact(activityFlow.history[2].pullRequests)} in 2026, while Issue intake fell slightly from {formatCompact(activityFlow.history[1].issues)} to {formatCompact(activityFlow.history[2].issues)}.</p>
+              <p>
+                This comparison follows the same {pressure.matchedRepositories} repositories
+                in every year. Counts cover all public Issues and pull requests opened or
+                closed from January through August—not a thread sample.
+              </p>
             </div>
-            <div className={styles.historyFlowChart}>
-              {activityFlow.history.map((item, index) => (
-                <article
-                  data-year={item.year}
-                  key={item.year}
-                  style={{ "--flow-delay": `${index * 130}ms` } as FlowRevealStyle}
-                >
-                  <strong>{item.year}</strong>
+
+            <div className={styles.pressureStory}>
+              <section>
+                <header>
                   <div>
-                    <span data-flow="issue" style={{ width: `${(item.issues / historyFlowMaximum) * 100}%` }}>
-                      Issues {formatCompact(item.issues)}
-                    </span>
-                    <span data-flow="pull-request" style={{ width: `${(item.pullRequests / historyFlowMaximum) * 100}%` }}>
-                      PRs {formatCompact(item.pullRequests)}
-                    </span>
+                    <span>Pull requests opened · same 55 repositories</span>
+                    <h5>Incoming code doubled in one year.</h5>
                   </div>
-                  <em
-                    aria-label={
-                      historyPullRequestGrowth[index] === null
-                        ? "Baseline year"
-                        : `${Math.round(historyPullRequestGrowth[index]!)} percent more pull requests than in ${item.year - 1}`
-                    }
-                    className={styles.historyGrowth}
-                    data-growth={historyPullRequestGrowth[index] === null ? "baseline" : "increase"}
-                  >
-                    {historyPullRequestGrowth[index] === null
-                      ? "→ baseline"
-                      : `↗ ${Math.round(historyPullRequestGrowth[index]!)}%`}
-                  </em>
-                </article>
-              ))}
+                  <strong>+{Math.round(pressurePullRequestGrowth)}%</strong>
+                </header>
+                <div className={styles.pressureTrend}>
+                  {pressure.history.map((item) => (
+                    <div key={item.year}>
+                      <span>{item.year}</span>
+                      <i>
+                        <em style={{ width: `${(item.pullRequestsOpened / pressure2026.pullRequestsOpened) * 100}%` }} />
+                      </i>
+                      <b>{formatCompact(item.pullRequestsOpened)}</b>
+                    </div>
+                  ))}
+                </div>
+              </section>
+              <aside>
+                <h5>More of that code waited.</h5>
+                <dl>
+                  <div>
+                    <dt>PR queue added</dt>
+                    <dd>{formatSignedCompact(pressure2025.pullRequestBalance)} <i>→</i> {formatSignedCompact(pressure2026.pullRequestBalance)}</dd>
+                  </div>
+                  <div>
+                    <dt>Still open after 90 days</dt>
+                    <dd>{formatPercent(pressure2025.pullRequestUnresolved90dShare, 1)} <i>→</i> {formatPercent(pressure2026.pullRequestUnresolved90dShare, 1)}</dd>
+                  </div>
+                  <div>
+                    <dt>Median merged within 90 days</dt>
+                    <dd>{formatPercent(pressure2025.repositoryMedianPullRequestMerged90dShare, 1)} <i>→</i> {formatPercent(pressure2026.repositoryMedianPullRequestMerged90dShare, 1)}</dd>
+                  </div>
+                </dl>
+                <p>
+                  Issue intake changed little, and these repositories closed slightly
+                  more Issues than they opened in 2026. The growing queue is concentrated in PRs.
+                </p>
+              </aside>
+            </div>
+
+            <div className={styles.pressureRoleSummary}>
+              <header>
+                <h5>The PR queue grew in 54 of 55 repositories.</h5>
+                <p>Every technical group added more pull requests than it closed during January–August 2026.</p>
+              </header>
+              <div>
+                {pressure.roleFlows.map((item) => (
+                  <p key={item.key}>
+                    <span>{item.label}</span>
+                    <i><em style={{ width: `${(item.pullRequestBalance / pressureRoleMaximum) * 100}%` }} /></i>
+                    <b>{formatSignedCompact(item.pullRequestBalance)}</b>
+                  </p>
+                ))}
+              </div>
             </div>
           </section>
 
-          <section className={styles.nicheFlowPanel}>
+          <section className={styles.efficiencyStudy} data-reveal>
+            <header>
+              <h3>Agent activity reached more PRs, while fewer finished within 30 days.</h3>
+              <p>
+                The full repository counts above show the growing queue. To see
+                what happened inside it, we compared 2,750 threads from
+                January–August 2025 with 2,750 from the same 55 repositories in
+                2026. Each repository contributes 50 threads in each year.
+              </p>
+            </header>
+
+            <div className={styles.efficiencyReport}>
+              <div className={styles.reportTableWrap}>
+                <table className={styles.efficiencyTable}>
+                  <thead>
+                    <tr>
+                      <th>Measure</th>
+                      <th>2025</th>
+                      <th>2026</th>
+                      <th>Change</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      {
+                        label: "Threads where a named Agent or App appeared",
+                        earlier: threadPanel2025.agentParticipationShare,
+                        later: threadPanel2026.agentParticipationShare,
+                      },
+                      {
+                        label: "A repository maintainer responded within 7 days",
+                        earlier: threadPanel2025.maintainerResponseWithin7dShare,
+                        later: threadPanel2026.maintainerResponseWithin7dShare,
+                      },
+                      {
+                        label: "Pull requests resolved within 30 days",
+                        earlier: threadPanel2025.pullRequestResolvedWithin30dShare,
+                        later: threadPanel2026.pullRequestResolvedWithin30dShare,
+                      },
+                      {
+                        label: "Pull requests with a visible review",
+                        earlier: threadPanel2025.pullRequestReviewedShare,
+                        later: threadPanel2026.pullRequestReviewedShare,
+                      },
+                    ].map((row) => (
+                      <tr key={row.label}>
+                        <th>{row.label}</th>
+                        <td>{formatPercent(row.earlier, 1)}</td>
+                        <td>{formatPercent(row.later, 1)}</td>
+                        <td data-direction={row.later >= row.earlier ? "up" : "down"}>
+                          {row.later >= row.earlier ? "+" : ""}
+                          {((row.later - row.earlier) * 100).toFixed(1)} pp
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className={styles.reportNarrative}>
+                <p>
+                  Named Agents appeared in more than twice as many threads, and
+                  review reached a larger share of PRs. At the same time,
+                  first-week maintainer response fell from {formatPercent(threadPanel2025.maintainerResponseWithin7dShare, 1)} to {formatPercent(threadPanel2026.maintainerResponseWithin7dShare, 1)}, and 30-day PR completion fell from {formatPercent(threadPanel2025.pullRequestResolvedWithin30dShare, 1)} to {formatPercent(threadPanel2026.pullRequestResolvedWithin30dShare, 1)}. Agents helped more changes reach review; repositories still had to find the attention and authority to finish them.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section className={styles.pushConcentration} data-reveal>
             <div className={styles.activityPanelHeading}>
               <div>
-                <h4>Infrastructure projects receive three to four PRs per Issue.</h4>
+                <h4>More accounts entered the push path, while integration stayed concentrated.</h4>
               </div>
-              <p>Unresolved means still open at the cutoff among items created inside this window. It excludes older backlog.</p>
+              <p>
+                In the same 55 repositories, the median number of accounts with a
+                PushEvent rose from {push2025.pushActors} to {push2026.pushActors}.
+                Yet the median number producing half of all pushes stayed at
+                {" "}{push2026.actorsForHalfOfPushes}. More people reached the integration
+                path; most integration activity still sat with a small core.
+              </p>
             </div>
-            <div className={styles.nicheFlowTable} role="table" aria-label="Issue and pull request intake by technical role">
-              <div className={styles.nicheFlowHeader} role="row">
-                <span role="columnheader">Repository group</span>
-                <span role="columnheader">Issues</span>
-                <span role="columnheader">PRs</span>
-                <span role="columnheader">PR / Issue</span>
-              </div>
-              {activityFlow.niches.map((item) => (
-                <div key={item.key} role="row">
-                  <strong role="cell">{item.label}<small>{item.repositories} repositories</small></strong>
-                  <span role="cell">{formatCompact(item.issues)}<small>{formatPercent(item.issueUnresolvedShare)} unresolved</small></span>
-                  <span role="cell">{formatCompact(item.pullRequests)}<small>{formatPercent(item.pullRequestUnresolvedShare)} unresolved</small></span>
-                  <b role="cell">{item.ratio.toFixed(2)}×</b>
-                </div>
+            <div className={styles.pushBenchmarkGrid}>
+              <header>
+                <strong>2026 comparison</strong>
+                <span>repository medians</span>
+              </header>
+              {pressure.pushBenchmarks.map((item) => (
+                <article key={item.label}>
+                  <div>
+                    <strong>{item.label.replace(" benchmark", "")}</strong>
+                    <span>{item.repositories} active repositories</span>
+                  </div>
+                  <p>
+                    <i style={{ width: `${(item.pushActors / pushBenchmarkMaximum) * 100}%` }} />
+                    <b>{item.pushActors}</b>
+                    <span>accounts pushed</span>
+                  </p>
+                  <p>
+                    <i style={{ width: `${(item.actorsForHalfOfPushes / 3) * 100}%` }} />
+                    <b>{item.actorsForHalfOfPushes}</b>
+                    <span>accounts made half the pushes</span>
+                  </p>
+                </article>
               ))}
             </div>
           </section>
@@ -1550,6 +1538,11 @@ export default function InclusionConfStory({
               </div>
             </div>
           </section>
+        </div>
+
+        <div className={styles.subchapterMarker} data-reveal>
+          <span>02B</span>
+          <strong>Contribution access and Agent setup</strong>
         </div>
 
         <div className={styles.governanceLedger} data-reveal>
@@ -1687,109 +1680,68 @@ export default function InclusionConfStory({
           </aside>
         </div>
 
-        <div className={styles.subchapterMarker} data-reveal>
-          <span>02A</span>
-          <strong>How repositories prepare for coding agents</strong>
-        </div>
-
-        <div className={styles.adoptionSequence} data-reveal>
+        <div className={styles.adoptionSequence} data-reveal id="agent-setup">
           <header>
             <EditableText as="h3" copyKey="collaborationAdoptionTitle" />
             <EditableText as="p" copyKey="collaborationAdoptionBody" />
           </header>
-          <div className={styles.agentSetupPanel}>
-            <div className={styles.agentSetupExplanation}>
+          <div className={styles.agentSetupSummary}>
+            <article>
+              <strong>{collaboration.codingAgentRepositories}/100</strong>
               <p>
-                <strong>{collaboration.codingAgentRepositories} of 100 repositories</strong>
-                {" "}publish at least one coding-agent file or tool folder on the
-                default branch. These artifacts tell an Agent how to build, test,
-                review or navigate a particular codebase. Their presence shows
-                which projects have made Agent-specific setup part of the repository.
+                repositories publish a coding-agent instruction file or tool folder
+                on the default branch. This setup is already common in every technical group.
               </p>
-              <p>
-                Cross-agent instructions are the most common format, followed by
-                Claude Code-specific files. The categories overlap: one repository
-                can publish several formats at once. The bars therefore compare
-                compatibility coverage across file formats.
-              </p>
-            </div>
-            <div className={styles.agentCoverageChart}>
-              <h4>Repositories publishing each kind of coding-agent file</h4>
-              <div>
-                {collaboration.agentMarkerCoverage.map((item, index) => (
-                  <p key={item.key}>
+            </article>
+            <div className={styles.agentRoleCoverage}>
+              <h4>Repositories with coding-agent setup</h4>
+              {markerNiches.map((item, index) => {
+                const rate = Math.round((item.value / item.total) * 100);
+                return (
+                  <p key={item.label}>
                     <span>{item.label}</span>
                     <i>
                       <em
                         style={
                           {
-                            "--agent-coverage": `${item.count}%`,
-                            "--agent-coverage-delay": `${index * 85}ms`,
-                          } as AgentCoverageStyle
+                            "--marker-delay": `${index * 90}ms`,
+                            "--marker-rate": `${rate}%`,
+                          } as MarkerBarStyle
                         }
                       />
                     </i>
-                    <strong>{item.count}%</strong>
+                    <b>{item.value}/{item.total}</b>
                   </p>
-                ))}
-              </div>
+                );
+              })}
             </div>
           </div>
-          <div className={styles.agentSetupLeaders}>
-            <h4>Projects supporting the most agent-specific formats</h4>
-            <ol>
-              {collaboration.agentMarkerLeaders.map((item) => (
-                <li key={item.repo}>
-                  <a href={`https://github.com/${item.repo}`} target="_blank" rel="noreferrer">
-                    {item.repo}
-                  </a>
-                  <small>{item.labels.join(" · ")}</small>
-                  <strong>{item.count}</strong>
-                </li>
-              ))}
-            </ol>
-          </div>
-
-        </div>
-
-        <div className={styles.markerSpread} data-reveal>
-          <header>
-            <h3>Coding-agent files now appear inside model infrastructure.</h3>
-            <p>
-              Explicit instruction files are most common in frameworks, but coding-agent
-              files or folders already appear in 32 of 36 Model Infra repositories. Coding agents
-              are therefore being given project-specific rules beside compilers,
-              runtimes, data systems and model-serving code—not only inside apps.
-            </p>
-          </header>
-          <div className={styles.markerNicheRows}>
-            {markerNiches.map((item, index) => {
-              const rate = Math.round((item.value / item.total) * 100);
-              return (
-                <div className={styles.markerNicheRow} key={item.label}>
+          <details className={styles.agentFormatDetails}>
+            <summary>Which instruction files and tool folders were found</summary>
+            <div className={styles.agentCoverageChart}>
+              {collaboration.agentMarkerCoverage.map((item, index) => (
+                <p key={item.key}>
                   <span>{item.label}</span>
-                  <div>
-                    <i
+                  <i>
+                    <em
                       style={
                         {
-                          "--marker-delay": `${index * 90}ms`,
-                          "--marker-rate": `${rate}%`,
-                        } as MarkerBarStyle
+                          "--agent-coverage": `${item.count}%`,
+                          "--agent-coverage-delay": `${index * 85}ms`,
+                        } as AgentCoverageStyle
                       }
                     />
-                  </div>
-                  <b>
-                    {item.value}/{item.total}
-                  </b>
-                </div>
-              );
-            })}
-          </div>
+                  </i>
+                  <strong>{item.count}</strong>
+                </p>
+              ))}
+            </div>
+          </details>
         </div>
 
         <div className={styles.subchapterMarker} data-reveal>
-          <span>02B</span>
-          <strong>Visible Agent activity in public threads</strong>
+          <span>02C</span>
+          <strong>Where Agents enter the public workflow</strong>
         </div>
 
         <SamplePoolHeader
@@ -1798,119 +1750,34 @@ export default function InclusionConfStory({
           body={`Between 1 January and 31 August 2026, we sampled 50 Issues or pull requests from each of the Top 100 repositories: ${(collaboration.sampleThreads - collaboration.samplePullRequests).toLocaleString("en-US")} Issues and ${collaboration.samplePullRequests.toLocaleString("en-US")} pull requests. The charts show what happened in these ${collaboration.sampleThreads.toLocaleString("en-US")} threads and their ${collaboration.publicEventsAnalyzed.toLocaleString("en-US")} linked public events. Each thread counts once.`}
         />
 
-        <section className={styles.visibleAgentActivity} data-reveal>
+        <section className={styles.visibleAgentActivity} data-reveal id="agent-workflow">
           <header>
             <EditableText as="h3" copyKey="collaborationEntryTitle" />
             <EditableText as="p" copyKey="collaborationEntryBody" />
           </header>
-          <div className={styles.reportNarrative}>
-            <p>
-              In this report, a visible Agent action is one where GitHub names the
-              Agent or the App behind it—for example, a CodeRabbit review, a Gemini
-              Code Assist comment or an OpenHands App action. Local use of Cursor,
-              Claude Code or Codex stays under the developer&apos;s ordinary User
-              account, so those contributions remain in the User column.
-            </p>
+          <div className={styles.agentHandoff}>
+            <article>
+              <span>Opened by a named Agent or App</span>
+              <strong>{formatPercent(openedStage.agent / openedStage.denominator, 1)}</strong>
+              <p>{openedStage.agent.toLocaleString("en-US")} of {openedStage.denominator.toLocaleString("en-US")} sampled Issues and PRs</p>
+            </article>
+            <article>
+              <span>Received an Agent review</span>
+              <strong>{formatPercent(reviewStage.agent / reviewStage.denominator, 1)}</strong>
+              <p>{reviewStage.agent.toLocaleString("en-US")} of {reviewStage.denominator.toLocaleString("en-US")} sampled PRs</p>
+            </article>
+            <article>
+              <span>Ended with a GitHub User action</span>
+              <strong>{formatPercent(finalStateStage.user / finalStateStage.denominator, 1)}</strong>
+              <p>{finalStateStage.user.toLocaleString("en-US")} of {finalStateStage.denominator.toLocaleString("en-US")} resolved threads</p>
+            </article>
           </div>
-          <details className={styles.participationDefinitions}>
-            <summary>How the sample and actor labels are defined</summary>
+          <div className={styles.agentWorkProfile}>
             <div>
-              <section>
-                <h4>5,000 sampled threads</h4>
-                <p>
-                  We sampled 50 Issues or pull requests from each of the 100
-                  repositories. Every thread counts once. Each row below states its
-                  own denominator because opening, response, review and resolution do
-                  not apply to the same set of records.
-                </p>
-              </section>
-              <section>
-                <h4>Named Agent or Agent-attributed App</h4>
-                <p>
-                  GitHub exposes a known coding, review, support or security Agent,
-                  identifies the App behind the action, or the contribution explicitly
-                  attributes the work to an Agent. Conventional CI, dependency and
-                  release bots are classified separately.
-                </p>
-              </section>
-              <section>
-                <h4>GitHub User account</h4>
-                <p>
-                  GitHub reports the actor as account type User. Local use of Cursor,
-                  Claude Code or Codex usually stays under this account, because GitHub
-                  exposes no separate Agent identity for that path.
-                </p>
-              </section>
-              <section>
-                <h4>Repository team account</h4>
-                <p>
-                  GitHub associates the account with the repository as OWNER, MEMBER
-                  or COLLABORATOR. This is a repository relationship, so it can overlap
-                  with a User account or an Agent-attributed action.
-                </p>
-              </section>
-              <section>
-                <h4>Last public action that resolved the thread</h4>
-                <p>
-                  The latest visible merge, close or reopen event in a thread that was
-                  resolved when collected. It identifies who executed the public state
-                  change, which may differ from the person who reviewed or decided it.
-                </p>
-              </section>
+              <h4>What named Agents did in public</h4>
+              <p>Review dominates the visible record; triage and discussion follow.</p>
             </div>
-          </details>
-          <div className={styles.participationTableWrap}>
-            <table className={styles.participationTable}>
-              <thead>
-                <tr>
-                  <th>Stage in the public thread</th>
-                  {Object.values(collaborationActorLabels).map((label) => (
-                    <th key={label}>{label}</th>
-                  ))}
-                  <th>What the result shows</th>
-                </tr>
-              </thead>
-              <tbody>
-                {collaborationStages.map((stage, index) => (
-                  <tr key={stage.id}>
-                    <th>
-                      <span>{String(index + 1).padStart(2, "0")}</span>
-                      <div>
-                        <strong>{stage.label}</strong>
-                        <small>{stage.scope}</small>
-                      </div>
-                    </th>
-                    {(["agent", "user", "repositoryTeam"] as const).map((actor) => (
-                      <td
-                        data-actor={actor}
-                        data-label={collaborationActorLabels[actor]}
-                        key={actor}
-                      >
-                        <strong>
-                          {formatPercent(stage[actor] / stage.denominator, 1)}
-                        </strong>
-                        <span>
-                          {stage[actor].toLocaleString("en-US")} of{" "}
-                          {stage.denominator.toLocaleString("en-US")}
-                        </span>
-                      </td>
-                    ))}
-                    <td data-label="What the result shows">
-                      <p>{stage.interpretation}</p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <div className={styles.taskFootprint} data-reveal>
-          <header>
-            <EditableText as="h3" copyKey="collaborationTasksTitle" />
-            <EditableText as="p" copyKey="collaborationTasksBody" />
-          </header>
-          <div className={styles.taskFootprintRows}>
+            <div className={styles.taskFootprintRows}>
             {taskFootprint.map((item, index) => (
               <div key={item.label}>
                 <span>{item.label}</span>
@@ -1930,35 +1797,26 @@ export default function InclusionConfStory({
                 <strong>{item.value.toLocaleString("en-US")}</strong>
               </div>
             ))}
+            </div>
           </div>
-          <div className={styles.automationSplit}>
-            <header>
-              <strong>Automation is broader than Agent use</strong>
-              <span>Share of sampled threads</span>
-            </header>
-            {collaboration.automationByItem.map((item) => (
-              <div key={item.label}>
-                <b>{item.label}</b>
-                <p>
-                  <strong>{formatPercent(item.knownAutomation, 1)}</strong>
-                  <span>Any known Bot or App</span>
-                </p>
-                <p>
-                  <strong>{formatPercent(item.verifiedAgent, 1)}</strong>
-                  <span>Verified Agent participation</span>
-                </p>
-                <p>
-                  <strong>{formatPercent(item.conventionalAutomation, 1)}</strong>
-                  <span>Conventional automation</span>
-                </p>
-                <p>
-                  <strong>{formatPercent(item.automationOnly, 2)}</strong>
-                  <span>No visible GitHub User account</span>
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
+          <details className={styles.participationDefinitions}>
+            <summary>What counts as a named Agent action</summary>
+            <div>
+              <section>
+                <h4>GitHub names the Agent or App</h4>
+                <p>Examples include a CodeRabbit review, a Gemini Code Assist comment or an OpenHands App action. Conventional CI, dependency and release bots are kept separate.</p>
+              </section>
+              <section>
+                <h4>Local Agent use is not visible here</h4>
+                <p>Work done with Cursor, Claude Code or Codex usually appears under the developer&apos;s normal GitHub User account unless the public record adds a separate attribution.</p>
+              </section>
+              <section>
+                <h4>The final action is a public state change</h4>
+                <p>It is the latest visible merge, close or reopen event. It shows which account completed the public workflow, not who made every earlier decision.</p>
+              </section>
+            </div>
+          </details>
+        </section>
 
         <div className={styles.iterationLoop} data-reveal>
           <header>
@@ -1983,38 +1841,33 @@ export default function InclusionConfStory({
               </div>
             ))}
           </div>
-        </div>
-
-        <div className={styles.scarcityStatement} data-reveal>
-          <EditableText as="h3" copyKey="collaborationScarcityTitle" />
-          <EditableText as="p" copyKey="collaborationScarcityBody" />
-          <div className={styles.reportTableWrap}>
-            <table className={styles.reportTable}>
-              <thead>
-                <tr>
-                  <th>Stage in the contribution process</th>
-                  <th>Observed share</th>
-                  <th>What the evidence says</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th>Pull-request intake from external accounts</th>
-                  <td>{formatPercent(collaboration.externalPrShare, 1)}</td>
-                  <td>Code supply is already broad. Most PRs enter from accounts that GitHub does not associate with the repository team.</td>
-                </tr>
-                <tr>
-                  <th>Pull requests with visible Agent review</th>
-                  <td>{formatPercent(collaboration.agentReviewShare, 1)}</td>
-                  <td>Agents participate in review, but they do not dominate the decision path across the sample.</td>
-                </tr>
-                <tr>
-                  <th>Resolved threads where the final visible gate came from a GitHub User account</th>
-                  <td>{formatPercent(collaboration.userGateShare, 1)}</td>
-                  <td>The final visible action that closed or accepted the work came from a GitHub User account.</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className={styles.reviewerFollowupComparison}>
+            <header>
+              <h4>Agent and User change requests were followed at similar rates.</h4>
+              <p>
+                The Agent comparison contains 17 pull requests, so the counts stay
+                visible beside the percentages.
+              </p>
+            </header>
+            <div>
+              {reviewerFollowupComparison.map((item, index) => (
+                <article key={item.id} data-reviewer={item.id}>
+                  <span>{item.label}</span>
+                  <i>
+                    <em
+                      style={
+                        {
+                          "--collaboration-delay": `${(index + 2) * 100}ms`,
+                          "--collaboration-rate": `${item.value * 100}%`,
+                        } as CollaborationBarStyle
+                      }
+                    />
+                  </i>
+                  <strong>{formatPercent(item.value, 1)}</strong>
+                  <small>{item.followups} of {item.total} PRs received another commit</small>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
 
@@ -2124,178 +1977,11 @@ export default function InclusionConfStory({
           </div>
         </div>
 
-        <SamplePoolHeader
-          label="Matched repository panels"
-          title="10 repositories selected for contrast"
-          body="We selected ten repositories that span new and established projects, Agent applications, frameworks, runtimes and model infrastructure. The lifecycle panel follows 900 threads across three stages in each project’s history. The fixed-window panel follows 840 threads in the same May–August period across 2024–2026, so change inside each repository can be read against a stable calendar window."
-          details={(
-            <ul>
-              <li>openai/codex</li>
-              <li>anthropics/claude-code</li>
-              <li>langchain-ai/langchain</li>
-              <li>langgenius/dify</li>
-              <li>n8n-io/n8n</li>
-              <li>langfuse/langfuse</li>
-              <li>coder/coder</li>
-              <li>milvus-io/milvus</li>
-              <li>vllm-project/vllm</li>
-              <li>pytorch/pytorch</li>
-            </ul>
-          )}
-        />
-
-        <CollaborationEvolution research={collaboration} />
-
-        <section className={styles.efficiencyStudy} data-reveal>
-          <header>
-            <EditableText as="h3" copyKey="collaborationBurdenTitle" />
-            <EditableText as="p" copyKey="collaborationBurdenBody" />
-          </header>
-
-          <div className={styles.efficiencyLens}>
-            <div role="group" aria-label="Efficiency comparison">
-              <button
-                type="button"
-                data-active={efficiencyLens === "panel"}
-                onClick={() => setEfficiencyLens("panel")}
-              >
-                Same repositories · 2025 / 2026
-              </button>
-              <button
-                type="button"
-                data-active={efficiencyLens === "threads"}
-                onClick={() => setEfficiencyLens("threads")}
-              >
-                Early Agent visible / none
-              </button>
-            </div>
-            <p>
-              {efficiencyLens === "panel"
-                ? "600 sampled threads · 10 repositories · May–Aug 2025 / 2026"
-                : "300 sampled threads · 2026 only · matched within repository and item type"}
-            </p>
-          </div>
-
-          {efficiencyLens === "panel" ? (
-            <div className={styles.efficiencyReport}>
-              <div className={styles.reportTableWrap}>
-                <table className={styles.efficiencyTable}>
-                  <thead>
-                    <tr>
-                      <th>Measure</th>
-                      <th>2025</th>
-                      <th>2026</th>
-                      <th>Change</th>
-                      <th>Interpretation</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {efficiencyPanelRows.map((row) => (
-                      <tr key={row.measure}>
-                        <th>{row.measure}</th>
-                        <td>{row.earlier}</td>
-                        <td>{row.later}</td>
-                        <td>{row.change}</td>
-                        <td>{row.reading}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              <div className={styles.reportNarrative}>
-                <p>
-                  The matched repositories absorbed far more work in 2026, and
-                  Agent participation became much easier to see. At the same time,
-                  a smaller share of threads received an early human response,
-                  closed as an Issue or merged as a pull request inside the fixed
-                  windows.
-                </p>
-                <p>
-                  Maintainer actions per sampled thread stayed almost unchanged:
-                  1.48 in 2025 and 1.44 in 2026. The same level of visible attention
-                  per thread was therefore spread across an incoming population
-                  that had grown to 2.65 times its earlier size.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className={styles.efficiencyReport}>
-              <div className={styles.reportTableWrap}>
-                <table className={styles.efficiencyTable}>
-                  <thead>
-                    <tr>
-                      <th>Measure</th>
-                      <th>Early coding/review Agent visible</th>
-                      <th>No visible Agent in first 24h</th>
-                      <th>Difference</th>
-                      <th>Interpretation</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {efficiency.exposure.map((item) => {
-                      const difference =
-                        item.format === "percent"
-                          ? ((item.agentVisible - item.noVisibleAgent) * 100).toFixed(1) + " pp"
-                          : (item.agentVisible / item.noVisibleAgent).toFixed(2) + "×";
-                      return (
-                        <tr key={item.key}>
-                          <th>{item.label}</th>
-                          <td>{formatExperimentValue(item.agentVisible, item.format)}</td>
-                          <td>{formatExperimentValue(item.noVisibleAgent, item.format)}</td>
-                          <td>{difference}</td>
-                          <td>{exposureInterpretation[item.key]}</td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-              <div className={styles.reportNarrative}>
-                <p>
-                  Within the 2026 sample, early Agent visibility corresponds to
-                  more conversation, more maintainer review and more commits
-                  after the first review. The 30-day merge rate is almost the same:
-                  48.7% when an Agent appears in the first 24 hours and 47.2% when
-                  none is visible. The clearest difference is how many public
-                  revision rounds the thread goes through before the outcome.
-                </p>
-              </div>
-            </div>
-          )}
-
-          <div className={styles.reportFinding}>
-            <h4>The queue grew faster than the public review capacity around it.</h4>
-            <p>
-              The repositories handled much more incoming work and showed more
-              Agent activity, especially in review and revision. Timely human
-              response, Issue closure and PR merge all weakened in the same panel.
-              The result is more public iteration inside a much larger queue,
-              without a matching rise in the visible maintainer attention available
-              to each thread.
-            </p>
-          </div>
-
-          <div className={styles.reportMethod}>
-            <h4>How the comparison was made</h4>
-            <p>
-              We sampled the same ten repositories in the same 1 May–28 August
-              window in 2024, 2025 and 2026. The full three-year panel contains{" "}
-              {efficiency.sampleThreads} threads:{" "}
-              {efficiency.eligibleSevenDayThreads} have a complete seven-day
-              response window and {efficiency.eligibleThirtyDayThreads} have a
-              complete 30-day outcome window. Threads left unanswered or
-              unresolved remain in the denominator. Read this as a workload
-              comparison: harder threads may also be more likely to attract an
-              Agent.
-            </p>
-          </div>
-        </section>
-
-        <SamplePoolHeader
-          label="Illustrative cases"
-          title="7 public collaboration traces"
-          body="Four cases come from the 5,000-thread sample and three from the ten-repository panels. Each one has a readable public sequence, allowing the casebook to show who opened the work, where an Agent entered, who revised it and who closed the loop. Together they explain the hand-offs hidden behind a simple merged, closed or fixed label."
-        />
+        <div className={styles.casebookIntro} data-reveal>
+          <span>Seven public threads</span>
+          <h3>The hand-off looks different in every repository.</h3>
+          <p>These cases show who opened the work, where an Agent entered, who revised it and who closed the loop.</p>
+        </div>
 
         <CollaborationCasebook />
 
@@ -2327,8 +2013,10 @@ export default function InclusionConfStory({
             </p>
             <p>
               The Collaboration chapter freezes the tracked-pool Top 100 by
-              July OpenRank, then treats OpenRank only as a sampling rule. The
-              current entry-surface refresh uses GitHub REST and GraphQL. Annual
+              July OpenRank, then treats OpenRank only as a sampling rule. Every
+              2026 collaboration measure stops at 31 August; September collection
+              and publication dates do not extend that window. The current
+              entry-surface refresh uses GitHub REST and GraphQL. Annual
               marker snapshots inspect coding-agent instruction files and
               tool-specific folders on the default branch. The ClickHouse event panel is retained for
               historical scale and quality checks, but its 2025–2026 PR author
@@ -2595,11 +2283,9 @@ function formatCompact(value: number) {
   });
 }
 
-function formatExperimentValue(
-  value: number,
-  format: "percent" | "count",
-) {
-  return format === "percent" ? formatPercent(value, 1) : value.toFixed(2);
+function formatSignedCompact(value: number) {
+  if (value === 0) return "0";
+  return `${value > 0 ? "+" : "−"}${formatCompact(Math.abs(value))}`;
 }
 
 function SectionTag({

@@ -10,23 +10,6 @@ export const metadata: Metadata = {
 };
 
 export default function InclusionPresentationPage() {
-  const { projects, stats: researchStats } = getInclusionResearchData();
-  const agentProjects = projects.filter((project) => project.stage !== "model");
-  const modelProjects = projects.filter((project) => project.stage === "model");
-  return (
-    <InclusionPresentation
-      projects={projects}
-      stats={{
-        ...researchStats,
-        agentParticipants: agentProjects.reduce(
-          (total, project) => total + (project.participants ?? 0),
-          0,
-        ),
-        modelParticipants: modelProjects.reduce(
-          (total, project) => total + (project.participants ?? 0),
-          0,
-        ),
-      }}
-    />
-  );
+  const { projects, stats } = getInclusionResearchData();
+  return <InclusionPresentation projects={projects} stats={stats} />;
 }

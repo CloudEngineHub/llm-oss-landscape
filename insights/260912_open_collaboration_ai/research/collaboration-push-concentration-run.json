@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-09-02T07:14:23.516034+00:00",
+  "window_each_year": "1 January through 31 August",
+  "cohorts": {
+    "Cloud Native benchmark": 100,
+    "Agentic AI Top 100": 100,
+    "Big Data benchmark": 57
+  },
+  "actor_rows": 18518,
+  "query_ids": [
+    "0f64fd4e-1f62-41f5-8e13-3f072f885440",
+    "77731f16-40bf-4795-a49c-6fdacea19f1c",
+    "f0b9a791-7aa2-4151-b09e-ec599d14070b",
+    "cafe49d1-2dc6-44d5-b043-60ffada35c96",
+    "c31450c1-4c82-4822-983f-0c82361822ad",
+    "4ae366e5-08ec-48fe-b81f-4eed8061a1ab",
+    "397bdad6-268e-4d05-97e9-172cc2088978",
+    "1b967117-cb52-4455-b48e-07e78468dbaf",
+    "edf7a480-8cde-4b16-9aa6-1a21b0b091b8",
+    "ffa1f45d-7b5f-49c2-993c-4af825ddaefc",
+    "8e823c7c-6acf-4e25-b5c8-7e8968277eb2"
+  ],
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-push-concentration-cohorts.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-push-concentration-repositories-2024-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-push-concentration-summary-2024-2026.csv"
+  ],
+  "definitions": {
+    "actors_for_50pct_pushes": "smallest number of non-obvious-bot PushEvent actors whose PushEvents make up at least half of a repository's Jan-Aug total",
+    "benchmark_selection": "top 100 repositories by July 2026 OpenRank within the OpenDigger technology label, excluding repositories already assigned to an earlier cohort"
+  },
+  "limitations": [
+    "PushEvent actors are pushers, not commit authors, and one push may carry several commits.",
+    "Bot exclusion uses public login patterns; service accounts without those patterns can remain.",
+    "The cohorts describe active head projects in each label, not every repository in the domain."
+  ]
+}

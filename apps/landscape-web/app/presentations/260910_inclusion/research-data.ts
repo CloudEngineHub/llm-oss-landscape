@@ -129,6 +129,74 @@ export type CollaborationResearchStats = {
       }>;
     };
   };
+  systemPressure: {
+    matchedRepositories: number;
+    roleFlows: Array<{
+      key: string;
+      label: string;
+      repositories: number;
+      issuesOpened: number;
+      issueBalance: number;
+      repositoriesWithPositiveIssueBalance: number;
+      repositoryMedianIssueBalanceShare: number;
+      pullRequestsOpened: number;
+      pullRequestBalance: number;
+      repositoriesWithPositivePullRequestBalance: number;
+      repositoryMedianPullRequestBalanceShare: number;
+      repositoryMedianPullRequestUnresolved90dShare: number;
+      repositoryMedianPullRequestMerged90dShare: number;
+    }>;
+    history: Array<{
+      year: number;
+      issuesOpened: number;
+      issuesClosed: number;
+      issuesOpenAtCutoff: number;
+      issueBalance: number;
+      repositoriesWithPositiveIssueBalance: number;
+      pullRequestsOpened: number;
+      pullRequestsClosed: number;
+      pullRequestsOpenAtCutoff: number;
+      pullRequestBalance: number;
+      repositoriesWithPositivePullRequestBalance: number;
+      issueUnresolved90dShare: number;
+      pullRequestUnresolved90dShare: number;
+      pullRequestMerged90dShare: number;
+      repositoryMedianPullRequestMerged90dShare: number;
+    }>;
+    pushHistory: Array<{
+      year: number;
+      pushActors: number;
+      actorsForHalfOfPushes: number;
+      topFiveActorShare: number;
+    }>;
+    pushBenchmarks: Array<{
+      label: string;
+      repositories: number;
+      pushActors: number;
+      actorsForHalfOfPushes: number;
+      topFiveActorShare: number;
+    }>;
+  };
+  threadPanel: {
+    matchedRepositories: number;
+    years: Array<{
+      year: number;
+      threads: number;
+      issues: number;
+      pullRequests: number;
+      agentParticipationShare: number;
+      humanResponseWithin7dShare: number;
+      maintainerResponseWithin7dShare: number;
+      issueResolvedWithin30dShare: number;
+      pullRequestResolvedWithin30dShare: number;
+      pullRequestReviewedShare: number;
+      pullRequestRequestedRevisionShare: number;
+      requestedRevisionFollowedByCommitShare: number;
+      pullRequestTwoPlusRevisionShare: number;
+      medianRequestedRevisionCycles: number;
+      medianCommitsAfterFirstReview: number;
+    }>;
+  };
   sampleThreads: number;
   samplePullRequests: number;
   activeRepositories: number;
@@ -343,8 +411,8 @@ function collaborationResearchStats(): CollaborationResearchStats {
     throw new Error("Repository collaboration profile does not cover the Top 100");
   }
   const markerSnapshot = readCsv(
-    "collaboration-agent-markers-260531-260829-summary.csv",
-  ).filter((row) => row.snapshot_date === "2026-08-29");
+    "collaboration-agent-markers-260531-260831-summary.csv",
+  ).filter((row) => row.snapshot_date === "2026-08-31");
   if (markerSnapshot.length !== sample.length) {
     throw new Error("Current Agent marker snapshot does not cover the Top 100");
   }
@@ -353,6 +421,32 @@ function collaborationResearchStats(): CollaborationResearchStats {
   if (fixedWindow.length !== sample.length * 5) {
     throw new Error("Matched repository-year activity panel does not cover the Top 100");
   }
+  const systemPressure = readCsv(
+    "collaboration-system-pressure-summary-2024-2026.csv",
+  );
+  const threadPanel = readCsv(
+    "collaboration-thread-panel-summary-2025-2026.csv",
+  );
+  const pressureRow = (
+    section: string,
+    panel: string,
+    year: number,
+    scopeValue = "all",
+  ) => {
+    const row = systemPressure.find(
+      (candidate) =>
+        candidate.section === section &&
+        candidate.panel === panel &&
+        Number(candidate.year) === year &&
+        candidate.scope_value === scopeValue,
+    );
+    if (!row) {
+      throw new Error(
+        `System-pressure row is missing: ${section} · ${panel} · ${year} · ${scopeValue}`,
+      );
+    }
+    return row;
+  };
   const efficiencyPanel = readCsv(
     "collaboration-efficiency-burden-panel-summary.csv",
   ).filter((row) => row.comparison === "2025_to_2026");
@@ -451,9 +545,12 @@ function collaborationResearchStats(): CollaborationResearchStats {
 
   const transitions = readCsv("collaboration-control-2022-2026-transitions.csv");
   const threadRows = readCsv("collaboration-thread-analysis-2026.csv");
-  const threadEvents = readCsv("collaboration-thread-events-2026.csv");
-  const reviewCommentEvents = readCsv("collaboration-thread-review-comments-2026.csv");
-  const prCommitEvents = readCsv("collaboration-thread-pr-commits-2026.csv");
+  const threadAnalysisRun = JSON.parse(
+    fs.readFileSync(
+      resolveResearchFile("collaboration-thread-analysis-2026-run.json"),
+      "utf8",
+    ),
+  ) as { events_within_window: number };
   const taskRows = readCsv("collaboration-agent-observed-tasks-2026.csv");
   const markerTransitions = readCsv("collaboration-marker-transitions-2025-2026.csv");
   const deepStages = readCsv("collaboration-deep-stage-metrics-2026.csv");
@@ -586,26 +683,26 @@ function collaborationResearchStats(): CollaborationResearchStats {
     agent_runtime_infra: "Agent runtime infrastructure",
     model_infra: "Model infrastructure",
   };
+  const matchedPressureRows = [2024, 2025, 2026].map((year) =>
+    pressureRow("queue_flow", "matched_top100", year),
+  );
   const constantCohortRepos = new Set(
-    sample
-      .filter((row) => row.created_at <= "2024-01-01")
+    readCsv("collaboration-system-pressure-repositories-2024-2026.csv")
+      .filter((row) => row.matched_historical_panel === "yes")
       .map((row) => row.repo_name),
   );
   const activityHistory = [2024, 2025, 2026].map((year) => {
-    const rows = fixedWindow.filter(
-      (row) => Number(row.year) === year && constantCohortRepos.has(row.repo_name),
-    );
-    const issues = sumActivity(rows, "issues_opened");
-    const pullRequests = sumActivity(rows, "prs_opened");
+    const row = matchedPressureRows.find((candidate) => Number(candidate.year) === year)!;
+    const issues = numberValue(row.issues_opened);
+    const pullRequests = numberValue(row.prs_opened);
+    const fixed = pressureRow("fixed_90d_outcome", "matched_top100", year);
     return {
       year,
-      repositories: rows.length,
+      repositories: numberValue(row.repositories),
       issues,
       pullRequests,
-      issueUnresolvedShare:
-        sumActivity(rows, "issues_unresolved_from_cohort") / issues,
-      pullRequestUnresolvedShare:
-        sumActivity(rows, "prs_unresolved_from_cohort") / pullRequests,
+      issueUnresolvedShare: numberValue(fixed.issue_unresolved_90d_share),
+      pullRequestUnresolvedShare: numberValue(fixed.pr_unresolved_90d_share),
     };
   });
   const releaseDays = repositoryProfile.map((row) => numberValue(row.github_release_days));
@@ -863,6 +960,130 @@ function collaborationResearchStats(): CollaborationResearchStats {
           })),
       },
     },
+    systemPressure: {
+      matchedRepositories: numberValue(
+        pressureRow("queue_flow", "matched_top100", 2026).repositories,
+      ),
+      roleFlows: nicheOrder.map((key) => {
+        const row = pressureRow("queue_flow", "current_top100", 2026, key);
+        const outcome = pressureRow(
+          "fixed_90d_outcome",
+          "current_top100",
+          2026,
+          key,
+        );
+        return {
+          key,
+          label: nicheLabels[key],
+          repositories: numberValue(row.repositories),
+          issuesOpened: numberValue(row.issues_opened),
+          issueBalance: numberValue(row.issue_flow_balance),
+          repositoriesWithPositiveIssueBalance: numberValue(
+            row.repositories_with_positive_issue_balance,
+          ),
+          repositoryMedianIssueBalanceShare: numberValue(
+            row.repo_median_issue_flow_balance_share,
+          ),
+          pullRequestsOpened: numberValue(row.prs_opened),
+          pullRequestBalance: numberValue(row.pr_flow_balance),
+          repositoriesWithPositivePullRequestBalance: numberValue(
+            row.repositories_with_positive_pr_balance,
+          ),
+          repositoryMedianPullRequestBalanceShare: numberValue(
+            row.repo_median_pr_flow_balance_share,
+          ),
+          repositoryMedianPullRequestUnresolved90dShare: numberValue(
+            outcome.repo_median_pr_unresolved_90d_share,
+          ),
+          repositoryMedianPullRequestMerged90dShare: numberValue(
+            outcome.repo_median_pr_merged_90d_share,
+          ),
+        };
+      }),
+      history: [2024, 2025, 2026].map((year) => {
+        const flow = pressureRow("queue_flow", "matched_top100", year);
+        const outcome = pressureRow("fixed_90d_outcome", "matched_top100", year);
+        return {
+          year,
+          issuesOpened: numberValue(flow.issues_opened),
+          issuesClosed: numberValue(flow.issues_closed),
+          issuesOpenAtCutoff: numberValue(flow.issues_open_at_cutoff),
+          issueBalance: numberValue(flow.issue_flow_balance),
+          repositoriesWithPositiveIssueBalance: numberValue(
+            flow.repositories_with_positive_issue_balance,
+          ),
+          pullRequestsOpened: numberValue(flow.prs_opened),
+          pullRequestsClosed: numberValue(flow.prs_closed),
+          pullRequestsOpenAtCutoff: numberValue(flow.prs_open_at_cutoff),
+          pullRequestBalance: numberValue(flow.pr_flow_balance),
+          repositoriesWithPositivePullRequestBalance: numberValue(
+            flow.repositories_with_positive_pr_balance,
+          ),
+          issueUnresolved90dShare: numberValue(outcome.issue_unresolved_90d_share),
+          pullRequestUnresolved90dShare: numberValue(outcome.pr_unresolved_90d_share),
+          pullRequestMerged90dShare: numberValue(outcome.pr_merged_90d_share),
+          repositoryMedianPullRequestMerged90dShare: numberValue(
+            outcome.repo_median_pr_merged_90d_share,
+          ),
+        };
+      }),
+      pushHistory: [2024, 2025, 2026].map((year) => {
+        const row = pressureRow(
+          "push_concentration",
+          "matched_top100",
+          year,
+          "Agentic AI Top 100",
+        );
+        return {
+          year,
+          pushActors: numberValue(row.median_push_actors),
+          actorsForHalfOfPushes: numberValue(row.median_actors_for_50pct_pushes),
+          topFiveActorShare: numberValue(row.median_top_5_actor_share),
+        };
+      }),
+      pushBenchmarks: [
+        ["Agentic AI Top 100", "matched_top100"],
+        ["Cloud Native benchmark", "current_benchmark"],
+        ["Big Data benchmark", "current_benchmark"],
+      ].map(([label, panel]) => {
+        const row = pressureRow("push_concentration", panel, 2026, label);
+        return {
+          label,
+          repositories: numberValue(row.repositories),
+          pushActors: numberValue(row.median_push_actors),
+          actorsForHalfOfPushes: numberValue(row.median_actors_for_50pct_pushes),
+          topFiveActorShare: numberValue(row.median_top_5_actor_share),
+        };
+      }),
+    },
+    threadPanel: {
+      matchedRepositories: numberValue(threadPanel[0]?.repositories),
+      years: threadPanel.map((row) => ({
+        year: numberValue(row.year),
+        threads: numberValue(row.threads),
+        issues: numberValue(row.issues),
+        pullRequests: numberValue(row.pull_requests),
+        agentParticipationShare: numberValue(row.agent_participation_share),
+        humanResponseWithin7dShare: numberValue(row.human_response_within_7d_share),
+        maintainerResponseWithin7dShare: numberValue(
+          row.maintainer_response_within_7d_share,
+        ),
+        issueResolvedWithin30dShare: numberValue(row.issue_resolved_within_30d_share),
+        pullRequestResolvedWithin30dShare: numberValue(row.pr_resolved_within_30d_share),
+        pullRequestReviewedShare: numberValue(row.pr_reviewed_share),
+        pullRequestRequestedRevisionShare: numberValue(row.pr_requested_revision_share),
+        requestedRevisionFollowedByCommitShare: numberValue(
+          row.requested_revision_followed_by_commit_share,
+        ),
+        pullRequestTwoPlusRevisionShare: numberValue(
+          row.pr_two_plus_requested_revision_share,
+        ),
+        medianRequestedRevisionCycles: numberValue(
+          row.median_requested_revision_cycles_among_requested_prs,
+        ),
+        medianCommitsAfterFirstReview: numberValue(row.median_commits_after_first_review),
+      })),
+    },
     sampleThreads: numberValue(overall.threads),
     samplePullRequests: threadRows.filter((row) => row.item_type === "pull_request").length,
     activeRepositories: 100,
@@ -922,8 +1143,7 @@ function collaborationResearchStats(): CollaborationResearchStats {
     changeRequestFollowupCommitShare: numberValue(overall.change_requested_pr_followup_commit_share_weighted),
     agentChangeRequestFollowupCommitShare: numberValue(overall.agent_change_requested_pr_followup_commit_share_weighted),
     humanChangeRequestFollowupCommitShare: numberValue(overall.human_change_requested_pr_followup_commit_share_weighted),
-    publicEventsAnalyzed:
-      threadEvents.length + reviewCommentEvents.length + prCommitEvents.length,
+    publicEventsAnalyzed: threadAnalysisRun.events_within_window,
     agentTaskEvents: {
       review: taskEvents("code_review"),
       triage: taskEvents("triage_and_routing") + taskEvents("review_routing"),

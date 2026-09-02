@@ -1,0 +1,28 @@
+{
+  "started_at": "2026-09-02T07:55:59.876324+00:00",
+  "completed_at": "2026-09-02T08:00:51.761582+00:00",
+  "repositories_requested": 82,
+  "threads_requested": 3972,
+  "threads_complete": 3972,
+  "threads_missing_timeline": 0,
+  "thread_errors": [],
+  "events": 79532,
+  "http_requests": 2116,
+  "core_rate_limit": {
+    "limit": 5000,
+    "used": 1,
+    "remaining": 4999,
+    "reset": 1788338004
+  },
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-events-2025.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-events-2025-status.csv"
+  ],
+  "limitations": [
+    "Timeline actors and review actors are public observations; a human-typed GitHub account may still be operating an Agent.",
+    "The default collection uses the Issue timeline for comments, reviews and commit events. Dedicated PR review and commit endpoints are optional because they materially increase API cost.",
+    "Commit author and committer are saved separately. Missing GitHub account links remain unknown rather than human.",
+    "The actor registry and disclosure review must run before automation-only and human-present thread labels are final.",
+    "Deleted or no-longer-visible timeline endpoints are recorded as missing evidence, not as empty collaboration."
+  ]
+}

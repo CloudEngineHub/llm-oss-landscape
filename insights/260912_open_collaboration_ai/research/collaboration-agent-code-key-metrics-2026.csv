@@ -1,7 +1,7 @@
 metric,value,sample_numerator,sample_denominator,note
-strict_agent_only_merged_pr_share,0.003765,8,2125,Share of sampled merged PRs in which every current commit is Agent attributed.
-strict_agent_only_final_addition_share,0.000607,952,1568653,Strict public lower bound for final added lines in merged PRs.
-verified_agent_touched_merged_pr_share,0.012235,26,2125,Agent opened the PR or authored at least one current commit; may include human rewrites.
-expanded_agent_touched_merged_pr_share,0.013176,28,2125,Sensitivity bound adding medium-confidence Coding Agent identities.
-directly_attributed_agent_commit_share,0.00503,55,10935,Commit author identity is a confirmed Coding Agent; share within sampled merged PRs.
-direct_or_pr_linked_agent_commit_share,0.00503,55,10935,Adds commit identities matching the verified Agent opener after normalizing the [bot] suffix.
+strict_agent_only_merged_pr_share,0.003772,8,2121,Share of sampled merged PRs in which every current commit is Agent attributed.
+strict_agent_only_final_addition_share,0.000607,952,1567321,Strict public lower bound for final added lines in merged PRs.
+verified_agent_touched_merged_pr_share,0.012258,26,2121,Agent opened the PR or authored at least one current commit; may include human rewrites.
+expanded_agent_touched_merged_pr_share,0.013201,28,2121,Sensitivity bound adding medium-confidence Coding Agent identities.
+directly_attributed_agent_commit_share,0.005191,55,10596,Commit author identity is a confirmed Coding Agent; share within sampled merged PRs.
+direct_or_pr_linked_agent_commit_share,0.005191,55,10596,Adds commit identities matching the verified Agent opener after normalizing the [bot] suffix.

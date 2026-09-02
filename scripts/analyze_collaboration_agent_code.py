@@ -27,6 +27,7 @@ DEFAULT_ESTIMATES = RESEARCH / "collaboration-agent-code-estimates-2026.csv"
 DEFAULT_KEY_METRICS = RESEARCH / "collaboration-agent-code-key-metrics-2026.csv"
 DEFAULT_STRATA = RESEARCH / "collaboration-agent-code-strata-2026.csv"
 DEFAULT_RUN = RESEARCH / "collaboration-agent-code-analysis-2026-run.json"
+STUDY_CUTOFF_EXCLUSIVE = datetime(2026, 9, 1, tzinfo=UTC)
 
 DETAIL_FIELDS = [
     "sample_rank",
@@ -147,6 +148,12 @@ def as_int(value: str | int | None) -> int:
         return 0
 
 
+def before_study_cutoff(value: str | None) -> bool:
+    if not value:
+        return True
+    return datetime.fromisoformat(value.replace("Z", "+00:00")) < STUDY_CUTOFF_EXCLUSIVE
+
+
 def identity_key(login: str | None) -> str:
     return re.sub(r"\[bot\]$", "", (login or "").strip().lower())
 
@@ -265,6 +272,8 @@ def main() -> None:
     metadata = {(row["repo_name"], row["number"]): row for row in metadata_rows}
     commits_by_pr: dict[tuple[str, str], list[dict[str, str]]] = defaultdict(list)
     for row in commits:
+        if not before_study_cutoff(row.get("created_at")):
+            continue
         commits_by_pr[(row["repo_name"], row["number"])].append(row)
 
     details: list[dict[str, Any]] = []
@@ -338,8 +347,14 @@ def main() -> None:
         expanded_agent_touched = expanded_agent_opened or expanded_agent_commits > 0
         additions = as_int(meta.get("additions"))
         deletions = as_int(meta.get("deletions"))
-        merged = meta.get("merged") == "true"
-        commit_total = as_int(meta.get("commits_total"))
+        merged = (
+            meta.get("merged") == "true"
+            and bool(meta.get("merged_at"))
+            and before_study_cutoff(meta.get("merged_at"))
+        )
+        closed_in_window = bool(item.get("closed_at")) and before_study_cutoff(item.get("closed_at"))
+        outcome_at_cutoff = "merged" if merged else "closed" if closed_in_window else "open"
+        commit_total = len(pr_commits)
         commit_attribution_complete = commit_total == len(pr_commits)
         agent_only = bool(
             agent_opened
@@ -385,7 +400,7 @@ def main() -> None:
             "html_url": item["html_url"],
             "llm_native_manual": item.get("llm_native_manual", ""),
             "collaboration_niche": item.get("collaboration_niche", ""),
-            "outcome": "merged" if merged else item.get("outcome", ""),
+            "outcome": outcome_at_cutoff,
             "additions": additions,
             "deletions": deletions,
             "change_lines": additions + deletions,

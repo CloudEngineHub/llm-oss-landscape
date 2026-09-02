@@ -189,7 +189,7 @@ def main() -> None:
     markers = {
         row["repo_name"]: row
         for row in read_csv(args.markers)
-        if row.get("snapshot_date") == "2026-08-29"
+        if row.get("snapshot_date") == "2026-08-31"
     }
     for row in top:
         row["has_active_instruction"] = markers.get(row["repo_name"], {}).get("has_active_instruction", "unknown")

@@ -6,6 +6,7 @@ import {
   ArrowLeftIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  ExternalLinkIcon,
   Maximize2Icon,
 } from "lucide-react";
 import {
@@ -19,77 +20,79 @@ import {
 } from "react";
 
 import LandscapeExplorer from "@/app/components/landscape-explorer";
-import { Button } from "@/components/ui/button";
 import type { LandscapeProject } from "@/lib/landscape-types";
 
 import type { InclusionResearchStats } from "../research-data";
 import styles from "./presentation.module.css";
 
-type PresentationStats = InclusionResearchStats & {
-  agentParticipants: number;
-  modelParticipants: number;
-};
 type SwipeStart = { pointerId: number; x: number; y: number };
 
 const scenes = [
-  { id: "cover", label: "开场", time: "00:35" },
-  { id: "agent-landscape", label: "Agent 全景", time: "00:55" },
-  { id: "model-landscape", label: "Model 全景", time: "00:55" },
-  { id: "landscape-signals", label: "版图信号", time: "01:05" },
-  { id: "method", label: "研究设计", time: "00:55" },
-  { id: "activity", label: "协作规模", time: "01:05" },
-  { id: "participation", label: "参与位置", time: "01:10" },
-  { id: "review", label: "Review 链路", time: "01:00" },
-  { id: "efficiency", label: "效率实验", time: "01:15" },
-  { id: "deepseek", label: "治理案例", time: "00:50" },
-  { id: "close", label: "结论", time: "00:35" },
+  { id: "cover", label: "开场" },
+  { id: "question", label: "研究问题" },
+  { id: "landscape", label: "全景图" },
+  { id: "trend", label: "增长趋势" },
+  { id: "method", label: "证据范围" },
+  { id: "flow", label: "进入仓库的工作" },
+  { id: "backlog", label: "处理结果" },
+  { id: "core", label: "核心参与者" },
+  { id: "access", label: "贡献入口" },
+  { id: "handoff", label: "Agent 进入的位置" },
+  { id: "tasks", label: "Agent 做了什么" },
+  { id: "review", label: "Review 后的修改" },
+  { id: "lineage", label: "代码沿革" },
+  { id: "outcomes", label: "同期变化" },
+  { id: "deepseek", label: "治理选择" },
+  { id: "close", label: "结论" },
 ] as const;
 
 type SceneId = (typeof scenes)[number]["id"];
-type RevealableSceneId = "agent-landscape" | "model-landscape";
-const revealableScenes = new Set<SceneId>(["agent-landscape", "model-landscape"]);
 
 export default function InclusionPresentation({
   projects,
   stats,
 }: {
   projects: LandscapeProject[];
-  stats: PresentationStats;
+  stats: InclusionResearchStats;
 }) {
   const [sceneIndex, setSceneIndex] = useState(0);
-  const [landscapeReveals, setLandscapeReveals] = useState<
-    Record<RevealableSceneId, boolean>
-  >({ "agent-landscape": false, "model-landscape": false });
+  const [hashReady, setHashReady] = useState(false);
   const swipeStart = useRef<SwipeStart | null>(null);
   const scene = scenes[sceneIndex];
 
   const next = useCallback(() => {
-    if (
-      revealableScenes.has(scene.id) &&
-      !landscapeReveals[scene.id as RevealableSceneId]
-    ) {
-      setLandscapeReveals((current) => ({ ...current, [scene.id]: true }));
-      return;
-    }
     setSceneIndex((current) => Math.min(scenes.length - 1, current + 1));
-  }, [landscapeReveals, scene.id]);
-
+  }, []);
   const previous = useCallback(() => {
-    if (
-      revealableScenes.has(scene.id) &&
-      landscapeReveals[scene.id as RevealableSceneId]
-    ) {
-      setLandscapeReveals((current) => ({ ...current, [scene.id]: false }));
-      return;
-    }
     setSceneIndex((current) => Math.max(0, current - 1));
-  }, [landscapeReveals, scene.id]);
-
+  }, []);
   const enterFullscreen = useCallback(async () => {
     if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.();
     else await document.exitFullscreen?.();
   }, []);
 
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      const requestedId = window.location.hash.slice(1).split(".")[0] as SceneId;
+      const requestedIndex = scenes.findIndex((item) => item.id === requestedId);
+      if (requestedIndex >= 0) setSceneIndex(requestedIndex);
+      setHashReady(true);
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+  useEffect(() => {
+    const handleHashChange = () => {
+      const requestedId = window.location.hash.slice(1).split(".")[0] as SceneId;
+      const requestedIndex = scenes.findIndex((item) => item.id === requestedId);
+      if (requestedIndex >= 0) setSceneIndex(requestedIndex);
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => window.removeEventListener("hashchange", handleHashChange);
+  }, []);
+  useEffect(() => {
+    if (hashReady) window.history.replaceState(null, "", `#${scene.id}`);
+  }, [hashReady, scene.id]);
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (["ArrowRight", "PageDown", " "].includes(event.key)) {
@@ -103,7 +106,6 @@ export default function InclusionPresentation({
       if (event.key === "Home") setSceneIndex(0);
       if (event.key === "End") setSceneIndex(scenes.length - 1);
       if (event.key === "Enter") void enterFullscreen();
-      if (/^[1-9]$/.test(event.key)) setSceneIndex(Number(event.key) - 1);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
@@ -111,13 +113,8 @@ export default function InclusionPresentation({
 
   function handlePointerDown(event: ReactPointerEvent<HTMLElement>) {
     if (event.pointerType !== "touch") return;
-    swipeStart.current = {
-      pointerId: event.pointerId,
-      x: event.clientX,
-      y: event.clientY,
-    };
+    swipeStart.current = { pointerId: event.pointerId, x: event.clientX, y: event.clientY };
   }
-
   function handlePointerUp(event: ReactPointerEvent<HTMLElement>) {
     const start = swipeStart.current;
     swipeStart.current = null;
@@ -129,57 +126,30 @@ export default function InclusionPresentation({
     else previous();
   }
 
-  function jumpTo(index: number) {
-    const target = scenes[index];
-    if (revealableScenes.has(target.id)) {
-      setLandscapeReveals((current) => ({ ...current, [target.id]: false }));
-    }
-    setSceneIndex(index);
-  }
-
-  const currentReveal = revealableScenes.has(scene.id)
-    ? landscapeReveals[scene.id as RevealableSceneId]
-    : false;
-
   return (
     <main
       className={styles.stage}
       lang="zh-CN"
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
-      onPointerCancel={() => {
-        swipeStart.current = null;
-      }}
+      onPointerCancel={() => { swipeStart.current = null; }}
     >
       <section className={styles.deck} aria-live="polite">
         <header className={styles.stageHeader}>
           <Link className={styles.backLink} href="/presentations/260910_inclusion">
-            <ArrowLeftIcon aria-hidden="true" />在线报告
+            <ArrowLeftIcon aria-hidden="true" />Online report
           </Link>
-          <strong>{scene.label}</strong>
+          <span className={styles.chapterName}>{scene.label}</span>
           <div className={styles.stageHeaderRight}>
-            <span>{scene.time}</span>
-            <Button variant="ghost" size="lg" onClick={() => void enterFullscreen()}>
-              <Maximize2Icon data-icon="inline-start" aria-hidden="true" />全屏
-            </Button>
+            <span>{String(sceneIndex + 1).padStart(2, "0")} / {scenes.length}</span>
+            <button type="button" onClick={() => void enterFullscreen()}>
+              <Maximize2Icon aria-hidden="true" />全屏
+            </button>
           </div>
         </header>
-
         <div className={styles.scene} data-stage-scene={scene.id} key={scene.id}>
-          <Scene
-            id={scene.id}
-            projects={projects}
-            stats={stats}
-            revealed={currentReveal}
-            onReveal={() =>
-              setLandscapeReveals((current) => ({
-                ...current,
-                [scene.id as RevealableSceneId]: true,
-              }))
-            }
-          />
+          <Scene id={scene.id} projects={projects} stats={stats} />
         </div>
-
         <footer className={styles.controls}>
           <div className={styles.progress} aria-label="演示进度">
             {scenes.map((item, index) => (
@@ -189,35 +159,13 @@ export default function InclusionPresentation({
                 aria-label={`跳转到第 ${index + 1} 页：${item.label}`}
                 aria-current={index === sceneIndex ? "page" : undefined}
                 data-active={index === sceneIndex}
-                onClick={() => jumpTo(index)}
-              >
-                <i />
-                <span className={styles.srOnly}>{item.label}</span>
-              </button>
+                onClick={() => setSceneIndex(index)}
+              ><i /><span>{item.label}</span></button>
             ))}
           </div>
           <div className={styles.pager}>
-            <span>
-              {String(sceneIndex + 1).padStart(2, "0")} / {String(scenes.length).padStart(2, "0")}
-            </span>
-            <Button
-              variant="outline"
-              size="icon-lg"
-              onClick={previous}
-              disabled={sceneIndex === 0}
-              aria-label="上一页"
-            >
-              <ChevronLeftIcon aria-hidden="true" />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon-lg"
-              onClick={next}
-              disabled={sceneIndex === scenes.length - 1}
-              aria-label="下一页"
-            >
-              <ChevronRightIcon aria-hidden="true" />
-            </Button>
+            <button type="button" onClick={previous} disabled={sceneIndex === 0} aria-label="上一页"><ChevronLeftIcon aria-hidden="true" /></button>
+            <button type="button" onClick={next} disabled={sceneIndex === scenes.length - 1} aria-label="下一页"><ChevronRightIcon aria-hidden="true" /></button>
           </div>
         </footer>
       </section>
@@ -229,44 +177,25 @@ function Scene({
   id,
   projects,
   stats,
-  revealed,
-  onReveal,
 }: {
   id: SceneId;
   projects: LandscapeProject[];
-  stats: PresentationStats;
-  revealed: boolean;
-  onReveal: () => void;
+  stats: InclusionResearchStats;
 }) {
   if (id === "cover") return <CoverSlide />;
-  if (id === "agent-landscape") {
-    return (
-      <LandscapeSlide
-        kind="agent"
-        projects={projects}
-        stats={stats}
-        revealed={revealed}
-        onReveal={onReveal}
-      />
-    );
-  }
-  if (id === "model-landscape") {
-    return (
-      <LandscapeSlide
-        kind="model"
-        projects={projects}
-        stats={stats}
-        revealed={revealed}
-        onReveal={onReveal}
-      />
-    );
-  }
-  if (id === "landscape-signals") return <LandscapeSignalsSlide stats={stats} />;
+  if (id === "question") return <QuestionSlide stats={stats} />;
+  if (id === "landscape") return <LandscapeSlide projects={projects} stats={stats} />;
+  if (id === "trend") return <TrendSlide stats={stats} />;
   if (id === "method") return <MethodSlide stats={stats} />;
-  if (id === "activity") return <ActivitySlide stats={stats} />;
-  if (id === "participation") return <ParticipationSlide stats={stats} />;
+  if (id === "flow") return <FlowSlide stats={stats} />;
+  if (id === "backlog") return <BacklogSlide stats={stats} />;
+  if (id === "core") return <CoreSlide stats={stats} />;
+  if (id === "access") return <AccessSlide stats={stats} />;
+  if (id === "handoff") return <HandoffSlide stats={stats} />;
+  if (id === "tasks") return <TaskSlide stats={stats} />;
   if (id === "review") return <ReviewSlide stats={stats} />;
-  if (id === "efficiency") return <EfficiencySlide stats={stats} />;
+  if (id === "lineage") return <LineageSlide />;
+  if (id === "outcomes") return <OutcomeSlide stats={stats} />;
   if (id === "deepseek") return <DeepSeekSlide />;
   return <ClosingSlide />;
 }
@@ -274,98 +203,123 @@ function Scene({
 function CoverSlide() {
   return (
     <article className={styles.coverSlide}>
-      <div className={styles.coverMain}>
-        <small>2026 INCLUSION CONFERENCE · 2026 年 9 月</small>
-        <h1>
-          Agent 进入
-          <br />
-          <span>开源协作</span>之后
-        </h1>
-        <p>一份关于基础设施版图、公开协作链路与维护者压力的实证研究</p>
-      </div>
-      <section className={styles.coverEvidence}>
-        <div><strong>143</strong><span>个 Agent 与 Model 基础设施项目</span></div>
-        <div><strong>95.7 万</strong><span>条 Issue / PR 公开记录</span></div>
-        <p>我们沿着 Landscape 里的活跃项目继续向下追踪：Agent 出现在哪里，工作量怎样变化，维护者是否真的因此更轻松。</p>
+      <div className={styles.coverAccent} aria-hidden="true" />
+      <section className={styles.coverCopy}>
+        <p className={styles.coverKicker}>THE INCLUSION CONFERENCE</p>
+        <h1>Agent 进入<br />开源协作之后</h1>
+        <p className={styles.coverQuestion}>代码变多了，Review 变多了，合入为什么没有更快？</p>
+        <div className={styles.speakerLine}><strong>Xiaoya Xia</strong><span>Ant Open Source</span></div>
       </section>
-      <footer className={styles.coverFooter}>
-        <span>ANT OPEN SOURCE × INCLUSIONAI 联合发布</span>
-        <div>
-          <Image
-            src="/community-logos/ant-open-source.png"
-            alt="Ant Open Source"
-            width={1282}
-            height={389}
-            priority
-          />
-          <i />
-          <Image
-            src="/community-logos/inclusionai.png"
-            alt="InclusionAI"
-            width={1612}
-            height={466}
-            priority
-          />
-        </div>
-      </footer>
+      <aside className={styles.coverLogoPlate} aria-label="Produced by Ant Open Source and InclusionAI">
+        <Image src="/community-logos/ant-open-source.png" alt="Ant Open Source" width={1282} height={389} priority />
+        <i aria-hidden="true" />
+        <Image src="/community-logos/inclusionai.png" alt="InclusionAI" width={1612} height={466} priority />
+      </aside>
+      <p className={styles.coverSource}>September 2026 · Open-source collaboration research</p>
+    </article>
+  );
+}
+
+function SlideHeader({ title, body }: { title: ReactNode; body: ReactNode }) {
+  return <header className={styles.slideHeader}><h2>{title}</h2><p>{body}</p></header>;
+}
+
+function QuestionSlide({ stats }: { stats: InclusionResearchStats }) {
+  const activity = stats.collaboration.activityFlow;
+  const panel = stats.collaboration.threadPanel.years;
+  const earlier = panel.find((item) => item.year === 2025)!;
+  const later = panel.find((item) => item.year === 2026)!;
+  return (
+    <article className={styles.questionSlide}>
+      <section className={styles.questionCopy}>
+        <p>研究从一个反差开始</p>
+        <h2>代码供给增长，<br />协作效率会一起增长吗？</h2>
+        <p>今年前八个月，Top 100 收到 {formatCompact(activity.pullRequestsOpened)} 条 Pull Request。在同一批可比仓库中，Agent 出现在更多公开线程里，但维护者的第一周响应和 PR 的 30 天完成率都下降了。</p>
+      </section>
+      <section className={styles.questionEvidence}>
+        <div><span>PR opened</span><strong>{formatCompact(activity.pullRequestsOpened)}</strong><small>Top 100 · Jan–Aug 2026</small></div>
+        <div><span>Agent visible</span><strong>{formatPercent(earlier.agentParticipationShare)} <i>→</i> {formatPercent(later.agentParticipationShare)}</strong><small>同一组 55 个仓库</small></div>
+        <div><span>PR completed in 30 days</span><strong>{formatPercent(earlier.pullRequestResolvedWithin30dShare)} <i>→</i> {formatPercent(later.pullRequestResolvedWithin30dShare)}</strong><small>2025 → 2026</small></div>
+      </section>
     </article>
   );
 }
 
 function LandscapeSlide({
-  kind,
   projects,
   stats,
-  revealed,
-  onReveal,
 }: {
-  kind: "agent" | "model";
   projects: LandscapeProject[];
-  stats: PresentationStats;
-  revealed: boolean;
-  onReveal: () => void;
+  stats: InclusionResearchStats;
 }) {
-  const isAgent = kind === "agent";
-  const groups = isAgent ? stats.agentMacro : stats.modelMacro;
-  const leaders = projects
-    .filter((project) => (isAgent ? project.stage !== "model" : project.stage === "model"))
-    .sort((a, b) => (b.openrank ?? -1) - (a.openrank ?? -1))
-    .slice(0, 5);
+  const [view, setView] = useState<"agent" | "model">("agent");
   return (
-    <article className={styles.landscapeSlide} data-kind={kind} data-revealed={revealed}>
-      <header className={styles.landscapeHeader}>
-        <div>
-          <strong>{isAgent ? "Agent Infra" : "Model Infra"}</strong>
-          <span>{isAgent ? stats.agent : stats.model} 个入选项目 · 2026</span>
-        </div>
-        <Button variant="outline" size="sm" onClick={onReveal} disabled={revealed}>
-          {revealed ? "图中信号" : "查看图中信号 →"}
-        </Button>
-      </header>
+    <article className={styles.landscapeSlide}>
       <div className={styles.landscapeCanvas}>
-        <LandscapeExplorer projects={projects} embedOnly={kind} presentationMode />
+        <LandscapeExplorer projects={projects} embedOnly={view} presentationMode />
       </div>
-      <section className={styles.landscapeEvidence} aria-hidden={!revealed}>
-        <div>
-          <strong>
-            {isAgent
-              ? `${Math.round((stats.agentRecent / stats.agent) * 100)}%`
-              : `${Math.round((stats.modelRecent / stats.model) * 100)}%`}
-          </strong>
-          <span>项目创建于 2025 年或以后</span>
+      <div className={styles.landscapeSwitcher} aria-label="切换全景图">
+        <span>2026 OPEN-SOURCE LANDSCAPE</span>
+        <button
+          type="button"
+          data-active={view === "agent"}
+          aria-pressed={view === "agent"}
+          onClick={() => setView("agent")}
+        >
+          Agent Infra · {stats.agent}
+        </button>
+        <button
+          type="button"
+          data-active={view === "model"}
+          aria-pressed={view === "model"}
+          onClick={() => setView("model")}
+        >
+          Model Infra · {stats.model}
+        </button>
+      </div>
+    </article>
+  );
+}
+
+function TrendSlide({ stats }: { stats: InclusionResearchStats }) {
+  const movers = stats.growthLeaders;
+  const maxGrowth = Math.max(...movers.map((item) => item.growth));
+  const application = stats.agentMacro.find((item) => item.label === "Application");
+  const serving = stats.modelMacro.find((item) => item.label === "Serving");
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader
+        title={<>应用层仍最活跃，近期增长已经扩散到 Runtime 和推理基础设施。</>}
+        body={<>7 月 OpenRank 仍主要集中在成熟应用和 Serving 项目；4 月以来的增长榜则同时出现开发入口、上下文工具与推理基础设施。生态关注点正在沿着 Agent 的完整运行链路展开。</>}
+      />
+      <section className={styles.trendBody}>
+        <div className={styles.trendSummary}>
+          <article>
+            <span>Agent Infra · July OpenRank</span>
+            <strong>{application?.openrankShare ?? 0}%</strong>
+            <p>来自 Application</p>
+          </article>
+          <article>
+            <span>Model Infra · July OpenRank</span>
+            <strong>{serving?.openrankShare ?? 0}%</strong>
+            <p>来自 Serving</p>
+          </article>
+          <article>
+            <span>Created since 2025</span>
+            <strong>{Math.round((stats.agentRecent / stats.agent) * 100)}%</strong>
+            <p>Agent Infra 入选项目</p>
+          </article>
         </div>
-        <div>
-          <strong>{groups[0]?.openrankShare ?? 0}%</strong>
-          <span>
-            {groups[0]?.label} 占该版图 7 月 OpenRank 的比例
-          </span>
-        </div>
-        <div className={styles.landscapeLeaders}>
-          {leaders.map((project) => (
-            <p key={project.repo}>
-              <b>{project.name}</b>
-              <span>{project.openrank?.toFixed(1)}</span>
-            </p>
+        <div className={styles.trendMovers}>
+          <header><h3>4–7 月 OpenRank 增长</h3><span>技术位置</span><span>增量</span></header>
+          {movers.map((item, index) => (
+            <div key={item.repo}>
+              <span>{String(index + 1).padStart(2, "0")}</span>
+              <h3>{item.name}</h3>
+              <small>{item.zone}</small>
+              <i><em style={{ "--width": `${(item.growth / maxGrowth) * 100}%` } as CSSProperties} /></i>
+              <strong>+{item.growth.toFixed(1)}</strong>
+            </div>
           ))}
         </div>
       </section>
@@ -373,360 +327,194 @@ function LandscapeSlide({
   );
 }
 
-function ReportHeader({ title, body }: { title: ReactNode; body: ReactNode }) {
-  return (
-    <header className={styles.reportHeader}>
-      <h2>{title}</h2>
-      <p>{body}</p>
-    </header>
-  );
-}
-
-function LandscapeSignalsSlide({ stats }: { stats: PresentationStats }) {
-  const movers = stats.growthLeaders.slice(0, 6);
-  return (
-    <article className={styles.reportSlide}>
-      <ReportHeader
-        title={<>应用仍然最热，基础设施新增供给已经向 Runtime 与 Serving 聚集。</>}
-        body={<>Agent Infra 的 32 个应用项目贡献了 55% 的 7 月 OpenRank，但相较 5 月新增的 23 个 Agent Infra 项目中，有 13 个落在 Runtime。Model Infra 的 Serving 与 Pre-Train 合计占 75% 活跃度。增长榜同时出现 Lark CLI、OpenViking、FlashInfer 与 DeepSeek Reasonix，说明终端入口、长期上下文和推理效率正在一起被拉动。</>}
-      />
-      <div className={styles.signalBody}>
-        <section className={styles.moverTable}>
-          <h3>4 月—7 月 OpenRank 增长</h3>
-          {movers.map((item, index) => (
-            <div key={item.repo}>
-              <span>{String(index + 1).padStart(2, "0")}</span>
-              <b>{item.name}</b>
-              <small>{item.zone}</small>
-              <i>
-                <em
-                  style={
-                    {
-                      "--bar": `${(item.growth / movers[0].growth) * 100}%`,
-                      "--delay": `${index * 80}ms`,
-                    } as CSSProperties
-                  }
-                />
-              </i>
-              <strong>+{item.growth.toFixed(1)}</strong>
-            </div>
-          ))}
-        </section>
-        <section className={styles.runtimeReport}>
-          <h3>Agent Runtime 的公开项目分布</h3>
-          <p>
-            31 个 Runtime 项目覆盖从上下文到结果证据的完整链路。越靠近隔离与验证，项目数量越少，
-            这也是当前版图里最清晰的基础设施缺口。
-          </p>
-          <div>
-            {stats.runtimePath.map((item) => (
-              <article key={item.label}>
-                <strong>{item.projects}</strong>
-                <span>{item.shortLabel}</span>
-                <small>{item.examples.map((example) => example.name).join(" · ")}</small>
-              </article>
-            ))}
-          </div>
-        </section>
-      </div>
-    </article>
-  );
-}
-
-function MethodSlide({ stats }: { stats: PresentationStats }) {
+function MethodSlide({ stats }: { stats: InclusionResearchStats }) {
   const collaboration = stats.collaboration;
-  return (
-    <article className={styles.reportSlide}>
-      <ReportHeader
-        title={<>规模、协作链路和年度变化，分别用不同的证据回答。</>}
-        body={<>OpenRank 只负责从 277 个追踪项目中确定 Top 100。规模问题使用今年以来的全部 Issue / PR；协作链路按每个仓库 50 条均衡抽样；年度变化采用成员固定的历史队列。均衡样本适合观察“典型仓库”的协作过程，不代表按全网流量加权的总体比例。</>}
-      />
-      <table className={styles.reportTable}>
-        <thead>
-          <tr>
-            <th>证据范围</th>
-            <th>包含什么</th>
-            <th>用来回答什么</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Top 100 仓库</th>
-            <td>2026 年 7 月 OpenRank 最高的 100 个项目</td>
-            <td>仓库类型、协作规则、Agent 文件、Release 与今年全部 Issue / PR</td>
-          </tr>
-          <tr>
-            <th>固定 53 仓库历史队列</th>
-            <td>当前 Top 100 中，2024 年 1 月前已经公开的仓库</td>
-            <td>比较 2024—2026 年相同 1—8 月窗口，避免新增项目改变样本</td>
-          </tr>
-          <tr>
-            <th>5,000 条均衡样本</th>
-            <td>
-              每仓库 50 条；{collaboration.sampleThreads - collaboration.samplePullRequests} 条 Issue、
-              {collaboration.samplePullRequests.toLocaleString("en-US")} 条 PR、
-              {formatCompact(collaboration.publicEventsAnalyzed)} 个公开事件
-            </td>
-            <td>谁发起、谁回应、谁 Review、谁执行最后的合并或关闭动作</td>
-          </tr>
-          <tr>
-            <th>10 个仓库同期面板</th>
-            <td>600 条 2025 / 2026 同期线程；完整实验共 {collaboration.efficiencyExperiment.sampleThreads} 条</td>
-            <td>进入仓库的任务、Agent 可见度、响应速度与 30 天结果如何变化</td>
-          </tr>
-          <tr>
-            <th>代码沿革与公开案例</th>
-            <td>10 条 Agent 改过代码的已合并 PR；7 条可阅读的协作案例</td>
-            <td>Agent 的第一笔代码后来保留多少，交接与治理选择如何发生</td>
-          </tr>
-        </tbody>
-      </table>
-    </article>
-  );
-}
-
-function ActivitySlide({ stats }: { stats: PresentationStats }) {
-  const activity = stats.collaboration.activityFlow;
-  const history = activity.history;
-  const maxMonthly = Math.max(...activity.monthly.flatMap((item) => [item.issues, item.pullRequests]));
-  const maxHistory = Math.max(...history.flatMap((item) => [item.issues, item.pullRequests]));
-  const prGrowth = ((history[2].pullRequests / history[1].pullRequests) - 1) * 100;
-  return (
-    <article className={styles.reportSlide}>
-      <ReportHeader
-        title={<>同一批仓库在一年里多收到了 {Math.round(prGrowth)}% 的 Pull Requests。</>}
-        body={<>Top 100 在 2026 年 1—8 月共打开约 {formatCompact(activity.pullRequestsOpened)} 条 PR 和 {formatCompact(activity.issuesOpened)} 条 Issue。固定 53 个仓库后，2025 到 2026 年的 Issue 从 {formatCompact(history[1].issues)} 降到 {formatCompact(history[2].issues)}，PR 却从 {formatCompact(history[1].pullRequests)} 增至 {formatCompact(history[2].pullRequests)}。协作入口正在从“提出问题”转向“直接提交改动”。</>}
-      />
-      <div className={styles.activityBody}>
-        <section className={styles.monthlyChart} aria-label="2026 年每月 Issue 与 Pull Request 数量">
-          <h3>2026 年每月进入 Top 100 的 Issue 与 PR</h3>
-          <div className={styles.monthlyBars}>
-            {activity.monthly.map((item) => (
-              <div key={item.month}>
-                <i
-                  data-series="issue"
-                  style={{ "--height": `${(item.issues / maxMonthly) * 100}%` } as CSSProperties}
-                />
-                <i
-                  data-series="pr"
-                  style={{ "--height": `${(item.pullRequests / maxMonthly) * 100}%` } as CSSProperties}
-                />
-                <span>{item.label}</span>
-                <small>{item.ratio.toFixed(2)}×</small>
-              </div>
-            ))}
-          </div>
-          <footer><span>Issue</span><span>Pull Request</span><b>PR / Issue 比值：1.35 → 2.11</b></footer>
-        </section>
-        <section className={styles.historyChart} aria-label="固定 53 个仓库 2024 至 2026 年活动">
-          <h3>固定 53 个仓库 · 相同 1—8 月窗口</h3>
-          {history.map((item, index) => (
-            <div key={item.year}>
-              <strong>{item.year}</strong>
-              <p>
-                <i style={{ "--width": `${(item.issues / maxHistory) * 100}%` } as CSSProperties} />
-                <span>Issue {formatCompact(item.issues)}</span>
-              </p>
-              <p>
-                <i style={{ "--width": `${(item.pullRequests / maxHistory) * 100}%` } as CSSProperties} />
-                <span>PR {formatCompact(item.pullRequests)}</span>
-              </p>
-              <b>{index === 0 ? "基线" : `PR 同比 +${Math.round((item.pullRequests / history[index - 1].pullRequests - 1) * 100)}%`}</b>
-            </div>
-          ))}
-        </section>
-      </div>
-    </article>
-  );
-}
-
-const stageMeta = {
-  opened: ["发起工作", "全部 5,000 条 Issue / PR"],
-  response: ["参与回应", "全部 5,000 条线程"],
-  review: ["参与 PR Review", "3,567 条抽样 PR"],
-  "final-state": ["执行最后公开动作", "收集时已解决且能识别最后执行者的线程"],
-} as const;
-
-function ParticipationSlide({ stats }: { stats: PresentationStats }) {
-  const collaboration = stats.collaboration;
-  return (
-    <article className={styles.reportSlide}>
-      <ReportHeader
-        title={<>Agent 很少发起工作，公开参与主要发生在回应与 Review。</>}
-        body={<>我们只在 GitHub 明确显示 Agent、GitHub App，或提交文本明确归因给 Agent 时计入。5,000 条样本中，Agent 参与出现在 {collaboration.participationSampleThreads.toLocaleString("en-US")} 条线程，但由 Agent 直接打开的只有 {collaboration.participationOpenerSampleThreads} 条。普通 User 账号仍贯穿绝大多数公开链路，仓库团队账号在 Review 与最终状态变更中承担更高比例。</>}
-      />
-      <table className={`${styles.reportTable} ${styles.participationTable}`}>
-        <thead>
-          <tr>
-            <th>公开协作阶段</th>
-            <th>可识别 Agent / App</th>
-            <th>GitHub User 账号</th>
-            <th>仓库团队账号</th>
-          </tr>
-        </thead>
-        <tbody>
-          {collaboration.threadParticipationStages.map((stage, index) => (
-            <tr key={stage.id}>
-              <th>
-                <span>{String(index + 1).padStart(2, "0")}</span>
-                <div><b>{stageMeta[stage.id][0]}</b><small>{stageMeta[stage.id][1]}</small></div>
-              </th>
-              {(["agent", "user", "repositoryTeam"] as const).map((actor) => (
-                <td key={actor} data-actor={actor}>
-                  <strong>{formatPercent(stage[actor] / stage.denominator)}</strong>
-                  <span>{stage[actor].toLocaleString("en-US")} / {stage.denominator.toLocaleString("en-US")}</span>
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className={styles.definitionStrip}>
-        <p><b>Agent / App</b>CodeRabbit、Gemini Code Assist、OpenHands 等公开身份；本地使用 Cursor、Claude Code 或 Codex 后以普通账号提交，无法从公开数据识别。</p>
-        <p><b>仓库团队账号</b>GitHub 把该账号标为 OWNER、MEMBER 或 COLLABORATOR；它可以同时也是 User，也可能通过 App 执行动作，所以三列并非互斥。</p>
-      </div>
-    </article>
-  );
-}
-
-function ReviewSlide({ stats }: { stats: PresentationStats }) {
-  const collaboration = stats.collaboration;
-  const segments = [
-    { label: "原样保留", value: 765, color: "signal" },
-    { label: "后来由人修改", value: 123, color: "agent" },
-    { label: "后来由 Agent 修改", value: 193, color: "model" },
-    { label: "作者无法确定", value: 144, color: "quiet" },
+  const methods = [
+    ["100", "个高活跃仓库", "用完整记录计算 Issue、PR、积压、Release 和核心参与者。"],
+    [collaboration.sampleThreads.toLocaleString("en-US"), "条公开线程", "每个仓库固定 50 条，逐条还原回应、Review 和修改过程。"],
+    [String(collaboration.systemPressure.matchedRepositories), "个历史可比仓库", "固定仓库成员，比较 2024、2025、2026 年相同的前八个月。"],
+    ["10", "条代码沿革案例", "继续追踪第一笔 Agent patch 到最终合入，九条可还原到行。"],
   ];
-  const total = segments.reduce((sum, item) => sum + item.value, 0);
-  const metrics = [
-    ["出现过 Review 的抽样 PR", collaboration.reviewedPrShare],
-    ["第一次 Review 后继续提交", collaboration.reviewedPrFollowupCommitShare],
-    ["Changes requested 后继续提交", collaboration.changeRequestFollowupCommitShare],
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>我们把仓库总量和协作过程分开看。</>} body={<>Top 100 来自 2026 年 7 月 OpenRank。所有 2026 年行为都截止到 8 月 31 日；图表按问题选择完整仓库记录或公开线程时间线。</>} />
+      <section className={styles.methodBand}>
+        {methods.map((item, index) => <article key={item[1]}><span>{String(index + 1).padStart(2, "0")}</span><strong>{item[0]}</strong><h3>{item[1]}</h3><p>{item[2]}</p></article>)}
+      </section>
+      <p className={styles.methodFooter}>完整记录回答“发生了多少”；线程时间线回答“协作怎样发生”。</p>
+    </article>
+  );
+}
+
+function FlowSlide({ stats }: { stats: InclusionResearchStats }) {
+  const activity = stats.collaboration.activityFlow;
+  const monthlyMax = Math.max(...activity.monthly.flatMap((item) => [item.issues, item.pullRequests]));
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>PR 流入增长最快，8 月已达到每个 Issue 对应 2.11 个 PR。</>} body={<>Top 100 在 1 月至 8 月收到 {formatCompact(activity.pullRequestsOpened)} 条 PR 和 {formatCompact(activity.issuesOpened)} 条 Issue。PR / Issue 比值从 1 月的 1.35 上升到 8 月的 2.11，维护工作的入口越来越像一条代码队列。</>} />
+      <section className={styles.flowChart} aria-label="Top 100 monthly Issue and pull request intake">
+        <div className={styles.flowTotals}><p><span>Issues</span><strong>{formatCompact(activity.issuesOpened)}</strong></p><p><span>Pull requests</span><strong>{formatCompact(activity.pullRequestsOpened)}</strong></p></div>
+        <div className={styles.monthAxis}>
+          {activity.monthly.map((item) => <div key={item.month}><div className={styles.monthBars}><i data-series="issue" style={{ "--height": `${(item.issues / monthlyMax) * 100}%` } as CSSProperties} /><i data-series="pr" style={{ "--height": `${(item.pullRequests / monthlyMax) * 100}%` } as CSSProperties} /></div><b>{item.label}</b><span>{item.ratio.toFixed(2)}×</span></div>)}
+        </div>
+        <footer><span><i data-series="issue" />Issue</span><span><i data-series="pr" />Pull request</span><b>下方数字为当月 PR / Issue</b></footer>
+      </section>
+    </article>
+  );
+}
+
+function BacklogSlide({ stats }: { stats: InclusionResearchStats }) {
+  const history = stats.collaboration.systemPressure.history;
+  const earlier = history.find((item) => item.year === 2025)!;
+  const later = history.find((item) => item.year === 2026)!;
+  const measures = [
+    ["PR 流入", formatCompact(earlier.pullRequestsOpened), formatCompact(later.pullRequestsOpened), `+${Math.round((later.pullRequestsOpened / earlier.pullRequestsOpened - 1) * 100)}%`],
+    ["仍未处理的 PR 净增", formatSignedCompact(earlier.pullRequestBalance), formatSignedCompact(later.pullRequestBalance), formatSignedCompact(later.pullRequestBalance - earlier.pullRequestBalance)],
+    ["90 天后仍开放", formatPercent(earlier.pullRequestUnresolved90dShare), formatPercent(later.pullRequestUnresolved90dShare), signedPointChange(earlier.pullRequestUnresolved90dShare, later.pullRequestUnresolved90dShare)],
+    ["仓库中位 90 天合入率", formatPercent(earlier.repositoryMedianPullRequestMerged90dShare), formatPercent(later.repositoryMedianPullRequestMerged90dShare), signedPointChange(earlier.repositoryMedianPullRequestMerged90dShare, later.repositoryMedianPullRequestMerged90dShare)],
+  ];
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>更多 PR 进入仓库，也有更多 PR 留在队列里。</>} body={<>固定同一组 {stats.collaboration.systemPressure.matchedRepositories} 个仓库后，PR 流入一年增加 {formatCompact(later.pullRequestsOpened - earlier.pullRequestsOpened)}。Issue 的流入与关闭量基本平衡，压力主要积累在代码合入这一侧。</>} />
+      <section className={styles.comparisonRows}>
+        <header><span>同一批仓库</span><b>2025</b><b>2026</b><b>变化</b></header>
+        {measures.map((item) => <div key={item[0]}><h3>{item[0]}</h3><span>{item[1]}</span><span>{item[2]}</span><strong data-negative={item[3].startsWith("−")}>{item[3]}</strong></div>)}
+      </section>
+    </article>
+  );
+}
+
+function CoreSlide({ stats }: { stats: InclusionResearchStats }) {
+  const history = stats.collaboration.systemPressure.pushHistory;
+  const benchmarks = stats.collaboration.systemPressure.pushBenchmarks;
+  const maxActors = Math.max(...benchmarks.map((item) => item.pushActors));
+  const labels: Record<string, string> = { "Agentic AI Top 100": "Agentic AI", "Cloud Native benchmark": "Cloud Native", "Big Data benchmark": "Big Data" };
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>参与合入的账号变多了，核心写入仍然集中。</>} body={<>在同一组 55 个仓库中，有 PushEvent 的账号中位数从 2024 年的 13 个增至 2026 年的 25 个；但一半 PushEvent 通常只由 3 个账号完成。参与面在扩大，真正把变化写进仓库的核心圈仍然很小。</>} />
+      <section className={styles.coreBody}>
+        <div className={styles.coreHistory}><h3>同一组 Agentic AI 仓库</h3><div>{history.map((item, index) => <article key={item.year}><span>{item.year}</span><strong>{item.pushActors}</strong><small>个账号产生 PushEvent</small><b>{item.actorsForHalfOfPushes}</b><small>个账号完成一半 Push</small>{index < history.length - 1 ? <i aria-hidden="true" /> : null}</article>)}</div></div>
+        <div className={styles.coreBenchmark}><h3>2026 年领域对比 · 仓库中位数</h3>{benchmarks.map((item) => <div key={item.label}><span>{labels[item.label] ?? item.label}</span><i><em style={{ "--width": `${(item.pushActors / maxActors) * 100}%` } as CSSProperties} /></i><strong>{item.pushActors}</strong><small>一半 Push 由 {item.actorsForHalfOfPushes} 人完成</small></div>)}</div>
+      </section>
+    </article>
+  );
+}
+
+function AccessSlide({ stats }: { stats: InclusionResearchStats }) {
+  const collaboration = stats.collaboration;
+  const total = collaboration.explicitInvitations + collaboration.gatedPolicies + collaboration.restrictedCreationPolicies + collaboration.noDetectedPolicySignal;
+  const policies = [
+    ["明确邀请外部贡献", collaboration.explicitInvitations, "violet"],
+    ["Issue-first、预批准或限定范围", collaboration.gatedPolicies, "blue"],
+    ["未检测到限制性政策", collaboration.noDetectedPolicySignal, "quiet"],
+    ["仅 collaborators 可创建 PR", collaboration.restrictedCreationPolicies, "pink"],
   ] as const;
   return (
-    <article className={styles.reportSlide}>
-      <ReportHeader
-        title={<>Agent 代码进入仓库后，Review 往往开启下一轮人机共同修订。</>}
-        body={<>3,567 条抽样 PR 中，{formatPercent(collaboration.reviewedPrShare)} 出现过 Review；完成第一次 Review 后，{formatPercent(collaboration.reviewedPrFollowupCommitShare)} 继续产生新 commit。我们又追踪 10 条已合并、且有 Coding Agent 改动代码的 PR：9 条可以还原行级历史，第一笔 Agent patch 的 1,225 行中有 765 行原样保留。</>}
-      />
-      <div className={styles.reviewBody}>
-        <section className={styles.reviewMetrics}>
-          {metrics.map(([label, value]) => (
-            <div key={label}><strong>{formatPercent(value)}</strong><span>{label}</span></div>
-          ))}
-        </section>
-        <section className={styles.lineageReport}>
-          <header><strong>62.4%</strong><span>第一笔 Agent patch 的文本行在合并时原样保留</span></header>
-          <div className={styles.lineageBar}>
-            {segments.map((item) => (
-              <i
-                key={item.label}
-                data-color={item.color}
-                style={{ "--width": `${(item.value / total) * 100}%` } as CSSProperties}
-              />
-            ))}
-          </div>
-          <dl>
-            {segments.map((item) => (
-              <div key={item.label} data-color={item.color}><dt>{item.value}</dt><dd>{item.label}</dd></div>
-            ))}
-          </dl>
-        </section>
-      </div>
-      <div className={styles.caseRows}>
-        <p><b>ONNX Runtime #28045</b><span>611 行第一笔 Agent patch 中，533 行原样保留，78 行后来由人类账号修改。</span></p>
-        <p><b>OpenHands SDK #2614</b><span>最初 11 行没有原样留下；4 行后来由人修改，7 行由后续 Agent 修改。</span></p>
-        <p><b>Vercel AI SDK #18818</b><span>最初 172 行全部被后续 Agent 提交替换，说明“Agent 生成”本身也包含多轮自动迭代。</span></p>
-      </div>
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>多数仓库为 Agent 留下了规则，贡献入口仍由项目决定。</>} body={<>92 个仓库的默认分支上存在 Agent instruction 或工具目录。我们再逐个检查仓库设置与贡献政策：开放代码、允许创建 PR、是否鼓励外部贡献，是三件不同的事。</>} />
+      <section className={styles.accessBody}>
+        <div className={styles.agentReady}><strong>{collaboration.codingAgentRepositories}<small>/100</small></strong><h3>存在 coding-agent 文件或目录</h3><p>包括 AGENTS.md、CLAUDE.md，以及 .claude、.cursor、.codex、.gemini 等路径。</p></div>
+        <div className={styles.policyChart}><h3>贡献政策怎么写</h3>{policies.map((item) => <div key={item[0]} data-color={item[2]}><span>{item[0]}</span><i><em style={{ "--width": `${(item[1] / total) * 100}%` } as CSSProperties} /></i><strong>{item[1]}</strong></div>)}<p>Codex 与 Claude Code 的 PR 页面可见，但创建权限只开放给 collaborators。</p></div>
+      </section>
     </article>
   );
 }
 
-function EfficiencySlide({ stats }: { stats: PresentationStats }) {
-  const experiment = stats.collaboration.efficiencyExperiment;
-  const selectedKeys = new Set([
-    "human_response_7d",
-    "maintainer_response_7d",
-    "issue_closed_30d",
-    "pr_merged_30d",
-    "maintainer_actions_30d",
-  ]);
-  const labels: Record<string, string> = {
-    human_response_7d: "7 天内出现人类回应",
-    maintainer_response_7d: "7 天内出现维护者回应",
-    issue_closed_30d: "Issue 在 30 天内关闭",
-    pr_merged_30d: "PR 在 30 天内合入",
-    maintainer_actions_30d: "每条线程的维护者动作",
-  };
-  const rows = experiment.panel.filter((item) => selectedKeys.has(item.key));
-  const exposure = Object.fromEntries(experiment.exposure.map((item) => [item.key, item]));
+function HandoffSlide({ stats }: { stats: InclusionResearchStats }) {
+  const stages = stats.collaboration.threadParticipationStages;
+  const meta = {
+    opened: ["发起工作", "全部 5,000 条线程"],
+    response: ["参与回应", "Issue / PR 时间线"],
+    review: ["参与 Review", "3,567 条 PR"],
+    "final-state": ["最后状态动作", "已解决且能识别执行者"],
+  } as const;
   return (
-    <article className={styles.reportSlide}>
-      <ReportHeader
-        title={<>Agent 扩大了吞吐，但维护者的及时响应没有同步增长。</>}
-        body={<>在同一批 10 个仓库、相同 5—8 月窗口中，进入仓库的 Issue / PR 从 38.4K 增至 101.9K，可见 Agent 参与从 33.5% 升至 54.4%。与此同时，7 天维护者响应从 42.9% 降至 20.0%，30 天 Issue 关闭和 PR 合入率也下降。这个同期面板描述工作负荷变化，不把相关性解释成 Agent 单独造成的因果结果。</>}
-      />
-      <div className={styles.efficiencyBody}>
-        <table className={`${styles.reportTable} ${styles.efficiencyTable}`}>
-          <thead><tr><th>同一批仓库的协作指标</th><th>2025</th><th>2026</th><th>变化</th></tr></thead>
-          <tbody>
-            <tr className={styles.volumeRow}><th>进入仓库的 Issue / PR</th><td>{formatCompact(experiment.population.earlier)}</td><td>{formatCompact(experiment.population.later)}</td><td>2.65×</td></tr>
-            <tr><th>可见 Agent 参与线程</th><td>{formatPercent(experiment.adoption.allAgentsEarlier)}</td><td>{formatPercent(experiment.adoption.allAgentsLater)}</td><td>{signedPointChange(experiment.adoption.allAgentsEarlier, experiment.adoption.allAgentsLater)}</td></tr>
-            {rows.map((item) => (
-              <tr key={item.key}>
-                <th>{labels[item.key]}</th>
-                <td>{formatMetric(item.earlier, item.format)}</td>
-                <td>{formatMetric(item.later, item.format)}</td>
-                <td>{item.format === "percent" ? signedPointChange(item.earlier, item.later) : signedNumber(item.later - item.earlier)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <section className={styles.efficiencyReading}>
-          <h3>Agent 参与更多，不等于 30 天内更容易合入。</h3>
-          <p>
-            2026 年样本中，前 24 小时出现 Coding / Review Agent 的 PR，30 天合入率是
-            {formatPercent(exposure.pr_merged_30d.agentVisible)}；未看到这类 Agent 的 PR 是
-            {formatPercent(exposure.pr_merged_30d.noVisibleAgent)}，结果接近。
-          </p>
-          <p>
-            差异主要体现在过程：前者平均有 {exposure.conversation_runs_30d.agentVisible.toFixed(2)} 轮公开对话，
-            后者为 {exposure.conversation_runs_30d.noVisibleAgent.toFixed(2)}；第一次 Review 后的 commit
-            分别为 {exposure.commits_after_first_review_30d.agentVisible.toFixed(2)} 与
-            {exposure.commits_after_first_review_30d.noVisibleAgent.toFixed(2)}。Agent 让迭代更密集，
-            但没有在这组样本里显示出明确的结果优势。
-          </p>
-        </section>
-      </div>
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>Agent 很少发起工作，最常在 Review 阶段出现。</>} body={<>我们只在 GitHub 明确显示 Agent、App，或贡献文本明确归因给 Agent 时计入。普通 User 账号仍负责大多数工作入口，也执行了 88.5% 的最后公开状态动作。</>} />
+      <section className={styles.handoffPath}>{stages.map((stage, index) => <article key={stage.id}><header><span>{String(index + 1).padStart(2, "0")}</span><div><h3>{meta[stage.id][0]}</h3><small>{meta[stage.id][1]}</small></div></header><div className={styles.actorMetric} data-actor="agent"><span>Agent / App</span><strong>{formatPercent(stage.agent / stage.denominator)}</strong><i style={{ "--width": `${(stage.agent / stage.denominator) * 100}%` } as CSSProperties} /></div><div className={styles.actorMetric} data-actor="user"><span>GitHub User</span><strong>{formatPercent(stage.user / stage.denominator)}</strong><i style={{ "--width": `${(stage.user / stage.denominator) * 100}%` } as CSSProperties} /></div></article>)}</section>
+      <p className={styles.handoffNote}>仓库团队账号是 User 的子集，因此这里不另画第三条线；它在 Review 与最终决策阶段承担的比例最高。</p>
+    </article>
+  );
+}
+
+function TaskSlide({ stats }: { stats: InclusionResearchStats }) {
+  const tasks = stats.collaboration.agentTaskEvents;
+  const rows = [["Review", tasks.review], ["讨论与回复", tasks.discussion], ["分流与路由", tasks.triage], ["公开归因的 commit", tasks.codeCommit], ["打开 Issue / PR", tasks.openedThread]] as const;
+  const maxValue = Math.max(...rows.map((item) => item[1]));
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>公开可见的 Agent 工作，主要是 Review、讨论和分流。</>} body={<>5,000 条线程关联了 {formatCompact(stats.collaboration.publicEventsAnalyzed)} 个公开事件。同一条线程可能包含多次 Review 或回复，因此这里展示的是动作数量，它说明 Agent 服务被放在了协作流程的什么位置。</>} />
+      <section className={styles.taskChart}>{rows.map((item, index) => <div key={item[0]}><span>{String(index + 1).padStart(2, "0")}</span><h3>{item[0]}</h3><i><em style={{ "--width": `${(item[1] / maxValue) * 100}%` } as CSSProperties} /></i><strong>{item[1].toLocaleString("en-US")}</strong></div>)}</section>
+    </article>
+  );
+}
+
+function ReviewSlide({ stats }: { stats: InclusionResearchStats }) {
+  const collaboration = stats.collaboration;
+  const reviewedCount = Math.round(collaboration.reviewedPrShare * collaboration.samplePullRequests);
+  const followupCount = Math.round(collaboration.reviewedPrFollowupCommitShare * reviewedCount);
+  const metrics = [
+    ["出现过 Review", collaboration.reviewedPrShare, `${reviewedCount.toLocaleString("en-US")} / ${collaboration.samplePullRequests.toLocaleString("en-US")} PRs`],
+    ["第一次 Review 后又有 commit", collaboration.reviewedPrFollowupCommitShare, `${followupCount.toLocaleString("en-US")} / ${reviewedCount.toLocaleString("en-US")} reviewed PRs`],
+    ["CHANGES_REQUESTED 后又有 commit", collaboration.changeRequestFollowupCommitShare, "123 / 161 PRs"],
+  ] as const;
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>一次明确的修改要求，通常会带来下一轮提交。</>} body={<>我们按时间排列抽样 PR 里的 Review 与 commit。所有 reviewed PR 中，55.0% 在第一次 Review 后继续提交；当 Review 明确标记 CHANGES_REQUESTED，这个比例升到 76.4%。</>} />
+      <section className={styles.reviewSequence}>{metrics.map((item, index) => <article key={item[0]}><span>{String(index + 1).padStart(2, "0")}</span><strong>{formatPercent(item[1])}</strong><h3>{item[0]}</h3><p>{item[2]}</p><i><em style={{ "--width": `${item[1] * 100}%` } as CSSProperties} /></i></article>)}</section>
+      <p className={styles.reviewReading}>Review 并没有停在一条评论上。越具体的修改要求，越可能触发下一轮代码。</p>
+    </article>
+  );
+}
+
+const lineageCases = [
+  { name: "ONNX Runtime #28045", href: "https://github.com/microsoft/onnxruntime/pull/28045", retained: 533, human: 78, agent: 0, unresolved: 0, text: "第一笔 Agent patch 有 611 行；合入时 533 行原样保留，另外 78 行后来由人类账号修改。" },
+  { name: "OpenHands SDK #2614", href: "https://github.com/OpenHands/software-agent-sdk/pull/2614", retained: 0, human: 4, agent: 7, unresolved: 0, text: "最初的 11 行没有原样留下；4 行后来由人修改，7 行由后续 Agent commit 修改。" },
+  { name: "Vercel AI SDK #18818", href: "https://github.com/vercel/ai/pull/18818", retained: 0, human: 0, agent: 172, unresolved: 0, text: "最初 172 行全部被后续 Agent commit 替换。Agent 生成的代码也会经历完整的自动迭代。" },
+] as const;
+
+function LineageSlide() {
+  const [caseIndex, setCaseIndex] = useState(0);
+  const selected = lineageCases[caseIndex];
+  const total = selected.retained + selected.human + selected.agent + selected.unresolved;
+  const overview = [["原样保留", 765, "violet"], ["后来由人修改", 123, "pink"], ["后来由 Agent 修改", 193, "blue"], ["作者无法确定", 144, "quiet"]] as const;
+  const caseSegments = [["原样保留", selected.retained, "violet"], ["人类修改", selected.human, "pink"], ["Agent 修改", selected.agent, "blue"], ["作者不明", selected.unresolved, "quiet"]] as const;
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>第一笔 Agent patch 常被保留，也可能在合入前被彻底重写。</>} body={<>我们跟踪了 10 条 Agent 改过代码的已合并 PR；其中 9 条可以还原行级历史。第一笔 Agent patch 共 1,225 行，最终有 62.4% 原样留在合入版本里。</>} />
+      <section className={styles.lineageOverview}><div className={styles.lineageStack}>{overview.map((item) => <i key={item[0]} data-color={item[2]} style={{ "--width": `${(item[1] / 1225) * 100}%` } as CSSProperties} />)}</div><div className={styles.lineageLegend}>{overview.map((item) => <span key={item[0]} data-color={item[2]}><i /><b>{formatPercent(item[1] / 1225)}</b>{item[0]}</span>)}</div></section>
+      <section className={styles.lineageCase}>
+        <nav aria-label="选择代码沿革案例">{lineageCases.map((item, index) => <button key={item.name} type="button" data-active={index === caseIndex} onClick={() => setCaseIndex(index)}>{item.name}</button>)}</nav>
+        <div><header><h3>{selected.name}</h3><a href={selected.href} target="_blank" rel="noreferrer">查看 PR <ExternalLinkIcon aria-hidden="true" /></a></header><div className={styles.caseStack}>{caseSegments.filter((item) => item[1] > 0).map((item) => <i key={item[0]} data-color={item[2]} style={{ "--width": `${(item[1] / total) * 100}%` } as CSSProperties} />)}</div><p>{selected.text}</p></div>
+      </section>
+    </article>
+  );
+}
+
+function OutcomeSlide({ stats }: { stats: InclusionResearchStats }) {
+  const years = stats.collaboration.threadPanel.years;
+  const earlier = years.find((item) => item.year === 2025)!;
+  const later = years.find((item) => item.year === 2026)!;
+  const rows = [
+    ["出现具名 Agent 或 App", earlier.agentParticipationShare, later.agentParticipationShare, "up"],
+    ["PR 出现公开 Review", earlier.pullRequestReviewedShare, later.pullRequestReviewedShare, "up"],
+    ["7 天内仓库维护者响应", earlier.maintainerResponseWithin7dShare, later.maintainerResponseWithin7dShare, "down"],
+    ["PR 在 30 天内处理完成", earlier.pullRequestResolvedWithin30dShare, later.pullRequestResolvedWithin30dShare, "down"],
+  ] as const;
+  return (
+    <article className={styles.standardSlide}>
+      <SlideHeader title={<>Agent 和 Review 出现得更多，响应与完成速度却没有跟上。</>} body={<>我们在同一组 55 个仓库中，为 2025 和 2026 各取 2,750 条线程。更多 PR 进入公开 Review，但维护者第一周回应和 PR 的 30 天完成率同时下降。</>} />
+      <section className={styles.outcomeGrid}>{rows.map((item) => <article key={item[0]} data-tone={item[3]}><h3>{item[0]}</h3><div><span>2025</span><strong>{formatPercent(item[1])}</strong></div><i aria-hidden="true"><em /></i><div><span>2026</span><strong>{formatPercent(item[2])}</strong></div><b>{signedPointChange(item[1], item[2])}</b></article>)}</section>
+      <p className={styles.outcomeReading}>Review 容量在增加；维护者完成取舍、验证和合入的速度没有按同样幅度扩大。</p>
     </article>
   );
 }
 
 function DeepSeekSlide() {
   return (
-    <article className={`${styles.reportSlide} ${styles.deepseekSlide}`}>
-      <section className={styles.deepseekStory}>
-        <h2>DeepSeek Harness 把“代码公开”和“核心仓库开放贡献”分开了。</h2>
-        <blockquote>
-          “You may consider this repository an idea, an official showcase, and a source of
-          inspiration, but not a mandate from us.”
-        </blockquote>
-        <p>
-          仓库把官方代码定位为参考实现，把第三方插件作为生态继续生长的主要入口。这种安排把接口稳定、
-          插件发现，以及不安全或无人维护插件的处置，留给核心仓库之外的治理机制。
-        </p>
-      </section>
-      <section className={styles.deepseekEvidence}>
-        <header><span>2026 年 8 月 13 日开源</span><h3>DeepSeek<br />Harness</h3></header>
-        <div className={styles.deepseekHero}><strong>204K+</strong><span>17 天内获得的 GitHub Stars</span><small>23.6K forks</small></div>
-        <dl>
-          <div><dt>LICENSE</dt><dd>MIT</dd></div>
-          <div><dt>ISSUES</dt><dd>关闭</dd></div>
-          <div><dt>PULL REQUESTS</dt><dd>关闭</dd></div>
-          <div><dt>DISCUSSIONS</dt><dd>开放</dd></div>
-          <div><dt>EXTENSION PATH</dt><dd>dsh-plugin</dd></div>
-        </dl>
-      </section>
+    <article className={styles.deepseekSlide}>
+      <section className={styles.deepseekCopy}><p>一个不同的贡献设计</p><h2>DeepSeek Harness 把外部扩展放在核心仓库之外。</h2><p>核心代码使用 MIT 许可证，Issues 和 Pull Requests 关闭，Discussions 开放；贡献指南把社区开发导向第三方插件。代码可以自由使用，不代表核心仓库必须接收外部改动。</p><blockquote>“an idea, an official showcase, and a source of inspiration”</blockquote></section>
+      <section className={styles.deepseekSurface}><header><span>13–30 August 2026</span><strong>DeepSeek<br />Harness</strong></header><div><strong>204K+</strong><span>GitHub Stars in 17 days</span><small>23.6K forks</small></div><dl><div><dt>LICENSE</dt><dd>MIT</dd></div><div><dt>ISSUES</dt><dd>关闭</dd></div><div><dt>PULL REQUESTS</dt><dd>关闭</dd></div><div><dt>DISCUSSIONS</dt><dd>开放</dd></div><div><dt>EXTENSION</dt><dd>dsh-plugin</dd></div></dl></section>
     </article>
   );
 }
@@ -734,45 +522,27 @@ function DeepSeekSlide() {
 function ClosingSlide() {
   return (
     <article className={styles.closingSlide}>
-      <h2>吞吐已经增长，协作能力仍取决于筛选、验证与责任交接。</h2>
-      <section className={styles.closingReading}>
-        <p>基础设施版图已经从应用扩展到 Runtime、Serving、隔离与结果证据。公开协作记录里，Agent 最常出现在回应、Review 和代码修订阶段，发起工作与最后的状态变更仍主要由人类账号完成。</p>
-        <div><strong>2.65×</strong><span>同一批仓库的 Issue / PR 进入量</span></div>
-        <div><strong>42.9% → 20.0%</strong><span>7 天内获得维护者回应的线程</span></div>
-        <p>这组同期实验里，吞吐和迭代密度上升得很快，响应与 30 天结果没有同步改善。接下来的协作系统需要更认真地处理筛选、验证和责任交接。</p>
-      </section>
-      <footer>
-        <span>完整数据、方法与案例见 Online Report</span>
-        <div>
-          <Image src="/community-logos/ant-open-source.png" alt="Ant Open Source" width={1282} height={389} />
-          <i />
-          <Image src="/community-logos/inclusionai.png" alt="InclusionAI" width={1612} height={466} />
-        </div>
-      </footer>
+      <section><p>OPEN-SOURCE COLLABORATION IN THE AGENT ERA</p><h2>Agent 让 patch 的起点更便宜。<br />项目能走多远，仍取决于社区能否把变化接住。</h2></section>
+      <div className={styles.closingPath}><span>生成代码</span><i /><span>回应问题</span><i /><span>接受 Review</span><i /><span>完成验证与合入</span><i /><strong>长期维护</strong></div>
+      <p className={styles.closingText}>这份公开记录里，Agent 已经扩大了代码、Review 和修订的供给。开源贡献仍然包括理解项目的问题、遵守仓库规则、回应具体修改，并留下一个社区愿意继续承担的结果。</p>
+      <footer><Link href="/presentations/260910_inclusion">完整报告与研究方法 <ExternalLinkIcon aria-hidden="true" /></Link><div><Image src="/community-logos/ant-open-source.png" alt="Ant Open Source" width={1282} height={389} /><i aria-hidden="true" /><Image src="/community-logos/inclusionai.png" alt="InclusionAI" width={1612} height={466} /></div></footer>
     </article>
   );
 }
 
 function formatCompact(value: number) {
-  if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
-  if (value >= 100_000) return `${(value / 1_000).toFixed(1)}K`;
-  if (value >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
+  const absolute = Math.abs(value);
+  if (absolute >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}M`;
+  if (absolute >= 1_000) return `${(value / 1_000).toFixed(1)}K`;
   return value.toLocaleString("en-US");
 }
-
+function formatSignedCompact(value: number) {
+  return `${value >= 0 ? "+" : "−"}${formatCompact(Math.abs(value))}`;
+}
 function formatPercent(value: number) {
   return `${(value * 100).toFixed(1)}%`;
 }
-
-function formatMetric(value: number, format: "percent" | "count") {
-  return format === "percent" ? formatPercent(value) : value.toFixed(2);
-}
-
 function signedPointChange(earlier: number, later: number) {
   const difference = (later - earlier) * 100;
-  return `${difference >= 0 ? "+" : ""}${difference.toFixed(1)} pp`;
-}
-
-function signedNumber(value: number) {
-  return `${value >= 0 ? "+" : ""}${value.toFixed(2)}`;
+  return `${difference >= 0 ? "+" : "−"}${Math.abs(difference).toFixed(1)} pp`;
 }

@@ -1,0 +1,258 @@
+cohort,rank,repo_id,repo_name,openrank_2607,selection
+Agentic AI Top 100,1,1103012935,openclaw/openclaw,462.71,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,2,1024554267,NousResearch/hermes-agent,350.21,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,3,65600975,pytorch/pytorch,333.26,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,4,214587193,supabase/supabase,296.4,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,5,979115477,bytedance/deer-flow,218.2,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,6,740303686,sgl-project/sglang,215.0,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,7,599547518,vllm-project/vllm,189.08,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,8,1191372811,larksuite/cli,179.37,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,9,1128123594,volcengine/OpenViking,177.61,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,10,965415649,openai/codex,175.4,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,11,658928958,ollama/ollama,167.01,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,12,1027384981,langchain-ai/deepagents,159.3,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,13,975734319,anomalyco/opencode,157.72,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,14,669331976,flashinfer-ai/flashinfer,147.83,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,15,679366051,NVIDIA/TensorRT-LLM,145.76,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,16,937253475,anthropics/claude-code,143.36,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,17,154739597,jax-ml/jax,121.48,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,18,942206898,ai-dynamo/dynamo,115.92,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,19,33884891,apache/airflow,98.32,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,20,671269505,BerriAI/litellm,92.22,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,21,612354784,ggml-org/llama.cpp,90.46,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,22,193215554,n8n-io/n8n,82.05,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,23,71932349,ray-project/ray,71.45,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,24,17165658,apache/spark,68.18,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,25,440752086,coder/coder,62.06,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,26,644461337,vercel/ai,56.02,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,27,839037098,mastra-ai/mastra,54.41,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,28,1054512829,vllm-project/vllm-omni,54.29,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,29,1008713177,QwenLM/qwen-code,53.69,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,30,626805178,langgenius/dify,53.65,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,31,384219990,warpdotdev/warp,53.23,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,32,1170821064,paperclipai/paperclip,49.68,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,33,924058625,vllm-project/vllm-ascend,48.15,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,34,391740664,open-metadata/OpenMetadata,47.49,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,35,156939672,microsoft/onnxruntime,46.91,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,36,805155266,CherryHQ/cherry-studio,45.74,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,37,1153130349,pingdotgg/t3code,44.99,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,38,208728772,milvus-io/milvus,44.93,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,39,1035029907,earendil-works/pi,43.89,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,40,90506918,NVIDIA/cudf,42.42,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,41,23496542,triton-lang/triton,41.95,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,42,1156956890,zeroclaw-labs/zeroclaw,41.22,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,43,826168160,docling-project/docling,40.22,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,44,46398090,datahub-project/datahub,38.95,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,45,643445235,lobehub/lobehub,38.07,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,46,575865240,AstrBotDevs/AstrBot,36.97,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,47,1147094660,HKUDS/nanobot,36.96,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,48,790916393,NVIDIA/Model-Optimizer,36.92,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,49,824874689,cline/cline,36.82,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,50,1043426082,OpenHands/software-agent-sdk,36.33,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,51,1165324947,agentscope-ai/QwenPaw,35.86,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,52,949546994,NVIDIA-NeMo/RL,35.74,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,53,818331198,pydantic/pydantic-ai,35.72,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,54,968197216,google-gemini/gemini-cli,35.41,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,55,158256479,apache/iceberg,34.89,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,56,730534580,infiniflow/ragflow,33.94,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,57,86031674,wandb/wandb,33.87,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,58,488641606,agno-agi/agno,33.49,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,59,946087422,Kilo-Org/kilocode,33.37,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,60,1063641074,a2ui-project/a2ui,33.04,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,61,1266212515,omnigent-ai/omnigent,32.65,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,62,573661753,activepieces/activepieces,32.54,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,63,176982014,NVIDIA/Megatron-LM,32.39,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,64,1157102282,diegosouzapw/OmniRoute,31.92,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,65,136202695,mlflow/mlflow,31.5,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,66,655515393,CopilotKit/CopilotKit,31.48,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,67,642497346,langfuse/langfuse,31.4,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,68,1133707766,multica-ai/multica,30.63,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,69,1007406267,coze-dev/coze-loop,30.54,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,70,979886407,IBM/mcp-context-forge,30.35,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,71,1166129534,NVIDIA/OpenShell,30.27,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,72,1031912724,farion1231/cc-switch,29.32,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,73,589831718,Comfy-Org/ComfyUI,29.18,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,74,1183888342,stablyai/orca,29.1,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,75,725205304,unslothai/unsloth,28.52,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,76,552661142,langchain-ai/langchain,27.87,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,77,153097643,openvinotoolkit/openvino,27.34,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,78,974445592,microsoft/agent-framework,27.23,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,79,638951438,comet-ml/opik,27.22,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,80,678526156,marimo-team/marimo,26.83,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,81,55072677,weaviate/weaviate,26.72,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,82,599320067,langflow-ai/langflow,26.11,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,83,1216785679,esengine/DeepSeek-Reasonix,26.06,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,84,564072810,Arize-ai/phoenix,25.11,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,85,76474200,apache/hudi,24.44,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,86,614765452,Significant-Gravitas/AutoGPT,24.14,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,87,65711522,PaddlePaddle/Paddle,23.89,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,88,1108837393,code-yeongyu/oh-my-openagent,23.75,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,89,291438522,siyuan-note/siyuan,23.03,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,90,881221486,verl-project/verl,22.94,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,91,250510075,huggingface/trl,22.75,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,92,627480054,eosphoros-ai/DB-GPT,22.22,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,93,600596928,danny-avila/LibreChat,22.06,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,94,631431061,apache/gravitino,22.03,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,95,987670088,charmbracelet/crush,21.76,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,96,846698999,aaif-goose/goose,21.73,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,97,701547123,open-webui/open-webui,21.58,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,98,707441527,livekit/agents,21.41,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,99,1012087571,router-for-me/CLIProxyAPI,21.34,Frozen July 2026 Agentic AI tracking Top 100
+Agentic AI Top 100,100,819733173,kvcache-ai/Mooncake,20.65,Frozen July 2026 Agentic AI tracking Top 100
+Cloud Native benchmark,1,75821432,llvm/llvm-project,626.5771,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,2,15111821,grafana/grafana,122.0121,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,3,72477752,pulumi/pulumi,88.9642,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,4,31558937,gravitational/teleport,62.6237,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,5,109145553,podman-container-tools/podman,62.0349,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,6,28449431,scylladb/scylladb,54.9395,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,7,473137633,cilium/tetragon,52.2241,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,8,2211243,apache/kafka,41.5292,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,9,11125589,keycloak/keycloak,41.3163,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,10,385634291,grafana/mimir,39.6326,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,11,302322,gradle/gradle,37.4447,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,12,157554479,meshery/meshery,36.2199,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,13,65214191,envoyproxy/envoy,33.1369,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,14,9759448,apache/cloudstack,31.9067,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,15,41986369,pingcap/tidb,30.8143,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,16,105944401,yugabyte/yugabyte-db,28.8449,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,17,36487440,gravitee-io/gravitee-api-management,28.4833,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,18,1357796,emscripten-core/emscripten,26.2284,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,19,50904245,apache/beam,25.7372,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,20,50734768,kubermatic/kubermatic,24.353,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,21,310611,apache/thrift,23.7814,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,22,20587599,apache/flink,23.1206,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,23,17728164,hashicorp/terraform,22.4658,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,24,16554739,elastic/beats,21.1123,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,25,146327667,vectordotdev/vector,18.8459,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,26,99412308,apache/seatunnel,18.5993,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,27,7202769,emqx/emqx,18.2018,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,28,10744183,netdata/netdata,17.7036,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,29,129717717,grafana/loki,17.1005,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,30,136163130,Flagsmith/flagsmith,16.8332,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,31,63882194,projectcalico/calico,16.3189,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,32,1103607,jenkinsci/jenkins,16.3177,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,33,196353673,taosdata/TDengine,15.069,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,34,99143276,velero-io/velero,14.8136,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,35,114187903,apple/foundationdb,14.7125,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,36,20445947,juju/juju,13.2491,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,37,924551,rabbitmq/rabbitmq-server,13.1695,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,38,2649214,arangodb/arangodb,13.1272,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,39,42408804,traefik/traefik,12.9962,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,40,101767772,bytecodealliance/wasmtime,12.9456,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,41,49876476,apache/shardingsphere,12.8086,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,42,356066,apache/trafficserver,12.7454,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,43,333303663,bytebase/bytebase,12.7183,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,44,36960321,opencontainers/runc,12.6773,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,45,26192117,canonical/lxd,12.1068,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,46,27911088,apache/nifi,11.9425,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,47,313628863,external-secrets/external-secrets,11.892,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,48,220517730,quay/quay,11.8914,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,49,6358188,apache/druid,11.8222,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,50,117377862,gardener/gardener,11.1541,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,51,3638964,ansible/ansible,10.8582,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,52,496143272,centreon/centreon,10.8062,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,53,54400687,grafana/k6,10.2232,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,54,156018,redis/redis,9.9641,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,55,131212638,google/gvisor,9.8686,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,56,1050944,infinispan/infinispan,9.8678,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,57,36653430,hashicorp/nomad,9.6562,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,58,1390248,saltstack/salt,9.4191,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,59,118510171,kgateway-dev/kgateway,9.2064,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,60,31006158,apache/ignite,8.9296,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,61,137451403,alibaba/nacos,8.9279,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,62,13753636,jhipster/generator-jhipster,8.9242,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,63,224908244,WasmEdge/WasmEdge,8.8686,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,64,381952060,kubeshop/testkube,8.7227,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,65,206424,apache/cassandra,8.6102,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,66,135516270,k3s-io/k3s,8.2089,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,67,109451092,siderolabs/talos,8.1873,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,68,12440855,Icinga/icinga2,8.1418,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,69,152572186,wasmerio/wasmer,8.0717,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,70,120181748,kiali/kiali,7.857,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,71,236055696,grafana/tempo,7.802,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,72,449649393,keploy/keploy,7.7978,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,73,179344069,woodpecker-ci/woodpecker,7.4535,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,74,318490971,kubewarden/adm-controller,7.2282,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,75,56353740,kubernetes/minikube,7.228,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,76,180481986,apache/apisix,7.2075,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,77,31288958,hashicorp/vault,7.1004,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,78,177068961,kubeovn/kube-ovn,7.0541,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,79,38812664,zalando/skipper,7.0433,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,80,3910314,cloudfoundry/bosh,6.9828,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,81,37912398,nginx/nginx,6.8457,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,82,886774,rundeck/rundeck,6.7287,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,83,2528254,Normation/rudder,6.689,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,84,1090311,elastic/logstash,6.6367,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,85,25459400,pinpoint-apm/pinpoint,6.4672,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,86,108278,chef/chef,6.4443,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,87,62117812,apache/pulsar,6.4119,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,88,82700090,cadence-workflow/cadence,6.1552,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,89,151700458,scalar-labs/scalardb,5.9537,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,90,62091339,kubernetes/kops,5.7115,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,91,206459,apache/avro,5.6837,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,92,24594933,Unleash/unleash,5.6768,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,93,388260896,aws/eks-anywhere,5.6442,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,94,271250363,k0sproject/k0s,5.5612,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,95,42548553,Azure/azure-functions-host,5.4104,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,96,558188628,higress-group/higress,5.3195,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,97,118469706,wasmi-labs/wasmi,5.2717,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,98,173335706,apache/dolphinscheduler,5.2461,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,99,175425051,kumahq/kuma,4.9833,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Cloud Native benchmark,100,108462822,projectcontour/contour,4.5705,"Top July 2026 OpenRank repositories under :technology/cloud_native/, excluding earlier cohorts"
+Big Data benchmark,1,7833168,elastic/kibana,208.5663,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,2,507775,elastic/elasticsearch,128.8843,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,3,99919302,apache/doris,80.7144,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,4,51905353,apache/arrow,73.9536,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,5,402945349,StarRocks/starrocks,62.3439,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,6,19961085,apache/pinot,54.1895,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,7,341631350,apache/lucene,45.0276,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,8,39464018,apache/superset,40.9122,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,9,358917318,apache/datafusion,29.9375,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,10,212382406,apache/ozone,27.6999,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,11,358917250,apache/arrow-rs,25.9741,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,12,206317,apache/camel,25.9462,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,13,807776416,apache/polaris,23.7944,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,14,20089857,apache/hbase,21.0701,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,15,158975124,apache/iotdb,17.4156,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,16,131619646,dagster-io/dagster,16.2249,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,17,743651128,apache/datafusion-comet,16.0178,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,18,341374920,apache/solr,15.6781,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,19,45646037,plotly/plotly.js,13.8899,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,20,4704710,mwaskom/seaborn,11.7782,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,21,435375021,apache/incubator-gluten,11.427,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,22,677260606,apache/iceberg-python,11.0254,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,23,677260678,apache/iceberg-go,10.4843,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,24,20675636,apache/parquet-java,10.1227,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,25,498785517,apache/arrow-adbc,9.3485,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,26,849127594,apache/arrow-go,9.2874,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,27,494107715,apache/datafusion-ballista,9.2797,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,28,952097046,apache/arrow-rs-object-store,8.999,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,29,282994686,apache/flink-cdc,8.5296,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,30,669011066,apache/iceberg-rust,7.9865,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,31,193065376,apache/camel-quarkus,6.5611,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,32,206444,apache/hive,6.5037,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,33,114619105,apache/kyuubi,6.2928,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,34,459025965,apache/opendal,6.1067,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,35,893682219,apache/arrow-java,5.8002,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,36,21193524,apache/calcite,5.3618,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,37,59737212,antvis/G2,5.2072,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,38,33653601,jupyter/notebook,4.6892,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,39,120538653,apache/datafusion-sqlparser-rs,4.3819,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,40,14135470,apache/storm,4.1775,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,41,123345344,keplergl/kepler.gl,3.6341,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,42,20473418,apache/phoenix,3.3977,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,43,515951203,apache/datafusion-python,3.3093,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,44,56750161,apache/nifi-minifi-cpp,2.9846,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,45,340642806,apache/solr-site,2.9462,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,46,469069490,apache/opendal-reqsign,2.9147,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,47,801199055,apache/datafusion-site,2.0263,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,48,188779637,apache/streampark,1.9392,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,49,98013453,apache/atlas,1.2834,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,50,1102985952,apache/terraform-provider-iceberg,1.1897,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,51,154230024,apache/pinot-site,1.1698,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,52,1077950478,apache/solr-mcp,1.1398,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,53,938782414,apache/polaris-tools,0.9634,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,54,988870018,apache/arrow-swift,0.936,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,55,13926404,getredash/redash,0.7254,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,56,542858846,apache/pulsar-client-cpp,0.7102,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"
+Big Data benchmark,57,20675635,apache/parquet-format,0.6841,"Top July 2026 OpenRank repositories under :technology/big_data/, excluding earlier cohorts"

@@ -10,19 +10,22 @@ This manuscript is the source for the online research report. The ten-minute Inc
 
 Every published finding needs evidence beside it. Stars describe attention, OpenRank describes open-source activity, and platform rankings describe traffic visible to that platform. Production use and repository-level Agent participation require their own evidence.
 
+The study window for 2026 ends on 31 August. Collection and publication dates in September do not extend any activity, response, review, merge or backlog measure beyond that cutoff.
+
 The local report page includes a visual copy editor. Its editable fields are
 stored in `web-copy.json`; charts, metrics, links and evidence labels remain
 locked. The editor is available only from the localhost preview.
 
 The report follows two questions. The first starts with the landscape and asks what its growth signals mean for the open infrastructure already carrying AI workloads. The second enters the repository and asks what changes when agents participate in Issues, pull requests and review.
 
-Five reading chapters keep that structure visible:
+Six reading chapters keep that structure visible:
 
 1. **01A · The current maps** — which projects and layers hold activity;
 2. **01B · Signals in the map** — growth, age, language and external usage checks;
 3. **01C · Open infrastructure** — how established projects are adapting to agent execution;
-4. **02A · Agent participation** — where agents appear in repository work;
-5. **02B · The contribution process** — review, revision, maintainer pressure and the decisions that turn a patch into a maintained contribution.
+4. **02A · Workload and repository setting** — how Issue and PR intake, backlog, response and completion changed;
+5. **02B · Repository access and Agent setup** — who may contribute and how repositories prepare coding Agents;
+6. **02C · Where Agents enter the public workflow** — what Agents do after work arrives, how review leads to revision and who completes the public process.
 
 ---
 
@@ -48,7 +51,7 @@ That creates one connected systems question. During execution, an Agent can writ
 
 **Repositories prepare Agents to contribute, but Agents rarely open the work.** Ninety-two of the Top 100 publish a coding-agent file or folder. A named Agent account or App opened 87 of the 5,000 sampled threads, while Agent participation appeared in 2,158. Most of the public trace enters later, through review, discussion, triage or code revision.
 
-**Agent activity grew with the queue. Maintainer attention did not.** In the same ten repositories, incoming work grew 165% from 2025 to 2026, seven-day maintainer response fell from 42.9% to 20.0%, and 30-day Issue closure and PR merge also declined. Across the wider sample, GitHub User accounts still performed 88.5% of the last visible actions that resolved a thread.
+**Code supply expanded faster than the merge path.** Across the same 55 repositories, PR intake rose from 129,563 in 2025 to 265,447 in 2026. The share still open after 90 days rose from 5.5% to 11.3%, while the repository-median merge rate fell from 77.0% to 68.4%. The public integration circle widened from 17 to 25 PushEvent accounts per repository, but it did not grow as fast as the PR queue.
 
 ## Snapshot
 
@@ -304,7 +307,7 @@ The useful trace begins before the tool call and ends at the external effect.
 
 # 02 · Open-source Collaboration
 
-## 02A · Agent participation
+## 02A · Workload and repository setting
 
 The study freezes the 100 highest-OpenRank repositories in the 277-project tracking pool. OpenRank decides the sample and does no further analytical work. Each repository was then reviewed as `llm_native`, `traditional` or `mixed`, with a confidence level and a short reason.
 
@@ -321,21 +324,16 @@ The review produced 68 LLM-native projects, 18 traditional projects and 14 mixed
 
 The sample is the most active slice of the tracked ecosystem by July OpenRank. Its repository scale, release cadence and contribution volume describe prominent Agentic AI projects; smaller and quieter repositories sit outside this view.
 
-### The report uses one repository frame and six derived pools
+### One repository frame, two layers of evidence
 
-The denominator changes when the question changes. The online report now keeps charts from the same pool together and marks each change before the next group begins.
+The report starts from the same frozen Top 100 throughout. It then uses the data at two different depths.
 
-| Sample pool | How it was selected | What it is used for |
+| Evidence layer | Coverage | What it answers |
 | --- | --- | --- |
-| Top 100 repository frame | The 100 highest-July-2026-OpenRank repositories inside the 277-project tracking pool | Repository profile, contribution settings and policies, coding-agent files, release activity and complete 2026 Issue/PR counts |
-| Fixed 53-repository historical cohort | The current Top 100 mechanically filtered to repositories already public by 1 January 2024 | Compare the same January–August activity window in 2024, 2025 and 2026 while keeping repository membership fixed; it still has survivor bias |
-| 5,000-thread repository-balanced sample | 50 non-overlapping Issues or pull requests from each Top 100 repository, created from 1 January to 31 August 2026 | What happened in the sampled threads: visible Agent activity, review and gate behavior, task types and revision loops |
-| Code-lineage subset | Ten merged PRs inside the thread sample where a high-confidence coding-Agent identity changed code; nine expose a clean line history | Follow the first Agent patch through later commits to see how much exact text remained and which account changed the rest |
-| Ten-repository matched panels | A deliberately varied set spanning project age, LLM relationship and technical role | A 900-thread lifecycle panel across three project stages, plus an 840-thread fixed-window panel across 2024–2026 |
-| Seven illustrative cases | Four threads from the 5,000-thread sample and three from the ten-repository panels, chosen because the public sequence is legible | Show the contributor, Agent, automation and maintainer hand-offs hidden behind a merged, closed or fixed label |
-| Twelve long-lived controls | Kubernetes, VS Code, Vue, Kata Containers, Prometheus, Envoy, Grafana, Arrow, Rust, pandas, FastAPI and Kafka | Check whether rising PR intake and unresolved work also appear in established non-Agentic repositories |
+| Complete repository counts | Every public Issue and pull request that GitHub Search finds in the Top 100 for January–August 2024, 2025 and 2026; historical comparisons use the same 55 repositories with activity in every fixed window | How much work arrived, how much was closed, what remained open after a fixed 90-day period, and whether the queue grew |
+| Repository-balanced thread timelines | 50 Issues or pull requests per repository in 2026; the historical panel uses 2,750 threads from the same 55 repositories in each of 2025 and 2026 | Who responded after the opener, how quickly a repository-team account appeared, and how many visible review-and-revision rounds followed |
 
-The Top 100 follows July OpenRank, and the ten-repository panel deliberately spans different project types. The thread study keeps 50 threads per repository and reports the observed counts and shares in those 5,000 threads. Equal repository quotas stop the busiest projects from dominating the result and preserve a comparable slice of every repository.
+The complete counts carry the workload and outcome claims. The thread timelines explain how that work moved through public collaboration. The ten code-lineage pull requests and seven readable public threads are closer views drawn from the 2026 sample.
 
 ### Pull requests are arriving faster than issues
 
@@ -352,24 +350,49 @@ Between 1 January and 31 August 2026, the Top 100 opened about 349,800 Issues an
 | July | 49,274 | 101,482 | 2.06× |
 | August | 52,982 | 111,551 | 2.11× |
 
-The gap remains in a fixed historical cohort. We filtered the current Top 100 to the 53 repositories already public by 1 January 2024, then compared the same 1 January–31 August window in each year. Repository membership stays fixed across the comparison. Because the cohort starts from today's Top 100, it represents long-lived projects that remain prominent in 2026.
+The historical comparison keeps repository membership fixed. Fifty-five of the current Top 100 have public Issue or PR activity in the January–May fixed-maturity cohort in all three years. Those same 55 repositories are used for queue flow, 90-day outcomes and PushEvent concentration.
 
-| Fixed 53-repository cohort | Issues opened | Pull requests opened | PR / Issue |
-| --- | ---: | ---: | ---: |
-| 2024 | 53,330 | 97,018 | 1.82× |
-| 2025 | 72,302 | 124,712 | 1.72× |
-| 2026 | 68,512 | 246,006 | 3.59× |
-
-Across the fixed cohort, PR intake rose from 124,712 in 2025 to 246,006 in 2026, a 97.3% increase, while Issue intake fell 5.2%. The public change stream became much heavier. The next section separates named Agent activity from conventional automation and ordinary User accounts inside the sampled threads.
-
-| 2026 intake by technical role | Repositories | Issues | Issue cohort unresolved | Pull requests | PR cohort unresolved | PR / Issue |
+| Same 55 repositories · January–August | Issues opened | Issues closed | Issue balance | PRs opened | PRs closed | PR balance |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Agent applications | 28 | 251,584 | 24.6% | 264,586 | 21.5% | 1.05× |
-| Agent frameworks | 21 | 34,321 | 33.2% | 101,575 | 18.8% | 2.96× |
-| Agent runtime infrastructure | 15 | 15,513 | 28.4% | 47,869 | 13.7% | 3.09× |
-| Model infrastructure | 36 | 48,408 | 35.0% | 192,711 | 23.0% | 3.98× |
+| 2024 | 53,847 | 46,033 | +7,814 | 97,793 | 96,367 | +1,426 |
+| 2025 | 74,586 | 64,001 | +10,585 | 129,563 | 125,104 | +4,459 |
+| 2026 | 71,539 | 72,789 | −1,250 | 265,447 | 222,675 | +42,772 |
 
-Model infrastructure has the highest unresolved Issue share: 35.0% of Issues opened inside the window were still open at the cutoff. The unresolved figures only follow items opened during this study window; they are not the repositories' full historical backlog. The flow is also concentrated. Claude Code, OpenClaw, Hermes Agent, OpenCode and Codex account for 54.5% of Issue intake, while the five PR leaders account for 34.7% of pull requests.
+“Balance” is opened minus closed during the eight-month window. A positive number means more work arrived than the repositories closed; closures may include older backlog. In 2026, the Issue side was almost balanced, while PR intake doubled and exceeded closures by 42,772. Fifty-four of the 55 repositories added to their PR queue. This is not a general collapse in issue handling. The pressure is concentrated in proposed code changes that still need review, revision and a merge decision.
+
+The result remains after giving every item a comparable amount of time. For the January–May cohorts, each Issue and pull request is observed for 90 days after its month ends.
+
+| Same 55 repositories · fixed 90-day outcome | 2024 | 2025 | 2026 |
+| --- | ---: | ---: | ---: |
+| Issues still open after 90 days | 32.3% | 31.7% | 28.6% |
+| PRs still open after 90 days | 4.6% | 5.5% | 11.3% |
+| Repository-median PR merge rate by 90 days | 81.1% | 77.0% | 68.4% |
+
+Issue closure improved modestly; PRs became less likely to reach a recorded merge within the same 90-day window and twice as likely to remain open. The 2026 backlog is not only a pile of late-August submissions that had no time to move.
+
+| 2026 technical role | Issue queue balance | Repositories with growing Issue queue | PR queue balance | Repositories with growing PR queue | Median PR still open after 90 days | Median PR merged by 90 days |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Agent applications | +45,865 | 21 / 28 | +54,625 | 26 / 28 | 7.0% | 56.6% |
+| Agent frameworks | +7,407 | 13 / 21 | +17,139 | 21 / 21 | 8.7% | 68.1% |
+| Agent runtime infrastructure | +526 | 13 / 15 | +5,715 | 15 / 15 | 6.9% | 73.7% |
+| Model infrastructure | +321 | 29 / 36 | +35,735 | 36 / 36 | 11.4% | 67.8% |
+
+Agent applications accumulated both unanswered questions and unprocessed code changes. Infrastructure repositories kept the aggregate Issue flow much closer to balance, yet every framework, runtime and model-infrastructure repository added to its PR queue. Model infrastructure has the highest repository-median 90-day unresolved PR share, while Agent Runtime has the highest median merge rate in the fixed window.
+
+The Top 100 flow is concentrated. Claude Code, OpenClaw, Hermes Agent, OpenCode and Codex account for 54.5% of Issue intake, while the five PR leaders account for 34.7% of pull requests. The report therefore keeps aggregate totals beside repository medians and counts of affected repositories.
+
+### Agent activity reached more PRs, while fewer finished within 30 days
+
+The complete repository counts above show the growing queue. To see what happened inside it, we compared 2,750 threads from January–August 2025 with 2,750 from the same 55 repositories in 2026. Each repository contributes 50 threads in each year. A maintainer response counts only when a repository Owner, Member or Collaborator other than the opener responds from a GitHub User account.
+
+| Same 55 repositories · 50 sampled threads per repository and year | 2025 | 2026 | Change |
+| --- | ---: | ---: | ---: |
+| Threads where a named Agent or App appeared | 19.9% | 46.1% | +26.3 pp |
+| A repository maintainer responded within 7 days | 37.1% | 31.1% | −6.0 pp |
+| Pull requests resolved within 30 days | 87.8% | 80.3% | −7.5 pp |
+| Pull requests with a visible review | 68.8% | 73.9% | +5.1 pp |
+
+Named Agents appeared in more than twice as many threads, and review reached a larger share of PRs. At the same time, first-week maintainer response and 30-day PR completion both fell. Agents helped more changes reach review; repositories still had to find the attention and authority to finish them.
 
 ### Some repositories publish GitHub Releases almost every day
 
@@ -396,7 +419,31 @@ Release records also cover 1 January–31 August 2026. Vercel AI's 15,232 record
 | vercel/ai | 194 / 243 | 15,232 |
 | flashinfer-ai/flashinfer | 185 / 243 | 221 |
 
-### Open collaboration is still the default surface
+### The core integration circle widened, but PR intake grew faster
+
+PushEvents show how widely the final write path is shared. For each repository, we ranked public PushEvent accounts and counted how many were needed to cover half of all pushes. In the same 55 Agentic AI repositories, the median number of accounts with a PushEvent rose from 13 in 2024 to 17 in 2025 and 25 in 2026. The median number producing half of all pushes rose from two to three.
+
+| Same 55 Agentic AI repositories | Median PushEvent accounts | Accounts producing half of pushes | Median share produced by top five accounts |
+| --- | ---: | ---: | ---: |
+| 2024 | 13 | 2 | 91.4% |
+| 2025 | 17 | 2 | 86.9% |
+| 2026 | 25 | 3 | 74.1% |
+
+The core did not shrink. More accounts entered the public integration path, and work became less concentrated in the top five. But from 2025 to 2026, the median PushEvent circle grew 47%, while PR intake in the same repositories grew 105%.
+
+OpenDigger technology labels provide two active-repository comparisons. In 2026, an Agentic AI repository needed a median of three accounts to produce half its pushes, compared with two in the cloud-native benchmark and one in the big-data benchmark.
+
+| 2026 benchmark | Active repositories | Median PushEvent accounts | Accounts producing half of pushes |
+| --- | ---: | ---: | ---: |
+| Agentic AI matched panel | 55 | 25 | 3 |
+| Cloud Native | 98 | 12 | 2 |
+| Big Data | 56 | 7 | 1 |
+
+A PushEvent account is the account that wrote to the repository, not necessarily the commit author. Agentic AI projects have a broader public integration circle than the two established technology controls. The present bottleneck is not a shrinking core; it is the gap between how quickly proposed changes arrive and how quickly repositories can review and integrate them.
+
+## 02B · Repository access and Agent setup
+
+### Most repositories accept outside pull requests
 
 All 100 repositories have Issues and Pull Requests enabled. The creation setting is not identical: 98 allow anyone to create a pull request, while Codex and Claude Code restrict creation to collaborators. Discussions are enabled in 74. A common-path scan found a CONTRIBUTING file in 89 repositories, an Issue template in 95 and a pull-request template in 84.
 
@@ -421,7 +468,7 @@ The distinction is visible in individual repositories. Mastra asks code contribu
 
 DeepSeek Harness sits outside this Top 100 denominator. Its MIT-licensed core keeps Issues and Pull Requests closed while directing outside development toward plugins. It is a useful comparison because open source code, an open core contribution path and an extension ecosystem are separate choices.
 
-### 92 repositories have set up files or folders for coding agents
+### Coding-agent setup is already common across the stack
 
 In 92 of the Top 100 repositories, the default branch contains something created for a coding-agent workflow. This includes instruction files such as `AGENTS.md` and `CLAUDE.md`, as well as tool folders such as `.claude`, `.cursor`, `.codex` and `.gemini`.
 
@@ -459,13 +506,15 @@ PyTorch, Spark, Iceberg, ONNX Runtime, Milvus, Triton and OpenVINO all carry mac
 
 The instruction text also reaches beyond implementation. Among the 86 repositories where we could read explicit instructions, 81 mention tests or validation, 79 mention Issue work or planning, 72 mention code review and 63 mention release or dependency work. Maintainers are preparing Agents for the full contribution loop, especially the checks and coordination that happen around code generation.
 
+## 02C · Where Agents enter the public workflow
+
 ### The 5,000-thread sample follows public collaboration in detail
 
 We sampled 50 non-overlapping threads from each repository, giving every project an equal place in the study instead of letting the largest repositories dominate. The final sample contains 5,000 threads: 1,433 Issues and 3,567 pull requests.
 
 Every sampled thread counts once. Taking the same number from each repository prevents the largest projects from swallowing the rest of the sample and keeps all 100 repositories visible in the result. The figures therefore describe an equal-sized slice of each repository: 5,000 threads drawn from the 956,567 Issues and pull requests opened during the eight-month window.
 
-### Agents enter after submission, especially in review
+### Agents mostly join after a contribution arrives
 
 A coding or review Agent left a visible action in 2,158 of the 5,000 Issues and pull requests we reviewed. We saw this in 95 of the 100 repositories. Only 87 threads were opened by an Agent account or App. Put plainly: Agent participation appears in 43.16% of this sample, while Agent-opened work accounts for 1.74%.
 
@@ -484,9 +533,9 @@ In this report, a visible Agent action is one where GitHub names the Agent or th
 | Stage in the public thread | Records included in this row | Named Agent or Agent-attributed App | GitHub User account | Repository team account | What the result shows |
 | --- | --- | ---: | ---: | ---: | --- |
 | Issue or pull request opened | All 5,000 sampled threads | 87（1.7%） | 4,730（94.6%） | 1,380（27.6%） | Agent-attributed openers remain unusual. Most work enters through a GitHub User account. |
-| Someone responded after opening | All 5,000 sampled threads | 1,914（38.3%） | 3,005（60.1%） | 1,936（38.7%） | Named Agents are already part of discussion and triage, alongside User and repository-team accounts. |
-| A pull request was reviewed | 3,567 sampled pull requests | 1,342（37.6%） | 1,934（54.2%） | 1,257（35.2%） | Review is the clearest public point of Agent participation in the contribution process. |
-| Last public action that resolved the thread | 4,098 resolved threads with an identifiable actor | 79（1.9%） | 3,626（88.5%） | 2,146（52.4%） | A GitHub User account performs the last visible merge, close or reopen action in most resolved threads. |
+| Someone responded after opening | All 5,000 sampled threads | 1,914（38.3%） | 2,998（60.0%） | 1,931（38.6%） | Named Agents are already part of discussion and triage, alongside User and repository-team accounts. |
+| A pull request was reviewed | 3,567 sampled pull requests | 1,342（37.6%） | 1,929（54.1%） | 1,253（35.1%） | Review is the clearest public point of Agent participation in the contribution process. |
+| Last public action that resolved the thread | 4,089 resolved threads with an identifiable actor | 79（1.9%） | 3,618（88.5%） | 2,140（52.3%） | A GitHub User account performs the last visible merge, close or reopen action in most resolved threads. |
 
 `GitHub User account` means GitHub reports the actor as account type `User`. Local tool use usually remains under that account because GitHub exposes no separate Agent identity. `Repository team account` means GitHub associates the account with the repository as `OWNER`, `MEMBER` or `COLLABORATOR`. The columns can overlap: an App may mediate a User action, and a repository-team account is usually also a User account.
 
@@ -504,29 +553,16 @@ The event mix makes the pattern concrete. Named Agent identities produced 5,363 
 
 Agent services are only one part of repository automation. GitHub Actions, project automation, Codecov, merge queues and dependency bots remain the most widely visible conventional layer. Coding Agents include Copilot, Codex, Cursor, Claude, Devin, Gemini CLI, Kilo Code and Warp service identities; review Agents include CodeRabbit, Gemini Code Assist, Greptile and similar services; support and security roles include Dosu, automated triage and security-review Apps. Identity and functional role are preserved separately in the actor registry.
 
-### Figure 12A.1 · Bot/App and Agent participation by thread type
+### A specific request for changes usually brings another commit
 
-| Share of sampled threads | Issues | Pull requests |
-| --- | ---: | ---: |
-| Any known Bot or App account | 60.2% | 87.9% |
-| Verified Agent participation | 19.1% | 52.8% |
-| Conventional automation | 47.3% | 71.6% |
-| No visible GitHub User account anywhere in the thread | 0.14% | 0.73% |
-
-The first three rows overlap: an Agent service often acts through a Bot or GitHub App. The last row is deliberately strict. A thread with a User opener and only Bot responses is not labelled automation-only; it is captured separately as no visible User response after the opener. This prevents the study from erasing the developer who initiated the work.
-
-## 02B · The contribution process
-
-### A formal change request usually leads to another commit
-
-We ordered every sampled pull request's reviews and commits by time. Any review appears in 2,522 of the 3,567 pull requests, and 1,386 of those reviewed PRs add a commit after the first review. The 161 PRs with an explicit `CHANGES_REQUESTED` review are the stricter subset: 123 add another commit. A concrete change request is the strongest public sign in this sample that another revision round will follow.
+We ordered every sampled pull request's reviews and commits by time. Any review appears in 2,521 of the 3,567 pull requests, and 1,385 of those reviewed PRs add a commit after the first review. The 161 PRs with an explicit `CHANGES_REQUESTED` review are the stricter subset: 123 add another commit. A concrete change request is the strongest public sign in this sample that another revision round will follow.
 
 ### Figure 12B · Observable review-to-revision loops
 
 | Signal | Share of sample | 95% within-sample bootstrap interval |
 | --- | ---: | ---: |
-| Any review recorded · 2,522 / 3,567 PRs | 70.7% | 69.4–72.0% |
-| Another commit after first review · 1,386 / 2,522 reviewed PRs | 55.0% | 53.1–56.8% |
+| Any review recorded · 2,521 / 3,567 PRs | 70.7% | 69.3–72.0% |
+| Another commit after first review · 1,385 / 2,521 reviewed PRs | 54.9% | 53.1–56.8% |
 | Another commit after `CHANGES_REQUESTED` · 123 / 161 PRs | 76.4% | 70.8–81.4% |
 
 Agent-attributed change requests are followed by a later commit in 13 of 17 cases, compared with 106 of 137 GitHub User cases. The rates — 76.5% and 77.4% — are nearly the same. In this sample, the next revision is just as likely to follow an Agent change request as a User-account change request; the 17 Agent cases are still too few to support a finer comparison.
@@ -582,47 +618,9 @@ DeepSeek Harness sits outside the Top 100 and serves as a contrasting governance
 
 Open code, open core contribution and a wider plugin ecosystem are three separate governance choices.
 
-### Ten repositories provide the longer comparison
-
-The deeper panel contains Codex, Claude Code, LangChain, Dify, n8n, Langfuse, Coder, Milvus, vLLM and PyTorch. Together they cover new and established projects, Agent applications, frameworks, runtimes and model infrastructure. The selection allows the report to compare change inside different repository types while keeping the same number of threads per project.
-
-The lifecycle panel samples 30 threads from each repository in three stages: its first 120 days, 2025 Q4 and May–August 2026. That produces 900 threads. It is used to compare one repository with itself as it matures. The online chart shows four repositories at a time so the trajectories remain readable; the underlying panel contains all ten.
-
-The efficiency panel asks a different question and uses fixed calendar windows. It samples 30 threads per repository from 1 May to 28 August in 2024, 2025 and 2026. Codex and Claude Code did not yet exist in the 2024 window, so the full panel contains 240 threads in 2024 and 300 in each later year, or 840 in total. The visible 2025–2026 comparison therefore uses 600 threads. The 2026 early-Agent comparison uses 300 threads before applying metric-specific seven- and 30-day eligibility rules.
-
-### Incoming work grew faster than visible maintainer attention
-
-We sampled the same ten repositories in the same 1 May–28 August window in 2024, 2025 and 2026. The matched panel contains 840 Issues and pull requests, with complete public timelines for every thread. Response is measured within seven days and outcomes within 30 days; threads that remained unanswered or unresolved stay in the denominator.
-
-The ten-repository intake grew from 38,429 threads in 2025 to 101,853 in 2026, an increase of 165%. Visible Agent participation rose from 33.5% to 54.4%; coding and review agents alone rose from 13.1% to 34.5%. Human response within seven days fell from 60.3% to 46.9%, while maintainer response fell from 42.9% to 20.0%. Thirty-day Issue closure fell from 48.7% to 38.4%. Thirty-day PR merge fell from 70.8% to 54.6%.
-
-| Same ten repositories · 1 May–28 August | 2025 | 2026 |
-| --- | ---: | ---: |
-| Incoming Issues and pull requests | 38,429 | 101,853 |
-| Threads with visible Agent participation | 33.5% | 54.4% |
-| Threads with a coding or review Agent | 13.1% | 34.5% |
-| Human response within 7 days | 60.3% | 46.9% |
-| Maintainer response within 7 days | 42.9% | 20.0% |
-| Issues closed within 30 days | 48.7% | 38.4% |
-| Pull requests merged within 30 days | 70.8% | 54.6% |
-| Maintainer actions per sampled thread | 1.48 | 1.44 |
-
-Maintainer activity per sampled thread stayed nearly flat, 1.48 actions in 2025 and 1.44 in 2026, while the complete intake count was 2.65 times larger. A similar amount of visible maintainer attention per thread was therefore spread across a much larger incoming queue.
-
-Inside the 2026 sample, PRs with a coding or review Agent visible in the first 24 hours had a 48.7% 30-day merge rate, compared with 47.2% when no Agent was visible. They also had more conversation runs, maintainer reviews and commits after the first review. The clearest difference is the number of public revision rounds; acceptance within 30 days is essentially unchanged. Because Agents were already present where we observed them, thread difficulty remains one possible explanation for the extra activity.
-
 ### Seven public threads show what the hand-offs look like
 
 The interactive casebook contains [Coder #25800](https://github.com/coder/coder/pull/25800), [ONNX Runtime #28045](https://github.com/microsoft/onnxruntime/pull/28045), [LangChain #37607](https://github.com/langchain-ai/langchain/pull/37607), [PyTorch #182986](https://github.com/pytorch/pytorch/pull/182986), [Supabase #42193](https://github.com/supabase/supabase/issues/42193), [Gemini CLI #24026](https://github.com/google-gemini/gemini-cli/issues/24026) and [n8n #33411](https://github.com/n8n-io/n8n/issues/33411). Each has a readable public sequence showing who opened the work, where an Agent entered, who revised it and who closed the loop. The cases explain the hand-offs hidden behind a simple merged, closed or fixed label.
-
-### Figure 13 · Fixed-maturity pressure is not unique to Agentic AI
-
-| Panel | Median unresolved PR share at fixed maturity |
-| --- | ---: |
-| Agentic AI Top 100 · 2026 Jan–May cohorts | 9.2% |
-| Twelve long-lived controls · 2026 Jan–May cohorts | 8.2% |
-
-Nine of the twelve controls also have a higher fixed-maturity unresolved PR share in 2026 than in 2022, and eleven receive more PRs. Review pressure is wider than the Agentic AI sample. This weakens any claim that Agents alone created the backlog.
 
 GitHub User accounts respond after the opener in 60.1% of sampled threads, and maintainer-associated accounts respond in 38.7%. In 27.6%, every visible response after the opener comes from automation; only 0.56% contain no visible User account anywhere in the thread. Automation is taking a larger share of routing and response work, while User accounts remain present where exceptions are handled and repository state changes.
 
@@ -630,15 +628,15 @@ GitHub User accounts respond after the opener in 60.1% of sampled threads, and m
 
 External accounts create 66.8% of the sampled pull requests. At the fixed-maturity checkpoint, GitHub's merged flag appears on 57.2% of resolved external PRs (95% within-sample interval 54.7–59.7%) and 82.8% of resolved maintainer or member PRs (80.2–85.3%). Repository access and context still shape which changes move through the gate, even when the initial code supply is broad.
 
-### Agents can produce patches. Open-source collaboration decides which changes a community will carry
+### Agents expand the supply of patches. Open source still decides what a project can absorb and maintain
 
 The public record shows a new division of work. Repositories increasingly publish instructions that an Agent can follow. Agents review, triage, discuss and revise contributions across most of the sample. Outside accounts still supply most pull requests, and GitHub User accounts perform most of the last visible actions that merge, close or reopen the work.
 
-The matched panel adds pressure to that picture. Incoming work and visible Agent participation grew quickly, while timely maintainer response and 30-day outcomes weakened. The line-level cases show that a first Agent patch can survive, be refined by a person or be replaced by another Agent. Producing the patch is becoming easier; deciding whether it fits the project, proving that it works and accepting responsibility for it still take shared attention.
+The matched evidence sharpens that picture. PR supply doubled and review reached a larger share of sampled PRs, but early human response and timely PR completion fell. Issue flow, by contrast, was close to balanced. Agents are adding production and review capacity; they have not yet removed the constraint around judgment, integration and long-term ownership. The line-level cases show why: a first Agent patch may survive, be refined by a person or be replaced by another Agent before it becomes code the project will carry.
 
 The next useful measure begins after the repository gate: whether an accepted change is reverted, needs follow-up fixes, brings the contributor back and continues to hold up in tests or benchmarks.
 
-In the Agent era, a patch is the beginning of a contribution. Contribution also means understanding a problem the project recognizes, working within its rules, responding to review and leaving behind code that other people are willing to maintain. **Open-source collaboration turns abundant Agent-generated changes into software a community is prepared to own.**
+In the Agent era, a patch is the beginning of a contribution. Contribution also means understanding a problem the project recognizes, working within its rules, responding to review and leaving behind code that other people are willing to maintain. **Agents can expand the supply of code; open-source collaboration determines how much of it a project can responsibly absorb and carry forward.**
 
 ---
 
@@ -651,7 +649,9 @@ In the Agent era, a patch is the beginning of a contribution. Contribution also 
 - OpenRouter App & Agent rankings are public and opt-in. The Top 20 alignment was checked on 29 August 2026 and will move as platform traffic changes.
 - ZenMux figures use a frozen single-platform export for 1–30 June 2026. Weight access means an official public weight repository was resolved; it is not an OSI license determination. The values are not combined with OpenRouter traffic.
 - Agent Sandbox, Kata Containers, kagent, Dapr Agents, OpenChoreo, kgateway, agentgateway, Istio, OpenTelemetry and Jaeger are cited as project-level evidence of engineering work around agent execution. Confidential Containers is labelled as an adjacent AI substrate. Their documentation does not establish how widely those capabilities are deployed.
-- Collaboration figures use a frozen Top 100 and 5,000 threads: 50 non-overlapping Issues or pull requests per repository. Each thread counts once; the report does not reweight repositories by traffic. Bootstrap intervals resample threads within repository and describe uncertainty inside this selected sample, not all open source.
+- Collaboration figures use a frozen Top 100 and 5,000 threads from January–August 2026: 50 non-overlapping Issues or pull requests per repository. Each thread counts once; the report does not reweight repositories by traffic.
+- Historical flow and 90-day outcomes use GitHub's full repository counts for the same 55 repositories that have comparable activity in 2024, 2025 and 2026. The response and revision comparison uses 2,750 sampled threads in 2025 and 2,750 in 2026 from those same repositories.
+- PushEvent concentration uses OpenDigger's ClickHouse event data. Cloud-native and big-data comparisons use OpenDigger technology labels and active repositories with July 2026 OpenRank data.
 - Public actor labels separate verified Agent services, conventional automation, App-mediated User actions and GitHub User account types. They cannot observe undisclosed local AI use.
 - Review-to-commit sequence uses dedicated PR commit timestamps. Timeline commit rows without a timestamp are not interpreted as no later revision.
 - GitHub's merged flag is reported as an observable gate signal, not a universal accepted-contribution or quality label.
@@ -670,7 +670,10 @@ Open infrastructure evidence: `../research/open-infrastructure-trends.md`
 - [GitHub REST API documentation](https://docs.github.com/en/rest/repos/repos)
 - [GitHub GraphQL pull request types](https://docs.github.com/en/graphql/reference/pulls)
 - [GitHub REST API endpoints for timeline events](https://docs.github.com/en/rest/issues/timeline)
+- [GitHub issue and pull-request search qualifiers](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests)
 - [OpenRank metric documentation](https://open-digger.cn/en/docs/user_docs/metrics/openrank)
+- [OpenDigger data description](https://github.com/X-lab2017/open-digger/blob/master/docs/data.md)
+- [OpenDigger labeled data](https://github.com/X-lab2017/open-digger/tree/master/labeled_data)
 - [OpenRouter App & Agent Rankings](https://openrouter.ai/apps/)
 - [ZenMux App Leaderboard API](https://zenmux.ai/docs/api/platform/statistics-app-leaderboard.html)
 - [ZenMux Model Leaderboard API](https://zenmux.ai/docs/api/platform/statistics-leaderboard.html)

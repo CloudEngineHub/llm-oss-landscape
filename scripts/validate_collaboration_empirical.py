@@ -54,6 +54,9 @@ def main() -> None:
     agent_code_run = json.loads(
         (RESEARCH / "collaboration-agent-code-analysis-2026-run.json").read_text(encoding="utf-8")
     )
+    thread_analysis_run = json.loads(
+        (RESEARCH / "collaboration-thread-analysis-2026-run.json").read_text(encoding="utf-8")
+    )
 
     sample_keys = {key(row) for row in sample}
     analysis_keys = {key(row) for row in analysis}
@@ -158,6 +161,28 @@ def main() -> None:
     require(all(row["created_at"] for row in commits), "PR commit timestamp is missing")
     total_events = len(timeline) + len(review_comments) + len(commits)
     require(total_events > 0, "No public thread events were collected")
+    require(
+        thread_analysis_run["window_end_inclusive"] == "2026-08-31",
+        "Thread analysis window must remain fixed at 2026-08-31",
+    )
+    require(
+        thread_analysis_run["events_input"] == total_events,
+        "Thread analysis input-event count differs from collected event files",
+    )
+    require(
+        thread_analysis_run["events_within_window"]
+        + thread_analysis_run["events_excluded_after_window"]
+        == total_events,
+        "Within-window and excluded event counts do not reconcile",
+    )
+    require(
+        not any(
+            (row.get(field) or "") >= "2026-09-01"
+            for row in analysis
+            for field in ("closed_at", "merged_at")
+        ),
+        "A post-August close or merge leaked into the fixed-window analysis",
+    )
 
     overall = next(row for row in summary if row["scope_type"] == "overall")
     probability_fields = [name for name in overall if "share" in name]
@@ -257,7 +282,8 @@ def main() -> None:
                 "repositories": len(repository_names),
                 "issues": issue_count,
                 "pull_requests": pull_request_count,
-                "public_events": total_events,
+                "public_events_within_window": thread_analysis_run["events_within_window"],
+                "public_events_excluded_after_window": thread_analysis_run["events_excluded_after_window"],
                 "agent_participation_sample_share": strict_share,
                 "agent_participation_expanded_upper_bound": expanded_share,
                 "post_review_commit_share": float(

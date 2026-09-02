@@ -1,0 +1,10 @@
+cohort,year,repositories,repositories_with_pushes,push_events,median_push_actors,median_actors_for_50pct_pushes,p25_actors_for_50pct_pushes,p75_actors_for_50pct_pushes,median_top_actor_share,median_top_5_actor_share
+Agentic AI Top 100,2024,100,60,255809,10.0,2.0,1.0,3.0,0.455854,0.951507
+Agentic AI Top 100,2025,100,81,312153,13.0,2.0,1.0,4.0,0.357616,0.87451
+Agentic AI Top 100,2026,100,100,395242,22.0,3.0,2.0,5.0,0.294747,0.796804
+Cloud Native benchmark,2024,100,99,234033,14.0,2.0,2.0,3.0,0.333236,0.823388
+Cloud Native benchmark,2025,100,100,191028,12.0,2.0,1.0,3.0,0.374768,0.876144
+Cloud Native benchmark,2026,100,98,102355,12.0,2.0,1.0,3.0,0.378565,0.875271
+Big Data benchmark,2024,57,51,85393,9.0,1.0,1.0,2.0,0.54007,0.978495
+Big Data benchmark,2025,57,55,80649,8.0,2.0,1.0,2.0,0.497696,0.956897
+Big Data benchmark,2026,57,56,38256,7.0,1.0,1.0,2.0,0.509615,0.969327

@@ -21,7 +21,7 @@ MANIFEST = RESEARCH / "collaboration-deep-repositories-2026.csv"
 OUTPUT = RESEARCH / "collaboration-deep-stage-metrics-2026.csv"
 CHANGES = RESEARCH / "collaboration-deep-stage-changes-2026.csv"
 FINDINGS = RESEARCH / "collaboration-deep-stage-findings.md"
-CUTOFF = datetime(2026, 8, 29, 23, 59, 59, tzinfo=timezone.utc)
+CUTOFF = datetime(2026, 8, 31, 23, 59, 59, tzinfo=timezone.utc)
 
 STAGE_ORDER = ["launch_120d", "previous_2025q4", "current_2026m5_m8"]
 LABELS = {

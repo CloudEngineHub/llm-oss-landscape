@@ -1,0 +1,22 @@
+{
+  "threads": 3972,
+  "repositories": 82,
+  "window_end_inclusive": "2025-08-31",
+  "events_input": 100693,
+  "events_within_window": 87095,
+  "events_excluded_after_window": 13598,
+  "actor_registry_rows": 7970,
+  "threads_excluded_missing_timeline": 0,
+  "threads_with_zero_visible_events": 29,
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-analysis-2025.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-analysis-2025-summary.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-agent-observed-tasks-2025.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-analysis-2025-findings.md"
+  ],
+  "limitations": [
+    "GitHub User accounts are labelled human_account only at the public account-type level; undisclosed AI assistance remains unobservable.",
+    "Explicit disclosure candidates do not establish autonomous Agent authorship without manual evidence review.",
+    "Every repository contributes 50 threads; reported shares describe this fixed 5,000-thread sample and are not reweighted by repository traffic."
+  ]
+}

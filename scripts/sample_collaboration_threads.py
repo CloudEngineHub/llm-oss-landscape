@@ -32,7 +32,7 @@ DEFAULT_OUTPUT = RESEARCH / "collaboration-thread-sample-2026.csv"
 DEFAULT_REPOSITORIES = RESEARCH / "collaboration-thread-sample-2026-repositories.csv"
 DEFAULT_RUN = RESEARCH / "collaboration-thread-sample-2026-run.json"
 SINCE = "2026-01-01T00:00:00Z"
-UNTIL = "2026-08-29T23:59:59Z"
+UNTIL = "2026-08-31T23:59:59Z"
 SEED = 260829
 
 ITEM_FIELDS = [
@@ -116,7 +116,7 @@ def write_csv(path: Path, fields: list[str], rows: list[dict[str, Any]]) -> None
 
 
 def number_frame(client: GitHubClient, repo: str) -> tuple[int, int]:
-    period = "created:2026-01-01..2026-08-29"
+    period = "created:2026-01-01..2026-08-31"
     oldest_query = json.dumps(f"repo:{repo} {period} sort:created-asc")
     newest_query = json.dumps(f"repo:{repo} {period} sort:created-desc")
     query = f"""

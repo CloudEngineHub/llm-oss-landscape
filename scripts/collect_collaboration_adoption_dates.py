@@ -23,7 +23,7 @@ DEFAULT_EVIDENCE = RESEARCH / "collaboration-agent-markers-2022-2026-evidence.cs
 DEFAULT_OUTPUT = RESEARCH / "collaboration-agent-instruction-adoption-dates-2026.csv"
 DEFAULT_PATHS = RESEARCH / "collaboration-agent-instruction-adoption-paths-2026.csv"
 DEFAULT_RUN = RESEARCH / "collaboration-agent-instruction-adoption-dates-2026-run.json"
-CUTOFF = "2026-08-29T23:59:59Z"
+CUTOFF = "2026-08-31T23:59:59Z"
 
 OUTPUT_FIELDS = [
     "repo_name",
@@ -120,7 +120,7 @@ def main() -> None:
         row
         for row in read_csv(args.evidence)
         if row["repo_name"] in repo_set
-        and row.get("snapshot_date") == "2026-08-29"
+        and row.get("snapshot_date") == "2026-08-31"
         and row.get("evidence_level") == "active_instruction"
     ]
     grouped: dict[str, list[dict[str, str]]] = {}

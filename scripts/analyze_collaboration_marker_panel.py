@@ -13,13 +13,13 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / "insights/260912_open_collaboration_ai/research"
-DEFAULT_SUMMARY = RESEARCH / "collaboration-agent-markers-260531-260829-summary.csv"
-DEFAULT_EVIDENCE = RESEARCH / "collaboration-agent-markers-260531-260829-evidence.csv"
-DEFAULT_METRICS = RESEARCH / "collaboration-agent-markers-260531-260829-metrics.csv"
-DEFAULT_TRANSITIONS = RESEARCH / "collaboration-agent-markers-260531-260829-transitions.csv"
-DEFAULT_FINDINGS = RESEARCH / "collaboration-agent-markers-260531-260829-findings.md"
+DEFAULT_SUMMARY = RESEARCH / "collaboration-agent-markers-260531-260831-summary.csv"
+DEFAULT_EVIDENCE = RESEARCH / "collaboration-agent-markers-260531-260831-evidence.csv"
+DEFAULT_METRICS = RESEARCH / "collaboration-agent-markers-260531-260831-metrics.csv"
+DEFAULT_TRANSITIONS = RESEARCH / "collaboration-agent-markers-260531-260831-transitions.csv"
+DEFAULT_FINDINGS = RESEARCH / "collaboration-agent-markers-260531-260831-findings.md"
 MAY = "2026-05-31"
-AUGUST = "2026-08-29"
+AUGUST = "2026-08-31"
 TOOLS = (
     "cross_agent",
     "claude_code",
@@ -220,9 +220,9 @@ def main() -> None:
     )
     findings = f"""# May–August 2026 public Agent-marker panel
 
-Date: 2026-08-29
+Date: 2026-08-31
 
-The panel reconstructs the latest commit at or before 31 May and 29 August for the same Top 100 research sample. Ninety-nine repositories existed at both dates; one repository was not public by the May snapshot.
+The panel reconstructs the latest commit at or before 31 May and 31 August for the same Top 100 research sample. Ninety-nine repositories existed at both dates; one repository was not public by the May snapshot.
 
 ## What changed in the paired repositories
 

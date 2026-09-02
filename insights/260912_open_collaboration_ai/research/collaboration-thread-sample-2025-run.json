@@ -1,0 +1,28 @@
+{
+  "started_at": "2026-09-02T08:11:53.339526+00:00",
+  "completed_at": "2026-09-02T08:11:54.233075+00:00",
+  "year": 2025,
+  "window": "2025-01-01..2025-08-31",
+  "repositories": 100,
+  "repositories_complete": 100,
+  "sample_items": 3972,
+  "items_per_repository_target": 50,
+  "http_requests": 1,
+  "token_pool_size": 3,
+  "token_switches": 0,
+  "core_rate_limit": {
+    "limit": 5000,
+    "used": 1,
+    "remaining": 4999,
+    "reset": 1788338004
+  },
+  "errors": [],
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-sample-2025.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-sample-2025-status.csv"
+  ],
+  "limitations": [
+    "The historical panel selects up to 50 accessible threads per repository across January-August, drawing candidates from every active month.",
+    "Each repository contributes the same target count; the panel describes those sampled threads and does not reproduce ecosystem traffic share."
+  ]
+}

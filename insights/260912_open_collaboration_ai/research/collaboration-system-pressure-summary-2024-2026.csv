@@ -1,0 +1,46 @@
+section,panel,scope,scope_value,year,repositories,issues_opened,issues_closed,issues_open_at_cutoff,issue_flow_balance,issue_flow_balance_share,repositories_with_positive_issue_balance,repo_median_issue_flow_balance_share,prs_opened,prs_closed,prs_open_at_cutoff,prs_merged,pr_flow_balance,pr_flow_balance_share,repositories_with_positive_pr_balance,repo_median_pr_flow_balance_share,issue_unresolved_90d_share,pr_unresolved_90d_share,pr_merged_90d_share,repo_median_pr_merged_90d_share,repo_median_issue_unresolved_90d_share,repo_median_pr_unresolved_90d_share,median_push_actors,median_actors_for_50pct_pushes,median_top_5_actor_share
+queue_flow,current_top100,all,all,2024,100,54080,46169,5424,7911,0.146283,47,0.175487,98116,96667,397,66539,1449,0.014768,47,0.01699,,,,,,,,,
+queue_flow,current_top100,all,all,2025,100,105524,84735,9038,20789,0.197007,73,0.253156,158494,152290,1624,109577,6204,0.039143,72,0.040904,,,,,,,,,
+queue_flow,current_top100,all,all,2026,100,349805,295686,93009,54119,0.154712,76,0.117397,606750,493536,84261,300984,113214,0.186591,98,0.135449,,,,,,,,,
+queue_flow,matched_top100,all,all,2024,55,53847,46033,5424,7814,0.145115,42,0.158227,97793,96367,397,66259,1426,0.014582,43,0.015164,,,,,,,,,
+queue_flow,matched_top100,all,all,2025,55,74586,64001,7962,10585,0.141917,47,0.195864,129563,125104,1486,88419,4459,0.034416,47,0.030172,,,,,,,,,
+queue_flow,matched_top100,all,all,2026,55,71539,72789,22659,-1250,-0.017473,36,0.062595,265447,222675,35570,151411,42772,0.161132,54,0.127675,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_application,2024,0,0,0,0,0,,0,,0,0,0,0,0,,0,,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_application,2025,0,0,0,0,0,,0,,0,0,0,0,0,,0,,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_application,2026,28,251576,205711,60897,45865,0.182311,21,0.139451,264588,209963,37490,100953,54625,0.206453,26,0.129122,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_framework,2024,0,0,0,0,0,,0,,0,0,0,0,0,,0,,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_framework,2025,0,0,0,0,0,,0,,0,0,0,0,0,,0,,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_framework,2026,21,34321,26914,11177,7407,0.215815,13,0.067391,101581,84442,12378,62940,17139,0.168722,21,0.129648,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_runtime_infra,2024,0,0,0,0,0,,0,,0,0,0,0,0,,0,,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_runtime_infra,2025,0,0,0,0,0,,0,,0,0,0,0,0,,0,,,,,,,,,,
+queue_flow,current_top100,technical_role,agent_runtime_infra,2026,15,15506,14980,4331,526,0.033922,13,0.19209,47869,42154,4038,33698,5715,0.119388,15,0.118161,,,,,,,,,
+queue_flow,current_top100,technical_role,model_infra,2024,0,0,0,0,0,,0,,0,0,0,0,0,,0,,,,,,,,,,
+queue_flow,current_top100,technical_role,model_infra,2025,0,0,0,0,0,,0,,0,0,0,0,0,,0,,,,,,,,,,
+queue_flow,current_top100,technical_role,model_infra,2026,36,48402,48081,16604,321,0.006632,29,0.081238,192712,156977,30355,103393,35735,0.185432,36,0.150518,,,,,,,,,
+fixed_90d_outcome,matched_top100,all,all,2024,55,33020,22363,,,,,,58931,56230,,39491,,,,,0.322744,0.045833,0.670123,0.811159,0.307715,0.027515,,,
+fixed_90d_outcome,matched_top100,all,all,2025,55,47613,32517,,,,,,76209,71986,,52247,,,,,0.317056,0.055413,0.685575,0.770012,0.397641,0.046891,,,
+fixed_90d_outcome,matched_top100,all,all,2026,55,43372,30955,,,,,,144647,128241,,84894,,,,,0.286291,0.113421,0.586905,0.684304,0.369048,0.095032,,,
+fixed_90d_outcome,current_top100,all,all,2024,100,33020,22363,,,,,,58931,56230,,39491,,,,,0.322744,0.045833,0.670123,0.811159,0.307715,0.027515,,,
+fixed_90d_outcome,current_top100,all,all,2025,100,58971,41035,,,,,,88673,84181,,61933,,,,,0.304149,0.050658,0.698443,0.768817,0.372988,0.036515,,,
+fixed_90d_outcome,current_top100,all,all,2026,100,205949,171088,,,,,,310627,280388,,151466,,,,,0.16927,0.097348,0.487614,0.674026,0.310452,0.090689,,,
+fixed_90d_outcome,current_top100,technical_role,agent_application,2024,28,5222,4081,,,,,,3064,3023,,2271,,,,,0.218499,0.013381,0.741188,0.775591,0.147059,0.003209,,,
+fixed_90d_outcome,current_top100,technical_role,agent_application,2025,28,16361,13223,,,,,,10990,10756,,8082,,,,,0.191798,0.021292,0.735396,0.714286,0.121212,0.013021,,,
+fixed_90d_outcome,current_top100,technical_role,agent_application,2026,28,152463,133597,,,,,,133729,123532,,45243,,,,,0.123741,0.076251,0.338319,0.565517,0.153719,0.069594,,,
+fixed_90d_outcome,current_top100,technical_role,agent_framework,2024,21,5153,3633,,,,,,9265,8966,,7628,,,,,0.294974,0.032272,0.823314,0.834146,0.305085,0.027515,,,
+fixed_90d_outcome,current_top100,technical_role,agent_framework,2025,21,13000,10254,,,,,,15513,14778,,11971,,,,,0.211231,0.04738,0.771675,0.786932,0.362755,0.03428,,,
+fixed_90d_outcome,current_top100,technical_role,agent_framework,2026,21,17566,12546,,,,,,48983,43631,,30808,,,,,0.285779,0.109262,0.628953,0.681218,0.285086,0.086669,,,
+fixed_90d_outcome,current_top100,technical_role,agent_runtime_infra,2024,15,3939,3051,,,,,,8455,8286,,6986,,,,,0.225438,0.019988,0.826257,0.843437,0.245328,0.006976,,,
+fixed_90d_outcome,current_top100,technical_role,agent_runtime_infra,2025,15,5801,3413,,,,,,11260,10957,,9605,,,,,0.411653,0.026909,0.85302,0.863088,0.302623,0.00838,,,
+fixed_90d_outcome,current_top100,technical_role,agent_runtime_infra,2026,15,9126,6894,,,,,,25975,24544,,18914,,,,,0.244576,0.055091,0.728162,0.737332,0.3298,0.069329,,,
+fixed_90d_outcome,current_top100,technical_role,model_infra,2024,36,18706,11598,,,,,,38147,35955,,22606,,,,,0.379985,0.057462,0.592602,0.796162,0.443515,0.048788,,,
+fixed_90d_outcome,current_top100,technical_role,model_infra,2025,36,23809,14145,,,,,,50910,47690,,32275,,,,,0.405897,0.063249,0.633962,0.753089,0.485294,0.057502,,,
+fixed_90d_outcome,current_top100,technical_role,model_infra,2026,36,26794,18051,,,,,,101940,88681,,56501,,,,,0.326304,0.130067,0.554257,0.677971,0.398043,0.114171,,,
+push_concentration,matched_top100,cohort,Agentic AI Top 100,2024,55,,,,,,,,,,,,,,,,,,,,,,13,2,0.913858
+push_concentration,matched_top100,cohort,Agentic AI Top 100,2025,55,,,,,,,,,,,,,,,,,,,,,,17,2,0.869117
+push_concentration,matched_top100,cohort,Agentic AI Top 100,2026,55,,,,,,,,,,,,,,,,,,,,,,25,3,0.741452
+push_concentration,current_benchmark,cohort,Big Data benchmark,2024,51,,,,,,,,,,,,,,,,,,,,,,9,1,0.978495
+push_concentration,current_benchmark,cohort,Big Data benchmark,2025,55,,,,,,,,,,,,,,,,,,,,,,8,2,0.956897
+push_concentration,current_benchmark,cohort,Big Data benchmark,2026,56,,,,,,,,,,,,,,,,,,,,,,7.0,1.0,0.969327
+push_concentration,current_benchmark,cohort,Cloud Native benchmark,2024,99,,,,,,,,,,,,,,,,,,,,,,14,2,0.823388
+push_concentration,current_benchmark,cohort,Cloud Native benchmark,2025,100,,,,,,,,,,,,,,,,,,,,,,12.0,2.0,0.876144
+push_concentration,current_benchmark,cohort,Cloud Native benchmark,2026,98,,,,,,,,,,,,,,,,,,,,,,12.0,2.0,0.875271

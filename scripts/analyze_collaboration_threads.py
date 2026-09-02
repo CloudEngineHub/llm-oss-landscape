@@ -8,7 +8,7 @@ import csv
 import json
 import math
 from collections import defaultdict
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from statistics import median
 from typing import Any, Iterable
@@ -29,6 +29,9 @@ DEFAULT_SUMMARY = RESEARCH / "collaboration-thread-analysis-2026-summary.csv"
 DEFAULT_FINDINGS = RESEARCH / "collaboration-thread-analysis-2026-findings.md"
 DEFAULT_RUN = RESEARCH / "collaboration-thread-analysis-2026-run.json"
 DEFAULT_AGENT_TASKS = RESEARCH / "collaboration-agent-observed-tasks-2026.csv"
+
+STUDY_WINDOW_END_MONTH = 8
+STUDY_WINDOW_END_DAY = 31
 
 MAINTAINER_ASSOCIATIONS = {"OWNER", "MEMBER", "COLLABORATOR"}
 EXTERNAL_ASSOCIATIONS = {"NONE", "CONTRIBUTOR", "FIRST_TIMER", "FIRST_TIME_CONTRIBUTOR"}
@@ -203,6 +206,23 @@ def parse_time(value: str | None) -> datetime | None:
     if not value:
         return None
     return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def study_cutoff(items: list[dict[str, str]]) -> datetime:
+    years = {
+        parsed.year
+        for row in items
+        if (parsed := parse_time(row.get("created_at"))) is not None
+    }
+    if len(years) != 1:
+        raise SystemExit(f"Expected one study year in the thread sample, found {sorted(years)}")
+    year = years.pop()
+    return datetime(year, STUDY_WINDOW_END_MONTH + 1, 1, tzinfo=UTC)
+
+
+def before_cutoff(value: str | None, cutoff: datetime) -> bool:
+    parsed = parse_time(value)
+    return parsed is None or parsed < cutoff
 
 
 def hours_between(start: datetime | None, end: datetime | None) -> float | None:
@@ -454,9 +474,11 @@ def display_path(path: Path) -> str:
 def main() -> None:
     args = parse_args()
     items = read_csv(args.items)
-    events = read_csv(args.events)
+    cutoff = study_cutoff(items)
+    events_input = read_csv(args.events)
     for path in args.extra_events:
-        events.extend(read_csv(path))
+        events_input.extend(read_csv(path))
+    events = [row for row in events_input if before_cutoff(row.get("created_at"), cutoff)]
     statuses = {event_key(row): row for row in read_csv(args.status)}
     actors = {row["actor_login"]: row for row in read_csv(args.actors)}
     if not items or not events or not actors:
@@ -602,7 +624,12 @@ def main() -> None:
             gate_associations.add(gate["author_association"].upper())
         if gate_login:
             gate_associations.update(repo_actor_associations.get((item["repo_name"], gate_login), set()))
-        finished = parse_time(item.get("merged_at")) or parse_time(item.get("closed_at"))
+        merged = parse_time(item.get("merged_at"))
+        closed = parse_time(item.get("closed_at"))
+        merged_in_window = merged if merged and merged < cutoff else None
+        closed_in_window = closed if closed and closed < cutoff else None
+        finished = merged_in_window or closed_in_window
+        outcome_at_cutoff = "merged" if merged_in_window else "closed" if closed_in_window else "open"
         disclosed = (
             item.get("ai_disclosure_candidate") == "candidate"
             and strict_ai_disclosure_evidence(item.get("ai_disclosure_evidence", ""))
@@ -618,6 +645,9 @@ def main() -> None:
         thread_rows.append(
             {
                 **{field: item.get(field, "") for field in THREAD_FIELDS},
+                "outcome": outcome_at_cutoff,
+                "closed_at": item.get("closed_at", "") if closed_in_window else "",
+                "merged_at": item.get("merged_at", "") if merged_in_window else "",
                 "opener_class": opener,
                 "explicit_ai_assistance_disclosure": bool_text(disclosed),
                 "known_automation_bot_present": bool_text(any(value in AUTOMATION_CLASSES for value in any_classes)),
@@ -812,7 +842,10 @@ def main() -> None:
     run = {
         "threads": len(thread_rows),
         "repositories": len({row["repo_name"] for row in thread_rows}),
-        "events_input": len(events),
+        "window_end_inclusive": f"{cutoff.year}-{STUDY_WINDOW_END_MONTH:02d}-{STUDY_WINDOW_END_DAY:02d}",
+        "events_input": len(events_input),
+        "events_within_window": len(events),
+        "events_excluded_after_window": len(events_input) - len(events),
         "actor_registry_rows": len(actors),
         "threads_excluded_missing_timeline": excluded_missing_timeline,
         "threads_with_zero_visible_events": sum(event_key(item) not in grouped for item in items),

@@ -8,11 +8,11 @@
 
 ## 目前信号最强的差异
 
-- **人类账号参与 review / technical_area**：agent_application 为 38.0%，model_infra 为 63.6%，相差 25.52 个百分点；p=0.0001，BH 校正后 q=0.0013。
-- **回复只有自动化账号 / technical_area**：model_infra 为 16.8%，agent_framework 为 30.7%，相差 13.83 个百分点；p=0.0056，BH 校正后 q=0.0243。
-- **存在可见 review / technical_area**：agent_application 为 57.4%，agent_runtime_infra 为 76.5%，相差 19.1 个百分点；p=0.0052，BH 校正后 q=0.0243。
-- **人类账号参与 review / llm_identity**：llm_native 为 46.1%，traditional 为 69.3%，相差 23.25 个百分点；p=0.0019，BH 校正后 q=0.0247。
-- **回复只有自动化账号 / llm_identity**：traditional 为 11.0%，llm_native 为 26.1%，相差 15.15 个百分点；p=0.0051，BH 校正后 q=0.0331。
+- **人类账号参与 review / technical_area**：agent_application 为 37.9%，model_infra 为 63.4%，相差 25.49 个百分点；p=0.0001，BH 校正后 q=0.0013。
+- **人类账号参与 review / llm_identity**：llm_native 为 45.9%，traditional 为 69.2%，相差 23.24 个百分点；p=0.0019，BH 校正后 q=0.0247。
+- **回复只有自动化账号 / technical_area**：model_infra 为 16.8%，agent_framework 为 30.7%，相差 13.83 个百分点；p=0.0058，BH 校正后 q=0.0251。
+- **存在可见 review / technical_area**：agent_application 为 57.4%，agent_runtime_infra 为 76.5%，相差 19.1 个百分点；p=0.0053，BH 校正后 q=0.0251。
+- **回复只有自动化账号 / llm_identity**：traditional 为 11.0%，llm_native 为 26.2%，相差 15.24 个百分点；p=0.0047，BH 校正后 q=0.0306。
 - **Agent 发起线程 / technical_area**：agent_runtime_infra 为 0.0%，agent_framework 为 5.1%，相差 5.14 个百分点；p=0.0330，BH 校正后 q=0.1072。
 - **Agent 参与线程 / llm_identity**：traditional 为 28.1%，mixed 为 56.3%，相差 28.17 个百分点；p=0.0346，BH 校正后 q=0.1499。
 - **仓库存在 Agent 指令文件 / llm_identity**：traditional 为 72.2%，mixed 为 100.0%，相差 27.78 个百分点；p=0.0574，BH 校正后 q=0.1865。

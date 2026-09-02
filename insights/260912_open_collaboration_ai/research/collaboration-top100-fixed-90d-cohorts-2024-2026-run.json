@@ -1,0 +1,27 @@
+{
+  "started_at": "2026-09-02T07:10:12.669356+00:00",
+  "completed_at": "2026-09-02T07:19:20.549612+00:00",
+  "years": [
+    2024,
+    2025,
+    2026
+  ],
+  "cohort_months_each_year": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "followup_days": 90,
+  "repositories": 100,
+  "rows": 1500,
+  "errors": [],
+  "http_requests": 100,
+  "output": "insights/260912_open_collaboration_ai/research/collaboration-top100-fixed-90d-cohorts-2024-2026.csv",
+  "limitations": [
+    "Search is evaluated at collection time; later reopen events can revise historical closed-state counts.",
+    "Each monthly cohort is observed at month-end plus 90 days, so items receive 90 to roughly 120 days of follow-up; this removes the partial-2026 follow-up bias but does not identify Agent participation.",
+    "The comparison panel remains purposive; the Top 100 and control panel are not a causal matched design."
+  ]
+}

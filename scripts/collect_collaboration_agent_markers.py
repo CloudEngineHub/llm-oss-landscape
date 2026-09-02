@@ -26,13 +26,13 @@ RESEARCH = ROOT / "insights/260912_open_collaboration_ai/research"
 DEFAULT_SAMPLE = RESEARCH / "collaboration-sample-top100-2607.csv"
 DEFAULT_SUMMARY = RESEARCH / "collaboration-agent-markers-2022-2026-summary.csv"
 DEFAULT_EVIDENCE = RESEARCH / "collaboration-agent-markers-2022-2026-evidence.csv"
-DEFAULT_RUN = RESEARCH / "collaboration-agent-markers-run-260829.json"
+DEFAULT_RUN = RESEARCH / "collaboration-agent-markers-run-260831.json"
 DEFAULT_SNAPSHOTS = (
     "2022-12-31",
     "2023-12-31",
     "2024-12-31",
     "2025-12-31",
-    "2026-08-29",
+    "2026-08-31",
 )
 
 INSTRUCTION_PATHS = {

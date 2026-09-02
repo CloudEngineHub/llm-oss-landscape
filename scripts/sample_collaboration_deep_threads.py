@@ -73,7 +73,7 @@ def stages(row: dict[str, str]) -> list[tuple[str, str, str]]:
     return [
         ("launch_120d", iso_day(created), iso_day(launch_end)),
         ("previous_2025q4", "2025-09-01", "2025-12-31"),
-        ("current_2026m5_m8", "2026-05-01", "2026-08-28"),
+        ("current_2026m5_m8", "2026-05-01", "2026-08-31"),
     ]
 
 
@@ -209,7 +209,7 @@ def main() -> None:
         "design": [
             "launch: first 120 calendar days after repository creation",
             "previous: 2025-09-01 through 2025-12-31",
-            "current: 2026-05-01 through 2026-08-28",
+            "current: 2026-05-01 through 2026-08-31",
             "uniform Issue-number rejection sample within each repository-stage",
         ],
     }

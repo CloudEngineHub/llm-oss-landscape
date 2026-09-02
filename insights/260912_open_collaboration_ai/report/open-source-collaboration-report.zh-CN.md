@@ -2,6 +2,8 @@
 
 [English version](open-source-collaboration-report.en.md) · 蚂蚁开源与 InclusionAI 联合出品 · 2026 年 9 月
 
+全文涉及 2026 年协作行为的统计窗口统一为 1 月 1 日至 8 月 31 日。9 月是报告发布时间，不进入观察窗口。
+
 这份报告从 143 个全景图项目、100 个高活跃仓库和 5,000 条公开 Issue / PR 出发，观察 Agent 正在怎样进入开源软件。项目全景图正在补齐 Runtime、工具、隔离和可追溯性；在 GitHub 上，Agent 很少发起工作，却已经大量进入评审、讨论、分流和修改代码的环节，而合并、关闭或重新打开线程的最后一个公开动作，绝大多数仍由 GitHub User 账号完成。
 
 这其实是同一个系统问题的两面。执行任务时，Agent 会编写和运行代码、临时取得权限，并留下可能比进程存活更久的外部影响；进入仓库后，它需要阅读贡献规则、修改补丁并回应评审。开放基础设施约束前一种行动，开源协作决定后一种变化是否值得由社区长期承担。
@@ -12,7 +14,7 @@
 
 **仓库已经开始为 Agent 准备贡献入口，但 Agent 很少发起工作。** Top 100 中有 92 个仓库发布了 coding-agent 文件或目录。在 5,000 条抽样线程中，只有 87 条由具名 Agent 账号或 App 发起，但 2,158 条出现了 Agent。Agent 的公开痕迹主要发生在工作进入仓库之后：评审、讨论、分流和代码修改。
 
-**Agent 活动和工作队列一起增长，维护者注意力没有同步增长。** 在同一组 10 个仓库中，2026 年同期进入的 Issue / PR 比 2025 年增长 165%，维护者 7 天内响应率却从 42.9% 降至 20.0%，30 天 Issue 关闭率和 PR 合并率也同时下降。在更大的 5,000 条线程样本中，88.5% 的最后一个解决动作仍由 GitHub User 账号完成。
+**代码供给增长得比合入路径更快。** 同一组 55 个仓库中，PR 流入从 2025 年的 129,563 条增加到 2026 年的 265,447 条；90 天后仍保持 open 的比例从 5.5% 升到 11.3%，仓库中位合入率从 77.0% 降到 68.4%。每仓库 PushEvent 账号中位数从 17 个增加到 25 个，公开集成圈在扩大，却没有 PR 队列增长得快。
 
 ## 研究范围
 
@@ -213,7 +215,7 @@ OpenRouter 反映 Agent 应用需求，ZenMux 则显示另一个平台上的模�
 
 # 02 · 开源协作
 
-## 02A · Agent 参与
+## 02A · 工作量与仓库环境
 
 研究首先冻结 277 个 tracking pool 中 7 月 OpenRank 最高的 100 个仓库。OpenRank 只用于确定样本，后续判断不再使用它。每个仓库再根据技术角色和与 LLM 的关系进行人工复核。
 
@@ -230,21 +232,16 @@ OpenRouter 反映 Agent 应用需求，ZenMux 则显示另一个平台上的模�
 
 这组样本代表 tracking pool 中最活跃的一部分，而不是所有开源项目的普查。仓库规模、发版频率和贡献量都应当在这个范围内理解。
 
-### 本章使用一个仓库框架和六组衍生样本
+### 一个仓库框架，两层证据
 
-不同问题需要不同分母。下表先把每组数据的选择方法和用途说明清楚，后面的图表按样本顺序排列。
+整章始终从同一份 Top 100 出发，再按数据深度分成两层。
 
-| 样本 | 如何选择 | 用途 |
+| 证据层 | 覆盖范围 | 回答的问题 |
 | --- | --- | --- |
-| Top 100 仓库框架 | 277 个 tracking pool 中 2026 年 7 月 OpenRank 最高的 100 个仓库 | 仓库画像、贡献规则、coding-agent 文件、release 和 2026 年完整 Issue / PR 总量 |
-| 固定 53 仓库同期样本 | 当前 Top 100 中在 2024 年 1 月 1 日前已公开的仓库 | 固定成员，比较 2024、2025、2026 年 1–8 月；仍保留 survivor bias |
-| 5,000 条仓库平衡样本 | 每个 Top 100 仓库抽取 50 条互不重复、创建于 2026 年 1 月 1 日至 8 月 31 日的 Issue / PR | 具名 Agent 的公开活动、评审、gate、任务类型和修改循环 |
-| 代码 lineage 子集 | 抽样中 10 个由高置信 coding Agent 改动代码并已合并的 PR；其中 9 个可以干净追踪行级历史 | 第一版 Agent patch 保留多少，后续由谁修改 |
-| 10 仓库 matched panels | 有意覆盖不同年龄、LLM 关系和技术角色的 10 个仓库 | 三个阶段的 900 条生命周期样本，以及跨 2024–2026 的 840 条固定窗口样本 |
-| 7 个公开案例 | 4 个来自 5,000 条样本，3 个来自 10 仓库面板；选择公开顺序清楚的线程 | 展示 contributor、Agent、automation 与 maintainer 的具体交接 |
-| 12 个长期对照仓库 | Kubernetes、VS Code、Vue、Kata Containers、Prometheus、Envoy、Grafana、Arrow、Rust、pandas、FastAPI、Kafka | 检查 PR 增长和未解决工作是否也出现在成熟的非 Agentic 仓库 |
+| 仓库全量计数 | GitHub Search 找到的 Top 100 在 2024、2025、2026 年 1–8 月全部公开 Issue / PR；历史比较固定为三个成熟窗口里都有活动的 55 个仓库 | 一共进入多少工作、关闭多少、固定 90 天后还剩多少、队列是否继续增长 |
+| 仓库平衡的线程时间线 | 2026 年每仓库 50 条 Issue / PR；历史面板在同一批 55 个仓库中，为 2025 和 2026 各取 2,750 条 | opener 之后谁先响应、仓库团队多快出现、PR 经历了几轮可见的评审与修改 |
 
-5,000 条样本保持每个仓库 50 条，不按仓库流量重新加权。这样不会让最大的几个仓库吞掉其余结果，也保证所有 100 个仓库都在统计中留下可比的一段记录。
+工作量与结果主要看全量计数，线程样本用来解释公开协作是怎样发生的。10 条代码沿革 PR 和 7 条易读的公开线程，都从 2026 年线程样本里继续下钻。
 
 ### PR 正在比 Issue 增长得更快
 
@@ -261,24 +258,51 @@ OpenRouter 反映 Agent 应用需求，ZenMux 则显示另一个平台上的模�
 | 7 月 | 49,274 | 101,482 | 2.06× |
 | 8 月 | 52,982 | 111,551 | 2.11× |
 
-固定 53 个仓库之后，变化更明显。这些仓库都在 2024 年 1 月 1 日前已经公开，并且今天仍在 Top 100 中，因此三年比较保持同一组成员。
+历史比较固定为 55 个仓库：它们来自当前 Top 100，并且在 2024、2025、2026 年 1–5 月的固定成熟窗口里都有公开 Issue 或 PR。同一份名单用于队列流量、90 天结果和 PushEvent 核心参与者分析。
 
-| 固定 53 仓库 · 1–8 月 | 新开 Issue | 新开 PR | PR / Issue |
-| --- | ---: | ---: | ---: |
-| 2024 | 53,330 | 97,018 | 1.82× |
-| 2025 | 72,302 | 124,712 | 1.72× |
-| 2026 | 68,512 | 246,006 | 3.59× |
-
-2025 到 2026 年，固定样本的 PR 增长 97.3%，Issue 则下降 5.2%。进入仓库的公开代码变更明显变重，而不是所有协作流量一起等比例增长。
-
-| 2026 年技术角色 | 仓库 | Issue | 窗口内 Issue 未解决 | PR | 窗口内 PR 未解决 | PR / Issue |
+| 同一组 55 个仓库 · 1–8 月 | 新开 Issue | 关闭 Issue | Issue 差额 | 新开 PR | 关闭 PR | PR 差额 |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| Agent Application | 28 | 251,584 | 24.6% | 264,586 | 21.5% | 1.05× |
-| Agent Framework | 21 | 34,321 | 33.2% | 101,575 | 18.8% | 2.96× |
-| Agent Runtime Infra | 15 | 15,513 | 28.4% | 47,869 | 13.7% | 3.09× |
-| Model Infra | 36 | 48,408 | 35.0% | 192,711 | 23.0% | 3.98× |
+| 2024 | 53,847 | 46,033 | +7,814 | 97,793 | 96,367 | +1,426 |
+| 2025 | 74,586 | 64,001 | +10,585 | 129,563 | 125,104 | +4,459 |
+| 2026 | 71,539 | 72,789 | −1,250 | 265,447 | 222,675 | +42,772 |
 
-这里的 unresolved 只跟踪本研究八个月窗口内开启、截至 8 月 31 日仍未解决的项目，不是仓库全部历史 backlog。Model Infra 的 PR / Issue 比和窗口内 Issue 未解决率最高，显示代码改动的供给和问题消化并不均匀分布在各类仓库中。
+“差额”是八个月内新开量减去关闭量；关闭量可以包含更早进入的 backlog。正数表示进入的工作比关闭的更多。2026 年 Issue 基本打平，PR 却翻了一倍，并且比关闭量多出 42,772 条。55 个仓库里有 54 个出现 PR 正增长。问题不是所有协作都处理不动，而是进入 review、修改和合入判断的代码变更增长得更快。
+
+把每条协作项的观察时间固定下来，差距仍然存在。1–5 月创建的 Issue / PR 都从所属月末继续观察 90 天。
+
+| 同一组 55 个仓库 · 固定 90 天结果 | 2024 | 2025 | 2026 |
+| --- | ---: | ---: | ---: |
+| 90 天后仍未关闭的 Issue | 32.3% | 31.7% | 28.6% |
+| 90 天后仍未解决的 PR | 4.6% | 5.5% | 11.3% |
+| 仓库中位 90 天 PR 合入率 | 81.1% | 77.0% | 68.4% |
+
+Issue 的处理反而略有改善；PR 在同样 90 天里更不容易进入 GitHub 的 merged 状态，仍保持 open 的比例翻了一倍。因此，2026 年的堆积不能只解释成“8 月刚提交，还没来得及处理”。
+
+不同技术角色承受的压力也不一样。
+
+| 2026 年技术角色 | Issue 队列差额 | Issue 增长仓库 | PR 队列差额 | PR 增长仓库 | 仓库中位 90 天未解决 PR | 仓库中位 90 天合入率 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Agent Application | +45,865 | 21 / 28 | +54,625 | 26 / 28 | 7.0% | 56.6% |
+| Agent Framework | +7,407 | 13 / 21 | +17,139 | 21 / 21 | 8.7% | 68.1% |
+| Agent Runtime Infra | +526 | 13 / 15 | +5,715 | 15 / 15 | 6.9% | 73.7% |
+| Model Infra | +321 | 29 / 36 | +35,735 | 36 / 36 | 11.4% | 67.8% |
+
+Agent Application 同时积累了问题和代码变更。三类基础设施仓库的 Issue 总量更接近平衡，但每一个 Framework、Runtime 和 Model Infra 仓库都增加了 PR 队列。Model Infra 的仓库中位 90 天未解决 PR 最高，Agent Runtime 的中位合入率最高。
+
+Top 100 的流量本身也高度集中。Claude Code、OpenClaw、Hermes Agent、OpenCode 和 Codex 占了 54.5% 的 Issue；PR 前五名占 34.7%。因此报告同时展示总量、仓库中位数和发生增长的仓库数量，避免把少数超大项目当成全部。
+
+### Agent 触达了更多 PR，但 30 天内完成的比例下降了
+
+上面的仓库全量数据说明了队列怎样增长。为了看清队列内部发生了什么，我们比较了同一组 55 个仓库在 2025、2026 年 1–8 月的线程：每个仓库、每年各 50 条，共 5,500 条。“维护者响应”指 opener 之外的仓库 Owner、Member 或 Collaborator 使用 GitHub User 账号作出响应。
+
+| 同一组 55 个仓库 · 每仓库、每年 50 条线程 | 2025 | 2026 | 变化 |
+| --- | ---: | ---: | ---: |
+| 出现具名 Agent 或 App 的线程 | 19.9% | 46.1% | +26.3 个百分点 |
+| 7 天内收到仓库维护者响应 | 37.1% | 31.1% | −6.0 个百分点 |
+| PR 在 30 天内处理完成 | 87.8% | 80.3% | −7.5 个百分点 |
+| PR 出现公开 review | 68.8% | 73.9% | +5.1 个百分点 |
+
+具名 Agent 出现在线程中的比例翻了一倍以上，进入公开 review 的 PR 也更多；与此同时，第一周维护者响应和 30 天 PR 完成率都下降了。Agent 帮助更多变更走到 review，仓库仍需要投入真人注意力并承担最终决定，才能把这些变更处理完。
 
 ### 一部分仓库几乎每天都在发布 GitHub Release
 
@@ -305,7 +329,31 @@ OpenRouter 反映 Agent 应用需求，ZenMux 则显示另一个平台上的模�
 
 llama.cpp 在 243 天中的 241 天发布了 GitHub Release。Vercel AI 的 15,232 条记录分布在 194 天，反映 multi-package 与 canary pipeline。这个频率下，release days 更接近自动化交付节奏，而不是偶发的大版本里程碑。仅有 tag、或只发布到 PyPI / npm 等 registry 的版本不在这里。
 
-### 开放协作仍是默认入口
+### 核心集成圈在扩大，但 PR 增长得更快
+
+PushEvent 可以观察最终写入路径由多少账号共同承担。对每个仓库，我们按公开 PushEvent 次数排序，计算覆盖一半 push 需要多少账号。同一组 55 个 Agentic AI 仓库中，发生过 PushEvent 的账号中位数从 2024 年的 13 个增加到 2025 年的 17 个、2026 年的 25 个；完成一半 push 所需账号从 2 个增加到 3 个。
+
+| 同一组 55 个 Agentic AI 仓库 | PushEvent 账号中位数 | 完成一半 push 的账号数 | 前五账号完成的 push 占比中位数 |
+| --- | ---: | ---: | ---: |
+| 2024 | 13 | 2 | 91.4% |
+| 2025 | 17 | 2 | 86.9% |
+| 2026 | 25 | 3 | 74.1% |
+
+核心圈没有收缩。更多账号进入公开写入路径，push 对前五账号的集中度也在下降。但 2025 到 2026 年，PushEvent 账号中位数增长 47%，同一批仓库的 PR 流入增长 105%。
+
+我们再用 OpenDigger 的技术标签取出活跃的云原生和大数据仓库作对照。2026 年，Agentic AI 仓库完成一半 push 需要的账号中位数为 3，云原生为 2，大数据为 1。
+
+| 2026 年对照 | 活跃仓库 | PushEvent 账号中位数 | 完成一半 push 的账号数 |
+| --- | ---: | ---: | ---: |
+| Agentic AI 固定面板 | 55 | 25 | 3 |
+| 云原生 | 98 | 12 | 2 |
+| 大数据 | 56 | 7 | 1 |
+
+PushEvent 里的账号是执行仓库写入的 pusher，不一定等于 commit author。它适合衡量有多少公开账号共同承担集成路径。Agentic AI 的核心圈比两组传统技术对照更宽，因此当前压力不能简单解释成“核心参与者越来越少”；真正的差距在增长速度上。
+
+## 02B · 贡献入口与 Agent 设置
+
+### 大多数仓库允许外部账号创建 PR
 
 ### 图 10 · Top 100 当前协作表面
 
@@ -324,7 +372,7 @@ API 设置、贡献文档和实际结果描述的是三个不同层面：能不�
 
 Mastra 要求代码贡献者先开 Issue。Open WebUI 对首次贡献者设置相同门槛，但本地化工作除外。DeepSeek Harness 不在 Top 100 分母内，它公开 MIT 代码并开放 Discussions，却关闭核心仓库的 Issues 与 PR，把外部开发引向插件。
 
-### 92 个仓库已经为 coding agent 放入文件或目录
+### Coding-agent 设置已经遍布整个技术栈
 
 在 Top 100 的默认分支上，有 92 个仓库存在专为 coding-agent workflow 创建的内容，包括 `AGENTS.md`、`CLAUDE.md` 等 instruction file，以及 `.claude`、`.cursor`、`.codex`、`.gemini` 等工具目录。报告把两类内容合并为“仓库已经为 coding agent 做过设置”，并排除只残留在 `.gitignore` 中的名字。
 
@@ -352,11 +400,13 @@ Mastra 要求代码贡献者先开 Issue。Open WebUI 对首次贡献者设置�
 
 PyTorch、Spark、Iceberg、ONNX Runtime、Milvus、Triton 和 OpenVINO 都已经出现这类文件。Agent instructions 不只告诉工具怎样写代码：在 86 个可以读取明确 instruction 的仓库里，81 个提到测试或验证，79 个提到 Issue 或计划，72 个提到 code review，63 个提到 release 或 dependency 工作。维护者正在把整个贡献循环写成 Agent 可以读取的规则。
 
+## 02C · Agent 在公开协作中的位置
+
 ### 5,000 条线程样本追踪公开协作细节
 
 每个仓库抽取 50 条互不重复的线程，最终得到 1,433 条 Issue 和 3,567 条 PR，共 5,000 条。它们来自八个月窗口中的 956,567 条 Issue / PR。每条线程只计算一次，不按仓库总流量加权。
 
-### Agent 主要在提交之后进入，最明显的入口是评审
+### Agent 主要在贡献到达之后进入
 
 具名 coding 或 review Agent 在 2,158 / 5,000 条线程中留下了公开动作，覆盖 95 / 100 个仓库；只有 87 条线程由 Agent 账号或 App 发起。也就是说，样本中 43.16% 出现 Agent，而 Agent 发起只占 1.74%。常见形式是 CodeRabbit 评审 PR、Gemini Code Assist 留下 review comment，或 OpenHands 通过 GitHub App 行动。
 
@@ -367,9 +417,9 @@ PyTorch、Spark、Iceberg、ONNX Runtime、Milvus、Triton 和 OpenVINO 都已�
 | 阶段 | 本行分母 | 具名 Agent 或 Agent-attributed App | GitHub User 账号 | 仓库团队账号 | 含义 |
 | --- | --- | ---: | ---: | ---: | --- |
 | 开启 Issue / PR | 5,000 条 | 87（1.7%） | 4,730（94.6%） | 1,380（27.6%） | Agent 很少发起，绝大多数工作由 User 账号带入仓库 |
-| 开启后有人响应 | 5,000 条 | 1,914（38.3%） | 3,005（60.1%） | 1,936（38.7%） | Agent 已进入讨论和分流，同时仍有大量 User 与团队账号参与 |
-| PR 出现评审 | 3,567 条 PR | 1,342（37.6%） | 1,934（54.2%） | 1,257（35.2%） | Review 是 Agent 最明确的公开参与点 |
-| 解决线程的最后一个公开动作 | 4,098 条可识别 actor 的已解决线程 | 79（1.9%） | 3,626（88.5%） | 2,146（52.4%） | 合并、关闭或 reopen 的最后公开动作大多由 User 账号完成 |
+| 开启后有人响应 | 5,000 条 | 1,914（38.3%） | 2,998（60.0%） | 1,931（38.6%） | Agent 已进入讨论和分流，同时仍有大量 User 与团队账号参与 |
+| PR 出现评审 | 3,567 条 PR | 1,342（37.6%） | 1,929（54.1%） | 1,253（35.1%） | Review 是 Agent 最明确的公开参与点 |
+| 解决线程的最后一个公开动作 | 4,089 条可识别 actor 的已解决线程 | 79（1.9%） | 3,618（88.5%） | 2,140（52.3%） | 合并、关闭或 reopen 的最后公开动作大多由 User 账号完成 |
 
 `GitHub User 账号` 是 GitHub 报告 actor type 为 `User` 的账号；`仓库团队账号` 是 GitHub 将其与仓库关联为 `OWNER`、`MEMBER` 或 `COLLABORATOR`。列之间可以重叠，因为团队账号通常也是 User，App 也可能中介 User 的动作。
 
@@ -385,29 +435,16 @@ Agent 产生的公开事件进一步说明它们在做什么：
 
 这里的单位是事件，因此一条线程可能贡献多次 review 或 reply。它不能换算为劳动份额，但能够直接显示具名 Agent 服务集中在工作流的哪些位置。
 
-### 图 12A.1 · Issue 与 PR 中 Bot / App 和 Agent 的出现比例
+### 明确要求修改，通常会带来下一次提交
 
-| 抽样线程占比 | Issue | PR |
-| --- | ---: | ---: |
-| 出现任一已知 Bot 或 App | 60.2% | 87.9% |
-| 出现已验证 Agent | 19.1% | 52.8% |
-| 出现传统自动化 | 47.3% | 71.6% |
-| 整条线程中没有可见 GitHub User 账号 | 0.14% | 0.73% |
-
-前三行会重叠，因为 Agent 服务经常通过 Bot 或 GitHub App 行动。最后一行强调的是：即使自动化已经非常普遍，整条公开线程完全没有 User 账号的情况仍然很少。
-
-## 02B · 贡献过程
-
-### 明确的 change request 往往会带来下一次提交
-
-我们按时间排列 3,567 条抽样 PR 的 review 和 commit。2,522 条出现过 review，其中 1,386 条在第一次 review 后又提交了 commit。161 条收到明确 `CHANGES_REQUESTED` 的 PR 中，123 条随后出现新 commit。
+我们按时间排列 3,567 条抽样 PR 的 review 和 commit。2,521 条出现过 review，其中 1,385 条在第一次 review 后又提交了 commit。161 条收到明确 `CHANGES_REQUESTED` 的 PR 中，123 条随后出现新 commit。
 
 ### 图 12B · 可见的 review-to-revision 循环
 
 | 信号 | 样本占比 | 95% 样本内 bootstrap 区间 |
 | --- | ---: | ---: |
-| 出现任意 review · 2,522 / 3,567 PR | 70.7% | 69.4–72.0% |
-| 第一次 review 后又有 commit · 1,386 / 2,522 reviewed PR | 55.0% | 53.1–56.8% |
+| 出现任意 review · 2,521 / 3,567 PR | 70.7% | 69.3–72.0% |
+| 第一次 review 后又有 commit · 1,385 / 2,521 reviewed PR | 54.9% | 53.1–56.8% |
 | `CHANGES_REQUESTED` 后又有 commit · 123 / 161 PR | 76.4% | 70.8–81.4% |
 
 17 个由 Agent 发出 change request 的案例中，有 13 个随后提交新 commit；137 个由 GitHub User 发出 change request 的案例中，有 106 个随后提交。两者分别为 76.5% 与 77.4%。在这组公开记录里，Agent 提出的明确修改要求同样会进入真实修改循环；但 Agent 案例数量仍然较小。
@@ -459,43 +496,9 @@ DeepSeek Harness 不在 Top 100 中，但提供了一个有价值的对照。仓
 
 代码可读、核心代码可贡献、以及存在开放扩展生态，是三个不同的治理选择。
 
-### 10 个仓库提供更长的同期比较
-
-这个面板包括 Codex、Claude Code、LangChain、Dify、n8n、Langfuse、Coder、Milvus、vLLM 和 PyTorch，覆盖新旧项目、Agent Application、Framework、Runtime 与 Model Infra。
-
-生命周期面板从每个仓库的三个阶段各抽取 30 条线程：公开后的前 120 天、2025 Q4 和 2026 年 5–8 月，共 900 条，用来观察同一个仓库随成熟度变化的轨迹。效率面板使用固定日历窗口：每个仓库从 2024、2025、2026 年 5 月 1 日至 8 月 28 日各抽取 30 条。Codex 和 Claude Code 在 2024 年尚不存在，因此三年分别是 240、300、300 条，共 840 条；2025–2026 的可见同期比较使用 600 条。
-
-### 进入仓库的工作增长快于可见维护者注意力
-
-10 个仓库的同期 intake 从 2025 年 38,429 条增长到 2026 年 101,853 条，增长 165%。可见 Agent 参与从 33.5% 上升到 54.4%，其中 coding / review Agent 从 13.1% 上升到 34.5%。与此同时，人类 7 天内响应率从 60.3% 降到 46.9%，维护者 7 天内响应率从 42.9% 降到 20.0%；30 天 Issue 关闭率和 PR 合并率也同时下降。
-
-| 同一组 10 个仓库 · 5 月 1 日–8 月 28 日 | 2025 | 2026 |
-| --- | ---: | ---: |
-| 进入的 Issue 与 PR | 38,429 | 101,853 |
-| 出现可见 Agent 的线程 | 33.5% | 54.4% |
-| 出现 coding / review Agent 的线程 | 13.1% | 34.5% |
-| 7 天内人类响应 | 60.3% | 46.9% |
-| 7 天内维护者响应 | 42.9% | 20.0% |
-| 30 天内 Issue 关闭 | 48.7% | 38.4% |
-| 30 天内 PR 合并 | 70.8% | 54.6% |
-| 每条抽样线程的维护者动作 | 1.48 | 1.44 |
-
-每条抽样线程的维护者动作几乎不变，但完整 intake 变成 2.65 倍。相近的公开维护者注意力被分摊到大得多的队列中。
-
-在 2026 年样本内，前 24 小时出现 coding / review Agent 的 PR，30 天合并率为 48.7%；没有出现 Agent 的 PR 为 47.2%。前者有更多讨论轮次、维护者 review，以及第一次 review 之后的 commit。最明显的区别是公开修改轮次增加，而不是 30 天内接受率提高。
-
 ### 7 条公开线程展示了具体交接
 
 交互式案例册包括 [Coder #25800](https://github.com/coder/coder/pull/25800)、[ONNX Runtime #28045](https://github.com/microsoft/onnxruntime/pull/28045)、[LangChain #37607](https://github.com/langchain-ai/langchain/pull/37607)、[PyTorch #182986](https://github.com/pytorch/pytorch/pull/182986)、[Supabase #42193](https://github.com/supabase/supabase/issues/42193)、[Gemini CLI #24026](https://github.com/google-gemini/gemini-cli/issues/24026) 和 [n8n #33411](https://github.com/n8n-io/n8n/issues/33411)。每条线程都能清楚看到谁提出工作、Agent 在哪里进入、谁修改，以及谁最终结束公开流程。
-
-### 图 13 · 固定成熟度下的压力并非 Agentic AI 独有
-
-| 面板 | 固定成熟度下 PR 未解决率中位数 |
-| --- | ---: |
-| Agentic AI Top 100 · 2026 年 1–5 月 cohorts | 9.2% |
-| 12 个长期对照仓库 · 2026 年 1–5 月 cohorts | 8.2% |
-
-12 个对照仓库中，有 9 个在 2026 年的固定成熟度 PR 未解决率高于 2022 年，11 个接收了更多 PR。评审压力并非只存在于 Agentic AI 样本，也不能简单归因于 Agent。
 
 ### 外部账号提供大多数 PR，User 账号仍然执行最终公开动作
 
@@ -503,15 +506,15 @@ DeepSeek Harness 不在 Top 100 中，但提供了一个有价值的对照。仓
 
 GitHub User 账号在 60.1% 的抽样线程中于 opener 之后响应，维护者关联账号为 38.7%。27.6% 的线程在 opener 之后只看到自动化响应；整条线程完全没有 User 账号的情况只有 0.56%。自动化承担了更多分流和响应工作，但例外处理和仓库状态改变仍然集中在 User 账号上。
 
-## Agent 可以生产 patch，开源协作决定哪些变化值得由社区承担
+## Agent 扩大代码供给，开源协作决定项目能吸收并长期维护多少
 
 公开记录显示，一种新的分工已经出现。越来越多仓库发布 Agent 可以直接读取的规则；Agent 在绝大多数样本仓库中参与 review、triage、discussion 和 revision；外部账号继续提供大多数 PR；而 merge、close 或 reopen 的最后一个公开动作，仍然主要由 GitHub User 账号完成。
 
-10 仓库同期面板把这项变化带来的压力展示得更清楚：进入的工作和 Agent 参与快速增长，及时的维护者响应与 30 天结果却走弱。行级案例进一步说明，第一版 Agent patch 可能原样保留、被人修改，也可能被另一个 Agent 完全替换。生成 patch 正在变得更容易；判断它是否适合项目、证明它有效，并愿意对它承担后续责任，仍然需要共同注意力。
+同期证据把这项变化带来的压力展示得更清楚：PR 供给翻倍，进入 review 的比例上升，但及时的人类响应和 PR 完成率下降；Issue 流量则基本平衡。Agent 正在增加生产与 review 产能，却还没有消除判断、集成和长期维护上的约束。行级案例说明了其中的原因：第一版 Agent patch 可能原样保留、被人修改，也可能在成为项目愿意承担的代码之前，被另一个 Agent 完全替换。
 
 下一项值得跟踪的指标从仓库 gate 之后开始：已接受的变化是否被 revert、是否需要 follow-up fix、贡献者是否再次参与，以及它能否继续经受测试和 benchmark。
 
-在 Agent 时代，patch 只是一次贡献的开头。贡献还意味着理解项目认可的问题、遵守它的规则、回应评审，并留下其他人愿意继续维护的代码。**开源协作的价值，是把越来越充足的 Agent 生成变更，转化为一个社区愿意共同拥有的软件。**
+在 Agent 时代，patch 只是一次贡献的开头。贡献还意味着理解项目认可的问题、遵守它的规则、回应评审，并留下其他人愿意继续维护的代码。**Agent 可以扩大代码供给；开源协作决定一个项目能够负责任地吸收多少，并把多少变化继续带向未来。**
 
 ---
 
@@ -522,8 +525,9 @@ GitHub User 账号在 60.1% 的抽样线程中于 opener 之后响应，维护�
 - OpenRouter App & Agent ranking 公开且为 opt-in；Top 20 对照检查于 2026 年 8 月 29 日。
 - ZenMux 数字来自 2026 年 6 月 1–30 日冻结的单平台导出；“公开权重”表示找到官方 public-weight repository，不是 OSI license 判断；不与 OpenRouter 流量相加。
 - 开放基础设施部分引用项目文档证明相应工程能力正在出现，不把项目合作、文档或社区活动写成生产部署范围。
-- 协作研究冻结 Top 100，并从每个仓库抽取 50 条互不重复的 Issue / PR，共 5,000 条。每条线程计算一次，不按仓库流量重新加权。
-- 样本内 bootstrap 按仓库内线程重抽样，只表达这组已选样本中的不确定性，不外推到所有开源项目。
+- 协作研究冻结 Top 100，并从每个仓库抽取 50 条 2026 年 1–8 月互不重复的 Issue / PR，共 5,000 条。每条线程计算一次，不按仓库流量重新加权。
+- 历史流量和 90 天结果使用同一组 55 个仓库的 GitHub 全量计数；响应与修改过程使用这 55 个仓库在 2025、2026 年各 2,750 条同期样本。
+- PushEvent 集中度来自 OpenDigger ClickHouse 事件数据；云原生和大数据对照使用 OpenDigger 技术标签，以及 2026 年 7 月有 OpenRank 的活跃仓库。
 - 公开 actor 标签区分已验证 Agent 服务、传统自动化、App-mediated User action 和 GitHub User account。普通 User 账号背后的未披露本地 AI 使用不可见。
 - Review-to-commit 顺序使用专门的 PR commit timestamp；没有 timestamp 的 timeline commit row 不被解释为“没有后续修改”。
 - GitHub 的 merged flag 是可观察 gate 信号，不等同于普适的贡献质量判断。
@@ -543,7 +547,10 @@ Open infrastructure 证据：`../research/open-infrastructure-trends.md`
 - [GitHub REST API documentation](https://docs.github.com/en/rest/repos/repos)
 - [GitHub GraphQL pull request types](https://docs.github.com/en/graphql/reference/pulls)
 - [GitHub timeline events API](https://docs.github.com/en/rest/issues/timeline)
+- [GitHub Issue 与 Pull Request 搜索条件](https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests)
 - [OpenRank metric documentation](https://open-digger.cn/en/docs/user_docs/metrics/openrank)
+- [OpenDigger 数据说明](https://github.com/X-lab2017/open-digger/blob/master/docs/data.md)
+- [OpenDigger labeled data](https://github.com/X-lab2017/open-digger/tree/master/labeled_data)
 - [OpenRouter App & Agent Rankings](https://openrouter.ai/apps/)
 - [ZenMux App Leaderboard API](https://zenmux.ai/docs/api/platform/statistics-app-leaderboard.html)
 - [ZenMux Model Leaderboard API](https://zenmux.ai/docs/api/platform/statistics-leaderboard.html)

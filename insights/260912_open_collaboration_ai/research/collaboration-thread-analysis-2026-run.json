@@ -1,7 +1,10 @@
 {
   "threads": 5000,
   "repositories": 100,
+  "window_end_inclusive": "2026-08-31",
   "events_input": 138244,
+  "events_within_window": 138150,
+  "events_excluded_after_window": 94,
   "actor_registry_rows": 7290,
   "threads_excluded_missing_timeline": 0,
   "threads_with_zero_visible_events": 11,

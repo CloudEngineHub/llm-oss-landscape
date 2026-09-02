@@ -1,0 +1,31 @@
+{
+  "started_at": "2026-09-02T07:12:10.604866+00:00",
+  "completed_at": "2026-09-02T07:15:33.939943+00:00",
+  "repositories": 100,
+  "years": [
+    2024,
+    2025,
+    2026
+  ],
+  "rows": 300,
+  "errors": [],
+  "http_requests": 101,
+  "token_pool_size": 3,
+  "token_switches": 0,
+  "graphql_rate_limit": {
+    "limit": 5000,
+    "used": 0,
+    "remaining": 5000,
+    "reset": 1788336936
+  },
+  "output": "insights/260912_open_collaboration_ai/research/collaboration-top100-flow-2024-2026.csv",
+  "definitions": {
+    "flow_balance": "items opened during Jan-Aug minus items closed during Jan-Aug; closures may belong to older vintages",
+    "currently_open_vintage": "items created in the named Jan-Aug vintage that were still open when this script ran"
+  },
+  "limitations": [
+    "GitHub Search evaluates current state. The vintage backlog is a collection-time snapshot, not a historical month-end snapshot.",
+    "Flow balance is a queue-pressure measure, not a direct reconstruction of backlog stock.",
+    "Counts do not identify whether a human or an Agent created the work."
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-09-02T07:36:01.409567+00:00",
+  "flow_rows": 300,
+  "maturity_rows": 1500,
+  "matched_repositories": 55,
+  "summary_rows": 45,
+  "repository_rows": 300,
+  "invariants": {
+    "flow_unique_keys": true,
+    "maturity_unique_keys": true,
+    "matched_present_all_years": true,
+    "no_negative_fixed_outcomes": true
+  },
+  "sources": [
+    "insights/260912_open_collaboration_ai/research/collaboration-top100-flow-2024-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-top100-fixed-90d-cohorts-2024-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-push-concentration-repositories-2024-2026.csv"
+  ]
+}

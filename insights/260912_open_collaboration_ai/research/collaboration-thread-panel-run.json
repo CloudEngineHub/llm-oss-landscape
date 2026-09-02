@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-09-02T10:09:15.243751+00:00",
+  "years": [
+    2025,
+    2026
+  ],
+  "matched_repositories": 55,
+  "source_analysis_rows": {
+    "2025": 2750,
+    "2026": 2750
+  },
+  "summary_rows": 2,
+  "repository_rows": 110,
+  "weighting": "none; every sampled thread counts once",
+  "revision_cycle_definition": "first CHANGES_REQUESTED review starts a cycle; another starts a new cycle only after an intervening commit",
+  "outputs": [
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-panel-summary-2025-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-panel-repositories-2025-2026.csv",
+    "insights/260912_open_collaboration_ai/research/collaboration-thread-panel-findings.md"
+  ]
+}

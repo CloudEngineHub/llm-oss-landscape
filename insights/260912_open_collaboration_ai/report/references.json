@@ -58,6 +58,30 @@
         "date": "accessed September 2026",
         "url": "https://docs.github.com/en/rest/issues/timeline",
         "usedFor": "Public comments, reviews, state changes and App-mediated actions linked to sampled Issues and pull requests."
+      },
+      {
+        "id": "D08",
+        "title": "Searching issues and pull requests",
+        "publisher": "GitHub",
+        "date": "accessed September 2026",
+        "url": "https://docs.github.com/en/search-github/searching-on-github/searching-issues-and-pull-requests",
+        "usedFor": "Repository-scoped creation, closure and merge counts for the fixed January-August windows."
+      },
+      {
+        "id": "D09",
+        "title": "OpenDigger data description",
+        "publisher": "OpenDigger",
+        "date": "accessed September 2026",
+        "url": "https://github.com/X-lab2017/open-digger/blob/master/docs/data.md",
+        "usedFor": "Scope and known completeness limits of the GH Archive event stream used for PushEvent concentration."
+      },
+      {
+        "id": "D10",
+        "title": "OpenDigger labeled data",
+        "publisher": "OpenDigger",
+        "date": "accessed September 2026",
+        "url": "https://github.com/X-lab2017/open-digger/tree/master/labeled_data",
+        "usedFor": "Technology labels used to construct the cloud-native and big-data comparison groups."
       }
     ]
   },

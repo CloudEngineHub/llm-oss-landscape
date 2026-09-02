@@ -6,14 +6,14 @@
 
 - 5,000 条 Issue / PR，来自 100 个仓库。
 - 1,433 条 Issue，3,567 条 PR。
-- 合并 timeline、inline review comment 和 PR commit 后，进入分析的公开事件共 138,244 条。
+- 合并 timeline、inline review comment 和 PR commit 后，进入分析的公开事件共 138,150 条。
 
 ## Agent 已经进入协作，但很少独自跑完整流程
 
 - 可确认的 coding、review、security-review、support Agent 和 App 代理行为，出现在样本线程的 43.2%。这是公开可见参与率的下界，不是“多少代码由 AI 写”的比例。
 - Agent 发起 1.7% 的线程，在 38.3% 的线程里参与后续回复。
-- GitHub `User` 账号在 99.2% 的线程里至少出现一次；发起之后有人类账号回复的比例是 60.1%，有维护者关联账号回复的比例是 38.7%。
-- 在能看到最终 gate 账号的已解决线程中，GitHub `User` 执行 88.5% 的 gate，维护者关联账号执行 52.4%，可确认 Agent 执行 1.9%。App 代理 User 时，这些类别可能重叠。
+- GitHub `User` 账号在 99.2% 的线程里至少出现一次；发起之后有人类账号回复的比例是 60.0%，有维护者关联账号回复的比例是 38.6%。
+- 在能看到最终 gate 账号的已解决线程中，GitHub `User` 执行 88.5% 的 gate，维护者关联账号执行 52.3%，可确认 Agent 执行 1.9%。App 代理 User 时，这些类别可能重叠。
 
 ## 外部贡献仍然真实存在，但 patch 和通过 gate 不是一回事
 
@@ -24,7 +24,7 @@
 ## Review 是反复修改，不是点一下 approve
 
 - 70.7% 的样本 PR 出现可见 review。
-- 在出现 review 的 PR 中，55.0% 在第一次 review 后继续提交代码。
+- 在出现 review 的 PR 中，54.9% 在第一次 review 后继续提交代码。
 - 在收到 `CHANGES_REQUESTED` 的 PR 中，76.4% 之后又有 commit。这个数字说明修改循环真实存在，但不能单独证明 review 是人还是 Agent 发起，也不能证明修改有效。
 
 ## 不能越过的边界

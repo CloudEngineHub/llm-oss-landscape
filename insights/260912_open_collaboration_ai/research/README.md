@@ -5,10 +5,10 @@
 ## 先读这六份
 
 1. **[实验到底怎么做的](how-the-study-was-run.md)**
-   100 个仓库、5,000 条线程和 10 个深挖仓库分别怎么选，`线程`、不加权样本比例、`Agent marker` 分别是什么意思。
+   100 个仓库、5,000 条线程和 55 个历史对照仓库分别怎么选，`线程`、不加权样本比例、`Agent marker` 分别是什么意思。
 
 2. **[研究问题与证据矩阵](research-question-evidence-matrix.md)**
-   用户提出的四个问题，当前回答到哪一步，哪些只是关联，哪些仍缺证据。
+   用户提出的四个问题，当前回答到哪一步，哪些只是关联，哪些仍缺证据。全文 2026 年观察窗口固定为 1 月 1 日至 8 月 31 日。
 
 3. **[今年有多少合入代码可以公开归因给 Agent](collaboration-agent-code-findings.md)**
    直接回答 Agent commit、Agent-only PR 和最终新增行的公开证据下界，也列出误判修正和仍然缺失的 patch lineage。
@@ -16,11 +16,11 @@
 4. **[不同类型仓库的比较](collaboration-strata-findings.md)**
    LLM-native、mixed、traditional，以及 Agent Application、Framework、Runtime Infra、Model Infra 是否存在显著差异。
 
-5. **[10 个仓库的阶段变化](collaboration-deep-stage-findings.md)**
-   同一仓库从 launch、2025 年末到 2026 年当前怎样变化；LangChain、Coder、PyTorch 等项目为什么不是同一条路径。
+5. **[系统压力与历史对照](collaboration-system-pressure-findings.md)**
+   同一组 55 个仓库在 2024–2026 年的 Issue / PR 流入、关闭、90 天结果和队列变化。
 
-6. **[固定成熟度与长期对照](collaboration-fixed-90d-findings.md)**
-   Top 100 与十二个长期软件仓库的 backlog、PR 处理和 merge flag 对照，解释为什么目前不能把效率变化直接归因给 Agent。
+6. **[同期线程过程比较](collaboration-thread-panel-findings.md)**
+   直接复用这 55 个仓库在 2026 年主样本中的 2,750 条线程，再补入 2025 年 2,750 条，比较响应、处理、Review 和后续修改。
 
 要核查纠错过程，再看 **[研究验证记录](collaboration-research-validation-log.md)**。
 
@@ -28,9 +28,9 @@
 
 | 研究问题 | 目前最有用的材料 |
 | --- | --- |
-| Agent 被采纳的比例有多高，做什么任务？ | [证据矩阵](research-question-evidence-matrix.md)、[Agent marker 变化](collaboration-agent-markers-260531-260829-findings.md)、`collaboration-agent-observed-tasks-2026.csv` |
-| Agent 怎样进入 Issue、PR、review 和迭代？ | [线程结果](collaboration-thread-analysis-2026-findings.md)、[10 仓库阶段研究](collaboration-deep-stage-findings.md) |
-| Agent 提高效率，还是增加维护者负担？ | [10 仓库阶段研究](collaboration-deep-stage-findings.md)、[固定成熟度对照](collaboration-fixed-90d-findings.md)、[Agent 结果比较](collaboration-agent-outcome-comparisons-2026-findings.md) |
+| Agent 被采纳的比例有多高，做什么任务？ | [证据矩阵](research-question-evidence-matrix.md)、[Agent marker 变化](collaboration-agent-markers-260531-260831-findings.md)、`collaboration-agent-observed-tasks-2026.csv` |
+| Agent 怎样进入 Issue、PR、review 和迭代？ | [线程结果](collaboration-thread-analysis-2026-findings.md)、[同期线程过程比较](collaboration-thread-panel-findings.md) |
+| Agent 提高效率，还是增加维护者负担？ | [系统压力与历史对照](collaboration-system-pressure-findings.md)、[同期线程过程比较](collaboration-thread-panel-findings.md)、[PushEvent 核心圈](collaboration-push-concentration-summary-2024-2026.csv) |
 | 代码变便宜后，什么贡献仍然稀缺？ | [Agent 代码归因实验](collaboration-agent-code-findings.md)、[证据矩阵](research-question-evidence-matrix.md) RQ4 |
 
 ## 当前主数据
@@ -38,8 +38,9 @@
 - 100 个仓库，每仓库保留 50 条，共 5,000 条线程；原有 20 条不变，另补 30 条；
 - 100 个仓库都启用 PR；98 个允许所有人创建，Codex 和 Claude Code 仅允许 collaborators 创建；
 - 1,433 条 Issue、3,567 条 PR；
-- 10 个代表仓库，每仓库三个阶段、每阶段 30 条，共 900 条深挖线程；
-- 主样本与深挖样本的 endpoint 请求均成功。Agent 代码归因实验另发现四个未合入 PR 的 commit 列表因持续更新或 250 条上限而不完整，已从 Agent-only 判定中排除。
+- 固定 55 个仓库的 2024–2026 全量 Issue / PR 流量与 90 天结果；
+- 同一组仓库在 2025、2026 年各 2,750 条线程，共 5,500 条同期过程样本；其中 2026 年部分直接复用主样本；
+- Agent 代码归因实验另发现四个未合入 PR 的 commit 列表因持续更新或 250 条上限而不完整，已从 Agent-only 判定中排除。
 
 cuDF 改名错误已经修复：样本和当前数据统一使用 `NVIDIA/cudf`。校验器当前通过。
 
@@ -93,7 +94,7 @@ cuDF 改名错误已经修复：样本和当前数据统一使用 `NVIDIA/cudf`�
 | --- | --- |
 | `collaboration-strata-comparison-2026.csv` | 每组仓库级估计与区间 |
 | `collaboration-strata-tests-2026.csv` | 仓库级 permutation test 与 BH 修正 |
-| `collaboration-deep-repositories-2026.csv` | 10 个仓库和选择理由 |
+| `collaboration-deep-repositories-2026.csv` | 早期 10 仓库探索性面板及选择理由；不用于当前主结论 |
 | `collaboration-deep-thread-sample-2026.csv` | 900 条分阶段概率样本 |
 | `collaboration-deep-stage-metrics-2026.csv` | 每个仓库、每个阶段的指标 |
 | `collaboration-deep-stage-changes-2026.csv` | 2025 年末到 2026 年当前的仓库内配对比较 |
