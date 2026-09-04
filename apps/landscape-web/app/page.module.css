@@ -367,15 +367,22 @@
 }
 
 .embedExplorer[data-presentation-mode="true"] .boardMasthead {
-  min-height: 75px;
-  padding: 10px 8px 12px;
-  border-bottom: 3px solid var(--ink);
+  min-height: 64px;
+  padding: 0 12px 10px;
+  border-bottom: 0;
 }
 
 .embedExplorer[data-presentation-mode="true"] .boardTitleLockup h2 {
-  font-size: 41px;
+  gap: 16px;
+  font-size: 46px;
   font-weight: 900;
   letter-spacing: -0.045em;
+}
+
+.embedExplorer[data-presentation-mode="true"] .boardTitleLockup h2 > span {
+  padding: 7px 20px 10px;
+  border-radius: 999px;
+  line-height: 0.92;
 }
 
 .embedExplorer[data-presentation-mode="true"] .boardTitleLockup > span {
@@ -383,6 +390,7 @@
 }
 
 .embedExplorer[data-presentation-mode="true"] .landscapeBand {
+  min-height: 0;
   gap: 0;
 }
 

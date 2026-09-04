@@ -1,15 +1,24 @@
 import type { Metadata } from "next";
 
+import { getPresentationCopy } from "@/lib/inclusion-presentation-copy";
+
 import { getInclusionResearchData } from "../research-data";
 import InclusionPresentation from "./presentation";
 
 export const metadata: Metadata = {
-  title: "Presentation | 260910 InclusionConf",
+  title: "Agent 进入开源协作之后 | 外滩大会",
   description:
-    "Interactive presentation material for the 2026 Inclusion Conference research release.",
+    "从 Agentic AI Landscape、生态趋势到仓库协作模式的中文演讲。",
 };
 
 export default function InclusionPresentationPage() {
   const { projects, stats } = getInclusionResearchData();
-  return <InclusionPresentation projects={projects} stats={stats} />;
+  const initialCopy = getPresentationCopy();
+  return (
+    <InclusionPresentation
+      initialCopy={initialCopy}
+      projects={projects}
+      stats={stats}
+    />
+  );
 }

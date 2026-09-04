@@ -16,7 +16,10 @@ this directory contains the event-specific selection and rehearsal copy.
 ## Controls
 
 - `←` / `→`, Page Up / Page Down, or Space: change slide
-- `1`–`7`: jump to a slide
+- `1`–`5`: jump to a slide
 - `Enter`: fullscreen
-- On the landscape slide, switch between Agent Infra and Model Infra; click a
-  project to open its detail view
+- The landscape sequence is Agent Infra overview → Agent trend highlight →
+  Model Infra overview → Model trend highlight → trend slide. Reverse
+  navigation walks back through the same sequence.
+- Click either landscape tab to switch directly; click a project to open its
+  detail view.

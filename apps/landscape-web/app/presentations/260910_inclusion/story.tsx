@@ -23,12 +23,11 @@ import type { ReportReferenceGroup } from "@/lib/inclusion-report-references";
 
 import type {
   InclusionResearchStats,
-  LanguageMixGroup,
   MacroGroup,
-  RuntimePathPoint,
 } from "./research-data";
 import { CollaborationCasebook } from "./collaboration-evidence";
 import { EditableText, ReportCopyEditor } from "./report-copy-editor";
+import { LanguageMixChart, RuntimePath } from "./report-figures";
 import styles from "./page.module.css";
 
 type StoryProject = {
@@ -648,7 +647,7 @@ export default function InclusionConfStory({
           href="/presentations/260910_inclusion/open-infrastructure/present"
         >
           <PlayIcon aria-hidden="true" />
-          <span>5 MIN</span>
+          <span>SLIDES</span>
           <strong>Open Infrastructure</strong>
         </Link>
         <Link
@@ -656,7 +655,7 @@ export default function InclusionConfStory({
           href="/presentations/260910_inclusion/present"
         >
           <PlayIcon aria-hidden="true" />
-          <span>15 MIN</span>
+          <span>SLIDES</span>
           <strong>Collaboration</strong>
         </Link>
       </aside>
@@ -2183,90 +2182,6 @@ function MacroComparison({
         ))}
       </div>
     </article>
-  );
-}
-
-function LanguageMixChart({
-  groups,
-  agentTotal,
-  modelTotal,
-}: {
-  groups: LanguageMixGroup[];
-  agentTotal: number;
-  modelTotal: number;
-}) {
-  const rows = [
-    { label: "Agent Infra", total: agentTotal, key: "agent" as const },
-    { label: "Model Infra", total: modelTotal, key: "model" as const },
-  ];
-
-  return (
-    <div className={styles.languageChart}>
-      <div className={styles.languageRows}>
-        {rows.map((row) => (
-          <div className={styles.languageRow} key={row.key}>
-            <div>
-              <strong>{row.label}</strong>
-              <span>{row.total} repositories</span>
-            </div>
-            <div
-              className={styles.languageBar}
-              role="img"
-              aria-label={`${row.label} primary-language mix`}
-            >
-              {groups.map((group, index) => (
-                <i
-                  data-language={group.label.toLowerCase()}
-                  key={group.label}
-                  style={
-                    {
-                      "--bar-delay": `${index * 80}ms`,
-                      "--bar-width": `${(group[row.key] / row.total) * 100}%`,
-                    } as BarStyle
-                  }
-                  title={`${group.label}: ${group[row.key]} repositories`}
-                />
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className={styles.languageLegend} aria-label="Language legend">
-        {groups.map((group) => (
-          <span key={group.label}>
-            <i data-language={group.label.toLowerCase()} />
-            {group.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function RuntimePath({ points }: { points: RuntimePathPoint[] }) {
-  return (
-    <div className={styles.runtimePathSteps}>
-      {points.map((point, index) => (
-        <article key={point.label}>
-          <span>{String(index + 1).padStart(2, "0")}</span>
-          <strong>{point.shortLabel}</strong>
-          <b>{point.projects}</b>
-          <small>{point.label}</small>
-          <div>
-            {point.examples.map((project) => (
-              <a
-                href={`https://github.com/${project.repo}`}
-                key={project.repo}
-                target="_blank"
-                rel="noreferrer"
-              >
-                {project.name}
-              </a>
-            ))}
-          </div>
-        </article>
-      ))}
-    </div>
   );
 }
 

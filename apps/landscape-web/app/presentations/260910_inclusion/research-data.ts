@@ -41,6 +41,11 @@ export type InclusionResearchStats = {
   selectedOutsideMay: number;
   agentOutsideMay: number;
   runtimeOutsideMay: number;
+  runtimeOutsideMayProjects: Array<{
+    name: string;
+    repo: string;
+    zone: string;
+  }>;
   agentRecent: number;
   modelRecent: number;
   agentMacro: MacroGroup[];
@@ -1382,6 +1387,13 @@ export function getInclusionResearchData() {
     runtimeOutsideMay: outsideMay.filter(
       (project) => project.stage === "runtime",
     ).length,
+    runtimeOutsideMayProjects: outsideMay
+      .filter((project) => project.stage === "runtime")
+      .map((project) => ({
+        name: project.name,
+        repo: project.repo,
+        zone: project.zone,
+      })),
     agentRecent: agentProjects.filter(
       (project) => project.createdAt >= "2025-01-01",
     ).length,

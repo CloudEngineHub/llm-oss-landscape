@@ -7,10 +7,15 @@ import { getInclusionResearchData } from "./research-data";
 import InclusionConfStory from "./story";
 
 export const metadata: Metadata = {
-  title:
-    "What Happened to Open-Source Collaboration When Agents Joined In? | The Inclusion Conference 2026",
+  title: "State of Open-Source Collaboration in the Agentic Era",
   description:
     "A data-led study of open-source collaboration and open infrastructure across 143 Agentic AI projects.",
+  openGraph: {
+    title: "State of Open-Source Collaboration in the Agentic Era",
+  },
+  twitter: {
+    title: "State of Open-Source Collaboration in the Agentic Era",
+  },
 };
 
 export default function InclusionConfStoryPage() {

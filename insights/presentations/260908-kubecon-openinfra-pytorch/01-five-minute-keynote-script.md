@@ -1,104 +1,118 @@
 # What AI Agents Need from Open Infrastructure
 
-Speaker: Xiaoya Xia
+Speaker: Yaya Xia
 Event: KubeCon + CloudNativeCon + OpenInfra Summit + PyTorch Conference China
 Date: 8 September 2026
 Length: 5 minutes
 Playback: `/presentations/260910_inclusion/open-infrastructure/present`
 
-## Slide 1 · What AI Agents Need from Open Infrastructure · `0:00–0:15`
+## Slide 1 · `0:00–0:22`
 
-Good morning. Over the past few months, we have been tracking the open-source
-projects growing around agentic AI. Today I want to use that map to ask a very
-practical question: when an agent starts doing work, what does the infrastructure
-underneath it have to carry?
+Good morning, everyone. I'm Yaya, and I work on Ant Group's open source team. For a
+while now we've been tracking the open-source projects growing up around
+agentic AI, and putting together landscape maps to keep track of the ecosystem.
+So today I want to use those maps to get at something pretty practical: when an
+agent actually goes into production, what does the infrastructure underneath it
+have to hold up—and what's still missing?
 
-## Slide 2 · The Agentic AI Landscape · `0:15–0:55`
+## Slide 2A · `0:22–1:00`
 
-Our current tracking pool contains 277 repositories. After technical and
-editorial review, 143 appear on the two maps: 84 in Agent Infra and 59 in Model
-Infra.
+> Playback: show the full Agent Infra map. After “84 projects,” advance once to
+> highlight Application and the complete Agent Runtime Infra layer.
 
-The Agent map covers applications, frameworks and runtime infrastructure. The
-Model map follows data and training through PyTorch and into serving. Today I
-want to draw your attention to the Runtime layer at the bottom of the Agent map.
+We looked at hundreds of thousands of repos, scored them, and narrowed it down
+to just over 100 for these two maps. Start with Agent Infra—84 projects.
+Thirty-two of those are applications, but here's the thing: they account for
+more than half the activity, measured by July OpenRank. So most of what people
+are actually paying attention to is still at the top—coding agents, personal
+assistants, the stuff you can see and use directly.
 
-## Slide 3 · Attention sits at the top. New demand is forming below · `0:55–1:30`
+But look at the bottom of the map. Thirty-one projects now sit in what we call
+Runtime—context, tools, sandboxed execution, evidence. That's the layer I want
+you to remember, because that's where things get interesting.
 
-The application layer still accounts for about 55 percent of the selected
-Agent Infra OpenRank. Coding agents and personal agents are where attention is
-most visible.
+## Slide 2B · `1:00–1:32`
 
-The layer is also young: 55 percent of Agent Infra projects were created in
-2025 or later. Thirteen of the 23 Agent Infra selections outside our May pool
-sit in Runtime. This is an activity signal, not an adoption rate. New engineering
-demand is accumulating around execution, tool control and context.
+> Playback: advance once to show the full Model Infra map. After “59 projects,”
+> advance again to highlight serving, pre-training, and the relevant data and
+> compute regions.
 
-## Slide 4 · The process is temporary. The task is not · `1:30–2:20`
+Now, Model Infra. These 59 projects are a lot older on average—only 17 percent
+were created in 2025 or later, versus 55 percent on the Agent Infra side. Three
+quarters of the activity sits in serving and pre-training. PyTorch's down in
+training, and half a dozen Apache projects handle data and compute underneath
+that.
 
-Why is that demand showing up now? In a conventional cloud-native workload, we
-usually know the artifact when we deploy it. An agent can write code during a
-task, call a model, fan out to several tools, wait, retry and then release the
-environment.
+So here's the point: agents are a new kind of workload, but they don't get a
+new stack to run on. They still run through this same, older infrastructure.
+Which means whatever new pressure agents create, it has to show up somewhere
+else.
 
-That does not mean every agent is a high-QPS service. The more consistent
-pattern is variability. Code can be unknown at startup. Traffic can arrive in
-bursts. The process may be temporary while its authority, state and external
-effects last longer. A retry is also different once a tool has already changed
-another system.
+## Slide 3 · `1:32–1:54`
 
-## Slide 5 · Open projects are already moving into the task path · `2:20–3:10`
+Put these two maps side by side and you can actually see where that pressure
+lands. Of the 23 new Agent Infra projects that showed up since our last review
+in May, 13 of them landed in Runtime. So you've got attention sitting at the
+top, old infrastructure sitting at the bottom, and right in the middle—that's
+where much of the new building is happening.
 
-The response is already visible across the open infrastructure ecosystem.
-Kubernetes Agent Sandbox turns a short-lived execution environment into a
-lifecycle object. Kata Containers can put untrusted generated code behind a
-dedicated guest-kernel boundary.
+## Slide 4 · What Agents Need, and Where the Gap Is · `1:54–3:20`
 
-Elsewhere, Dapr Agents brings durable workflow and recovery. Agentgateway puts
-model and tool traffic on a governed path. Kueue manages quota and heterogeneous
-resources. OpenTelemetry is extending traces toward agent and tool execution.
+So why there, why Runtime? Think about a normal cloud-native workload—you
+usually know what you're deploying before you deploy it. An agent's different:
+it writes code mid-task, calls a model, calls a few tools, waits, retries, and
+then the process disappears. But what it *did* along the way—the permissions it
+used, the state it changed, its effects on other systems—that sticks around a
+lot longer than the process itself. A short-lived process with long-lived
+consequences—that's the real problem agents bring.
 
-Some were created for agents. Others are mature projects being adapted. That is
-reuse and active engineering, not proof that the whole stack is production-ready.
+And the cloud-native ecosystem is already reacting. On the process side,
+projects like Kubernetes Agent Sandbox and Kata Containers give these
+short-lived, untrusted executions a proper lifecycle and a safer boundary. On
+the task side, projects like Dapr Agents, agentgateway and Kueue are trying to
+carry recovery, governed traffic and quota across the *whole* task, not just
+one call.
 
-## Slide 6 · The missing layer is task-wide control · `3:10–4:30`
+So, going back to where I started—what does infrastructure actually need to
+carry? I'd call it a task envelope: the tenant and policy boundary, runtime
+profile, artifacts and state, and the evidence and cleanup for a single run.
+The pieces for this already exist in open infrastructure. What doesn't exist
+yet is something that carries that boundary all the way through, consistently.
 
-The current stack already covers many pieces. The gaps appear between them.
+## Slide 5 · Closing · `3:20–3:50`
 
-Strong isolation still competes with startup time. A rate limit at one gateway
-does not give the whole task a budget or stop work already running in another
-tool. A workflow can retry a failed step, but the tool may repeat its side
-effect. Workload identity names the caller; it does not carry the user's intent
-and approved tools. A successful trace does not prove the final change was right.
+Which is a good place to hand off. Xu Wang is going to walk you through one
+task, end to end, on a working open-source runtime—one real attempt at closing
+that gap. Kubernetes Agent Sandbox manages the lifecycle, Kata Containers
+handles the boundary, and the rest of the chain runs the container and delivers
+its images and model weights.
 
-I use “task envelope” as a working description. The identity, budget,
-environment, state and evidence for one run need a shared lifecycle. Open
-infrastructure has many building blocks, but that boundary does not yet travel
-consistently across the stack.
-
-## Slide 7 · Building an Agent Runtime with Open Infrastructure · `4:30–5:00`
-
-This brings me directly to the next keynote.
-
-Xu Wang will follow one task through a working open-source runtime. Kubernetes
-Agent Sandbox manages its lifecycle. Kata Containers provides the guest-kernel
-boundary. The rest of the chain executes the container and delivers its images
-and model artifacts.
-
-The landscape shows why this stack is becoming necessary. The demo will show
-how the pieces can work together. Xu, over to you.
+Thank you.
 
 ## Rehearsal notes
 
-- Target speaking pace: 118–124 words per minute.
-- Do not read the project matrix line by line. Point to one project in each
-  lane, then move on.
-- On Slide 2, keep Agent Infra selected. Switch to Model Infra only if the room
-  or rehearsal timing makes the two-map relationship worth showing.
-- The `55%` and `13/23` figures describe the current landscape selection and
-  activity signals. Do not call them production adoption rates.
-- Finish Slide 7 facing Xu Wang rather than returning to a generic closing
-  statement.
+- Current draft: approximately 619 spoken words.
+- At 118–124 words per minute, expect about `5:00–5:15`. The supplied slide
+  timestamps total `3:50`, which would require about 161 words per minute.
+- On Slide 2A, use the full map for the pool size, then reveal the highlight.
+  Point first to Application and then to the complete Runtime layer. Advance
+  at about `1:00` to reveal the full Model Infra map.
+- On Slide 2B, use the full map for the project count, then reveal the
+  highlight. Trace serving and pre-training before pointing to PyTorch and the
+  six Apache projects in data and compute. Advance at about `1:32` to leave the
+  landscape slide.
+- Do not read either map section by section. The spoken point is the contrast:
+  a young Agent layer is forming above a more established model, data and
+  compute stack.
+- On Slide 3, read the page vertically: visible attention at the top, `13 of
+  23` new projects in Runtime, and the established model stack underneath. The
+  project names are there for reference; do not read all thirteen aloud.
+- On Slide 4, trace the short-lived process into its long-lived consequences,
+  then point to the named project groups. Finish on the task-envelope paragraph.
+- The `55%` on the Agent Infra map describes July OpenRank activity. The `13 of
+  23` on Slide 3 describes additions to this landscape selection since May.
+  Neither is a production-adoption rate.
+- Finish Slide 5 facing Xu Wang. Say “Thank you” and leave the stage.
 
 ## Evidence used in the talk
 
@@ -113,3 +127,4 @@ how the pieces can work together. Xu, over to you.
 - [Dapr Agents v1.0](https://www.cncf.io/announcements/2026/03/23/general-availability-of-dapr-agents-delivers-production-reliability-for-enterprise-ai/)
 - [Kueue overview](https://kueue.sigs.k8s.io/docs/overview/)
 - [OpenTelemetry GenAI semantic conventions](https://github.com/open-telemetry/semantic-conventions-genai)
+- [CNCF TAB reference architecture #147](https://github.com/cncf/tab/issues/147)

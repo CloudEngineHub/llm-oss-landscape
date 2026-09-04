@@ -7,6 +7,7 @@ import {
   ChevronRightIcon,
   Maximize2Icon,
 } from "lucide-react";
+import Image from "next/image";
 import {
   type PointerEvent as ReactPointerEvent,
   type ReactNode,
@@ -19,22 +20,12 @@ import {
 import LandscapeLogo from "@/app/components/landscape-logo";
 import LandscapeExplorer from "@/app/components/landscape-explorer";
 import type { LandscapeProject } from "@/lib/landscape-types";
+import { projectLogoUrl } from "@/lib/project-logo";
 
 import type { InclusionResearchStats } from "../../research-data";
 import styles from "./presentation.module.css";
 
-type PressureSection = {
-  label: string;
-  zone: string;
-  count: number;
-  projects: Array<{ name: string; repo: string }>;
-};
-
-type KeynoteStats = InclusionResearchStats & {
-  agentRecentShare: number;
-  modelRecentShare: number;
-  pressure: PressureSection[];
-};
+type KeynoteStats = InclusionResearchStats;
 
 type SwipeStart = {
   pointerId: number;
@@ -46,13 +37,71 @@ const scenes = [
   { id: "cover", label: "OPEN" },
   { id: "landscape", label: "LANDSCAPE" },
   { id: "signal", label: "TREND" },
-  { id: "workload", label: "WORKLOAD" },
-  { id: "project-bridge", label: "PROJECTS" },
-  { id: "task-envelope", label: "RESPONSE" },
-  { id: "handoff", label: "NEXT" },
+  { id: "needs-gap", label: "RUNTIME" },
+  { id: "closing", label: "THANKS" },
 ] as const;
 
 type SceneId = (typeof scenes)[number]["id"];
+type LandscapeView = "agent" | "model";
+
+const runtimeProjectGroups = [
+  { zone: "Memory, knowledge & context", label: "Memory & context" },
+  { zone: "Protocols & interoperability", label: "Protocols" },
+  { zone: "Tools, web & computer use", label: "Tools & computer use" },
+  { zone: "Development sandboxes", label: "Sandboxes" },
+] as const;
+
+type LandscapeInsight = {
+  metrics: Array<{ value: string; label: string }>;
+  reading: string;
+  focus: string[];
+};
+
+const LANDSCAPE_STEP_COUNT = 4;
+
+const landscapeInsights: Record<LandscapeView, LandscapeInsight> = {
+  agent: {
+    metrics: [
+      { value: "32 / 84", label: "Application projects" },
+      { value: "55%", label: "July OpenRank in Application" },
+      { value: "31", label: "Runtime projects" },
+    ],
+    reading:
+      "Runtime runs through context, protocols, tools, sandboxes and evidence.",
+    focus: [
+      "Agentic coding",
+      "Coding workflows & harnesses",
+      "Personal AI assistants",
+      "Chatbot workspaces",
+      "Memory, knowledge & context",
+      "Protocols & interoperability",
+      "Tools, web & computer use",
+      "Development sandboxes",
+      "Observability & evaluation",
+    ],
+  },
+  model: {
+    metrics: [
+      { value: "17%", label: "Created since 2025" },
+      { value: "75%", label: "OpenRank in serving + pre-training" },
+      { value: "6", label: "Apache projects" },
+    ],
+    reading:
+      "PyTorch sits in training; Apache sits in data and compute.",
+    focus: [
+      "Model API gateways",
+      "Serving · Deploy",
+      "Serving · Inference",
+      "Pre-Train · Framework & parallel",
+      "Pre-Train · Compiler & accelerator",
+      "Pre-Train · Evaluation & observability",
+      "Pre-Train · Robotics infra",
+      "Data · Integration",
+      "Data · Governance",
+      "Compute & scheduling",
+    ],
+  },
+};
 
 export default function OpenInfrastructureKeynote({
   stats,
@@ -62,14 +111,39 @@ export default function OpenInfrastructureKeynote({
   projects: LandscapeProject[];
 }) {
   const [sceneIndex, setSceneIndex] = useState(0);
+  const [landscapeStep, setLandscapeStep] = useState(0);
   const swipeStart = useRef<SwipeStart | null>(null);
 
   const next = useCallback(() => {
-    setSceneIndex((current) => Math.min(scenes.length - 1, current + 1));
-  }, []);
+    if (
+      scenes[sceneIndex].id === "landscape" &&
+      landscapeStep < LANDSCAPE_STEP_COUNT - 1
+    ) {
+      setLandscapeStep((current) => current + 1);
+      return;
+    }
+
+    const nextIndex = Math.min(scenes.length - 1, sceneIndex + 1);
+    if (scenes[nextIndex].id === "landscape") setLandscapeStep(0);
+    setSceneIndex(nextIndex);
+  }, [landscapeStep, sceneIndex]);
 
   const previous = useCallback(() => {
-    setSceneIndex((current) => Math.max(0, current - 1));
+    if (scenes[sceneIndex].id === "landscape" && landscapeStep > 0) {
+      setLandscapeStep((current) => current - 1);
+      return;
+    }
+
+    const previousIndex = Math.max(0, sceneIndex - 1);
+    if (scenes[previousIndex].id === "landscape") {
+      setLandscapeStep(LANDSCAPE_STEP_COUNT - 1);
+    }
+    setSceneIndex(previousIndex);
+  }, [landscapeStep, sceneIndex]);
+
+  const goToScene = useCallback((index: number) => {
+    if (scenes[index].id === "landscape") setLandscapeStep(0);
+    setSceneIndex(index);
   }, []);
 
   const enterFullscreen = useCallback(async () => {
@@ -90,15 +164,15 @@ export default function OpenInfrastructureKeynote({
         event.preventDefault();
         previous();
       }
-      if (event.key === "Home") setSceneIndex(0);
+      if (event.key === "Home") goToScene(0);
       if (event.key === "End") setSceneIndex(scenes.length - 1);
       if (event.key === "Enter") void enterFullscreen();
-      if (/^[1-7]$/.test(event.key)) setSceneIndex(Number(event.key) - 1);
+      if (/^[1-5]$/.test(event.key)) goToScene(Number(event.key) - 1);
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [enterFullscreen, next, previous]);
+  }, [enterFullscreen, goToScene, next, previous]);
 
   function handlePointerDown(event: ReactPointerEvent<HTMLElement>) {
     if (event.pointerType !== "touch") return;
@@ -158,9 +232,16 @@ export default function OpenInfrastructureKeynote({
         <div
           className={styles.scene}
           data-stage-scene={scene.id}
+          data-stage-build={scene.id === "landscape" ? landscapeStep : 0}
           key={scene.id}
         >
-          <Scene id={scene.id} stats={stats} projects={projects} />
+          <Scene
+            id={scene.id}
+            stats={stats}
+            projects={projects}
+            landscapeStep={landscapeStep}
+            onLandscapeStepChange={setLandscapeStep}
+          />
         </div>
 
         <footer className={styles.controls}>
@@ -172,7 +253,7 @@ export default function OpenInfrastructureKeynote({
                 aria-label={`Go to slide ${index + 1}: ${item.label}`}
                 aria-current={index === sceneIndex ? "page" : undefined}
                 data-active={index === sceneIndex}
-                onClick={() => setSceneIndex(index)}
+                onClick={() => goToScene(index)}
               >
                 <i />
                 <span>{item.label}</span>
@@ -210,20 +291,29 @@ function Scene({
   id,
   stats,
   projects,
+  landscapeStep,
+  onLandscapeStepChange,
 }: {
   id: SceneId;
   stats: KeynoteStats;
   projects: LandscapeProject[];
+  landscapeStep: number;
+  onLandscapeStepChange: (step: number) => void;
 }) {
   if (id === "cover") return <CoverSlide />;
   if (id === "landscape") {
-    return <LandscapeMapSlide projects={projects} stats={stats} />;
+    return (
+      <LandscapeMapSlide
+        projects={projects}
+        stats={stats}
+        step={landscapeStep}
+        onStepChange={onLandscapeStepChange}
+      />
+    );
   }
   if (id === "signal") return <LandscapeSignalSlide stats={stats} />;
-  if (id === "workload") return <WorkloadSlide />;
-  if (id === "project-bridge") return <ProjectBridgeSlide />;
-  if (id === "task-envelope") return <TaskEnvelopeSlide />;
-  return <DemoHandoffSlide />;
+  if (id === "needs-gap") return <NeedsGapSlide />;
+  return <ClosingSlide />;
 }
 
 function CoverSlide() {
@@ -248,7 +338,7 @@ function CoverSlide() {
       </h1>
       <div className={styles.coverMeta}>
         <p>
-          <strong>Xiaoya Xia</strong>
+          <strong>Yaya Xia</strong>
           <span>Ant Open Source</span>
         </p>
         <p className={styles.coverEvent}>
@@ -263,28 +353,38 @@ function CoverSlide() {
 function LandscapeMapSlide({
   projects,
   stats,
+  step,
+  onStepChange,
 }: {
   projects: LandscapeProject[];
   stats: KeynoteStats;
+  step: number;
+  onStepChange: (step: number) => void;
 }) {
-  const [view, setView] = useState<"agent" | "model">("agent");
+  const view: LandscapeView = step < 2 ? "agent" : "model";
+  const highlighted = step % 2 === 1;
+  const insight = landscapeInsights[view];
 
   return (
-    <article className={styles.landscapeMapSlide}>
+    <article
+      className={styles.landscapeMapSlide}
+      data-highlighted={highlighted}
+      data-view={view}
+    >
       <div className={styles.liveLandscape}>
         <LandscapeExplorer
           projects={projects}
           embedOnly={view}
           presentationMode
+          presentationFocus={highlighted ? insight.focus : undefined}
         />
       </div>
       <div className={styles.landscapeSwitcher} aria-label="Landscape view">
-        <span>EXPLORE THE MAP</span>
         <button
           type="button"
           data-active={view === "agent"}
           aria-pressed={view === "agent"}
-          onClick={() => setView("agent")}
+          onClick={() => onStepChange(0)}
         >
           Agent Infra · {stats.agent}
         </button>
@@ -292,272 +392,158 @@ function LandscapeMapSlide({
           type="button"
           data-active={view === "model"}
           aria-pressed={view === "model"}
-          onClick={() => setView("model")}
+          onClick={() => onStepChange(2)}
         >
           Model Infra · {stats.model}
         </button>
       </div>
+      {highlighted ? (
+        <LandscapeInsightCard insight={insight} view={view} />
+      ) : null}
     </article>
   );
 }
 
-function WorkloadSlide() {
-  const traits = [
-    ["UNKNOWN", "Code appears during the task"],
-    ["VARIABLE", "Model and tool calls can fan out"],
-    ["INTERRUPTIBLE", "Work pauses, retries and resumes"],
-    ["DURABLE", "Authority, state and effects outlive a process"],
-  ];
-
+function LandscapeInsightCard({
+  insight,
+  view,
+}: {
+  insight: LandscapeInsight;
+  view: LandscapeView;
+}) {
   return (
-    <article className={styles.workloadSlide}>
-      <SlideHeading eyebrow="THE WORKLOAD">
-        The process is temporary. The task is not.
-      </SlideHeading>
-      <div className={styles.workloadSequence}>
-        <div className={styles.deployedArtifact}>
-          <span>09:00 · DEPLOY</span>
-          <strong>Known image</strong>
-          <code>service:v42</code>
-        </div>
-        <div className={styles.sequenceArrow} aria-hidden="true">
-          <i />
-        </div>
-        <div className={styles.agentTask}>
-          <span>10:42 · AGENT TASK</span>
-          <strong>Code written inside the run</strong>
-          <code>fix_auth.py · created 10:43</code>
-        </div>
-        <div className={styles.sequenceArrow} aria-hidden="true">
-          <i />
-        </div>
-        <div className={styles.externalEffect}>
-          <span>10:46 · EFFECT</span>
-          <strong>The environment is gone. The change remains.</strong>
-          <code>repository · pull request #482</code>
-        </div>
+    <aside
+      className={styles.landscapeInsight}
+      data-view={view}
+      aria-live="polite"
+    >
+      <div className={styles.insightIndex}>
+        <span>KEY TREND</span>
+        <strong>{view === "agent" ? "01" : "02"} / 02</strong>
       </div>
-      <div className={styles.workloadTraits}>
-        {traits.map(([label, text]) => (
-          <section key={label}>
-            <span>{label}</span>
-            <p>{text}</p>
-          </section>
+      <div className={styles.insightMetrics}>
+        {insight.metrics.map((metric) => (
+          <div key={metric.label}>
+            <strong>{metric.value}</strong>
+            <span>{metric.label}</span>
+          </div>
         ))}
       </div>
+      <p>{insight.reading}</p>
+    </aside>
+  );
+}
+
+function NeedsGapSlide() {
+  return (
+    <article className={styles.needsGapSlide}>
+      <SlideHeading eyebrow="AGENT RUNTIME">
+        What Agents Need, and Where the Gap Is
+      </SlideHeading>
+      <div className={styles.runtimeNarrative}>
+        <p className={styles.runtimeProblem}>
+          An agent can write code, call a model and tools, wait, and retry before
+          its process disappears. <strong>The permissions it used, the state it
+          changed, and its effects on other systems can last much longer.</strong>
+        </p>
+        <p className={styles.runtimeResponse}>
+          <strong>Kubernetes Agent Sandbox and Kata Containers</strong> give
+          untrusted execution a lifecycle and a safer boundary. <strong>Dapr
+          Agents, agentgateway and Kueue</strong> carry recovery, governed traffic
+          and quota across the task.
+        </p>
+      </div>
+      <p className={styles.taskEnvelopeStatement}>
+        A <strong>task envelope</strong> would keep the tenant and policy boundary,
+        runtime profile, artifacts and state, and evidence and cleanup tied to one
+        run. Open infrastructure has these pieces, but does not yet carry that
+        boundary consistently through the whole stack.
+      </p>
+      <SourceLine>
+        Source: CNCF TAB reference architecture submission #147 + project documentation
+      </SourceLine>
     </article>
   );
 }
 
 function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
-  const applicationShare = Math.round(
-    stats.agentMacro.find((group) => group.label === "Application")
-      ?.openrankShare ?? 0,
-  );
-
   return (
     <article className={styles.landscapeSignalSlide}>
-      <SlideHeading eyebrow="AGENTIC AI ECOSYSTEM">
-        Attention sits at the top. New demand is forming below.
+      <SlideHeading eyebrow="WHERE THE PRESSURE LANDS">
+        New Agent Infra work is gathering in Runtime.
       </SlideHeading>
-      <div className={styles.signalNumbers}>
-        <section>
-          <strong>{applicationShare}%</strong>
-          <p>of selected Agent Infra OpenRank still sits in Application</p>
-          <span>JULY 2026</span>
+      <div className={styles.pressureStack}>
+        <section className={styles.attentionLayer}>
+          <span>TOP</span>
+          <p>
+            Visible community attention remains with <strong>applications</strong>,
+            especially coding agents and assistants.
+          </p>
         </section>
-        <section>
-          <strong>{stats.agentRecentShare}%</strong>
-          <p>of Agent Infra projects were created in 2025 or later</p>
-          <span>MODEL INFRA: {stats.modelRecentShare}%</span>
+        <section className={styles.runtimeLayer}>
+          <span>MIDDLE</span>
+          <p>
+            <strong>{stats.runtimeOutsideMay} of 23</strong> new Agent Infra
+            projects since May landed in Runtime.
+          </p>
         </section>
-        <section>
-          <strong>{stats.runtimeOutsideMay}/{stats.agentOutsideMay}</strong>
-          <p>Agent Infra selections outside the May pool sit in Runtime</p>
-          <span>CURRENT SELECTION</span>
+        <section className={styles.foundationLayer}>
+          <span>FOUNDATION</span>
+          <p>
+            The older <strong>model infrastructure</strong> stack stays underneath
+            every agent task.
+          </p>
         </section>
       </div>
-      <div className={styles.pressureRail}>
-        {stats.pressure.map((section) => (
-          <section key={section.zone}>
-            <div className={styles.pressureCount}>{section.count}</div>
-            <div>
-              <h3>{section.label}</h3>
-              <p>{section.zone}</p>
-              <div className={styles.projectLine}>
-                {section.projects.map((project) => (
-                  <ProjectMark key={project.repo} {...project} />
-                ))}
-              </div>
-            </div>
-          </section>
-        ))}
-      </div>
+      <aside className={styles.runtimeProjectList}>
+        <header>
+          <strong>{stats.runtimeOutsideMayProjects.length} Runtime additions</strong>
+          <span>since May</span>
+        </header>
+        <div className={styles.runtimeProjectGroups}>
+          {runtimeProjectGroups.map((group) => {
+            const projects = stats.runtimeOutsideMayProjects.filter(
+              (project) => project.zone === group.zone,
+            );
+
+            return (
+              <section key={group.zone}>
+                <h3>
+                  {group.label} <span>{projects.length}</span>
+                </h3>
+                <ul>
+                  {projects.map((project) => (
+                    <li key={project.repo}>
+                      <Image
+                        src={projectLogoUrl(project.repo.split("/")[0])}
+                        width={28}
+                        height={28}
+                        unoptimized
+                        alt=""
+                      />
+                      <span>{project.name}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
+      </aside>
       <SourceLine>
-        Source: current landscape selection + May tracking snapshot. OpenRank
-        describes community activity, not production adoption.
+        Source: current landscape selection + May tracking snapshot.
       </SourceLine>
     </article>
   );
 }
 
-function ProjectBridgeSlide() {
-  const lanes = [
-    {
-      role: "RUN & ISOLATE",
-      projects: ["Agent Sandbox", "Kata Containers", "Confidential Containers"],
-      note: "Lifecycle, VM isolation and attestation",
-    },
-    {
-      role: "COORDINATE",
-      projects: ["kagent", "Dapr Agents", "OpenChoreo"],
-      note: "Operations, durable state and recovery",
-    },
-    {
-      role: "CONNECT & GOVERN",
-      projects: ["kgateway", "agentgateway", "Istio"],
-      note: "LLM, MCP and agent traffic under policy",
-    },
-    {
-      role: "TRACE & EXPLAIN",
-      projects: ["OpenTelemetry", "Jaeger"],
-      note: "Agent semantics and execution paths",
-    },
-  ];
-
-  return (
-    <article className={styles.installedBaseSlide}>
-      <SlideHeading eyebrow="OPEN INFRASTRUCTURE PROJECTS">
-        Open projects are already moving into the task path.
-      </SlideHeading>
-      <div className={styles.projectLanes}>
-        {lanes.map((lane) => (
-          <section key={lane.role}>
-            <span>{lane.role}</span>
-            <div>
-              {lane.projects.map((project) => (
-                <strong key={project}>{project}</strong>
-              ))}
-            </div>
-            <p>{lane.note}</p>
-          </section>
-        ))}
-      </div>
-      <p className={styles.dataBoundary}>
-        Some were built for agents. Others are established projects adding an
-        agent-specific interface, traffic path or evidence model.
-      </p>
-      <SourceLine>
-        Sources: CNCF and project documentation · Kata Containers / OpenInfra ·
-        OpenTelemetry GenAI semantic conventions
-      </SourceLine>
-    </article>
-  );
-}
-
-function TaskEnvelopeSlide() {
-  const responses = [
-    {
-      step: "START",
-      need: "Unknown code in a short-lived environment",
-      existing: "Agent Sandbox + Kata Containers",
-      gap: "Low-latency isolation and safe warm reuse",
-    },
-    {
-      step: "CALL",
-      need: "Model and tool calls fan out or retry",
-      existing: "Gateways + agentgateway",
-      gap: "Task budgets, backpressure and cancellation",
-    },
-    {
-      step: "RESUME",
-      need: "Work outlives one process",
-      existing: "Dapr workflows + state systems",
-      gap: "Safe replay after an external side effect",
-    },
-    {
-      step: "ACT",
-      need: "Authority borrowed for one task",
-      existing: "SPIFFE/SPIRE workload identity",
-      gap: "Intent, tool scope, approval and expiry",
-    },
-    {
-      step: "PLACE",
-      need: "Inference, tools and sandbox compute mix",
-      existing: "Kubernetes DRA + Kueue",
-      gap: "Task SLOs, capacity and cost attribution",
-    },
-    {
-      step: "PROVE",
-      need: "A tool changes an external system",
-      existing: "OpenTelemetry + Jaeger",
-      gap: "Causal evidence from decision to effect",
-    },
-  ];
-
-  return (
-    <article className={styles.taskEnvelopeSlide}>
-      <SlideHeading eyebrow="WHERE THE STACK IS STILL OPEN">
-        The missing layer is task-wide control.
-      </SlideHeading>
-      <div className={styles.envelopeLegend}>
-        <span>AGENT BEHAVIOUR</span>
-        <span>ESTABLISHED OPEN INFRA</span>
-        <span>WORK STILL OPEN</span>
-      </div>
-      <div className={styles.envelopeRows}>
-        {responses.map((response) => (
-          <section key={response.step}>
-            <div className={styles.stepMark}>{response.step}</div>
-            <p>{response.need}</p>
-            <p>{response.existing}</p>
-            <p>{response.gap}</p>
-          </section>
-        ))}
-      </div>
-      <SourceLine>
-        Project evidence: Agent Sandbox · Kata · agentgateway · Dapr · SPIRE ·
-        Kueue · OpenTelemetry
-      </SourceLine>
-    </article>
-  );
-}
-
-function DemoHandoffSlide() {
+function ClosingSlide() {
   return (
     <article className={styles.handoffSlide}>
-      <div className={styles.handoffIntro}>
-        <span>NEXT · ONE TASK, RUN LIVE</span>
-        <h2>Building an Agent Runtime with Open Infrastructure</h2>
-      </div>
-      <div className={styles.demoChain}>
-        <section>
-          <span>01 · LIFECYCLE</span>
-          <strong>Kubernetes Agent Sandbox</strong>
-          <p>creates, warms and releases the task environment</p>
-        </section>
-        <i aria-hidden="true" />
-        <section>
-          <span>02 · BOUNDARY</span>
-          <strong>Kata Containers</strong>
-          <p>puts untrusted code behind a dedicated guest kernel</p>
-        </section>
-        <i aria-hidden="true" />
-        <section>
-          <span>03 · DELIVERY</span>
-          <strong>Open runtime chain</strong>
-          <p>executes containers and delivers images and model artifacts</p>
-        </section>
-      </div>
-      <div className={styles.handoffFooter}>
-        <div>
-          <strong>Xu Wang</strong>
-          <span>Ant Group · CNCF + OpenInfra Foundation</span>
-        </div>
-        <p>
-          The next keynote turns this ecosystem signal into a working stack.
-        </p>
-      </div>
+      <p className={styles.closingLead}>A working open source runtime built with</p>
+      <h2>Kata Containers</h2>
+      <p className={styles.closingTail}>and an open delivery chain.</p>
+      <strong className={styles.closingThanks}>Thank you.</strong>
     </article>
   );
 }
@@ -574,18 +560,6 @@ function SlideHeading({
       <span>{eyebrow}</span>
       <h2>{children}</h2>
     </header>
-  );
-}
-
-function ProjectMark({ name, repo }: { name: string; repo: string }) {
-  const owner = repo.split("/")[0];
-  return (
-    <span className={styles.projectMark}>
-      {/* GitHub organisation avatar is used as the project mark in the landscape. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={`/api/project-logo/${encodeURIComponent(owner)}`} alt="" />
-      {name}
-    </span>
   );
 }
 

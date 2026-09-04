@@ -228,7 +228,7 @@ const MODEL_STAGE_ASPECT_RATIO: Record<
 
 const LANDSCAPE_CANVAS_WIDTH = 1440;
 const LANDSCAPE_CANVAS_HEIGHT = 810;
-const LANDSCAPE_UPDATED_AT = "2026-08-26";
+const LANDSCAPE_UPDATED_AT = "2026-09-01";
 
 function FixedLandscapeFrame({
   children,
@@ -568,13 +568,20 @@ function ZoneSection({
   zoneProjects: LandscapeProject[];
   normalizedQuery: string;
   selectedRepo: string | null;
-  presentationFocus?: string;
+  presentationFocus?: string | string[];
   onSelect: (repo: string) => void;
   expanded?: boolean;
   style?: CSSProperties;
   aspectRatio: number;
   className?: string;
 }) {
+  const presentationFocuses = Array.isArray(presentationFocus)
+    ? presentationFocus
+    : presentationFocus
+      ? [presentationFocus]
+      : [];
+  const hasPresentationFocus = presentationFocuses.length > 0;
+  const isPresentationFocused = presentationFocuses.includes(zone);
   const orderedZoneProjects = [...zoneProjects].sort(
     compareLandscapeProjects,
   );
@@ -597,10 +604,10 @@ function ZoneSection({
     <section
       data-landscape-zone
       data-presentation-focus={
-        presentationFocus === zone ? "true" : undefined
+        isPresentationFocused ? "true" : undefined
       }
       data-presentation-muted={
-        presentationFocus && presentationFocus !== zone ? "true" : undefined
+        hasPresentationFocus && !isPresentationFocused ? "true" : undefined
       }
       className={cn(styles.zone, className)}
       style={zoneStyle}
@@ -643,7 +650,7 @@ function StageSection({
   projects: LandscapeProject[];
   normalizedQuery: string;
   selectedRepo: string | null;
-  presentationFocus?: string;
+  presentationFocus?: string | string[];
   onSelect: (repo: string) => void;
   focused?: boolean;
   onFocusStage?: (stage: StageId) => void;
@@ -757,7 +764,7 @@ function ModelStageSection({
   projects: LandscapeProject[];
   normalizedQuery: string;
   selectedRepo: string | null;
-  presentationFocus?: string;
+  presentationFocus?: string | string[];
   onSelect: (repo: string) => void;
   focused?: boolean;
   onFocusStage?: (stage: string) => void;
@@ -952,7 +959,7 @@ export default function LandscapeExplorer({
   projects: LandscapeProject[];
   embedOnly?: "agent" | "model";
   standalone?: boolean;
-  presentationFocus?: string;
+  presentationFocus?: string | string[];
   presentationMode?: boolean;
   filterQuery?: string;
 }) {
