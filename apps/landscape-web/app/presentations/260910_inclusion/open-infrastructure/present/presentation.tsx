@@ -20,9 +20,17 @@ import {
 import LandscapeLogo from "@/app/components/landscape-logo";
 import LandscapeExplorer from "@/app/components/landscape-explorer";
 import type { LandscapeProject } from "@/lib/landscape-types";
+import type {
+  OpenInfrastructurePresentationCopy,
+  OpenInfrastructurePresentationCopyKey,
+} from "@/lib/open-infrastructure-presentation-copy";
 import { projectLogoUrl } from "@/lib/project-logo";
 
 import type { InclusionResearchStats } from "../../research-data";
+import {
+  EditableOpenInfrastructureText,
+  OpenInfrastructureCopyEditor,
+} from "./open-infrastructure-copy-editor";
 import styles from "./presentation.module.css";
 
 type KeynoteStats = InclusionResearchStats;
@@ -45,15 +53,30 @@ type SceneId = (typeof scenes)[number]["id"];
 type LandscapeView = "agent" | "model";
 
 const runtimeProjectGroups = [
-  { zone: "Memory, knowledge & context", label: "Memory & context" },
-  { zone: "Protocols & interoperability", label: "Protocols" },
-  { zone: "Tools, web & computer use", label: "Tools & computer use" },
-  { zone: "Development sandboxes", label: "Sandboxes" },
+  {
+    zone: "Memory, knowledge & context",
+    labelKey: "runtimeMemoryLabel",
+  },
+  {
+    zone: "Protocols & interoperability",
+    labelKey: "runtimeProtocolsLabel",
+  },
+  {
+    zone: "Tools, web & computer use",
+    labelKey: "runtimeToolsLabel",
+  },
+  {
+    zone: "Development sandboxes",
+    labelKey: "runtimeSandboxesLabel",
+  },
 ] as const;
 
 type LandscapeInsight = {
-  metrics: Array<{ value: string; label: string }>;
-  reading: string;
+  metrics: Array<{
+    value: string;
+    labelKey: OpenInfrastructurePresentationCopyKey;
+  }>;
+  readingKey: OpenInfrastructurePresentationCopyKey;
   focus: string[];
 };
 
@@ -62,12 +85,11 @@ const LANDSCAPE_STEP_COUNT = 4;
 const landscapeInsights: Record<LandscapeView, LandscapeInsight> = {
   agent: {
     metrics: [
-      { value: "32 / 84", label: "Application projects" },
-      { value: "55%", label: "July OpenRank in Application" },
-      { value: "31", label: "Runtime projects" },
+      { value: "32 / 84", labelKey: "agentApplicationProjectsLabel" },
+      { value: "55%", labelKey: "agentOpenRankLabel" },
+      { value: "31", labelKey: "agentRuntimeProjectsLabel" },
     ],
-    reading:
-      "Runtime runs through context, protocols, tools, sandboxes and evidence.",
+    readingKey: "agentInsightReading",
     focus: [
       "Agentic coding",
       "Coding workflows & harnesses",
@@ -82,12 +104,11 @@ const landscapeInsights: Record<LandscapeView, LandscapeInsight> = {
   },
   model: {
     metrics: [
-      { value: "17%", label: "Created since 2025" },
-      { value: "75%", label: "OpenRank in serving + pre-training" },
-      { value: "6", label: "Apache projects" },
+      { value: "17%", labelKey: "modelCreatedLabel" },
+      { value: "75%", labelKey: "modelOpenRankLabel" },
+      { value: "6", labelKey: "modelApacheLabel" },
     ],
-    reading:
-      "PyTorch sits in training; Apache sits in data and compute.",
+    readingKey: "modelInsightReading",
     focus: [
       "Model API gateways",
       "Serving · Deploy",
@@ -103,10 +124,22 @@ const landscapeInsights: Record<LandscapeView, LandscapeInsight> = {
   },
 };
 
+function isPresentationShortcutTarget(eventTarget: EventTarget | null) {
+  if (!(eventTarget instanceof HTMLElement)) return false;
+  return Boolean(
+    eventTarget.isContentEditable ||
+      eventTarget.closest(
+        'a[href], button, input, select, textarea, [contenteditable="true"], [contenteditable="plaintext-only"], [role="button"]',
+      ),
+  );
+}
+
 export default function OpenInfrastructureKeynote({
+  initialCopy,
   stats,
   projects,
 }: {
+  initialCopy: OpenInfrastructurePresentationCopy;
   stats: KeynoteStats;
   projects: LandscapeProject[];
 }) {
@@ -156,6 +189,8 @@ export default function OpenInfrastructureKeynote({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (isPresentationShortcutTarget(event.target)) return;
+
       if (["ArrowRight", "PageDown", " "].includes(event.key)) {
         event.preventDefault();
         next();
@@ -198,16 +233,17 @@ export default function OpenInfrastructureKeynote({
   const scene = scenes[sceneIndex];
 
   return (
-    <main
-      className={styles.stage}
-      lang="en"
-      onPointerDown={handlePointerDown}
-      onPointerUp={handlePointerUp}
-      onPointerCancel={() => {
-        swipeStart.current = null;
-      }}
-    >
-      <section className={styles.deck} aria-live="polite">
+    <OpenInfrastructureCopyEditor initialCopy={initialCopy}>
+      <main
+        className={styles.stage}
+        lang="en"
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={() => {
+          swipeStart.current = null;
+        }}
+      >
+        <section className={styles.deck} aria-live="polite">
         <header className={styles.stageHeader}>
           <div className={styles.stageHeaderLeft}>
             <Link
@@ -217,7 +253,10 @@ export default function OpenInfrastructureKeynote({
               <ArrowLeftIcon aria-hidden="true" />
               260910_InclusionConf
             </Link>
-            <span>OPEN INFRASTRUCTURE KEYNOTE</span>
+            <EditableOpenInfrastructureText
+              as="span"
+              copyKey="stageHeaderLabel"
+            />
           </div>
           <button
             className={styles.fullscreenButton}
@@ -282,8 +321,9 @@ export default function OpenInfrastructureKeynote({
             </button>
           </div>
         </footer>
-      </section>
-    </main>
+        </section>
+      </main>
+    </OpenInfrastructureCopyEditor>
   );
 }
 
@@ -321,7 +361,7 @@ function CoverSlide() {
     <article className={styles.coverSlide}>
       <div className={styles.coverMark}>
         <LandscapeLogo title="Agentic AI Landscape" />
-        <span>AGENTIC AI LANDSCAPE · 2026</span>
+        <EditableOpenInfrastructureText as="span" copyKey="coverMarkLabel" />
       </div>
       <div
         className={styles.coverBrands}
@@ -333,17 +373,23 @@ function CoverSlide() {
         <img src="/community-logos/inclusionai.png" alt="InclusionAI" />
       </div>
       <h1>
-        What AI Agents Need
-        <em>from Open Infrastructure</em>
+        <EditableOpenInfrastructureText
+          as="span"
+          copyKey="coverTitleLine1"
+        />
+        <EditableOpenInfrastructureText as="em" copyKey="coverTitleLine2" />
       </h1>
       <div className={styles.coverMeta}>
         <p>
-          <strong>Yaya Xia</strong>
-          <span>Ant Open Source</span>
+          <EditableOpenInfrastructureText
+            as="strong"
+            copyKey="coverSpeakerName"
+          />
+          <EditableOpenInfrastructureText as="span" copyKey="coverSpeakerOrg" />
         </p>
         <p className={styles.coverEvent}>
-          KubeCon + CloudNativeCon + OpenInfra Summit + PyTorch Conference China
-          <span>8 September 2026 · Shanghai</span>
+          <EditableOpenInfrastructureText as="span" copyKey="coverEvent" />
+          <EditableOpenInfrastructureText as="span" copyKey="coverDate" />
         </p>
       </div>
     </article>
@@ -418,18 +464,21 @@ function LandscapeInsightCard({
       aria-live="polite"
     >
       <div className={styles.insightIndex}>
-        <span>KEY TREND</span>
+        <EditableOpenInfrastructureText as="span" copyKey="insightKicker" />
         <strong>{view === "agent" ? "01" : "02"} / 02</strong>
       </div>
       <div className={styles.insightMetrics}>
         {insight.metrics.map((metric) => (
-          <div key={metric.label}>
+          <div key={metric.labelKey}>
             <strong>{metric.value}</strong>
-            <span>{metric.label}</span>
+            <EditableOpenInfrastructureText
+              as="span"
+              copyKey={metric.labelKey}
+            />
           </div>
         ))}
       </div>
-      <p>{insight.reading}</p>
+      <EditableOpenInfrastructureText as="p" copyKey={insight.readingKey} />
     </aside>
   );
 }
@@ -437,30 +486,58 @@ function LandscapeInsightCard({
 function NeedsGapSlide() {
   return (
     <article className={styles.needsGapSlide}>
-      <SlideHeading eyebrow="AGENT RUNTIME">
-        What Agents Need, and Where the Gap Is
+      <SlideHeading eyebrowKey="needsGapEyebrow">
+        <EditableOpenInfrastructureText as="span" copyKey="needsGapTitle" />
       </SlideHeading>
-      <div className={styles.runtimeNarrative}>
-        <p className={styles.runtimeProblem}>
-          An agent can write code, call a model and tools, wait, and retry before
-          its process disappears. <strong>The permissions it used, the state it
-          changed, and its effects on other systems can last much longer.</strong>
+      <p className={styles.runtimePremise}>
+        <EditableOpenInfrastructureText as="span" copyKey="runtimeStackPremise" />
+      </p>
+      <div className={styles.runtimeWorkload}>
+        <p>
+          <EditableOpenInfrastructureText
+            as="span"
+            copyKey="runtimeProblemLead"
+          />
         </p>
-        <p className={styles.runtimeResponse}>
-          <strong>Kubernetes Agent Sandbox and Kata Containers</strong> give
-          untrusted execution a lifecycle and a safer boundary. <strong>Dapr
-          Agents, agentgateway and Kueue</strong> carry recovery, governed traffic
-          and quota across the task.
+        <p>
+          <EditableOpenInfrastructureText
+            as="span"
+            copyKey="runtimeProblemEmphasis"
+          />
+        </p>
+      </div>
+      <p className={styles.runtimeProblemStatement}>
+        <EditableOpenInfrastructureText
+          as="span"
+          copyKey="runtimeProblemStatement"
+        />
+      </p>
+      <div className={styles.runtimeResponseGrid}>
+        <p>
+          <EditableOpenInfrastructureText
+            as="span"
+            copyKey="runtimeResponseProcess"
+          />
+        </p>
+        <p>
+          <EditableOpenInfrastructureText
+            as="span"
+            copyKey="runtimeResponseTask"
+          />
         </p>
       </div>
       <p className={styles.taskEnvelopeStatement}>
-        A <strong>task envelope</strong> would keep the tenant and policy boundary,
-        runtime profile, artifacts and state, and evidence and cleanup tied to one
-        run. Open infrastructure has these pieces, but does not yet carry that
-        boundary consistently through the whole stack.
+        <EditableOpenInfrastructureText
+          as="span"
+          copyKey="taskEnvelopePrefix"
+        />{" "}
+        <EditableOpenInfrastructureText
+          as="span"
+          copyKey="taskEnvelopeSuffix"
+        />
       </p>
       <SourceLine>
-        Source: CNCF TAB reference architecture submission #147 + project documentation
+        <EditableOpenInfrastructureText as="span" copyKey="needsGapSource" />
       </SourceLine>
     </article>
   );
@@ -469,36 +546,58 @@ function NeedsGapSlide() {
 function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
   return (
     <article className={styles.landscapeSignalSlide}>
-      <SlideHeading eyebrow="WHERE THE PRESSURE LANDS">
-        New Agent Infra work is gathering in Runtime.
+      <SlideHeading eyebrowKey="signalEyebrow">
+        <EditableOpenInfrastructureText as="span" copyKey="signalTitle" />
       </SlideHeading>
       <div className={styles.pressureStack}>
         <section className={styles.attentionLayer}>
-          <span>TOP</span>
+          <EditableOpenInfrastructureText as="span" copyKey="pressureTopLabel" />
           <p>
-            Visible community attention remains with <strong>applications</strong>,
-            especially coding agents and assistants.
+            <EditableOpenInfrastructureText
+              as="span"
+              copyKey="pressureTopBody"
+            />
           </p>
         </section>
         <section className={styles.runtimeLayer}>
-          <span>MIDDLE</span>
+          <EditableOpenInfrastructureText
+            as="span"
+            copyKey="pressureMiddleLabel"
+          />
           <p>
-            <strong>{stats.runtimeOutsideMay} of 23</strong> new Agent Infra
-            projects since May landed in Runtime.
+            <strong>{stats.runtimeOutsideMay} of 23</strong>{" "}
+            <EditableOpenInfrastructureText
+              as="span"
+              copyKey="pressureMiddleBody"
+            />
           </p>
         </section>
         <section className={styles.foundationLayer}>
-          <span>FOUNDATION</span>
+          <EditableOpenInfrastructureText
+            as="span"
+            copyKey="pressureFoundationLabel"
+          />
           <p>
-            The older <strong>model infrastructure</strong> stack stays underneath
-            every agent task.
+            <EditableOpenInfrastructureText
+              as="span"
+              copyKey="pressureFoundationBody"
+            />
           </p>
         </section>
       </div>
       <aside className={styles.runtimeProjectList}>
         <header>
-          <strong>{stats.runtimeOutsideMayProjects.length} Runtime additions</strong>
-          <span>since May</span>
+          <strong>
+            {stats.runtimeOutsideMayProjects.length}{" "}
+            <EditableOpenInfrastructureText
+              as="span"
+              copyKey="runtimeAdditionsLabel"
+            />
+          </strong>
+          <EditableOpenInfrastructureText
+            as="span"
+            copyKey="runtimeAdditionsPeriod"
+          />
         </header>
         <div className={styles.runtimeProjectGroups}>
           {runtimeProjectGroups.map((group) => {
@@ -509,7 +608,11 @@ function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
             return (
               <section key={group.zone}>
                 <h3>
-                  {group.label} <span>{projects.length}</span>
+                  <EditableOpenInfrastructureText
+                    as="span"
+                    copyKey={group.labelKey}
+                  />{" "}
+                  <span>{projects.length}</span>
                 </h3>
                 <ul>
                   {projects.map((project) => (
@@ -531,7 +634,7 @@ function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
         </div>
       </aside>
       <SourceLine>
-        Source: current landscape selection + May tracking snapshot.
+        <EditableOpenInfrastructureText as="span" copyKey="signalSource" />
       </SourceLine>
     </article>
   );
@@ -540,24 +643,36 @@ function LandscapeSignalSlide({ stats }: { stats: KeynoteStats }) {
 function ClosingSlide() {
   return (
     <article className={styles.handoffSlide}>
-      <p className={styles.closingLead}>A working open source runtime built with</p>
-      <h2>Kata Containers</h2>
-      <p className={styles.closingTail}>and an open delivery chain.</p>
-      <strong className={styles.closingThanks}>Thank you.</strong>
+      <EditableOpenInfrastructureText
+        as="p"
+        className={styles.closingLead}
+        copyKey="closingLead"
+      />
+      <EditableOpenInfrastructureText as="h2" copyKey="closingFocus" />
+      <EditableOpenInfrastructureText
+        as="p"
+        className={styles.closingTail}
+        copyKey="closingTail"
+      />
+      <EditableOpenInfrastructureText
+        as="strong"
+        className={styles.closingThanks}
+        copyKey="closingThanks"
+      />
     </article>
   );
 }
 
 function SlideHeading({
-  eyebrow,
+  eyebrowKey,
   children,
 }: {
-  eyebrow: string;
+  eyebrowKey: keyof OpenInfrastructurePresentationCopy;
   children: ReactNode;
 }) {
   return (
     <header className={styles.slideHeading}>
-      <span>{eyebrow}</span>
+      <EditableOpenInfrastructureText as="span" copyKey={eyebrowKey} />
       <h2>{children}</h2>
     </header>
   );

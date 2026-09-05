@@ -258,8 +258,20 @@ export type CollaborationResearchStats = {
   controlsTotal: number;
   reviewedPrShare: number;
   reviewedPrFollowupCommitShare: number;
+  firstReviewAgentPrs: number;
+  firstReviewAgentFollowupCommits: number;
+  firstReviewAgentFollowupShare: number;
+  firstReviewGithubUserPrs: number;
+  firstReviewGithubUserFollowupCommits: number;
+  firstReviewGithubUserFollowupShare: number;
+  changeRequestPrs: number;
+  changeRequestFollowupCommits: number;
   changeRequestFollowupCommitShare: number;
+  agentChangeRequestPrs: number;
+  agentChangeRequestFollowupCommits: number;
   agentChangeRequestFollowupCommitShare: number;
+  humanChangeRequestPrs: number;
+  humanChangeRequestFollowupCommits: number;
   humanChangeRequestFollowupCommitShare: number;
   publicEventsAnalyzed: number;
   agentTaskEvents: {
@@ -1145,8 +1157,44 @@ function collaborationResearchStats(): CollaborationResearchStats {
     controlsTotal: transitions.length,
     reviewedPrShare: numberValue(overall.pr_review_observed_share_weighted),
     reviewedPrFollowupCommitShare: numberValue(overall.reviewed_pr_post_review_commit_share_weighted),
+    firstReviewAgentPrs: numberValue(overall.first_review_agent_prs_count),
+    firstReviewAgentFollowupCommits: numberValue(overall.first_review_agent_prs_followup_commit_count),
+    firstReviewAgentFollowupShare: numberValue(overall.first_review_agent_prs_followup_commit_share),
+    firstReviewGithubUserPrs: numberValue(overall.first_review_github_user_prs_count),
+    firstReviewGithubUserFollowupCommits: numberValue(overall.first_review_github_user_prs_followup_commit_count),
+    firstReviewGithubUserFollowupShare: numberValue(overall.first_review_github_user_prs_followup_commit_share),
+    changeRequestPrs: countThreads(
+      pullRequestThreads,
+      (row) => row.change_request_observed === "yes",
+    ),
+    changeRequestFollowupCommits: countThreads(
+      pullRequestThreads,
+      (row) =>
+        row.change_request_observed === "yes" &&
+        row.change_request_followed_by_commit === "yes",
+    ),
     changeRequestFollowupCommitShare: numberValue(overall.change_requested_pr_followup_commit_share_weighted),
+    agentChangeRequestPrs: countThreads(
+      pullRequestThreads,
+      (row) => row.agent_change_request_present === "yes",
+    ),
+    agentChangeRequestFollowupCommits: countThreads(
+      pullRequestThreads,
+      (row) =>
+        row.agent_change_request_present === "yes" &&
+        row.change_request_followed_by_commit === "yes",
+    ),
     agentChangeRequestFollowupCommitShare: numberValue(overall.agent_change_requested_pr_followup_commit_share_weighted),
+    humanChangeRequestPrs: countThreads(
+      pullRequestThreads,
+      (row) => row.human_account_change_request_present === "yes",
+    ),
+    humanChangeRequestFollowupCommits: countThreads(
+      pullRequestThreads,
+      (row) =>
+        row.human_account_change_request_present === "yes" &&
+        row.change_request_followed_by_commit === "yes",
+    ),
     humanChangeRequestFollowupCommitShare: numberValue(overall.human_change_requested_pr_followup_commit_share_weighted),
     publicEventsAnalyzed: threadAnalysisRun.events_within_window,
     agentTaskEvents: {

@@ -553,19 +553,34 @@ The event mix makes the pattern concrete. Named Agent identities produced 5,363 
 
 Agent services are only one part of repository automation. GitHub Actions, project automation, Codecov, merge queues and dependency bots remain the most widely visible conventional layer. Coding Agents include Copilot, Codex, Cursor, Claude, Devin, Gemini CLI, Kilo Code and Warp service identities; review Agents include CodeRabbit, Gemini Code Assist, Greptile and similar services; support and security roles include Dosu, automated triage and security-review Apps. Identity and functional role are preserved separately in the actor registry.
 
-### A specific request for changes usually brings another commit
+### An Agent-first review is more often followed by another commit
 
-We ordered every sampled pull request's reviews and commits by time. Any review appears in 2,521 of the 3,567 pull requests, and 1,385 of those reviewed PRs add a commit after the first review. The 161 PRs with an explicit `CHANGES_REQUESTED` review are the stricter subset: 123 add another commit. A concrete change request is the strongest public sign in this sample that another revision round will follow.
+We ordered the formal reviews and commits in all 3,567 sampled pull requests by time. Formal review appeared in 2,521 PRs, Agent review or inline review comments appeared in 1,342, and 1,385 reviewed PRs received another commit after the first review.
 
-### Figure 12B · Observable review-to-revision loops
+### Figure 12B · Later commits by first formal reviewer
 
-| Signal | Share of sample | 95% within-sample bootstrap interval |
+| First formal reviewer | Reviewed PRs | PRs with a later commit | Share with a later commit |
+| --- | ---: | ---: | ---: |
+| Named Agent or App | 1,249 | 834 | 66.8% |
+| GitHub User account | 1,111 | 457 | 41.1% |
+
+| Review context | Count | Share |
 | --- | ---: | ---: |
-| Any review recorded · 2,521 / 3,567 PRs | 70.7% | 69.3–72.0% |
-| Another commit after first review · 1,385 / 2,521 reviewed PRs | 54.9% | 53.1–56.8% |
-| Another commit after `CHANGES_REQUESTED` · 123 / 161 PRs | 76.4% | 70.8–81.4% |
+| Formal review recorded | 2,521 / 3,567 PRs | 70.7% |
+| Agent review or inline review comment recorded | 1,342 / 3,567 PRs | 37.6% |
+| Another commit after the first formal review | 1,385 / 2,521 reviewed PRs | 54.9% |
 
-Agent-attributed change requests are followed by a later commit in 13 of 17 cases, compared with 106 of 137 GitHub User cases. The rates — 76.5% and 77.4% — are nearly the same. In this sample, the next revision is just as likely to follow an Agent change request as a User-account change request; the 17 Agent cases are still too few to support a finer comparison.
+When the first formal review came from a named Agent or App, 834 of 1,249 PRs received another commit. When it came from a GitHub User account, 457 of 1,111 did—a gap of 25.7 percentage points.
+
+An explicit request for changes gives the comparison more shape:
+
+| Reviewer who requested changes | PRs with `CHANGES_REQUESTED` | PRs with a later commit | Share with a later commit |
+| --- | ---: | ---: | ---: |
+| All reviewers | 161 | 123 | 76.4% |
+| Named Agent or App | 17 | 13 | 76.5% |
+| GitHub User account | 137 | 106 | 77.4% |
+
+Agent-first reviews are followed by another commit more often overall. Once the review explicitly asks for a change, the Agent and User groups are almost identical. Agent review is already part of the revision loop; the clearest public sign of another round is a concrete request to change the code.
 
 ### The first Agent patch often survives—and sometimes gets rewritten
 

@@ -74,12 +74,21 @@ type BarStyle = CSSProperties & {
 
 const policyLabels = {
   invite: "明确邀请外部贡献",
-  gate: "先开 Issue 或限定范围",
+  gate: "需先开 Issue、获同意或限定贡献类型",
   quiet: "没有检测到限制",
   closed: "仅 collaborators 可创建 PR",
 } as const;
 
 const lineageCases = [
+  {
+    name: "MLflow #21621",
+    href: "https://github.com/mlflow/mlflow/pull/21621",
+    retained: 33,
+    human: 0,
+    agent: 0,
+    unresolved: 0,
+    text: "第一笔 Agent patch 的 33 行全部原样进入最终版本，没有被人类或后续 Agent 改写。",
+  },
   {
     name: "ONNX Runtime #28045",
     href: "https://github.com/microsoft/onnxruntime/pull/28045",
@@ -88,15 +97,6 @@ const lineageCases = [
     agent: 0,
     unresolved: 0,
     text: "第一笔 Agent patch 有 611 行；合入时 533 行原样保留，另外 78 行后来由人类账号修改。",
-  },
-  {
-    name: "OpenHands SDK #2614",
-    href: "https://github.com/OpenHands/software-agent-sdk/pull/2614",
-    retained: 0,
-    human: 4,
-    agent: 7,
-    unresolved: 0,
-    text: "最初的 11 行没有原样留下；4 行后来由人修改，7 行由后续 Agent commit 修改。",
   },
   {
     name: "Vercel AI SDK #18818",
@@ -108,6 +108,16 @@ const lineageCases = [
     text: "最初 172 行全部被后续 Agent commit 替换。Agent 生成的代码也会经历完整的自动迭代。",
   },
 ] as const;
+
+function isPresentationShortcutTarget(eventTarget: EventTarget | null) {
+  if (!(eventTarget instanceof HTMLElement)) return false;
+  return Boolean(
+    eventTarget.isContentEditable ||
+      eventTarget.closest(
+        'a[href], button, input, select, textarea, [contenteditable="true"], [contenteditable="plaintext-only"], [role="button"]',
+      ),
+  );
+}
 
 export default function InclusionPresentation({
   initialCopy,
@@ -200,14 +210,8 @@ export default function InclusionPresentation({
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (
-        target?.isContentEditable ||
-        target?.tagName === "INPUT" ||
-        target?.tagName === "TEXTAREA"
-      ) {
-        return;
-      }
+      if (isPresentationShortcutTarget(event.target)) return;
+
       if (["ArrowRight", "PageDown", " "].includes(event.key)) {
         event.preventDefault();
         next();
@@ -260,7 +264,11 @@ export default function InclusionPresentation({
           data-current-scene={scene.id}
           aria-live="polite"
         >
-          <div className={styles.scene} data-stage-scene={scene.id} key={`${scene.id}.${build}`}>
+          <div
+            className={styles.scene}
+            data-stage-scene={scene.id}
+            key={scene.id === "lineage" ? scene.id : `${scene.id}.${build}`}
+          >
             <Scene build={build} id={scene.id} projects={projects} stats={stats} />
           </div>
 
@@ -770,45 +778,77 @@ function PublicWorkSlide({ stats }: { stats: InclusionResearchStats }) {
 
 function ReviewSlide({ stats }: { stats: InclusionResearchStats }) {
   const collaboration = stats.collaboration;
-  const reviewedCount = Math.round(collaboration.reviewedPrShare * collaboration.samplePullRequests);
-  const metrics = [
+  const comparisons = [
     {
-      label: "抽样 PR 出现过 Review",
-      value: collaboration.reviewedPrShare,
-      detail: `${reviewedCount.toLocaleString("en-US")} / ${collaboration.samplePullRequests.toLocaleString("en-US")} PRs`,
-      emphasis: "context",
+      id: "agent",
+      label: "第一次正式 Review 来自 Agent",
+      value: collaboration.firstReviewAgentFollowupShare,
+      followups: collaboration.firstReviewAgentFollowupCommits,
+      total: collaboration.firstReviewAgentPrs,
     },
     {
-      label: "Agent 要求修改后又有 commit",
-      value: collaboration.agentChangeRequestFollowupCommitShare,
-      detail: "13 / 17 PRs",
-      emphasis: "primary",
+      id: "user",
+      label: "第一次正式 Review 来自 GitHub User",
+      value: collaboration.firstReviewGithubUserFollowupShare,
+      followups: collaboration.firstReviewGithubUserFollowupCommits,
+      total: collaboration.firstReviewGithubUserPrs,
+    },
+  ] as const;
+  const comparisonGroups = [
+    {
+      id: "first-review",
+      title: "第一次正式 Review 后出现新 commit",
+      finding: "Agent 高 25.7 个百分点",
+      items: comparisons,
     },
     {
-      label: "人类 reviewer 要求修改后又有 commit",
-      value: collaboration.humanChangeRequestFollowupCommitShare,
-      detail: "106 / 137 PRs",
-      emphasis: "compare",
+      id: "change-request",
+      title: "明确要求修改后出现新 commit",
+      finding: "Agent 与人类基本相同",
+      items: [
+        {
+          id: "agent",
+          label: "修改要求来自 Agent",
+          value: collaboration.agentChangeRequestFollowupCommitShare,
+          followups: collaboration.agentChangeRequestFollowupCommits,
+          total: collaboration.agentChangeRequestPrs,
+        },
+        {
+          id: "user",
+          label: "修改要求来自 GitHub User",
+          value: collaboration.humanChangeRequestFollowupCommitShare,
+          followups: collaboration.humanChangeRequestFollowupCommits,
+          total: collaboration.humanChangeRequestPrs,
+        },
+      ],
     },
   ] as const;
 
   return (
     <SlideShell bodyKey="reviewBody" titleKey="reviewTitle" tone="blue">
       <section className={styles.reviewVisual}>
-        {metrics.map((item, index) => (
-          <article
-            data-emphasis={item.emphasis}
-            key={item.label}
-            style={{ "--delay": `${index * 120}ms` } as BarStyle}
-          >
-            <span>{item.label}</span>
-            <strong>{formatPercent(item.value)}</strong>
-            <p>{item.detail}</p>
-            <i><em style={{ "--width": `${item.value * 100}%` } as BarStyle} /></i>
+        {comparisonGroups.map((group, groupIndex) => (
+          <article className={styles.reviewPanel} data-comparison={group.id} key={group.id}>
+            <header>
+              <h3>{group.title}</h3>
+              <p>{group.finding}</p>
+            </header>
+            {group.items.map((item, index) => (
+              <div
+                className={styles.reviewRow}
+                data-reviewer={item.id}
+                key={item.id}
+                style={{ "--delay": `${(groupIndex * 2 + index) * 100}ms` } as BarStyle}
+              >
+                <span>{item.label}</span>
+                <strong>{formatPercent(item.value)}</strong>
+                <i><em style={{ "--width": `${item.value * 100}%` } as BarStyle} /></i>
+                <small>{item.followups.toLocaleString("en-US")} / {item.total.toLocaleString("en-US")} 个 PR</small>
+              </div>
+            ))}
           </article>
         ))}
       </section>
-      <EditablePresentationText as="p" className={styles.readingNote} copyKey="reviewNote" />
     </SlideShell>
   );
 }
@@ -865,7 +905,7 @@ function LineageSlide({ build }: { build: number }) {
               </span>
             ))}
           </nav>
-          <article>
+          <article key={selected.name}>
             <header>
               <h3>{selected.name}</h3>
               <a href={selected.href} target="_blank" rel="noreferrer">

@@ -534,27 +534,54 @@ export default function InclusionConfStory({
   const taskMaximum = Math.max(...taskFootprint.map((item) => item.value));
   const iterationSignals = [
     {
-      label: "Another commit after first review · 1,385 / 2,521 reviewed PRs",
-      value: collaboration.reviewedPrFollowupCommitShare,
+      label: "Formal review recorded · 2,521 / 3,567 PRs",
+      value: collaboration.reviewedPrShare,
     },
     {
-      label: "Another commit after CHANGES_REQUESTED · 123 / 161 PRs",
-      value: collaboration.changeRequestFollowupCommitShare,
+      label: "Agent review or inline review comment · 1,342 / 3,567 PRs",
+      value: collaboration.agentReviewShare,
+    },
+    {
+      label: "Another commit after first formal review · 1,385 / 2,521 PRs",
+      value: collaboration.reviewedPrFollowupCommitShare,
     },
   ];
   const reviewerFollowupComparison = [
     {
       id: "agent",
-      label: "Named Agent or App",
-      followups: 13,
-      total: 17,
+      label: "First formal review by a named Agent or App",
+      followups: collaboration.firstReviewAgentFollowupCommits,
+      total: collaboration.firstReviewAgentPrs,
+      value: collaboration.firstReviewAgentFollowupShare,
+    },
+    {
+      id: "user",
+      label: "First formal review by a GitHub User account",
+      followups: collaboration.firstReviewGithubUserFollowupCommits,
+      total: collaboration.firstReviewGithubUserPrs,
+      value: collaboration.firstReviewGithubUserFollowupShare,
+    },
+  ];
+  const changeRequestComparison = [
+    {
+      id: "all",
+      label: "All CHANGES_REQUESTED reviews",
+      followups: collaboration.changeRequestFollowupCommits,
+      total: collaboration.changeRequestPrs,
+      value: collaboration.changeRequestFollowupCommitShare,
+    },
+    {
+      id: "agent",
+      label: "Request from a named Agent or App",
+      followups: collaboration.agentChangeRequestFollowupCommits,
+      total: collaboration.agentChangeRequestPrs,
       value: collaboration.agentChangeRequestFollowupCommitShare,
     },
     {
       id: "user",
-      label: "GitHub User account",
-      followups: 106,
-      total: 137,
+      label: "Request from a GitHub User account",
+      followups: collaboration.humanChangeRequestFollowupCommits,
+      total: collaboration.humanChangeRequestPrs,
       value: collaboration.humanChangeRequestFollowupCommitShare,
     },
   ];
@@ -1822,30 +1849,12 @@ export default function InclusionConfStory({
             <EditableText as="h3" copyKey="collaborationIterationTitle" />
             <EditableText as="p" copyKey="collaborationIterationBody" />
           </header>
-          <div className={styles.iterationSignals}>
-            {iterationSignals.map((item, index) => (
-              <div key={item.label}>
-                <strong>{formatPercent(item.value, 1)}</strong>
-                <span>{item.label}</span>
-                <i>
-                  <em
-                    style={
-                      {
-                        "--collaboration-delay": `${index * 100}ms`,
-                        "--collaboration-rate": `${item.value * 100}%`,
-                      } as CollaborationBarStyle
-                    }
-                  />
-                </i>
-              </div>
-            ))}
-          </div>
           <div className={styles.reviewerFollowupComparison}>
             <header>
-              <h4>Agent and User change requests were followed at similar rates.</h4>
+              <h4>66.8% after an Agent-first review, versus 41.1% after a User-first review.</h4>
               <p>
-                The Agent comparison contains 17 pull requests, so the counts stay
-                visible beside the percentages.
+                Each reviewed PR is assigned to the account behind its first formal
+                review, then followed through the next commit. The gap is 25.7 percentage points.
               </p>
             </header>
             <div>
@@ -1867,6 +1876,31 @@ export default function InclusionConfStory({
                 </article>
               ))}
             </div>
+          </div>
+          <div className={styles.changeRequestComparison}>
+            <header>
+              <h4>An explicit request for changes is followed by another commit three quarters of the time.</h4>
+              <p>
+                Once the review state is CHANGES_REQUESTED, the Agent and User groups are nearly identical.
+              </p>
+            </header>
+            <div>
+              {changeRequestComparison.map((item) => (
+                <article key={item.id} data-reviewer={item.id}>
+                  <span>{item.label}</span>
+                  <strong>{formatPercent(item.value, 1)}</strong>
+                  <small>{item.followups} of {item.total} PRs received another commit</small>
+                </article>
+              ))}
+            </div>
+          </div>
+          <div className={styles.iterationSignals} aria-label="Review sample context">
+            {iterationSignals.map((item) => (
+              <div key={item.label}>
+                <strong>{formatPercent(item.value, 1)}</strong>
+                <span>{item.label}</span>
+              </div>
+            ))}
           </div>
         </div>
 

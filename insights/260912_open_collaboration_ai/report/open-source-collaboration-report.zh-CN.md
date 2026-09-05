@@ -435,19 +435,34 @@ Agent 产生的公开事件进一步说明它们在做什么：
 
 这里的单位是事件，因此一条线程可能贡献多次 review 或 reply。它不能换算为劳动份额，但能够直接显示具名 Agent 服务集中在工作流的哪些位置。
 
-### 明确要求修改，通常会带来下一次提交
+### Agent 先 Review 的 PR，更常出现下一次提交
 
-我们按时间排列 3,567 条抽样 PR 的 review 和 commit。2,521 条出现过 review，其中 1,385 条在第一次 review 后又提交了 commit。161 条收到明确 `CHANGES_REQUESTED` 的 PR 中，123 条随后出现新 commit。
+我们按时间排列 3,567 条抽样 PR 的正式 Review 和 commit。2,521 条出现过正式 Review，1,342 条出现过 Agent Review 或行内 Review 评论；在全部已 Review 的 PR 中，1,385 条在第一次 Review 后又提交了代码。
 
-### 图 12B · 可见的 review-to-revision 循环
+### 图 12B · 按第一次正式 reviewer 比较后续 commit
 
-| 信号 | 样本占比 | 95% 样本内 bootstrap 区间 |
+| 第一次正式 reviewer | 已 Review PR | 后续又有 commit | 后续 commit 比例 |
+| --- | ---: | ---: | ---: |
+| 具名 Agent 或 App | 1,249 | 834 | 66.8% |
+| GitHub User 账号 | 1,111 | 457 | 41.1% |
+
+| Review 背景 | 数量 | 比例 |
 | --- | ---: | ---: |
-| 出现任意 review · 2,521 / 3,567 PR | 70.7% | 69.3–72.0% |
-| 第一次 review 后又有 commit · 1,385 / 2,521 reviewed PR | 54.9% | 53.1–56.8% |
-| `CHANGES_REQUESTED` 后又有 commit · 123 / 161 PR | 76.4% | 70.8–81.4% |
+| 出现正式 Review | 2,521 / 3,567 PR | 70.7% |
+| 出现 Agent Review 或行内 Review 评论 | 1,342 / 3,567 PR | 37.6% |
+| 第一次正式 Review 后又有 commit | 1,385 / 2,521 个已 Review PR | 54.9% |
 
-17 个由 Agent 发出 change request 的案例中，有 13 个随后提交新 commit；137 个由 GitHub User 发出 change request 的案例中，有 106 个随后提交。两者分别为 76.5% 与 77.4%。在这组公开记录里，Agent 提出的明确修改要求同样会进入真实修改循环；但 Agent 案例数量仍然较小。
+第一次正式 Review 来自具名 Agent 或 App 时，1,249 条 PR 中有 834 条继续提交代码；第一次正式 Review 来自 GitHub User 账号时，1,111 条中有 457 条继续提交，两组相差 25.7 个百分点。
+
+明确要求修改的 Review，让这组比较更清楚：
+
+| 提出修改要求的 reviewer | 出现 `CHANGES_REQUESTED` 的 PR | 后续又有 commit | 后续 commit 比例 |
+| --- | ---: | ---: | ---: |
+| 全部 reviewer | 161 | 123 | 76.4% |
+| 具名 Agent 或 App | 17 | 13 | 76.5% |
+| GitHub User 账号 | 137 | 106 | 77.4% |
+
+整体来看，Agent 完成第一次正式 Review 的 PR，后面更常继续提交代码；当 Review 已经明确要求修改时，Agent 与 GitHub User 两组几乎一样。Agent Review 已经进入真实的修改循环，公开记录里最容易跟着下一轮提交的，是一条具体的修改要求。
 
 ### 第一版 Agent patch 常常会保留，也可能被人或另一个 Agent 重写
 

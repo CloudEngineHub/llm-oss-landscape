@@ -89,6 +89,7 @@ THREAD_FIELDS = [
     "reviews",
     "changes_requested_reviews",
     "review_observed",
+    "first_review_actor_group",
     "post_review_commit_observed",
     "change_request_observed",
     "change_request_followed_by_commit",
@@ -154,6 +155,12 @@ SUMMARY_FIELDS = [
     "internal_pr_github_merge_flag_share_resolved_fixed_maturity_weighted",
     "pr_review_observed_share_weighted",
     "reviewed_pr_post_review_commit_share_weighted",
+    "first_review_agent_prs_count",
+    "first_review_agent_prs_followup_commit_count",
+    "first_review_agent_prs_followup_commit_share",
+    "first_review_github_user_prs_count",
+    "first_review_github_user_prs_followup_commit_count",
+    "first_review_github_user_prs_followup_commit_share",
     "change_requested_pr_followup_commit_share_weighted",
     "median_first_human_account_response_hours",
     "median_first_maintainer_account_response_hours",
@@ -390,6 +397,12 @@ def summarize(scope_type: str, scope_value: str, rows: list[dict[str, Any]]) -> 
         row for row in mature_resolved_prs if row["external_author"] == "no"
     ]
     reviewed_prs = [row for row in prs if row["review_observed"] == "yes"]
+    first_review_agent_prs = [
+        row for row in reviewed_prs if row["first_review_actor_group"] == "agent"
+    ]
+    first_review_github_user_prs = [
+        row for row in reviewed_prs if row["first_review_actor_group"] == "github_user"
+    ]
     change_requested_prs = [row for row in prs if row["change_request_observed"] == "yes"]
     agent_change_requested_prs = [row for row in prs if row["agent_change_request_present"] == "yes"]
     human_change_requested_prs = [row for row in prs if row["human_account_change_request_present"] == "yes"]
@@ -446,6 +459,21 @@ def summarize(scope_type: str, scope_value: str, rows: list[dict[str, Any]]) -> 
         "pr_review_observed_share_weighted": rounded(weighted_share(prs, "review_observed")),
         "reviewed_pr_post_review_commit_share_weighted": rounded(
             weighted_share(reviewed_prs, "post_review_commit_observed")
+        ),
+        "first_review_agent_prs_count": len(first_review_agent_prs),
+        "first_review_agent_prs_followup_commit_count": sum(
+            row["post_review_commit_observed"] == "yes" for row in first_review_agent_prs
+        ),
+        "first_review_agent_prs_followup_commit_share": rounded(
+            weighted_share(first_review_agent_prs, "post_review_commit_observed")
+        ),
+        "first_review_github_user_prs_count": len(first_review_github_user_prs),
+        "first_review_github_user_prs_followup_commit_count": sum(
+            row["post_review_commit_observed"] == "yes"
+            for row in first_review_github_user_prs
+        ),
+        "first_review_github_user_prs_followup_commit_share": rounded(
+            weighted_share(first_review_github_user_prs, "post_review_commit_observed")
         ),
         "change_requested_pr_followup_commit_share_weighted": rounded(
             weighted_share(change_requested_prs, "change_request_followed_by_commit")
@@ -591,7 +619,22 @@ def main() -> None:
             if row.get("event_type") in {"commented", "review_commented"}
         ]
         commits = [row for row in item_events if row.get("event_type") == "committed"]
-        first_review = first_time(reviews, lambda row: True)
+        first_review_event = min(
+            (row for row in reviews if parse_time(row.get("created_at"))),
+            key=lambda row: parse_time(row.get("created_at")) or created,
+            default=None,
+        )
+        first_review = parse_time(first_review_event.get("created_at")) if first_review_event else None
+        first_review_actor_group = ""
+        if first_review_event:
+            first_review_role = first_review_event.get("resolved_actor_role", "")
+            first_review_class = first_review_event.get("resolved_actor_class", "")
+            if first_review_role in AGENT_PARTICIPATION_ROLES:
+                first_review_actor_group = "agent"
+            elif first_review_class == "human_account":
+                first_review_actor_group = "github_user"
+            else:
+                first_review_actor_group = "other"
         commits_after_review = sum(
             1
             for row in commits
@@ -720,6 +763,7 @@ def main() -> None:
                     str(row.get("review_state", "")).upper() == "CHANGES_REQUESTED" for row in reviews
                 ),
                 "review_observed": bool_text(bool(reviews)),
+                "first_review_actor_group": first_review_actor_group,
                 "post_review_commit_observed": bool_text(bool(commits_after_review)),
                 "change_request_observed": bool_text(bool(change_request_times)),
                 "change_request_followed_by_commit": bool_text(change_request_followed),
@@ -828,8 +872,9 @@ def main() -> None:
 ## Review 是反复修改，不是点一下 approve
 
 - {fmt_share(overall['pr_review_observed_share_weighted'])} 的样本 PR 出现可见 review。
+- {fmt_share(overall['agent_review_event_present_share_pr_weighted'])} 的样本 PR 出现 Agent review 或行内 review 评论。
 - 在出现 review 的 PR 中，{fmt_share(overall['reviewed_pr_post_review_commit_share_weighted'])} 在第一次 review 后继续提交代码。
-- 在收到 `CHANGES_REQUESTED` 的 PR 中，{fmt_share(overall['change_requested_pr_followup_commit_share_weighted'])} 之后又有 commit。这个数字说明修改循环真实存在，但不能单独证明 review 是人还是 Agent 发起，也不能证明修改有效。
+- 第一次正式 review 来自 Agent 的 {overall['first_review_agent_prs_count']:,} 条 PR 中，{overall['first_review_agent_prs_followup_commit_count']:,} 条随后又有 commit，占 {fmt_share(overall['first_review_agent_prs_followup_commit_share'])}；第一次正式 review 来自 GitHub User 账号的 {overall['first_review_github_user_prs_count']:,} 条 PR 中，{overall['first_review_github_user_prs_followup_commit_count']:,} 条随后又有 commit，占 {fmt_share(overall['first_review_github_user_prs_followup_commit_share'])}。
 
 ## 不能越过的边界
 

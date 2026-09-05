@@ -325,13 +325,20 @@ function renderFigure12A1(figure) {
 }
 
 function renderFigure12B(figure) {
-  const rows = figure.tables[0]?.rows ?? [];
-  const body = rows.map((row, index) => {
-    const x = 80 + index * 500;
-    const value = numberValue(row[1]);
-    return `${roundedRect(x, 250, 440, 430, index === 2 ? palette.palePink : palette.white, index === 2 ? palette.pink : palette.line, 24)}${textBlock(x + 30, 365, row[1], { size: 58, weight: 600, fill: palette.purple, width: 12 })}${textBlock(x + 30, 450, row[0], { size: 22, weight: 600, width: 34 })}<rect x="${x + 30}" y="590" width="360" height="20" rx="10" fill="#e8e6e0"/><rect x="${x + 30}" y="590" width="${value * 3.6}" height="20" rx="10" fill="${palette.purple}"/>${textBlock(x + 30, 645, row[2], { size: 15, fill: palette.quiet, width: 34 })}`;
+  const comparison = figure.tables[0]?.rows ?? [];
+  const context = figure.tables[1]?.rows ?? [];
+  const comparisonBody = comparison.map((row, index) => {
+    const x = 80 + index * 740;
+    const value = numberValue(row[3]);
+    const fill = index === 0 ? palette.palePink : palette.paleBlue;
+    const accent = index === 0 ? palette.purple : "#488dcc";
+    return `${roundedRect(x, 210, 700, 315, fill, palette.ink, 22)}${textBlock(x + 30, 270, row[0], { size: 22, weight: 600, width: 40 })}${textBlock(x + 30, 385, row[3], { size: 72, weight: 600, fill: accent, width: 12 })}${textBlock(x + 30, 445, `${row[2]} of ${row[1]} PRs received another commit`, { size: 18, fill: palette.quiet, width: 52 })}<rect x="${x + 30}" y="475" width="640" height="18" rx="9" fill="#e8e6e0"/><rect x="${x + 30}" y="475" width="${value * 6.4}" height="18" rx="9" fill="${accent}"/>`;
   }).join("");
-  return baseSvg(figure.title, body);
+  const contextBody = context.map((row, index) => {
+    const x = 80 + index * 480;
+    return `${index ? `<line x1="${x - 20}" y1="605" x2="${x - 20}" y2="810" stroke="${palette.line}"/>` : ""}${textBlock(x, 675, row[2], { size: 38, weight: 600, fill: palette.ink, width: 12 })}${textBlock(x, 730, row[0], { size: 18, weight: 600, width: 31 })}${textBlock(x, 790, row[1], { size: 15, fill: palette.quiet, width: 28 })}`;
+  }).join("");
+  return baseSvg(figure.title, `${comparisonBody}<line x1="80" y1="585" x2="1520" y2="585" stroke="${palette.line}"/>${contextBody}`);
 }
 
 function renderFigure12B1(figure) {

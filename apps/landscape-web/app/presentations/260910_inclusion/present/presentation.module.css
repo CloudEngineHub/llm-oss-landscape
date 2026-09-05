@@ -1091,71 +1091,97 @@
 
 .reviewVisual {
   display: grid;
-  grid-template-columns: .78fr 1.34fr .88fr;
-  gap: 20px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
   align-items: stretch;
 }
 
-.reviewVisual article {
-  min-height: 330px;
-  padding: 32px 30px;
+.reviewPanel {
+  min-height: 336px;
+  padding: 26px 28px 24px;
   display: grid;
-  align-content: end;
+  grid-template-rows: auto repeat(2, 1fr);
   background: var(--white);
   border: 2.5px solid var(--ink);
+}
+
+.reviewPanel[data-comparison="change-request"] {
+  background: var(--violet-soft);
+}
+
+.reviewPanel > header {
+  padding-bottom: 18px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.reviewPanel h3,
+.reviewPanel header p {
+  margin: 0;
+}
+
+.reviewPanel h3 {
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 850;
+  line-height: 1.15;
+}
+
+.reviewPanel header p {
+  margin-top: 8px;
+  color: var(--violet);
+  font-size: 18px;
+  font-weight: 840;
+}
+
+.reviewRow {
+  min-height: 118px;
+  padding: 18px 0 14px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  gap: 10px 18px;
+  align-items: center;
+  border-top: 1.5px solid var(--line);
   opacity: 0;
   animation: rise-in 520ms cubic-bezier(.22, 1, .36, 1) both;
   animation-delay: var(--delay);
 }
 
-.reviewVisual article[data-emphasis="context"] {
-  background: var(--white);
+.reviewPanel .reviewRow:nth-of-type(1) {
+  border-top: 0;
 }
 
-.reviewVisual article[data-emphasis="primary"] {
-  padding: 38px 38px;
-  background: var(--violet-soft);
+.reviewRow span {
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 830;
+  line-height: 1.2;
 }
 
-.reviewVisual article[data-emphasis="compare"] {
-  background: var(--blue-soft);
-}
-
-.reviewVisual span {
-  color: var(--quiet);
-  font-size: 20px;
-  font-weight: 780;
-}
-
-.reviewVisual strong {
-  margin-top: 18px;
-  font-size: 66px;
-  font-weight: 890;
-  line-height: .85;
-}
-
-.reviewVisual article[data-emphasis="primary"] strong {
+.reviewRow strong {
   color: var(--violet);
-  font-size: 98px;
-  letter-spacing: -.05em;
+  font-size: 46px;
+  font-weight: 900;
+  line-height: .9;
+  letter-spacing: -.045em;
 }
 
-.reviewVisual p {
-  min-height: 38px;
-  margin: 20px 0 0;
-  color: #4e4d52;
-  font-size: 18px;
-}
-
-.reviewVisual i {
-  height: 13px;
-  margin-top: 30px;
+.reviewRow i {
+  height: 16px;
   display: block;
   overflow: hidden;
   background: #e8e4dc;
 }
 
-.reviewVisual em {
+.reviewRow[data-reviewer="user"] strong {
+  color: var(--ink);
+}
+
+.reviewRow[data-reviewer="user"] em {
+  background: var(--ink);
+}
+
+.reviewRow em {
   width: var(--width);
   height: 100%;
   display: block;
@@ -1164,6 +1190,12 @@
   transform-origin: left;
   animation: grow-width 720ms cubic-bezier(.22, 1, .36, 1) both;
   animation-delay: var(--delay);
+}
+
+.reviewRow small {
+  color: var(--quiet);
+  font-size: 14px;
+  line-height: 1.2;
 }
 
 .lineageVisual {

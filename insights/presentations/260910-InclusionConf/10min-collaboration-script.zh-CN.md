@@ -96,7 +96,13 @@ Agent 产品更偏 TypeScript，Model Infra 仍然以 Python 为主。在 GitHub
 
 100 个高活跃仓库里，92 个已经在默认分支上写了 Agent instruction、工具目录或者相关配置。也就是说，大多数项目已经在告诉 Agent：你进来以后该怎么工作。
 
-贡献入口要分开看。这里有 48 个仓库明确邀请外部贡献；12 个要求先开 Issue 或限定范围；38 个没有检测到明显限制；还有 2 个把创建 PR 限定给 collaborators。
+贡献入口要分开看。这里有 48 个仓库明确邀请外部贡献；12 个要求先开 Issue、先获得项目方同意，或只接受指定类型的贡献；38 个没有检测到明显限制；还有 2 个把创建 PR 限定给 collaborators。
+
+这 12 个仓库分别是 OpenViking、Mastra、Pydantic AI、Gemini CLI、Omnigent、CopilotKit、CC Switch、marimo、Phoenix、goose、Open WebUI 和 LiveKit Agents。现场可以挑下面三个例子来讲，不必逐个念名单：
+
+- **Mastra** 对所有代码贡献都要求先讨论。README 原文是：“If you are a developer and would like to contribute with code, please open an issue to discuss before opening a Pull Request.” 也就是先用 Issue 确认这项代码改动是否值得做，再开 PR。([原文](https://github.com/mastra-ai/mastra/blob/75dd419e613fe9c39f846ffc500716141b74fda6/README.md#L86))
+- **OpenViking** 限定的是会改变公共语义或持久化行为的修改。CONTRIBUTING 原文先写：“Open an issue or start a discussion before implementing a change that affects:”，下面列出的第一类是“public REST, SDK, CLI, MCP, or configuration semantics”。它没有拦住所有贡献，公共接口这类影响面较大的改动需要先讨论。([原文](https://github.com/volcengine/OpenViking/blob/cd8580c6f8a50ec44593618b3102799ab0b553fd/CONTRIBUTING.md#L55-L60))
+- **Gemini CLI** 明确保留了一部分只供维护者处理的 Issue。CONTRIBUTING 原文是：“If an issue is tagged as `🔒Maintainers only`, this means it is reserved for project maintainers. We will not accept pull requests related to these issues.” 外部贡献者可以提交 PR，但不能认领带有 `Maintainers only` 标签的工作。([原文](https://github.com/google-gemini/gemini-cli/blob/0bd1d439751478771c45d3d0895a6a9760554bf4/CONTRIBUTING.md#L218-L220))
 
 更靠近 Agent 入口的项目，开始主动限制传统的协作入口。DeepSeek Harness 只开放 Discussion，关闭 Issue 和 PR；Codex 和 Claude Code 启用了只有仓库协作者才能创建 PR 的功能。
 
@@ -118,35 +124,33 @@ Agent 更常出现在中间。回应、讨论、triage、Review 这些位置，�
 
 ## 10｜Agent Review 能不能推动修改（01:25）
 
-接着看 Review。这一页真正要回答的是：Agent 的 Review 被接受到什么程度，它提出的修改要求，会不会真的推动 PR 继续改。
+我们把每条已 Review 的 PR 按时间排列，找到第一次正式 Review，再看后面有没有新 commit。
 
-先看背景。在抽样 PR 里，大约 70.7% 出现过 Review。所以 Review 本身已经是这批 PR 里很常见的一环。
+再按第一次正式 Review 由谁完成来分组。具名 Agent 或 App 首先 Review 的 1,249 条 PR 中，有 834 条后续又有 commit，占 66.8%；GitHub User 首先 Review 的 1,111 条 PR 中，有 457 条继续提交，占 41.1%。两组相差 25.7 个百分点。其余 161 条的第一次 reviewer 是常规自动化或无法归类的账号，没有放进比较。
 
-中间这张卡是重点：收到 Agent 明确修改要求的 PR 中，13/17 随后出现了新提交，大约四分之三。也就是说，Agent Review 没有停在评论区，它提出的修改要求，很多时候确实进入了下一轮代码修改。
+再看一组更明确的 Review：161 条 PR 收到过 `CHANGES_REQUESTED`，其中 123 条随后又有 commit，占 76.4%。由 Agent 提出修改要求的是 17 条，其中 13 条继续提交，占 76.5%；由 GitHub User 提出修改要求的是 137 条，其中 106 条继续提交，占 77.4%。两组几乎一样。
 
-右边是人类 reviewer 的参照：106/137 在明确要求修改后继续提交，比例也接近四分之三。至少在这个样本里，Agent 提出的明确修改要求，和人类 reviewer 的效果很接近。
+Agent Review 已经进入真实的修改循环。第一次 reviewer 是 Agent 的 PR，后续提交更多；当 Review 明确指出需要改什么，Agent 和 GitHub User 推动下一轮提交的比例几乎一样。
 
-这件事不用讲成“Agent 替代了 reviewer”。更准确地说，Agent review 已经能在公开协作里触发后续修改。它参与的是迭代过程，很少直接替项目做最终判断。
-
-下一页再看一个更具体的问题：Agent 写出来的代码，最后留下来了吗。
+下一页再看这些反复修改的代码，最后有多少真正留在了仓库里。
 
 ## 11｜第一笔 Agent patch 最后怎样了（01:35）
 
-操作：这一页有三个案例，用翻页笔继续向下翻，不用鼠标点。第一次显示 ONNX Runtime，第二次显示 OpenHands SDK，第三次显示 Vercel AI SDK。
+操作：这一页有三个案例，用翻页笔继续向下翻，不用鼠标点。第一次显示 MLflow，第二次显示 ONNX Runtime，第三次显示 Vercel AI SDK。切换案例时，左侧总体数据保持不动，只有右侧案例更新。
 
 我们追踪了 10 条 Agent 改过代码、最后已经合并的 PR。其中 9 条可以还原行级历史。
 
 第一笔 Agent patch 一共有 1,225 行。合入版本里，765 行原样保留，占 62.4%；123 行后来由人类账号修改；193 行由后续 Agent 修改；还有 144 行作者无法确定。
 
-先看第一个例子，ONNX Runtime #28045。第一笔 Agent patch 有 611 行，合入时 533 行原样保留，另外 78 行后来由人类账号修改。这是比较理想的一类：Agent 写出来的代码，大部分直接进入了最终版本。
+先看第一个例子，MLflow #21621。第一笔 Agent patch 有 33 行，合入时 33 行全部原样保留，没有被人类或后续 Agent 改写。Agent 给出的第一版完整进入了最终版本。
 
 按下一页。
 
-第二个例子是 OpenHands SDK #2614。最初 11 行没有原样留下；4 行后来由人修改，7 行由后续 Agent commit 修改。这里重点不在保留率本身，而在于 Agent 写的代码也会进入正常的修订过程。
+第二个例子是 ONNX Runtime #28045。第一笔 Agent patch 有 611 行，合入时 533 行原样保留，另外 78 行后来由人类账号修改。代码大部分保留下来，也经过了人的后续调整。
 
 再按下一页。
 
-第三个例子是 Vercel AI SDK #18818。最初 172 行全部被后续 Agent commit 替换。它说明另一种路径：Agent 可以先给出一个版本，后面继续由 Agent 自己迭代，直到形成可合入的代码。
+第三个例子是 Vercel AI SDK #18818。最初 172 行全部被后续 Agent commit 替换。这个例子展示的是另一条路径：Agent 先给出一版，再由后续 Agent 继续修改，直到进入最终版本。
 
 所以这页我想带走的结论是：Agent 写的代码不会一次性贴进仓库就结束。它可能被保留，也可能被人改掉，也可能被 Agent 后续重写。开源协作真正关心的是，它在 Review 和修订之后能不能进入一个项目愿意维护的状态。
 
@@ -154,7 +158,7 @@ Agent 更常出现在中间。回应、讨论、triage、Review 这些位置，�
 
 最后收回来。
 
-公开记录里的 Agent patch 正在增多，Agent review 也确实能推动代码继续修改。我们在样本里看到，明确修改要求之后，大约四分之三的 PR 会继续提交；Agent 第一笔 patch 也有六成左右能原样保留到合入版本。
+公开记录里的 Agent patch 正在增多，Agent Review 也已经进入真实的修改循环。第一次正式 Review 来自 Agent 的 PR，66.8% 后续继续提交；Agent 第一笔 patch 也有六成左右能原样保留到合入版本。
 
 但另一边也很明显。PR 增长更快，维护者响应变慢，未处理队列变长。Agent 很少发起工作，也很少执行最后的关闭或合入动作。它更多出现在协作途中。
 

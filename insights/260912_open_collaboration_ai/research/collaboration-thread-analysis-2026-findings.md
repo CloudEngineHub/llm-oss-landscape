@@ -24,8 +24,9 @@
 ## Review 是反复修改，不是点一下 approve
 
 - 70.7% 的样本 PR 出现可见 review。
+- 37.6% 的样本 PR 出现 Agent review 或行内 review 评论。
 - 在出现 review 的 PR 中，54.9% 在第一次 review 后继续提交代码。
-- 在收到 `CHANGES_REQUESTED` 的 PR 中，76.4% 之后又有 commit。这个数字说明修改循环真实存在，但不能单独证明 review 是人还是 Agent 发起，也不能证明修改有效。
+- 第一次正式 review 来自 Agent 的 1,249 条 PR 中，834 条随后又有 commit，占 66.8%；第一次正式 review 来自 GitHub User 账号的 1,111 条 PR 中，457 条随后又有 commit，占 41.1%。
 
 ## 不能越过的边界
 
