@@ -124,6 +124,49 @@ const landscapeInsights: Record<LandscapeView, LandscapeInsight> = {
   },
 };
 
+const runtimeResponseGroups = [
+  {
+    side: "process",
+    sideLabelKey: "runtimeProcessSideLabel",
+    projects: [
+      {
+        name: "Kubernetes Agent Sandbox",
+        owner: "kubernetes-sigs",
+        roleKey: "runtimeAgentSandboxRole",
+      },
+      {
+        name: "Kata Containers",
+        owner: "kata-containers",
+        roleKey: "runtimeKataRole",
+      },
+    ],
+  },
+  {
+    side: "task",
+    sideLabelKey: "runtimeTaskSideLabel",
+    projects: [
+      {
+        name: "Dapr Agents",
+        owner: "dapr",
+        roleKey: "runtimeDaprAgentsRole",
+      },
+      {
+        name: "agentgateway",
+        owner: "agentgateway",
+        roleKey: "runtimeAgentgatewayRole",
+      },
+    ],
+  },
+] as const satisfies ReadonlyArray<{
+  side: "process" | "task";
+  sideLabelKey: OpenInfrastructurePresentationCopyKey;
+  projects: ReadonlyArray<{
+    name: string;
+    owner: string;
+    roleKey: OpenInfrastructurePresentationCopyKey;
+  }>;
+}>;
+
 function isPresentationShortcutTarget(eventTarget: EventTarget | null) {
   if (!(eventTarget instanceof HTMLElement)) return false;
   return Boolean(
@@ -512,25 +555,56 @@ function NeedsGapSlide() {
           copyKey="runtimeProblemStatement"
         />
       </p>
-      <div className={styles.runtimeResponseGrid}>
-        <p>
+      <div className={styles.runtimeResponseBand}>
+        <p className={styles.runtimeResponseLead}>
           <EditableOpenInfrastructureText
             as="span"
-            copyKey="runtimeResponseProcess"
+            copyKey="runtimeResponseLead"
           />
         </p>
-        <p>
-          <EditableOpenInfrastructureText
-            as="span"
-            copyKey="runtimeResponseTask"
-          />
-        </p>
+        <div className={styles.runtimeResponseProjects}>
+          {runtimeResponseGroups.map((group) => (
+            <section
+              className={styles.runtimeResponseGroup}
+              data-runtime-side={group.side}
+              key={group.side}
+            >
+              <span className={styles.runtimeResponseSide}>
+                <EditableOpenInfrastructureText
+                  as="span"
+                  copyKey={group.sideLabelKey}
+                />
+              </span>
+              <div className={styles.runtimeResponseGroupProjects}>
+                {group.projects.map((project) => (
+                  <article
+                    className={styles.runtimeResponseProject}
+                    key={project.name}
+                  >
+                    <Image
+                      alt=""
+                      height={84}
+                      src={projectLogoUrl(project.owner)}
+                      unoptimized
+                      width={84}
+                    />
+                    <div>
+                      <strong>{project.name}</strong>
+                      <small>
+                        <EditableOpenInfrastructureText
+                          as="span"
+                          copyKey={project.roleKey}
+                        />
+                      </small>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
       </div>
       <p className={styles.taskEnvelopeStatement}>
-        <EditableOpenInfrastructureText
-          as="span"
-          copyKey="taskEnvelopePrefix"
-        />{" "}
         <EditableOpenInfrastructureText
           as="span"
           copyKey="taskEnvelopeSuffix"
