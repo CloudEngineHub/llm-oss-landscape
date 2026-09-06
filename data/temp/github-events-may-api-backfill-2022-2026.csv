@@ -1,0 +1,3 @@
+event_type,may_2022,may_2023,may_2024,may_2025,may_2026,note
+DiscussionEvent,1133,2018,3374,1895,892,from_api=1 only
+IssuesReactionEvent,3615,1467,1527,2189,4781,from_api=1 only

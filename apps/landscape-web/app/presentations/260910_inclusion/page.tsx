@@ -20,12 +20,13 @@ export const metadata: Metadata = {
 
 export default function InclusionConfStoryPage() {
   const { projects, stats } = getInclusionResearchData();
-  const initialCopy = getReportCopy();
+  const initialCopy = getReportCopy("en");
   const references = getReportReferences();
 
   return (
     <InclusionConfStory
       initialCopy={initialCopy}
+      locale="en"
       references={references}
       stats={stats}
       projects={projects.map((project) => ({

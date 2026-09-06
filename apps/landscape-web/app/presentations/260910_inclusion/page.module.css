@@ -16,6 +16,18 @@
   overflow-x: clip;
 }
 
+.page:lang(zh-CN) {
+  --font-ui: "Alibaba PuHuiTi Report Full", "Alibaba PuHuiTi",
+    "阿里巴巴普惠体", sans-serif;
+  --font-code: var(--font-ui);
+  font-family: var(--font-ui);
+  font-synthesis: none;
+}
+
+.page:lang(zh-CN) :where(h1, h2, h3, h4, h5, h6) {
+  word-break: auto-phrase;
+}
+
 .page[data-motion-ready="true"] [data-reveal] {
   opacity: 0;
   transform: translateY(22px);
@@ -207,6 +219,10 @@
 .downloadLink svg { width: 12px; height: 12px; stroke-width: 2.2; }
 .downloadEnglish { background: var(--model-soft); }
 .downloadChinese { background: var(--agent-soft); }
+.downloadLink[data-active="true"] {
+  color: var(--white);
+  background: var(--ink);
+}
 .downloadLink:hover,
 .downloadLink:focus-visible { color: var(--white); background: var(--ink); outline: none; }
 
@@ -280,6 +296,25 @@
 }
 
 .heroTitle em { color: var(--signal); font-style: normal; }
+
+.page:lang(zh-CN) .heroTitle > span,
+.page:lang(zh-CN) .heroTitle > em {
+  white-space: nowrap;
+}
+
+.page:lang(zh-CN) .heroTitle {
+  max-width: 1280px;
+  font-family: "Alibaba Sans Display", "Alibaba PuHuiTi Report Full", sans-serif;
+  font-size: clamp(62px, 6.3vw, 96px);
+  font-weight: 900;
+  line-height: .92;
+  letter-spacing: -.055em;
+}
+
+.page:lang(zh-CN) .heroTitle .heroAgent {
+  padding: 0 .08em .02em;
+  background: linear-gradient(transparent 16%, var(--agent) 16% 91%, transparent 91%);
+}
 
 .heroByline {
   margin: 30px 0 0;
@@ -370,6 +405,22 @@
   line-height: 1.75;
 }
 
+.page:lang(zh-CN) .executiveSummary > h2 {
+  font-size: clamp(36px, 4.2vw, 56px);
+  line-height: 1.04;
+  letter-spacing: -.045em;
+}
+
+.page:lang(zh-CN) .executiveSummary h3 {
+  font-size: clamp(22px, 2vw, 28px);
+  line-height: 1.18;
+  letter-spacing: -.025em;
+}
+
+.page:lang(zh-CN) .executiveSummary p {
+  font-size: 16px;
+}
+
 .openingVoices {
   border-top: 2px solid var(--ink);
 }
@@ -456,6 +507,20 @@
 }
 .axisBand p { max-width: 690px; margin: 0; color: #484742; font-size: 16px; line-height: 1.72; }
 
+.page:lang(zh-CN) .axisBand h2 {
+  max-width: none;
+  font-size: clamp(34px, 3.25vw, 46px);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+  word-break: keep-all;
+}
+
+.page:lang(zh-CN) .axisBand p {
+  font-size: 17px;
+  line-height: 1.8;
+}
+
 .metricSection {
   padding: clamp(52px, 6vw, 82px) max(24px, calc((100vw - 1360px) / 2));
   background: var(--paper);
@@ -521,6 +586,12 @@
   line-height: .98;
   letter-spacing: -.065em;
   text-wrap: balance;
+}
+
+.page:lang(zh-CN) .chapterTitle {
+  font-size: clamp(40px, 4.4vw, 60px);
+  line-height: 1.06;
+  letter-spacing: -.045em;
 }
 
 .landscapeFindingTitle {
@@ -2892,6 +2963,10 @@
   .playLink strong { display: none; }
   .navBack span { display: none; }
   .heroTitle { font-size: clamp(34px, 10.6vw, 48px); line-height: .94; letter-spacing: -.045em; }
+  .page:lang(zh-CN) .heroTitle {
+    font-size: clamp(38px, 11vw, 52px);
+    line-height: .94;
+  }
   .heroCredits {
     margin-top: 40px;
     padding-top: 0;
@@ -3154,6 +3229,18 @@
   }
   .editorActions { flex-wrap: wrap; }
   .editorStatus { max-width: none; }
+}
+
+.page:lang(zh-CN) :where(h1, h2, h3, h4, h5, h6, strong, b, th) {
+  font-weight: 700;
+}
+
+.page:lang(zh-CN) .heroTitle {
+  font-weight: 900;
+}
+
+.page:lang(zh-CN) :where(p, li, td, small, figcaption) {
+  font-weight: 400;
 }
 
 @media print {

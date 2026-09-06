@@ -25,6 +25,7 @@ import {
 import type {
   ReportCopy,
   ReportCopyKey,
+  ReportLocale,
 } from "@/lib/inclusion-report-copy";
 
 import styles from "./page.module.css";
@@ -49,9 +50,11 @@ function copiesMatch(left: ReportCopy, right: ReportCopy) {
 export function ReportCopyEditor({
   children,
   initialCopy,
+  locale = "en",
 }: {
   children: ReactNode;
   initialCopy: ReportCopy;
+  locale?: ReportLocale;
 }) {
   const [copy, setCopy] = useState(initialCopy);
   const [savedCopy, setSavedCopy] = useState(initialCopy);
@@ -116,7 +119,7 @@ export function ReportCopyEditor({
       const response = await fetch("/api/inclusion-report-copy", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ copy: draftRef.current }),
+        body: JSON.stringify({ copy: draftRef.current, locale }),
       });
       const result: unknown = await response.json();
       if (!response.ok) {

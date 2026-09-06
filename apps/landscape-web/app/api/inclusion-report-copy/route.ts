@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import {
   getReportCopy,
+  type ReportLocale,
   validateReportCopy,
   writeReportCopy,
 } from "@/lib/inclusion-report-copy";
@@ -29,10 +30,15 @@ function canEdit(request: Request) {
 }
 
 export async function GET(request: Request) {
+  const locale = readLocale(new URL(request.url).searchParams.get("locale"));
   return NextResponse.json({
     canEdit: canEdit(request),
-    copy: getReportCopy(),
+    copy: getReportCopy(locale),
   });
+}
+
+function readLocale(value: unknown): ReportLocale {
+  return value === "zh-CN" ? "zh-CN" : "en";
 }
 
 export async function PUT(request: Request) {
@@ -44,6 +50,10 @@ export async function PUT(request: Request) {
   }
 
   const body: unknown = await request.json();
+  const locale =
+    body && typeof body === "object" && "locale" in body
+      ? readLocale((body as { locale: unknown }).locale)
+      : "en";
   const copy =
     body && typeof body === "object" && "copy" in body
       ? (body as { copy: unknown }).copy
@@ -56,6 +66,6 @@ export async function PUT(request: Request) {
     );
   }
 
-  await writeReportCopy(copy);
-  return NextResponse.json({ copy, saved: true });
+  await writeReportCopy(copy, locale);
+  return NextResponse.json({ copy, locale, saved: true });
 }

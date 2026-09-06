@@ -7,6 +7,7 @@ import type {
   LanguageMixGroup,
   RuntimePathPoint,
 } from "./research-data";
+import type { ReportLocale } from "@/lib/inclusion-report-copy";
 import styles from "./page.module.css";
 
 type BarStyle = CSSProperties & {
@@ -21,10 +22,12 @@ type FlowRevealStyle = CSSProperties & {
 export function LanguageMixChart({
   agentTotal,
   groups,
+  locale = "en",
   modelTotal,
 }: {
   agentTotal: number;
   groups: LanguageMixGroup[];
+  locale?: ReportLocale;
   modelTotal: number;
 }) {
   const rows = [
@@ -39,12 +42,12 @@ export function LanguageMixChart({
           <div className={styles.languageRow} key={row.key}>
             <div>
               <strong>{row.label}</strong>
-              <span>{row.total} repositories</span>
+              <span>{row.total} {locale === "zh-CN" ? "个仓库" : "repositories"}</span>
             </div>
             <div
               className={styles.languageBar}
               role="img"
-              aria-label={`${row.label} primary-language mix`}
+              aria-label={`${row.label}${locale === "zh-CN" ? " 的主要语言分布" : " primary-language mix"}`}
             >
               {groups.map((group, index) => (
                 <i
@@ -56,14 +59,14 @@ export function LanguageMixChart({
                       "--bar-width": `${(group[row.key] / row.total) * 100}%`,
                     } as BarStyle
                   }
-                  title={`${group.label}: ${group[row.key]} repositories`}
+                  title={`${group.label}: ${group[row.key]} ${locale === "zh-CN" ? "个仓库" : "repositories"}`}
                 />
               ))}
             </div>
           </div>
         ))}
       </div>
-      <div className={styles.languageLegend} aria-label="Language legend">
+      <div className={styles.languageLegend} aria-label={locale === "zh-CN" ? "语言图例" : "Language legend"}>
         {groups.map((group) => (
           <span key={group.label}>
             <i data-language={group.label.toLowerCase()} />
@@ -75,15 +78,21 @@ export function LanguageMixChart({
   );
 }
 
-export function RuntimePath({ points }: { points: RuntimePathPoint[] }) {
+export function RuntimePath({
+  locale = "en",
+  points,
+}: {
+  locale?: ReportLocale;
+  points: RuntimePathPoint[];
+}) {
   return (
     <div className={styles.runtimePathSteps}>
       {points.map((point, index) => (
         <article key={point.label}>
           <span>{String(index + 1).padStart(2, "0")}</span>
-          <strong>{point.shortLabel}</strong>
+          <strong>{locale === "zh-CN" ? translateRuntimeLabel(point.shortLabel) : point.shortLabel}</strong>
           <b>{point.projects}</b>
-          <small>{point.label}</small>
+          <small>{locale === "zh-CN" ? translateRuntimeLabel(point.label) : point.label}</small>
           <div>
             {point.examples.map((project) => (
               <a
@@ -100,6 +109,23 @@ export function RuntimePath({ points }: { points: RuntimePathPoint[] }) {
       ))}
     </div>
   );
+}
+
+function translateRuntimeLabel(label: string) {
+  const labels: Record<string, string> = {
+    Context: "上下文",
+    Interface: "接口",
+    Tools: "工具",
+    Execution: "执行",
+    Isolation: "隔离",
+    Evidence: "证据",
+    "Memory & context": "记忆与上下文",
+    "Protocols & interoperability": "协议与互操作",
+    "Tool, web & computer use": "工具、Web 与计算机操作",
+    "Development sandbox": "开发沙箱",
+    "Observability & evaluation": "可观测与评估",
+  };
+  return labels[label] ?? label;
 }
 
 export function MonthlyFlowPanel({
