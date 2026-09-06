@@ -18,8 +18,9 @@ this directory contains the event-specific selection and rehearsal copy.
 - `←` / `→`, Page Up / Page Down, or Space: change slide
 - `1`–`5`: jump to a slide
 - `Enter`: fullscreen
-- The landscape sequence is Agent Infra overview → Agent trend highlight →
-  Model Infra overview → Model trend highlight → trend slide. Reverse
-  navigation walks back through the same sequence.
+- The landscape sequence is Agent Infra overview → Application attention →
+  Runtime density → Model Infra overview → age comparison → serving and
+  pre-training activity → training, data and compute foundation → trend slide.
+  Reverse navigation walks back through the same sequence.
 - Click either landscape tab to switch directly; click a project to open its
   detail view.

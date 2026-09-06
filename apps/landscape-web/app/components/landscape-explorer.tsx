@@ -443,12 +443,16 @@ function ProjectMark({
   matched,
   selected,
   focused,
+  presentationFocused,
+  presentationMuted,
   onSelect,
 }: {
   project: LandscapeProject;
   matched: boolean;
   selected: boolean;
   focused?: boolean;
+  presentationFocused?: boolean;
+  presentationMuted?: boolean;
   onSelect: () => void;
 }) {
   const [logoFailed, setLogoFailed] = useState(false);
@@ -475,6 +479,12 @@ function ProjectMark({
       aria-pressed={selected}
       aria-label={`${project.name}, OpenRank ${formatOpenRank(project)}`}
       data-landscape-project
+      data-presentation-project-focus={
+        presentationFocused ? "true" : undefined
+      }
+      data-presentation-project-muted={
+        presentationMuted ? "true" : undefined
+      }
       data-landscape-signal={
         project.trendSignals.length
           ? project.trendSignals.join(" ")
@@ -558,6 +568,7 @@ function ZoneSection({
   normalizedQuery,
   selectedRepo,
   presentationFocus,
+  presentationProjectFocus,
   onSelect,
   expanded,
   style,
@@ -569,6 +580,7 @@ function ZoneSection({
   normalizedQuery: string;
   selectedRepo: string | null;
   presentationFocus?: string | string[];
+  presentationProjectFocus?: string[];
   onSelect: (repo: string) => void;
   expanded?: boolean;
   style?: CSSProperties;
@@ -582,6 +594,7 @@ function ZoneSection({
       : [];
   const hasPresentationFocus = presentationFocuses.length > 0;
   const isPresentationFocused = presentationFocuses.includes(zone);
+  const hasPresentationProjectFocus = Boolean(presentationProjectFocus?.length);
   const orderedZoneProjects = [...zoneProjects].sort(
     compareLandscapeProjects,
   );
@@ -628,6 +641,13 @@ function ZoneSection({
             matched={matchesQuery(zoneProject, normalizedQuery)}
             selected={selectedRepo === zoneProject.repo}
             focused={expanded}
+            presentationFocused={presentationProjectFocus?.includes(
+              zoneProject.repo,
+            )}
+            presentationMuted={
+              hasPresentationProjectFocus &&
+              !presentationProjectFocus?.includes(zoneProject.repo)
+            }
             onSelect={() => onSelect(zoneProject.repo)}
           />
         ))}
@@ -642,6 +662,7 @@ function StageSection({
   normalizedQuery,
   selectedRepo,
   presentationFocus,
+  presentationProjectFocus,
   onSelect,
   focused,
   onFocusStage,
@@ -651,6 +672,7 @@ function StageSection({
   normalizedQuery: string;
   selectedRepo: string | null;
   presentationFocus?: string | string[];
+  presentationProjectFocus?: string[];
   onSelect: (repo: string) => void;
   focused?: boolean;
   onFocusStage?: (stage: StageId) => void;
@@ -735,6 +757,7 @@ function StageSection({
               normalizedQuery={normalizedQuery}
               selectedRepo={selectedRepo}
               presentationFocus={presentationFocus}
+              presentationProjectFocus={presentationProjectFocus}
               onSelect={onSelect}
               expanded={focused}
               style={zoneStyle}
@@ -756,6 +779,7 @@ function ModelStageSection({
   normalizedQuery,
   selectedRepo,
   presentationFocus,
+  presentationProjectFocus,
   onSelect,
   focused,
   onFocusStage,
@@ -765,6 +789,7 @@ function ModelStageSection({
   normalizedQuery: string;
   selectedRepo: string | null;
   presentationFocus?: string | string[];
+  presentationProjectFocus?: string[];
   onSelect: (repo: string) => void;
   focused?: boolean;
   onFocusStage?: (stage: string) => void;
@@ -880,6 +905,7 @@ function ModelStageSection({
                     normalizedQuery={normalizedQuery}
                     selectedRepo={selectedRepo}
                     presentationFocus={presentationFocus}
+                    presentationProjectFocus={presentationProjectFocus}
                     onSelect={onSelect}
                     expanded={focused}
                     aspectRatio={
@@ -953,6 +979,7 @@ export default function LandscapeExplorer({
   embedOnly,
   standalone,
   presentationFocus,
+  presentationProjectFocus,
   presentationMode,
   filterQuery,
 }: {
@@ -960,6 +987,7 @@ export default function LandscapeExplorer({
   embedOnly?: "agent" | "model";
   standalone?: boolean;
   presentationFocus?: string | string[];
+  presentationProjectFocus?: string[];
   presentationMode?: boolean;
   filterQuery?: string;
 }) {
@@ -1214,6 +1242,7 @@ export default function LandscapeExplorer({
                           normalizedQuery={normalizedInfraQuery}
                           selectedRepo={selectedRepo}
                           presentationFocus={presentationFocus}
+                          presentationProjectFocus={presentationProjectFocus}
                           onSelect={(repo) => {
                             setDialogScope("agent");
                             setSelectedRepo(repo);
@@ -1357,6 +1386,7 @@ export default function LandscapeExplorer({
                         normalizedQuery={normalizedInfraQuery}
                         selectedRepo={selectedRepo}
                         presentationFocus={presentationFocus}
+                        presentationProjectFocus={presentationProjectFocus}
                         onSelect={(repo) => {
                           setDialogScope("model");
                           setSelectedRepo(repo);

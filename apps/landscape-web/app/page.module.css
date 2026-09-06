@@ -444,6 +444,22 @@
   transform: scale(1.018);
 }
 
+.embedExplorer [data-landscape-project][data-presentation-project-muted="true"] {
+  opacity: 0.25;
+  filter: grayscale(0.78) saturate(0.35);
+}
+
+.embedExplorer [data-landscape-project][data-presentation-project-focus="true"] {
+  z-index: 9;
+  opacity: 1;
+  filter: none;
+  outline: 4px solid #ff955d;
+  outline-offset: 2px;
+  background: white;
+  box-shadow: 0 0 0 7px rgb(255 149 93 / 20%);
+  transform: scale(1.045);
+}
+
 .landscapeLead {
   max-width: 1500px;
   margin: 0 auto 64px;

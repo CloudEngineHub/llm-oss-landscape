@@ -6,7 +6,7 @@ Date: 8 September 2026
 Length: 5 minutes
 Playback: `/presentations/260910_inclusion/open-infrastructure/present`
 
-## Slide 1 · `0:00–0:22`
+## Slide 1 · `0:00–0:35`
 
 Good morning, everyone. I'm Yaya, and I work on Ant Group's open source team. For a
 while now we've been tracking the open-source projects growing up around
@@ -15,10 +15,11 @@ So today I want to use those maps to get at something pretty practical: when an
 agent actually goes into production, what does the infrastructure underneath it
 have to hold up—and what's still missing?
 
-## Slide 2A · `0:22–1:00`
+## Slide 2A · `0:35–1:30`
 
 > Playback: show the full Agent Infra map. After “84 projects,” advance once to
-> highlight Application and the complete Agent Runtime Infra layer.
+> isolate Application. Advance again before “But look at the bottom” to isolate
+> the complete Agent Runtime Infra layer.
 
 We looked at hundreds of thousands of repos, scored them, and narrowed it down
 to just over 100 for these two maps. Start with Agent Infra—84 projects.
@@ -31,24 +32,26 @@ But look at the bottom of the map. Thirty-one projects now sit in what we call
 Runtime—context, tools, sandboxed execution, evidence. That's the layer I want
 you to remember, because that's where things get interesting.
 
-## Slide 2B · `1:00–1:32`
+## Slide 2B · `1:30–2:30`
 
 > Playback: advance once to show the full Model Infra map. After “59 projects,”
-> advance again to highlight serving, pre-training, and the relevant data and
-> compute regions.
+> advance to show the age comparison without dimming the map. Advance again for
+> serving and pre-training, then once more for PyTorch and the Apache foundation.
 
-Now, Model Infra. These 59 projects are a lot older on average—only 17 percent
-were created in 2025 or later, versus 55 percent on the Agent Infra side. Three
-quarters of the activity sits in serving and pre-training. PyTorch's down in
-training, and half a dozen Apache projects handle data and compute underneath
-that.
+Now, Model Infra. These 59 projects are a lot older on average. Only 17 percent
+were created in 2025 or later, versus 55 percent on the Agent Infra side. The
+agent layer is young; the model stack underneath it is much more established.
+
+The activity is concentrated too. Three quarters of July OpenRank sits in
+serving and pre-training. Then follow the stack further down: PyTorch anchors
+the training layer, while six Apache projects sit across data and compute.
 
 So here's the point: agents are a new kind of workload, but they don't get a
 new stack to run on. They still run through this same, older infrastructure.
 Which means whatever new pressure agents create, it has to show up somewhere
 else.
 
-## Slide 3 · `1:32–1:54`
+## Slide 3 · `2:30–3:02`
 
 Put these two maps side by side and you can actually see where that pressure
 lands. Of the 23 new Agent Infra projects that showed up since our last review
@@ -56,7 +59,7 @@ in May, 13 of them landed in Runtime. So you've got attention sitting at the
 top, old infrastructure sitting at the bottom, and right in the middle—that's
 where much of the new building is happening.
 
-## Slide 4 · What Agents Need, and Where the Gap Is · `1:54–3:20`
+## Slide 4 · What Agents Need, and Where the Gap Is · `3:02–4:30`
 
 So why there, why Runtime? Think about a normal cloud-native workload—you
 usually know what you're deploying before you deploy it. An agent's different:
@@ -66,12 +69,9 @@ used, the state it changed, its effects on other systems—that sticks around a
 lot longer than the process itself. A short-lived process with long-lived
 consequences—that's the real problem agents bring.
 
-And the cloud-native ecosystem is already reacting. On the process side,
-projects like Kubernetes Agent Sandbox and Kata Containers give these
-short-lived, untrusted executions a proper lifecycle and a safer boundary. On
-the task side, projects like Dapr Agents, agentgateway and Kueue are trying to
-carry recovery, governed traffic and quota across the *whole* task, not just
-one call.
+And the cloud-native ecosystem is already reacting. Projects like Kubernetes
+Agent Sandbox and Kata Containers give these short-lived, untrusted executions
+a proper lifecycle and a safer boundary.
 
 So, going back to where I started—what does infrastructure actually need to
 carry? I'd call it a task envelope: the tenant and policy boundary, runtime
@@ -79,28 +79,28 @@ profile, artifacts and state, and the evidence and cleanup for a single run.
 The pieces for this already exist in open infrastructure. What doesn't exist
 yet is something that carries that boundary all the way through, consistently.
 
-## Slide 5 · Closing · `3:20–3:50`
+## Slide 5 · Closing · `4:30–4:50`
 
-Which is a good place to hand off. Xu Wang is going to walk you through one
-task, end to end, on a working open-source runtime—one real attempt at closing
-that gap. Kubernetes Agent Sandbox manages the lifecycle, Kata Containers
-handles the boundary, and the rest of the chain runs the container and delivers
-its images and model weights.
+Which is a good place to hand off. Xu Wang is going to walk you through an
+end-to-end agent runtime with a complete open delivery chain—one real attempt
+at closing that gap.
 
 Thank you.
 
 ## Rehearsal notes
 
-- Current draft: approximately 619 spoken words.
-- At 118–124 words per minute, expect about `5:00–5:15`. The supplied slide
-  timestamps total `3:50`, which would require about 161 words per minute.
-- On Slide 2A, use the full map for the pool size, then reveal the highlight.
-  Point first to Application and then to the complete Runtime layer. Advance
-  at about `1:00` to reveal the full Model Infra map.
-- On Slide 2B, use the full map for the project count, then reveal the
-  highlight. Trace serving and pre-training before pointing to PyTorch and the
-  six Apache projects in data and compute. Advance at about `1:32` to leave the
-  landscape slide.
+- Current draft: approximately 583 spoken words.
+- At 118–124 words per minute, expect about `4:42–4:56`. The slide timings now
+  leave a small pause for each reveal and keep the complete handoff under five
+  minutes.
+- On Slide 2A, use the full map for the pool size. The first reveal isolates
+  Application for `32 / 84` and `55%`; the second isolates the complete Runtime
+  layer for `31`. Advance at about `1:30` to reveal the full Model Infra map.
+- On Slide 2B, use the full map for the project count. The first reveal compares
+  project age without dimming the map; the second isolates serving and
+  pre-training for `75%`; the third points to the training, data and compute
+  foundation for PyTorch and the six Apache projects. Advance at about `2:30`
+  to leave the landscape slide.
 - Do not read either map section by section. The spoken point is the contrast:
   a young Agent layer is forming above a more established model, data and
   compute stack.

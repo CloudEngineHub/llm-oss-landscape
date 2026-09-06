@@ -71,57 +71,125 @@ const runtimeProjectGroups = [
   },
 ] as const;
 
-type LandscapeInsight = {
+type LandscapeTrend = {
+  kickerKey: OpenInfrastructurePresentationCopyKey;
+  index: string;
   metrics: Array<{
     value: string;
     labelKey: OpenInfrastructurePresentationCopyKey;
   }>;
   readingKey: OpenInfrastructurePresentationCopyKey;
-  focus: string[];
+  focus?: string[];
+  projectFocus?: string[];
 };
 
-const LANDSCAPE_STEP_COUNT = 4;
+type LandscapeStep = {
+  view: LandscapeView;
+  trend?: LandscapeTrend;
+};
 
-const landscapeInsights: Record<LandscapeView, LandscapeInsight> = {
-  agent: {
-    metrics: [
-      { value: "32 / 84", labelKey: "agentApplicationProjectsLabel" },
-      { value: "55%", labelKey: "agentOpenRankLabel" },
-      { value: "31", labelKey: "agentRuntimeProjectsLabel" },
-    ],
-    readingKey: "agentInsightReading",
-    focus: [
-      "Agentic coding",
-      "Coding workflows & harnesses",
-      "Personal AI assistants",
-      "Chatbot workspaces",
-      "Memory, knowledge & context",
-      "Protocols & interoperability",
-      "Tools, web & computer use",
-      "Development sandboxes",
-      "Observability & evaluation",
-    ],
+const landscapeSteps: LandscapeStep[] = [
+  { view: "agent" },
+  {
+    view: "agent",
+    trend: {
+      kickerKey: "agentTrendKicker",
+      index: "01 / 02",
+      metrics: [
+        { value: "32 / 84", labelKey: "agentApplicationProjectsLabel" },
+        { value: "55%", labelKey: "agentOpenRankLabel" },
+      ],
+      readingKey: "agentAttentionReading",
+      focus: [
+        "Agentic coding",
+        "Coding workflows & harnesses",
+        "Personal AI assistants",
+        "Chatbot workspaces",
+      ],
+    },
   },
-  model: {
-    metrics: [
-      { value: "17%", labelKey: "modelCreatedLabel" },
-      { value: "75%", labelKey: "modelOpenRankLabel" },
-      { value: "6", labelKey: "modelApacheLabel" },
-    ],
-    readingKey: "modelInsightReading",
-    focus: [
-      "Model API gateways",
-      "Serving · Deploy",
-      "Serving · Inference",
-      "Pre-Train · Framework & parallel",
-      "Pre-Train · Compiler & accelerator",
-      "Pre-Train · Evaluation & observability",
-      "Pre-Train · Robotics infra",
-      "Data · Integration",
-      "Data · Governance",
-      "Compute & scheduling",
-    ],
+  {
+    view: "agent",
+    trend: {
+      kickerKey: "agentTrendKicker",
+      index: "02 / 02",
+      metrics: [
+        { value: "31", labelKey: "agentRuntimeProjectsLabel" },
+      ],
+      readingKey: "agentRuntimeReading",
+      focus: [
+        "Memory, knowledge & context",
+        "Protocols & interoperability",
+        "Tools, web & computer use",
+        "Development sandboxes",
+        "Observability & evaluation",
+      ],
+    },
   },
+  { view: "model" },
+  {
+    view: "model",
+    trend: {
+      kickerKey: "modelTrendKicker",
+      index: "01 / 03",
+      metrics: [
+        { value: "17%", labelKey: "modelCreatedLabel" },
+        { value: "55%", labelKey: "agentCreatedLabel" },
+      ],
+      readingKey: "modelAgeReading",
+    },
+  },
+  {
+    view: "model",
+    trend: {
+      kickerKey: "modelTrendKicker",
+      index: "02 / 03",
+      metrics: [
+        { value: "75%", labelKey: "modelOpenRankLabel" },
+      ],
+      readingKey: "modelActivityReading",
+      focus: [
+        "Model API gateways",
+        "Serving · Deploy",
+        "Serving · Inference",
+        "Pre-Train · Framework & parallel",
+        "Pre-Train · Compiler & accelerator",
+        "Pre-Train · Evaluation & observability",
+        "Pre-Train · Robotics infra",
+      ],
+    },
+  },
+  {
+    view: "model",
+    trend: {
+      kickerKey: "modelTrendKicker",
+      index: "03 / 03",
+      metrics: [{ value: "6", labelKey: "modelApacheLabel" }],
+      readingKey: "modelFoundationReading",
+      focus: [
+        "Pre-Train · Framework & parallel",
+        "Data · Integration",
+        "Data · Governance",
+        "Compute & scheduling",
+      ],
+      projectFocus: [
+        "pytorch/pytorch",
+        "apache/airflow",
+        "apache/gravitino",
+        "apache/hudi",
+        "apache/iceberg",
+        "apache/paimon",
+        "apache/spark",
+      ],
+    },
+  },
+];
+
+const LANDSCAPE_STEP_COUNT = landscapeSteps.length;
+
+const landscapeOverviewSteps: Record<LandscapeView, number> = {
+  agent: 0,
+  model: 3,
 };
 
 const runtimeResponseGroups = [
@@ -434,14 +502,13 @@ function LandscapeMapSlide({
   step: number;
   onStepChange: (step: number) => void;
 }) {
-  const view: LandscapeView = step < 2 ? "agent" : "model";
-  const highlighted = step % 2 === 1;
-  const insight = landscapeInsights[view];
+  const activeStep = landscapeSteps[step] ?? landscapeSteps[0];
+  const { view, trend } = activeStep;
 
   return (
     <article
       className={styles.landscapeMapSlide}
-      data-highlighted={highlighted}
+      data-highlighted={Boolean(trend)}
       data-view={view}
     >
       <div className={styles.liveLandscape}>
@@ -449,7 +516,8 @@ function LandscapeMapSlide({
           projects={projects}
           embedOnly={view}
           presentationMode
-          presentationFocus={highlighted ? insight.focus : undefined}
+          presentationFocus={trend?.focus}
+          presentationProjectFocus={trend?.projectFocus}
         />
       </div>
       <div className={styles.landscapeSwitcher} aria-label="Landscape view">
@@ -457,7 +525,7 @@ function LandscapeMapSlide({
           type="button"
           data-active={view === "agent"}
           aria-pressed={view === "agent"}
-          onClick={() => onStepChange(0)}
+          onClick={() => onStepChange(landscapeOverviewSteps.agent)}
         >
           Agent Infra · {stats.agent}
         </button>
@@ -465,13 +533,13 @@ function LandscapeMapSlide({
           type="button"
           data-active={view === "model"}
           aria-pressed={view === "model"}
-          onClick={() => onStepChange(2)}
+          onClick={() => onStepChange(landscapeOverviewSteps.model)}
         >
           Model Infra · {stats.model}
         </button>
       </div>
-      {highlighted ? (
-        <LandscapeInsightCard insight={insight} view={view} />
+      {trend ? (
+        <LandscapeInsightCard insight={trend} view={view} />
       ) : null}
     </article>
   );
@@ -481,7 +549,7 @@ function LandscapeInsightCard({
   insight,
   view,
 }: {
-  insight: LandscapeInsight;
+  insight: LandscapeTrend;
   view: LandscapeView;
 }) {
   return (
@@ -491,10 +559,16 @@ function LandscapeInsightCard({
       aria-live="polite"
     >
       <div className={styles.insightIndex}>
-        <EditableOpenInfrastructureText as="span" copyKey="insightKicker" />
-        <strong>{view === "agent" ? "01" : "02"} / 02</strong>
+        <EditableOpenInfrastructureText
+          as="span"
+          copyKey={insight.kickerKey}
+        />
+        <strong>{insight.index}</strong>
       </div>
-      <div className={styles.insightMetrics}>
+      <div
+        className={styles.insightMetrics}
+        data-metric-count={insight.metrics.length}
+      >
         {insight.metrics.map((metric) => (
           <div key={metric.labelKey}>
             <strong>{metric.value}</strong>
