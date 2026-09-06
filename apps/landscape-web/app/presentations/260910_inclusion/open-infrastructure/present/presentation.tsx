@@ -1,12 +1,5 @@
 "use client";
 
-import Link from "next/link";
-import {
-  ArrowLeftIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  Maximize2Icon,
-} from "lucide-react";
 import Image from "next/image";
 import {
   type PointerEvent as ReactPointerEvent,
@@ -339,83 +332,20 @@ export default function OpenInfrastructureKeynote({
         }}
       >
         <section className={styles.deck} aria-live="polite">
-        <header className={styles.stageHeader}>
-          <div className={styles.stageHeaderLeft}>
-            <Link
-              className={styles.backLink}
-              href="/presentations/260910_inclusion"
-            >
-              <ArrowLeftIcon aria-hidden="true" />
-              260910_InclusionConf
-            </Link>
-            <EditableOpenInfrastructureText
-              as="span"
-              copyKey="stageHeaderLabel"
+          <div
+            className={styles.scene}
+            data-stage-scene={scene.id}
+            data-stage-build={scene.id === "landscape" ? landscapeStep : 0}
+            key={scene.id}
+          >
+            <Scene
+              id={scene.id}
+              stats={stats}
+              projects={projects}
+              landscapeStep={landscapeStep}
+              onLandscapeStepChange={setLandscapeStep}
             />
           </div>
-          <button
-            className={styles.fullscreenButton}
-            type="button"
-            onClick={() => void enterFullscreen()}
-          >
-            <Maximize2Icon aria-hidden="true" />
-            Fullscreen
-          </button>
-        </header>
-
-        <div
-          className={styles.scene}
-          data-stage-scene={scene.id}
-          data-stage-build={scene.id === "landscape" ? landscapeStep : 0}
-          key={scene.id}
-        >
-          <Scene
-            id={scene.id}
-            stats={stats}
-            projects={projects}
-            landscapeStep={landscapeStep}
-            onLandscapeStepChange={setLandscapeStep}
-          />
-        </div>
-
-        <footer className={styles.controls}>
-          <div className={styles.progress} aria-label="Presentation progress">
-            {scenes.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                aria-label={`Go to slide ${index + 1}: ${item.label}`}
-                aria-current={index === sceneIndex ? "page" : undefined}
-                data-active={index === sceneIndex}
-                onClick={() => goToScene(index)}
-              >
-                <i />
-                <span>{item.label}</span>
-              </button>
-            ))}
-          </div>
-          <div className={styles.pager}>
-            <span>
-              {String(sceneIndex + 1).padStart(2, "0")} / {String(scenes.length).padStart(2, "0")}
-            </span>
-            <button
-              type="button"
-              onClick={previous}
-              disabled={sceneIndex === 0}
-              aria-label="Previous slide"
-            >
-              <ChevronLeftIcon aria-hidden="true" />
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              disabled={sceneIndex === scenes.length - 1}
-              aria-label="Next slide"
-            >
-              <ChevronRightIcon aria-hidden="true" />
-            </button>
-          </div>
-        </footer>
         </section>
       </main>
     </OpenInfrastructureCopyEditor>

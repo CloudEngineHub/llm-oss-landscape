@@ -6,6 +6,7 @@ PyTorch Conference China**, 8 September 2026, Shanghai.
 ## Deliverables
 
 - [Final speaker script](./01-five-minute-keynote-script.md)
+- [PowerPoint screenshot deck](./What-AI-Agents-Need-from-Open-Infrastructure-screenshots.pptx)
 - Interactive playback route:
   `/presentations/260910_inclusion/open-infrastructure/present`
 
