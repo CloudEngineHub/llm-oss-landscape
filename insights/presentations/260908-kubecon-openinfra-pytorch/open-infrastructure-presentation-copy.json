@@ -39,15 +39,10 @@
   "runtimeProblemStatement": "The real problem agents bring is short-lived processes with long-lived consequences.",
   "runtimeResponseLead": "The cloud-native ecosystem is already reacting to this.",
   "runtimeProcessSideLabel": "Process side",
-  "runtimeTaskSideLabel": "Task side",
   "runtimeAgentSandboxRole": "Lifecycle",
   "runtimeKataRole": "Safer boundary",
-  "runtimeDaprAgentsRole": "Recovery",
-  "runtimeAgentgatewayRole": "Governed traffic",
   "taskEnvelopeSuffix": "The pieces for this already exist in open infrastructure. What we need is something that carries it all the way through.",
   "needsGapSource": "Source: CNCF TAB reference architecture submission #147 + project documentation",
-  "closingLead": "A working open source runtime built with",
-  "closingFocus": "Kata Containers",
-  "closingTail": "and an open delivery chain.",
+  "closingStatement": "An end-to-end agent runtime with a complete open delivery chain.",
   "closingThanks": "Thank you."
 }

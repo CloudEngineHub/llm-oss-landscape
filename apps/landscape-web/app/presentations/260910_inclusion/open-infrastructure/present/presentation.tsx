@@ -141,22 +141,6 @@ const runtimeResponseGroups = [
       },
     ],
   },
-  {
-    side: "task",
-    sideLabelKey: "runtimeTaskSideLabel",
-    projects: [
-      {
-        name: "Dapr Agents",
-        owner: "dapr",
-        roleKey: "runtimeDaprAgentsRole",
-      },
-      {
-        name: "agentgateway",
-        owner: "agentgateway",
-        roleKey: "runtimeAgentgatewayRole",
-      },
-    ],
-  },
 ] as const satisfies ReadonlyArray<{
   side: "process" | "task";
   sideLabelKey: OpenInfrastructurePresentationCopyKey;
@@ -718,15 +702,9 @@ function ClosingSlide() {
   return (
     <article className={styles.handoffSlide}>
       <EditableOpenInfrastructureText
-        as="p"
-        className={styles.closingLead}
-        copyKey="closingLead"
-      />
-      <EditableOpenInfrastructureText as="h2" copyKey="closingFocus" />
-      <EditableOpenInfrastructureText
-        as="p"
-        className={styles.closingTail}
-        copyKey="closingTail"
+        as="h2"
+        className={styles.closingStatement}
+        copyKey="closingStatement"
       />
       <EditableOpenInfrastructureText
         as="strong"

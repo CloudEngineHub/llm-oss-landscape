@@ -544,12 +544,14 @@
 
 .runtimeResponseProjects {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.2cqw;
 }
 
 .runtimeResponseGroup {
+  width: min(100%, 62cqw);
   min-height: 12.6cqh;
+  margin-inline: auto;
   padding: 0.95cqh 1cqw 1.15cqh;
   display: grid;
   grid-template-rows: auto 1fr;
@@ -560,10 +562,6 @@
 
 .runtimeResponseGroup[data-runtime-side="process"] {
   box-shadow: 0.25cqw 0.32cqh 0 var(--pink);
-}
-
-.runtimeResponseGroup[data-runtime-side="task"] {
-  box-shadow: 0.25cqw 0.32cqh 0 var(--blue);
 }
 
 .runtimeResponseSide {
@@ -814,37 +812,15 @@
   background: var(--ink);
 }
 
-.closingLead,
-.closingTail {
-  max-width: 78cqw;
-  margin: 0;
-  color: #d5d6d9;
-  font-size: 2cqw;
-  font-weight: 650;
-  line-height: 1.2;
-  letter-spacing: -0.03em;
-}
-
-.handoffSlide h2 {
-  width: fit-content;
-  margin: 2.9cqh 0 3.1cqh;
-  padding: 0.65cqh 1.05cqw 1cqh;
-  color: var(--ink);
-  background: var(--blue);
-  box-shadow: 0.58cqw 0.72cqh 0 var(--pink);
-  font-size: 7.35cqw;
-  font-weight: 860;
-  line-height: 0.86;
-  letter-spacing: -0.085em;
-}
-
-.closingTail {
-  width: fit-content;
-  padding-bottom: 0.55cqh;
+.closingStatement {
+  max-width: 80cqw;
+  margin: 4.2cqh 0 0;
   color: white;
-  border-bottom: 0.24cqw solid var(--pink);
-  font-size: 2.4cqw;
-  font-weight: 760;
+  font-size: 5.35cqw;
+  font-weight: 830;
+  line-height: 0.96;
+  letter-spacing: -0.065em;
+  text-wrap: balance;
 }
 
 .closingThanks {

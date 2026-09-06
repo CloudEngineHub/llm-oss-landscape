@@ -44,16 +44,11 @@ export const OPEN_INFRASTRUCTURE_PRESENTATION_COPY_KEYS = [
   "runtimeProblemStatement",
   "runtimeResponseLead",
   "runtimeProcessSideLabel",
-  "runtimeTaskSideLabel",
   "runtimeAgentSandboxRole",
   "runtimeKataRole",
-  "runtimeDaprAgentsRole",
-  "runtimeAgentgatewayRole",
   "taskEnvelopeSuffix",
   "needsGapSource",
-  "closingLead",
-  "closingFocus",
-  "closingTail",
+  "closingStatement",
   "closingThanks",
 ] as const;
 
