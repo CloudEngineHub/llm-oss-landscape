@@ -827,15 +827,24 @@
 
 .handoffSlide h2 {
   width: fit-content;
-  margin: 2.5cqh 0;
-  padding: 0.7cqh 1.15cqw 1.1cqh;
+  margin: 2.9cqh 0 3.1cqh;
+  padding: 0.65cqh 1.05cqw 1cqh;
   color: var(--ink);
   background: var(--blue);
-  box-shadow: 0.72cqw 0.9cqh 0 var(--pink);
-  font-size: 8.7cqw;
+  box-shadow: 0.58cqw 0.72cqh 0 var(--pink);
+  font-size: 7.35cqw;
   font-weight: 860;
   line-height: 0.86;
   letter-spacing: -0.085em;
+}
+
+.closingTail {
+  width: fit-content;
+  padding-bottom: 0.55cqh;
+  color: white;
+  border-bottom: 0.24cqw solid var(--pink);
+  font-size: 2.4cqw;
+  font-weight: 760;
 }
 
 .closingThanks {
