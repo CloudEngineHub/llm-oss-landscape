@@ -10,6 +10,7 @@ export const REPORT_COPY_KEYS = [
   "heroFocus",
   "heroByline",
   "heroLede",
+  "heroAttribution",
   "mergeGateTitle",
   "mergeGateBody",
   "executionGateTitle",

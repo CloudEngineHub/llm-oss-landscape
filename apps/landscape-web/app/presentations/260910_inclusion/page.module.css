@@ -361,6 +361,19 @@
   line-height: 1.72;
 }
 
+.heroSummary p {
+  margin: 0;
+}
+
+.heroAttribution {
+  display: block;
+  margin-top: 16px;
+  color: var(--ink);
+  font-size: .82em;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+
 .executiveSummary {
   padding: clamp(64px, 8vw, 108px) max(24px, calc((100vw - 1360px) / 2 + 48px));
   background: var(--white);

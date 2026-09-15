@@ -709,7 +709,14 @@ export default function InclusionConfStory({
           <EditableText as="em" copyKey="heroFocus" />
         </h1>
         <EditableText as="p" className={styles.heroByline} copyKey="heroByline" />
-        <EditableText as="p" className={styles.heroSummary} copyKey="heroLede" />
+        <blockquote className={styles.heroSummary}>
+          <EditableText as="p" copyKey="heroLede" />
+          <EditableText
+            as="span"
+            className={styles.heroAttribution}
+            copyKey="heroAttribution"
+          />
+        </blockquote>
         <div
           className={styles.heroCredits}
           aria-label="Ant Open Source and InclusionAI"
