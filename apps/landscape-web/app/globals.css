@@ -50,7 +50,7 @@
  */
 @font-face {
   font-family: "Alibaba PuHuiTi Report Full";
-  src: url("/fonts/AlibabaPuHuiTi-Full-Regular.woff2") format("woff2");
+  src: url("/fonts/AlibabaPuHuiTi-Full-Regular.woff2?v=20260915") format("woff2");
   font-style: normal;
   font-weight: 400;
   font-display: swap;
@@ -58,7 +58,7 @@
 
 @font-face {
   font-family: "Alibaba PuHuiTi Report Full";
-  src: url("/fonts/AlibabaPuHuiTi-Full-Bold.woff2") format("woff2");
+  src: url("/fonts/AlibabaPuHuiTi-Full-Bold.woff2?v=20260915") format("woff2");
   font-style: normal;
   font-weight: 700;
   font-display: swap;
@@ -66,7 +66,7 @@
 
 @font-face {
   font-family: "Alibaba PuHuiTi Report Full";
-  src: url("/fonts/AlibabaPuHuiTi-Full-Heavy.woff2") format("woff2");
+  src: url("/fonts/AlibabaPuHuiTi-Full-Heavy.woff2?v=20260915") format("woff2");
   font-style: normal;
   font-weight: 900;
   font-display: swap;
@@ -74,7 +74,7 @@
 
 @font-face {
   font-family: "Alibaba Sans Display";
-  src: url("/fonts/AlibabaSans-Black.woff2") format("woff2");
+  src: url("/fonts/AlibabaSans-Black.woff2?v=20260915") format("woff2");
   font-style: normal;
   font-weight: 900;
   font-display: swap;

@@ -363,6 +363,7 @@
 
 .heroSummary p {
   margin: 0;
+  font-weight: 400;
 }
 
 .heroAttribution {
@@ -3250,6 +3251,15 @@
 
 .page:lang(zh-CN) .heroTitle {
   font-weight: 900;
+}
+
+.page:lang(zh-CN) .heroByline,
+.page:lang(zh-CN) .heroAttribution {
+  font-weight: 700;
+}
+
+.page:lang(zh-CN) .heroSummary p {
+  font-weight: 400;
 }
 
 .page:lang(zh-CN) :where(p, li, td, small, figcaption) {
