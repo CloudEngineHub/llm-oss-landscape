@@ -153,6 +153,7 @@ const PROJECT_NAME_OVERRIDES: Record<string, string> = {
   "deepspeedai/deepspeed": "DeepSpeed",
   "deepseek-ai/deepep": "DeepEP",
   "deepseek-ai/deepseek-harness": "DeepSeek Harness",
+  "minimax-ai/minimax-code": "MiniMax Code",
   "deusdata/codebase-memory-mcp": "Codebase Memory MCP",
   "delta-io/delta": "Delta Lake",
   "earendil-works/pi": "Pi",

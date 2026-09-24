@@ -72,6 +72,15 @@ export default function Home() {
               <div className={styles.navPanel}>
                 <a
                   className={styles.archiveRelease}
+                  href="https://insights.inclusion-ai.org/presentations/260910_inclusion"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <strong>260910</strong>
+                  <ArrowUpRightIcon aria-hidden="true" />
+                </a>
+                <a
+                  className={styles.archiveRelease}
                   href="https://github.com/antgroup/agentic-ai-landscape/blob/main/insights/260527-agentic_landscape/260527_agentic_ai_en.md"
                   target="_blank"
                   rel="noreferrer"
@@ -114,6 +123,13 @@ export default function Home() {
                 <ChevronDownIcon aria-hidden="true" />
               </summary>
               <div className={styles.navPanel}>
+                <Link
+                  className={styles.inclusionPresentation}
+                  href="/presentations/260924_MiniMaxDeveloper"
+                >
+                  <span>260924</span>
+                  <strong>260924_MiniMaxDeveloper</strong>
+                </Link>
                 <Link
                   className={styles.inclusionPresentation}
                   href="/presentations/260910_inclusion"

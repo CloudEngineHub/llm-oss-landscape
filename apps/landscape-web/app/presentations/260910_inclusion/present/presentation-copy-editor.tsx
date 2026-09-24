@@ -53,9 +53,11 @@ function copiesMatch(left: PresentationCopy, right: PresentationCopy) {
 
 export function PresentationCopyEditor({
   children,
+  endpoint = "/api/inclusion-presentation-copy",
   initialCopy,
 }: {
   children: ReactNode;
+  endpoint?: string;
   initialCopy: PresentationCopy;
 }) {
   const [copy, setCopy] = useState(initialCopy);
@@ -118,7 +120,7 @@ export function PresentationCopyEditor({
     setStatus("正在保存…");
 
     try {
-      const response = await fetch("/api/inclusion-presentation-copy", {
+      const response = await fetch(endpoint, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ copy: draftRef.current }),

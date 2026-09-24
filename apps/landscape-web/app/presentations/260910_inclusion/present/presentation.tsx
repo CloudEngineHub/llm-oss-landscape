@@ -120,10 +120,12 @@ function isPresentationShortcutTarget(eventTarget: EventTarget | null) {
 }
 
 export default function InclusionPresentation({
+  copyEndpoint = "/api/inclusion-presentation-copy",
   initialCopy,
   projects,
   stats,
 }: {
+  copyEndpoint?: string;
   initialCopy: PresentationCopy;
   projects: LandscapeProject[];
   stats: InclusionResearchStats;
@@ -249,7 +251,7 @@ export default function InclusionPresentation({
   }
 
   return (
-    <PresentationCopyEditor initialCopy={initialCopy}>
+    <PresentationCopyEditor endpoint={copyEndpoint} initialCopy={initialCopy}>
       <main
         className={styles.stage}
         lang="zh-CN"

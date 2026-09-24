@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
     "/*": [
       "../../data/agentic-ai-projects.csv",
       "../../insights/260912_open_collaboration_ai/report/web-copy.json",
+      "../../insights/presentations/260924-MiniMaxDeveloper/presentation-copy.json",
     ],
   },
   turbopack: {
