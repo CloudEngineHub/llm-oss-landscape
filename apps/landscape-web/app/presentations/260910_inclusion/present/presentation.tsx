@@ -770,6 +770,7 @@ function LandscapeFinding({
     <aside
       aria-live="polite"
       className={styles.landscapeFinding}
+      data-finding-index={index}
       data-view={view}
     >
       <div className={styles.findingIndex}>

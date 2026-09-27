@@ -35,7 +35,7 @@
   "agentInsight3Angle": "Runtime",
   "agentInsight3Metric": "32",
   "agentInsight3Title": "Runtime 串起一次 Agent 任务的执行路径",
-  "agentInsight3Note": "32 个项目分布在 Context、Interface、Action、Isolation、Evidence。它们连起来，决定一次 Agent 任务能不能从准备走到可检查的执行结果。",
+  "agentInsight3Note": "32 个项目分布在 Context、Interface、Action Isolation、Evidence。它们连起来，决定一次 Agent 任务能不能从准备走到可检查的执行结果。",
   "agentRankingLabel": "8 月 OpenRank · Agent Infra",
   "modelInsight1Angle": "8 月 OpenRank",
   "modelInsight1Metric": "TOP 5",
